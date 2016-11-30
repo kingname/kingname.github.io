@@ -1,0 +1,782 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,CodeStyle," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="开篇闲扯距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实习的过程中逐步接手了一些维护的工作，并提交了不少代码。7月6号正式入职以后，我加入了一个Amazing的新项目的创建，目前我们做出来的Demo真是非常的Amazing。不过可惜的是，这样一个项目在最近几年是不会对外公布的。
+在6月之前，每晚回家就是做毕设了，这段时间休">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的编码规范">
+<meta property="og:url" content="http://kingname.info/2015/07/19/mycodestyle/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="开篇闲扯距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实习的过程中逐步接手了一些维护的工作，并提交了不少代码。7月6号正式入职以后，我加入了一个Amazing的新项目的创建，目前我们做出来的Demo真是非常的Amazing。不过可惜的是，这样一个项目在最近几年是不会对外公布的。
+在6月之前，每晚回家就是做毕设了，这段时间休">
+<meta property="og:updated_time" content="2016-11-30T13:56:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我的编码规范">
+<meta name="twitter:description" content="开篇闲扯距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实习的过程中逐步接手了一些维护的工作，并提交了不少代码。7月6号正式入职以后，我加入了一个Amazing的新项目的创建，目前我们做出来的Demo真是非常的Amazing。不过可惜的是，这样一个项目在最近几年是不会对外公布的。
+在6月之前，每晚回家就是做毕设了，这段时间休">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingname.info/2015/07/19/mycodestyle/"/>
+
+
+
+
+
+  <title> 我的编码规范 | Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2015/07/19/mycodestyle/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                我的编码规范
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-07-19T16:31:54+08:00">
+                2015-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2015/07/19/mycodestyle/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/19/mycodestyle/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="开篇闲扯"><a href="#开篇闲扯" class="headerlink" title="开篇闲扯"></a>开篇闲扯</h2><p>距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实习的过程中逐步接手了一些维护的工作，并提交了不少代码。7月6号正式入职以后，我加入了一个Amazing的新项目的创建，目前我们做出来的Demo真是非常的Amazing。不过可惜的是，这样一个项目在最近几年是不会对外公布的。</p>
+<p>在6月之前，每晚回家就是做毕设了，这段时间休息的都比较晚，头发都白了很多。</p>
+<p>还有就是给极客学院录课，第一个系列课程《定向爬虫入门》已经全部录制完毕了，一共8课，大家可以在about me 里面找到前7课的链接，最后一课目前正在后期制作当中，上线以后会更新链接。接下来我会讲解远程控制软件的编写，欢迎大家在极客学院关注我，我的名字叫kingname~</p>
+<p>闲话完毕，那我们开始正题。</p>
+<p>##本题由来<br>其实以前我是不太注意编码风格的，觉得程序可以运行了就行。甚至网上还有一种说法：</p>
+<blockquote>
+<p>如果你急急忙忙写一个程序，都没有注重编码规范，程序可能一次就跑通了；但是如果你仔细编码，而且还把单元测试做的非常完善，很有可能程序会出现大bug,而且还难以找到原因。</p>
+</blockquote>
+<p>然而在我实习的过程中，读了公司的很多代码，才发现编码规范是如此的重要，以至于可以显著影响对代码的理解。而且由于在部门里面code review做的比较严格，因此代码的风格不统一的话，是不能merge的，于是在多次提交代码以后渐渐的总结出了一些规律。</p>
+<p>##变量命名<br>在我大一学编程的时候，老师告诉我们变量命名最后使用匈牙利命名法，例如，经常出现hszStr、istuNum之类的变量名，如果对代码不熟悉的话，都不知道是什么意思。</p>
+<p>现在我们并不使用匈牙利命名法，而是直接将变量的含义通过单纯完整拼写处理。例如：</p>
+<blockquote>
+<p>deviceSerialDict： 用于保存设备串号的字典<br>deviceSerialDictList： 用于保存设备串号字典的列表<br>unusedSerialNumList： 未使用的序列号列表</p>
+</blockquote>
+<p>我们约定：</p>
+<ul>
+<li>变量名首字母小写</li>
+<li>多个单词的构成的变量，从第二个开始首字母大写</li>
+<li>缩写词做单词处理，例如ACM在变量名中应该写为Acm而不是ACM</li>
+<li>常量大写，每个单词使用_下划线分割</li>
+<li>不允许出现Magic Number</li>
+<li>使用名词或者动宾结构</li>
+</ul>
+<p>##类与方法</p>
+<p>使用面向对象编程，这一点在我做毕业设计的程序时，帮了我大忙，大大减轻了我的工作压力。</p>
+<p>我们的风格其实有点像Java了，文件名和类名相同，如果一个文件里面有多个类，那文件名与主要的类名相同。</p>
+<p>我们约定：</p>
+<ul>
+<li>非私有的方法，首字母小写，动宾结构，例如getSerialNum</li>
+<li>对于和类本身没有什么大关系的方法，要使用@staticmethod</li>
+<li>只有类自己使用的方法需要设为私有，也就是名称前加两个下划线</li>
+</ul>
+<p>##代码细节</p>
+<ul>
+<li>逗号后面要有一个空格</li>
+<li>每一行代码后面不能有空格</li>
+<li>文件的最后要有一个空行</li>
+<li>等号左右都需要有空格，但是作为参数的时候不需要空格</li>
+<li>方法的参数大于6个，则使用列表或者字典来传递</li>
+</ul>
+<p>##总结</p>
+<p>挂一漏万，以上的规范使用Pylint都可以帮忙检查出来。没有说到的地方请大家补充，除了以上的规范以外，还有Python自己本身的编码规范，请戳-&gt;<a href="https://www.python.org/dev/peps/pep-0008/" target="_blank" rel="external">https://www.python.org/dev/peps/pep-0008/</a>。 </p>
+<p>最近重构了MCC,请大家对比</p>
+<p><a href="https://github.com/kingname/MCC" target="_blank" rel="external">https://github.com/kingname/MCC</a> </p>
+<p>与 重构之前 </p>
+<p><a href="https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb" target="_blank" rel="external">https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb</a></p>
+<p>的区别。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/CodeStyle/" rel="tag"># CodeStyle</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/04/29/lxmloldbug/" rel="next" title="requests的content与text导致lxml的解析问题">
+                <i class="fa fa-chevron-left"></i> requests的content与text导致lxml的解析问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/07/lxmlencoding/" rel="prev" title="使用etree.HTML的编码问题">
+                使用etree.HTML的编码问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/07/19/mycodestyle/"
+           data-title="我的编码规范" data-url="http://kingname.info/2015/07/19/mycodestyle/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">MediaTek软件工程师，极客学院讲师。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开篇闲扯"><span class="nav-number">1.</span> <span class="nav-text">开篇闲扯</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"kingname"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

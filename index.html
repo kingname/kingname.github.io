@@ -1,0 +1,2349 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python, 爬虫, 数据挖掘, 机器学习, 自动化测试框架" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="MediaTek软件工程师，极客学院讲师。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kingname">
+<meta property="og:url" content="http://kingname.info/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="MediaTek软件工程师，极客学院讲师。">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kingname">
+<meta name="twitter:description" content="MediaTek软件工程师，极客学院讲师。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingname.info/"/>
+
+
+
+
+
+  <title> Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/11/07/autoalarmclock/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/07/autoalarmclock/" itemprop="url">
+                  如果我提前起床，闹钟你就别响
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-07T22:56:21+08:00">
+                2016-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/11/07/autoalarmclock/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/07/autoalarmclock/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>闹钟已经成了我们生活中必不可少的东西。如果全球每个国家的当地时间明天早上，所有的闹钟突然都不响了，不知道会发生什么样的混乱。</p>
+<p>然而我们要讨论另外一种情况，闹钟每天定时响起来，真的是最好的情况吗？你有过醒来以后等闹钟的经历吗？如果你有时候在闹钟响之前就起来了，那么你会不会希望闹钟能知道你已经起来了？如果你提前醒了，那么闹钟就不响，只有你一直睡着的时候，闹钟才会按时响起来。</p>
+<p>这个项目基于 Andorid 上面的自动化 workflow 程序 Automate 和 Python 制作。总代码量非常小。</p>
+<p>做这个东西目的，是因为我现在早上有时候会在 7 点起床写东西，然后再去上班。但有时候可能会直接睡到 7 点 45 ，让闹钟把我闹醒。提前起床可能会忘记关闹钟，但是我不希望在我早上写作的时候被闹钟打扰。</p>
+<p>如果我早上提前起床使用电脑，那么 Automate 可以得到信息，并关闭闹钟。如果 Automate 发现我 7 点 45 都还没有碰电脑，就会把我闹醒。整个过程，我不需要和闹钟有任何的交互。</p>
+<p>这就是AutoAlarmClock这个项目存在的意义。</p>
+<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>AutoAlarmClock分为三个部分，安卓手机上的Automate，VPS上面的Web Server和Mac OS上面的一行命令。</p>
+<p>每天早上7点40，手机上的Automate会访问一个URL A：<a href="http://autoemo.kingname.info:745/alarm_clock" target="_blank" rel="external">http://autoemo.kingname.info:745/alarm_clock</a>，只要没有得到返回信息“No”，无论是网络问题，还是因为服务器返回的是其他信息，都会设定一个闹钟，在7点45分响起来。只有访问URL以后，服务器返回“No”，那么就不设闹钟。</p>
+<p>对于电脑来说，每天早上7点30分，如果电脑是开着的，说明我正在工作。这个时候电脑就会自动访问一个URL B：<a href="http://autoemo.kingname.info:745/set_alarm" target="_blank" rel="external">http://autoemo.kingname.info:745/set_alarm</a>.只有这个URL被访问过，之前给Automate访问的URL A才会返回“No”。</p>
+<h2 id="设计实现"><a href="#设计实现" class="headerlink" title="设计实现"></a>设计实现</h2><h3 id="Web-Server"><a href="#Web-Server" class="headerlink" title="Web Server"></a>Web Server</h3><p>Web Server是手机和电脑之间的桥梁。它是使用Python的Flask框架写成的。代码已经放在了Github上：<a href="https://github.com/kingname/Automatic.git" target="_blank" rel="external">AutoAlarmClock</a>. 包括空行总共只有32行代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</div><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line"><span class="meta">@app.route('/')</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'please visit my blog at http://kingname.info'</span></div><div class="line"></div><div class="line"><span class="meta">@app.route("/alarm_clock")</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">alarm_clock</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> os.path.exists(<span class="string">'alarmclock.txt'</span>):</div><div class="line">        <span class="keyword">with</span> open(<span class="string">'alarmclock.txt'</span>) <span class="keyword">as</span> f:</div><div class="line">            date_in_txt = f.read()</div><div class="line">            today = str(date.today())</div><div class="line">            <span class="keyword">if</span> date_in_txt == today:</div><div class="line">                <span class="keyword">return</span> <span class="string">'No'</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'Yes'</span></div><div class="line"></div><div class="line"><span class="meta">@app.route('/set_alarm')</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_alarm</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'alarmclock.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> f:</div><div class="line">        f.write(str(date.today()))</div><div class="line">    <span class="keyword">return</span> <span class="string">'OK'</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    app.run(host=<span class="string">'0.0.0.0'</span>, port=<span class="number">745</span>)</div></pre></td></tr></table></figure>
+<p>由于这个Web Server每天只访问两次，所以没有必要使用数据库或者做线程安全的设置。数据只需要使用一个文本文件作为中转即可。一旦<a href="http://autoemo.kingname.info:745/set_alarm" target="_blank" rel="external">http://autoemo.kingname.info:745/set_alarm</a>这个链接被访问，就会在当前目录创建一个alarmclock.txt文件，里面存放的是今天的日期。当<a href="http://autoemo.kingname.info:745/alarm_clock" target="_blank" rel="external">http://autoemo.kingname.info:745/alarm_clock</a>被访问的时候，它会去检查alarmclock.txt，如果这个文件不存在，或者里面的日期不是今天的日期，那么它就会返回“Yes”。只有当alarmclock.txt存在，并且里面的内容为今天的日期，它才会返回“No”。</p>
+<h3 id="电脑端"><a href="#电脑端" class="headerlink" title="电脑端"></a>电脑端</h3><p>电脑只需要访问<a href="http://autoemo.kingname.info:745/set_alarm" target="_blank" rel="external">http://autoemo.kingname.info:745/set_alarm</a>.由于Mac Book Pro只休眠，不关机，无法使用开机启动的方法来触发这个URL的访问。所以我使用了Crontab这个定时任务。因为在电脑休眠的时候，Crontab的定时任务是不会执行的，只有我在电脑上工作的时候，电脑开着才会访问这个URL，并让它生成记录今天日期的文本文件。</p>
+<p>通过下面的命令设定Crontab定时任务，编辑器我选择的是VIM：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">env EDITOR=vim crontab -e</div></pre></td></tr></table></figure>
+<p>定时任务设定为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">30 07 * * * curl -G http://autoemo.kingname.info:745/set_alarm</div></pre></td></tr></table></figure></p>
+<p>表示每天的7点30分使用curl访问后面的链接。</p>
+<p>Crontab在Linux下面也可以正常使用。</p>
+<p>如果你的电脑为Windows，因为Windows电脑一般在晚上睡觉时会关机，所以访问URL的工作可以设定开机启动来完成。</p>
+<p>首先创建一个EnableAlarmClock.py文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import requests</div><div class="line"></div><div class="line">requests.get(&apos;http://autoemo.kingname.info:745/set_alarm&apos;)</div></pre></td></tr></table></figure></p>
+<p>这个文件用到了Python的requests库，如果你没有的话，请使用pip安装。</p>
+<p>再创建一个EnableAlarmClock.bat文件，文件内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python EnableAlarmClock.py</div></pre></td></tr></table></figure></p>
+<p>打开Windows的 <strong>任务计划</strong> ，触发器选择“当前用户登录时”，操作选择“启动程序”，并填写EnableAlarmClock.bat的路径，如下图所示：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/task.png" alt=""></p>
+<p>这样，每次开机登录桌面的时候，程序自动就会访问设定闹钟的页面了。</p>
+<h3 id="手机端"><a href="#手机端" class="headerlink" title="手机端"></a>手机端</h3><p>Automate是安卓上面的一个强大的自动化工具，类似于IFTTT和iOS上面的Workflow。</p>
+<p>在Automate中创建一个Flow，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161108-074321.png" alt=""><br>其中涉及到了”Time await”, “HTTP request”, “Expression true?”, “Alarm add”这几个组件。</p>
+<ul>
+<li><p>“Time await”的设置如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224111.png" alt=""></p>
+</li>
+<li><p>“HTTP request”的设置为下面两张图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224136.png" alt=""><br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224142.png" alt=""></p>
+</li>
+<li><p>“Alarm add”的设置为下图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224155.png" alt=""><br>这里由于没有设置“REPEAT WEEKDAYS”这一项，所以闹钟都是一次性的，关了以后，第二天需要再根据实际情况来让Automate来决定是否需要创建。</p>
+</li>
+</ul>
+<p>设置并启动这个Flow以后，每天早上的闹钟就可以根据你是否在电脑前面工作而决定要不要闹响了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/06/27/alias-vs-virtualenv/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/27/alias-vs-virtualenv/" itemprop="url">
+                  alias导致virtualenv异常的分析和解法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-27T23:40:56+08:00">
+                2016-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OS-X/" itemprop="url" rel="index">
+                    <span itemprop="name">OS X</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/06/27/alias-vs-virtualenv/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/27/alias-vs-virtualenv/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>virtualenv 可以虚拟出一个独立的Python环境，在这个环境中安装的第三方库不会对系统中的Python产生影响。作为一个系统洁癖，我的系统中的Python环境只安装最主要的第三方库，我在开发Python项目的时候一般使用virtualenv生成的独立环境来安装项目需要的第三方库。但是如果同时使用了zsh的alias 和virtualenv，有可能就会导致virtualenv下面的python不能使用第三方库。</p>
+<h2 id="Python的运行方式"><a href="#Python的运行方式" class="headerlink" title="Python的运行方式"></a>Python的运行方式</h2><p>一般我们会使用以下两种方式之一来运行Python：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python xxx.py</div></pre></td></tr></table></figure>
+<p>或者在代码的第一行加上python的路径：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/local/bin/python</span></div></pre></td></tr></table></figure>
+<p>这两种方式，使用的是系统中的Python来解释代码。</p>
+<h2 id="问题的复现"><a href="#问题的复现" class="headerlink" title="问题的复现"></a>问题的复现</h2><p>如果电脑上安装了Python2 和Python3， 那么想运行Python3写的代码的时候，我们可以使用以下方法来运行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 xxx.py</div></pre></td></tr></table></figure>
+<p>但是由于有人不想写数字3， 于是就使用了zsh的alias功能，在<code>~/.zshrc</code>文件中，添加了一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias python=/usr/local/bin/python3</div></pre></td></tr></table></figure>
+<p>在这种情况下，使用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python xxx.py</div></pre></td></tr></table></figure>
+<p>就可以通过Python3来解析代码了。这种方式使用系统中的Python没有问题，但是如果在virtualenv下面可就惨了。</p>
+<p>我们创建一个虚拟环境并激活，安装Python的requests库，再启动python并导入requests库, 并其代码流程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ virtualenv --python=python3 venv</div><div class="line">$ . venv/bin/activate</div><div class="line">$ pip install requests</div><div class="line">$ python</div><div class="line">&gt;&gt;&gt;import requests</div></pre></td></tr></table></figure>
+<p>如果我们设置了上面的alias，那么你一定会得到下面的结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">ImportError: No module named requests</div></pre></td></tr></table></figure>
+<p>于是你打开<code>venv/lib/python3.5/site-packages</code>却发现requests安安静静的躺在里面。于是你百思不得其解，明明pip 是把requests安装在虚拟环境下面的，为什么Python不能正常导入呢？于是你再执行以下代码查看环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">import sys</div><div class="line">print(sys.path)</div></pre></td></tr></table></figure>
+<p>你看到的可能是下面的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[&apos;&apos;,</div><div class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python35.zip&apos;,</div><div class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python3.5&apos;,</div><div class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python3.5/plat-darwin&apos;,</div><div class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python3.5/lib-dynload&apos;,</div><div class="line">&apos;/usr/local/lib/python3.5/site-packages&apos;]</div></pre></td></tr></table></figure>
+<p>全部是系统下面Python的路径，和你的virtualenv 没有一点点的关系。</p>
+<p>然后你退出Python，在虚拟环境下面打印PATH，你却发现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ echo $PATH</div><div class="line">/Users/kingname/jikexueyuan/class_spider_basic/program/mongodb/venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</div></pre></td></tr></table></figure>
+<p>你的virtualenv环境好好的躺在你的环境变量的最前面。于是你快要疯掉了，到底是什么鬼，怎么会发生如此灵异的事件？系统不应该是首先找环境变量第一个位置下面的Python吗？怎么会跳过虚拟环境，去打开了系统中的Python呢？应该直接打开虚拟环境下面的Python才对啊！</p>
+<h2 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h2><p>问题的根源就在你的alias上面。</p>
+<p>zsh 的alias的优先级是非常高的，它会首先替换为等号后面的内容，然后再执行。那么即使在虚拟环境下，在终端输入<code>python</code>并回车以后，实际执行的代码是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/local/bin/python3</div></pre></td></tr></table></figure>
+<p>你使用了绝对路径打开了系统中的Python3。</p>
+<p>而由于你没有对pip 设定alias, 因此你使用pip 安装requests的时候，它调用的是虚拟环境下面的pip,所以requests会正确安装在虚拟环境下面。</p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>解决办法有两个:</p>
+<ol>
+<li>在<code>~/.zshrc</code>中删除下面的代码，并重启终端：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias python=/usr/local/bin/python3</div></pre></td></tr></table></figure>
+<ol>
+<li>将<code>~/.zshrc</code>中的：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias python=/usr/local/bin/python3</div></pre></td></tr></table></figure>
+<p>修改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias python=python3</div></pre></td></tr></table></figure>
+<p>本文首发地址： <a href="http://kingname.info/2016/06/27/alias-vs-virtualenv/">http://kingname.info/2016/06/27/alias-vs-virtualenv/</a>转载请注明出处。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/06/19/bean-in-python/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/19/bean-in-python/" itemprop="url">
+                  可爱的豆子——使用Beans思想让Python代码更易维护
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-19T21:43:33+08:00">
+                2016-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/06/19/bean-in-python/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/19/bean-in-python/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我曾经是一个对Java非常反感的人，因为Java的语法非常啰嗦。而用惯了动态类型的Python再使用静态类型的Java就会觉得多出了很多的工作量。</p>
+<p>因为工作的关系，我开始使用Java来做项目。在这个过程中，我发现Java在某些方面确实和Python不一样。</p>
+<p>有一句话说的好：</p>
+<blockquote>
+<p>语言决定了世界观。</p>
+</blockquote>
+<p>当我Java用的越来越多的时候，我渐渐发现我不是那么讨厌它了。</p>
+<p>今天我要讲的，是我从Java里面学到的，一个被称为JavaBeans的东西。</p>
+<blockquote>
+<p>In computing based on the Java Platform, JavaBeans are classes that encapsulate many objects into a single object (the bean). They are serializable, have a zero-argument constructor, and allow access to properties using getter and setter methods. </p>
+</blockquote>
+<p>一句话概括起来： <strong>当一些信息需要使用类似于字典套字典套列表这种很深的结构来储存的时候，请改用类来储存。</strong></p>
+<p>在Python里面，我以前会写这样的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">person_list = [&#123;</div><div class="line">        <span class="string">'name'</span>: <span class="string">'kingname'</span>,</div><div class="line">        <span class="string">'age'</span>: <span class="number">23</span>,</div><div class="line">        <span class="string">'sex'</span>: <span class="string">'male'</span></div><div class="line">        <span class="string">'detail'</span>: &#123;</div><div class="line">                    <span class="string">'address'</span>: <span class="string">'xxx'</span>,</div><div class="line">                    <span class="string">'work'</span>: <span class="string">'engineer'</span>,</div><div class="line">                    <span class="string">'salary'</span>: <span class="number">100000</span></div><div class="line">            &#125;</div><div class="line">&#125;,</div><div class="line">&#123;</div><div class="line">        <span class="string">'name'</span>: <span class="string">'xiaoming'</span>,</div><div class="line">        <span class="string">'age'</span>: <span class="number">65</span>,</div><div class="line">        <span class="string">'sex'</span>: <span class="string">'male'</span></div><div class="line">        <span class="string">'detail'</span>: &#123;</div><div class="line">                    <span class="string">'address'</span>: <span class="string">'yyy'</span>,</div><div class="line">                    <span class="string">'work'</span>: <span class="string">'pm'</span>,</div><div class="line">                    <span class="string">'salary'</span>: <span class="number">0.5</span></div><div class="line">            &#125;</div><div class="line">&#125;]</div></pre></td></tr></table></figure>
+<p>由于Python动态类型的特点，字典里面的value经常是包含了各种类型，有时候，字典里面包含了字典，里面的字典里面还有列表，这个内部字典里面的列表里面又包含了字典……</p>
+<p>当我刚刚开始写Java代码的时候，也会保留了这个坏习惯，于是我定义的一个变量类似于这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> Map&lt;String, List&lt;Map&lt;String, Map&lt;String, Object&gt;&gt;&gt;&gt; info = .....</div></pre></td></tr></table></figure>
+<p>并且由于Java是静态类型语言，有时候Map里面的Value类型还不一致，需要使用Object来代替，等要使用的时候再做类型转换。</p>
+<p>对于这样的写法，真可谓是写代码一时爽，调试代码火葬场。我过几天读自己的代码，自己都不知道这个字典里面有哪些内容，也不知道它们有哪些类型，必须到定义的地方去看。</p>
+<p>我的Mentor看了我的Java代码以后，让我去用一下JavaBeans，于是我的世界瞬间就简洁多了。后来我将JavaBeans的思想用到Python中，果然Python代码也变得好看多了。</p>
+<p>使用上面person_list这个复杂的结构为例，我用JavaBeans的思想，在Python里面重构它：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name=<span class="string">''</span>, age=<span class="number">0</span>, sex=<span class="string">''</span>, detail=None)</span>:</span></div><div class="line">        self._name = name</div><div class="line">        self._age = age</div><div class="line">        self._sex = sex</div><div class="line">        self._detail = detail</div><div class="line">    </div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">name</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._name</div><div class="line">    </div><div class="line"><span class="meta">    @name.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">name</span><span class="params">(self, new_name)</span>:</span></div><div class="line">        self._name = new_name</div><div class="line">    </div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">age</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._age</div><div class="line">    </div><div class="line"><span class="meta">    @age.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">age</span><span class="params">(self, new_age)</span>:</span></div><div class="line">        self._age = new_age</div><div class="line">    </div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sex</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._sex</div><div class="line">    </div><div class="line"><span class="meta">    @sex.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sex</span><span class="params">(self, new_sex)</span>:</span></div><div class="line">        self._sex = new_sex</div><div class="line">    </div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detail</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._detail</div><div class="line">    </div><div class="line"><span class="meta">    @detail.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detail</span><span class="params">(self, new_detail)</span>:</span></div><div class="line">        self._detail = new_detail</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Detail</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, address=<span class="string">''</span>, work=<span class="string">''</span>, salary=<span class="number">0</span>)</span>:</span></div><div class="line">        self._address = address</div><div class="line">        self._work = work</div><div class="line">        self._salary = salary</div><div class="line">    </div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">address</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._address</div><div class="line">    </div><div class="line"><span class="meta">    @address.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">address</span><span class="params">(self, new_address)</span>:</span></div><div class="line">        self._address = new_address</div><div class="line">    </div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">work</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._work</div><div class="line">    </div><div class="line"><span class="meta">    @work.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">work</span><span class="params">(self, new_work)</span>:</span></div><div class="line">        self._work = new_work</div><div class="line">    </div><div class="line"><span class="meta">    @property</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">salary</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._salary</div><div class="line">    </div><div class="line"><span class="meta">    @salary.setter</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">salary</span><span class="params">(self, new_salary)</span>:</span></div><div class="line">        self._salary = new_salary</div></pre></td></tr></table></figure>
+<p>从这里可以看到，我把字典变成了类。于是，当我想保存我自己的信息和小明的时候，我就可以这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">detail_kingname = Detail(address=<span class="string">'xxx'</span>, work=<span class="string">'engineer'</span>, salary=<span class="number">10000</span>),</div><div class="line">kingname = Person(name=<span class="string">'kingname'</span>, age=<span class="number">23</span>, sex=<span class="string">'male'</span>, detail=detail_kingname)</div><div class="line"></div><div class="line">detail_xiaoming = Detail(address=<span class="string">'yyy'</span>, work=<span class="string">'pm'</span>, salary=<span class="number">0.5</span>),</div><div class="line">xiaoming = Person(name=<span class="string">'xiaoming'</span>, age=<span class="number">65</span>, sex=<span class="string">'male'</span>, detail=detail_xiaoming)</div><div class="line"></div><div class="line">person_list = [kingname, xiaoming]</div></pre></td></tr></table></figure>
+<p>这样写，虽然说代码量确实翻了不止一倍，但是当我们后期维护的时候或者遇到问题来调试代码，我们就能发现这样写的好处。</p>
+<p>举一个很简单的例子，在写了代码一年以后，我已经对这段代码没有多少印象了，现在我得到了变量<code>person_list</code>, 我想查看每个人的工资。首先，由于<code>Person</code>和<code>Detail</code>这两个类是已经定义好的，分别放在<code>Person.py</code>和<code>Detail.py</code>两个文件中，于是我点开它们，就知道，原来工资是保存在<code>Detail</code>这个类中的，关键词是<code>salary</code>, 而<code>Detail</code>又是保存在<code>Person</code>中的，关键词是<code>detail</code>。</p>
+<p>所以要查看每个人的工资，我可以这样写:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> person <span class="keyword">in</span> person_list:</div><div class="line">    detail = person.detail</div><div class="line">    salary = detail.salary</div><div class="line">    print(salary)</div></pre></td></tr></table></figure>
+<p>但是如果我使用的是最上面字典的那种方式，那么情况就没有这么简单了。因为我不知道工资是在这个字典的什么地方。于是我首先要找到<code>person_list</code>是在哪里初始化的，然后看它里面有什么。在这个例子中，我是一次性把整个列表字典初始化完成的，直接找到列表初始化的地方就知道，原来这个<code>person_list</code>下面有很多个字典，字典有一个key 叫<code>detail</code>,这个<code>detail</code>的value本身又是一个字典，它下面的key<code>salary</code>保存了工资的信息。这似乎还比较方便。但是如果字典里面的信息不是一次性初始化完成的呢？万一<code>detail</code>这一个key是后面再加的呢？于是又要去找<code>detail</code>初始化的地方……</p>
+<p>第二个好处，使用Beans的时候，每个关键字是定义好的，<code>salary</code>就只能叫做<code>salary</code>，如果写成了<code>salarv</code>, 集成开发环境会立刻告诉你，<code>Detail</code>没有<code>salarv</code>这个属性。但是如果使用字典的方式，我在给字典赋值的时候，一不小心:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">detail[<span class="string">'salarv'</span>] = <span class="number">0.5</span></div></pre></td></tr></table></figure>
+<p>由于这里的<code>salarv</code>是字符串，所以集成开发环境是不会报错的，只有等你运行的时候,尝试读取<code>detail[&#39;salary&#39;]</code>里面的值，Python会告诉你:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;xxx.py&quot;, line 1, in &lt;module&gt;</div><div class="line">KeyError: &apos;salary&apos;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>将JavaBeans的思想用在Python中，避免字典套字典这种深层嵌套的情况，对于一些需要反复使用的字典，使用类来表示。这样做，别人读代码的时候会更加的容易，自己开发的时候，也会避免出现问题。</p>
+<p>本文首发于：<a href="http://kingname.info/2016/06/19/bean-in-python/">http://kingname.info/2016/06/19/bean-in-python/</a> 转载请注明出处。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/06/04/markdownPicPicker/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/04/markdownPicPicker/" itemprop="url">
+                  MarkdownPicPicker - Markdown 图片上传助手
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-04T16:40:06+08:00">
+                2016-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Markdown/" itemprop="url" rel="index">
+                    <span itemprop="name">Markdown</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/06/04/markdownPicPicker/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/04/markdownPicPicker/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><p>MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&lt;图片地址&gt;))复制到剪贴板中。</p>
+<p>项目地址：<a href="https://github.com/kingname/MarkdownPicPicker" target="_blank" rel="external">https://github.com/kingname/MarkdownPicPicker</a></p>
+<h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>第0.2版有以下功能：</p>
+<ol>
+<li>使用七牛云作为图床。</li>
+<li>将图片保存在本地</li>
+<li>图片上传成功后将Markdown格式的图片地址保存到剪贴板中</li>
+<li>全局监听键盘(默认不开启)</li>
+<li>独立配置文件</li>
+</ol>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置文件保存在<code>config.ini</code>文件中，其意义分别如下：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="section">[basic]</span></div><div class="line"><span class="attr">run_method</span> = bat # 设定程序的运行方式，bat为使用bat文件触发，global_listen为全局键盘监听方式</div><div class="line"><span class="attr">picture_folder</span> = pic #设定程序的运行方式，bat为使用bat文件触发，pyHook为全局键盘监听方式</div><div class="line"><span class="attr">picture_suffix</span> = png #截图的保存格式，可以选择bmp或者png</div><div class="line"><span class="comment"># now support qiniu only</span></div><div class="line"><span class="attr">picture_bed</span> = qiniu</div><div class="line"><span class="section"></span></div><div class="line">[global_listen]</div><div class="line"><span class="attr">short_key_one</span> = Lwin #快捷键第一个按键</div><div class="line"><span class="attr">short_key_two</span> = C #快捷键第二个按键</div><div class="line"><span class="section"></span></div><div class="line">[qiniu]</div><div class="line"><span class="comment">#七牛云的相关配置</span></div><div class="line"><span class="attr">access_key</span> = Q6sS422O05AwYD5aVqM3FqCcCpF36tqvyQ75Zvzw</div><div class="line"><span class="attr">secret_key</span> = <span class="number">6</span>QtAqqTxoSxZP-<span class="number">2</span>uoXROehxPLX2CCmoOaB2aLObM</div><div class="line"><span class="attr">container_name</span> = picturebed  #七牛云的图片储存位置</div><div class="line"><span class="attr">url</span> = http://<span class="number">7</span>sbpmp.com1.z0.glb.clouddn.com/&#123;&#125; #七牛云分配的默认域名</div></pre></td></tr></table></figure></p>
+<p>其中<code>access_key</code> 和 <code>secret_key</code> 可以在七牛云的控制面板中看到，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/20160605083025.png" alt=""><br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-22-43.png" alt=""> </p>
+<p><code>container_name</code> 为下图所示内容：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-24-40.png" alt=""> </p>
+<p><code>short_key_one</code> 和 <code>short_key_two</code> 为快捷键的两个按键，默认为左侧windows徽标键(<code>Lwin</code>) 和 字母 <code>C</code>。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>将程序配置好以后运行，创建一个批处理文件markdownpicpicker.bat, 其内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;G:\github\MarkdownPicPicker\venv\Scripts\activate &amp; cd /d G:\github\MarkdownPicPicker &amp; python MarkdownPicPicker.py &amp; deactivate &amp; exit&quot;</div></pre></td></tr></table></figure></p>
+<p>路径请根据实际情况修改。</p>
+<p>由于我使用了virtualenv, 所以需要在批处理中进入virtualenv的环境才能正常运行程序。对于将requirements.txt里面包含的库直接安装在全局的情况，bat 可以简化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;cd /d &lt;MarkdownPicPicker.py脚本所在文件夹路径&gt; &amp; python MarkdownPicPicker.py &amp; exit&quot;</div></pre></td></tr></table></figure>
+<p>不论哪种方式，均不要在任何相关的路径上出现中文，否则会导致不可预知的问题。</p>
+<p>然后右键选择批处理，发送到桌面快捷方式。接着右键快捷方式，属性，在“快捷键” 这一栏按下字母Q，它将自动填充为 <code>Ctrl + Alt + Q</code>, 确定。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-05-00-45-03.png" alt=""> </p>
+<p>只需要首先使用QQ截图或者其他截图工具将图片保存到剪贴板中，然后按下设定好的快捷键即可。Markdown格式的图片链接就已经保存到剪贴板中了。在需要使用的地方直接粘贴。</p>
+<p>不过这样设定的快捷键，按下以后会有大概一秒钟的延迟。推荐大家使用AutoHotKey来触发这个bat文件。</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><h3 id="Pillow-bug修正"><a href="#Pillow-bug修正" class="headerlink" title="Pillow bug修正"></a>Pillow bug修正</h3><p>本程序使用了Pillow库中的 <code>ImageGrab.grabclipboard()</code> 方法来获取剪贴板中的数据，但是由于这个方法有一个bug, 导致可能会爆以下错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Unsupported BMP bitfields layout</div></pre></td></tr></table></figure></p>
+<p>这个问题从Pillow 2.8.0开始，一直到3.2.0都没有被官方解决。目前有一个间接的解决办法。<br>请打开Python安装目录下的\Lib\site-packages\PIL\BmpImagePlugin.py文件，将以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</div><div class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</div><div class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</div><div class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</div><div class="line">    else:</div><div class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div><div class="line">else:</div><div class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div></pre></td></tr></table></figure>
+<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</div><div class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</div><div class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</div><div class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</div><div class="line">    &apos;&apos;&apos;新增内容开始&apos;&apos;&apos;</div><div class="line">    elif file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgb_mask&apos;] == (0xff0000, 0xff00, 0xff):</div><div class="line">        pass</div><div class="line">    &apos;&apos;&apos;新增内容结束&apos;&apos;&apos;</div><div class="line">    else:</div><div class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div><div class="line">else:</div><div class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div></pre></td></tr></table></figure></p>
+<p>就能解决本问题。</p>
+<h3 id="全局键盘监听"><a href="#全局键盘监听" class="headerlink" title="全局键盘监听"></a>全局键盘监听</h3><p>本程序还有一个功能是全局监听键盘，通过特殊的快捷键组合就可以直接触发读取图片上传图片的操作。但是由于这个功能使用到了pyHook这个库。但是这个库在设计上存在缺陷，如果当前窗体的标题包含Unicode字符时，会导致Python崩溃。因此这个功能默认不启动。</p>
+<h3 id="获取键盘按键"><a href="#获取键盘按键" class="headerlink" title="获取键盘按键"></a>获取键盘按键</h3><p>如果不清楚某个键盘按键对应的字符串是什么样子的，可以运行QueryKey.py这个文件，运行以后按下某个键，控制台上就会显示相应的信息。其中<code>Key</code>就是可以设置到<code>SHORT_KEY_ONE</code>和<code>SHORT_KEY_TWO</code>的内容。如图为按下键盘左Shift键以后显示的信息。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-23-14-30.png" alt=""> </p>
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ul>
+<li>支持更多的截图方式</li>
+<li>支持更多的图床</li>
+<li>窗口隐藏</li>
+<li>解决pyHook的问题</li>
+<li>适配Linux 和 Mac OS</li>
+</ul>
+<p><strong>本文首发地址-&gt; <a href="http://kingname.info/2016/06/04/markdownPicPicker/">http://kingname.info/2016/06/04/markdownPicPicker/</a> 转载请注明出处</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/05/29/raspberryCI-1/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/29/raspberryCI-1/" itemprop="url">
+                  搭建持续集成环境(一)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-29T14:04:49+08:00">
+                2016-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/持续集成/" itemprop="url" rel="index">
+                    <span itemprop="name">持续集成</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/05/29/raspberryCI-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/29/raspberryCI-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="开题说明"><a href="#开题说明" class="headerlink" title="开题说明"></a>开题说明</h2><p>软件开发的过程是一个从简单到复杂的过程。我们在开发的时候，会首先写出具有核心的功能的原型，满足基本的需求。但是这个原型使用非常的麻烦，有无数的配置，数据的格式也需要严格的规定，稍微一个不合法的输入输出就有可能导致程序的崩溃。</p>
+<p>接下来，在这个基本的原型上，我们逐渐进行完善，逐渐提高了程序的鲁棒性，用户体验逐渐的提高。新的需求出现了，于是又添加新的功能来满足新的需求。</p>
+<p>在这样一个逐渐搭建（迭代）起来的过程中，我们要进行不间断的测试来保证修改没有破坏代码的已有功能，也要防止引入新的bug.如果是团队开发，要保持代码风格的一致。如果多个人同时开发，又要防止代码修改的地方出现冲突。一个版本的代码开发完成了，测试也没有问题了，同时部署到几百台服务器上，完成新功能的上线。</p>
+<p>这样一个流程，如果手动来完成是相当痛苦的。于是，就需要持续集成来帮助我们完成这些琐碎的工作。开发者开发好了程序，本地测试没有问题了。使用Git提交到代码仓库，然后触发一系列的检查流程，如果出问题就给提交者发邮件提示问题，如果一切正常就开始代码审核(code review)，审核完成，合并代码。合并完成以后，会自动做好部署前面的集成测试，然后等待下一次部署周期到达以后自动将代码部署到各个服务器。</p>
+<p>持续集成这个系列的文章，就是要完成以上各个环节的搭建工作，从而让开发者把精力放在开发上，而不是一些无谓的体力劳动上。</p>
+<p>我会使用树莓派2 来搭建持续集成的环境，树莓派的系统为ArchLinux.</p>
+<h2 id="Jenkins"><a href="#Jenkins" class="headerlink" title="Jenkins"></a>Jenkins</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Jenkins是一个用Java编写的开源的持续集成工具。它是持续集成的核心部分，扮演了一个总管的角色，统筹联系各个部分。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -S jenkins</div></pre></td></tr></table></figure>
+<p>由于jenkins是Java写的，所以这个时候如果你的系统中没有Java的运行环境，他就会让你选择安装jre7-openjdk 或者是jre8-openjdk, 我选择的是安装jre8-openjdk. 这个时候我没有意识到，隐患已经埋下来了。</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>在ArchLinux中，什么东西都喜欢使用systemd来启动，所以执行以下命令来启动Jenkins：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
+<p>理论上这样就能使用了。但是当我在浏览器打开<code>http://192.168.2.107:8090</code>的时候却发现网页无法打开。于是检查它的log:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">journalctl -u jenkins</div></pre></td></tr></table></figure></p>
+<p>发现原来报错了。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/openjdkerror.png" alt=""></p>
+<p>难道说Java环境有问题？于是我是用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
+<p>来检查Java环境，果然, 连查看Java 的版本都报错了，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/javaversion.png" alt=""></p>
+<h3 id="重装"><a href="#重装" class="headerlink" title="重装"></a>重装</h3><p>对于这种情况，看起来不能使用openJDK了，于是去安装Oracle的JDK。</p>
+<p>首先要卸载openJdk:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -Rdd jre8-openjdk</div></pre></td></tr></table></figure>
+<p>这里使用<code>-Rdd</code> 而不是<code>-R</code>就是为了忽略依赖性。如果直接使用<code>-R</code>的话，会报错，无法卸载。</p>
+<p>如何判断卸载是否完成呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure>
+<p>提示找不到Java的时候，就说明卸载完成了。如果此时依然会爆出上面的core dumpd的错误, 就说明openJDK没有卸载干净。输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -Rdd jre</div></pre></td></tr></table></figure></p>
+<p>然后按键盘上面的Tab键，让自动完成功能来探测到底是哪个部分还没有卸载。</p>
+<p>完全卸载干净openJDK以后，就可以安装Oracle的JDK了。</p>
+<p>由于Oracle的JDK不能直接使用pacman来安装，所以需要使用AUR。树莓派的CPU是ARM架构，所以使用使用<a href="https://aur.archlinux.org/packages/jdk-arm/" target="_blank" rel="external">arm版的JDK</a>。如果有朋友是在X86的电脑上面安装的话，可以使用<a href="https://aur.archlinux.org/packages/jdk" target="_blank" rel="external">x86版的JDK</a>。</p>
+<p>对于安装AUR的文件，首先从左侧<a href="https://aur.archlinux.org/cgit/aur.git/snapshot/jdk-arm.tar.gz" target="_blank" rel="external">Download snapshot</a>下载pkg文件，然后使用以下命令来安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tar -xvf jdk-arm.tar.gz</div><div class="line">cd jdk-arm</div><div class="line">makepkg -sri</div></pre></td></tr></table></figure>
+<p>然后就等待下载安装文件然后完成安装。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/aurinstall.png" alt=""></p>
+<p>完成以后，我们再执行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
+<p>就可以正常看到Java的版本信息了。</p>
+<h3 id="再启动"><a href="#再启动" class="headerlink" title="再启动"></a>再启动</h3><p>再一次启动Jenkins:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
+<p>也可以正常启动了。（输入命令以后等待1分钟左右，让服务完全启动起来。）如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/jenkins.png" alt=""></p>
+<p>根据它的提示读取密码，并填写到网页上，于是Jenkins就算是安装成功了。</p>
+<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>插件是Jenkins的精华，在第一次进入的时候，Jenkins就会让你选择插件。这里我选择<br><code>Select plugins to install</code>.<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/plugin.png" alt=""></p>
+<p>它默认已经勾选了一些插件，我增加了以下的插件：</p>
+<ul>
+<li>Source Code Management 下面的Github plugin</li>
+<li>Notifications and Publishing下面的 SSH plugin</li>
+<li>Pipelines and Continuous Delivery 下面的 Parameterized Trigger plugin</li>
+</ul>
+<p>选择好以后点击 install就可以等待它安装了。如果发现漏选了或者多选了也没有关系，因为之后还可以手动管理这些插件。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这一篇讲到了如何在树莓派上面搭建Jenkins并安装插件。下一篇将会讲到Jenkins Job的创建和配置和使用。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/05/19/screenshot/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/19/screenshot/" itemprop="url">
+                  使用Python保存截图
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-19T22:47:29+08:00">
+                2016-05-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/05/19/screenshot/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/19/screenshot/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>在<a href="http://jikexueyuan.com" target="_blank" rel="external">极客学院</a>讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。</p>
+<p>如果使用PIL，这个需求只需要三行代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</div><div class="line">pic = ImageGrab.grab()</div><div class="line">pic.save(<span class="string">'1.jpg'</span>)</div></pre></td></tr></table></figure></p>
+<p>但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实现截图的功能。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于被控端使用了win32api, 因此有一个方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32api.keybd_event</div></pre></td></tr></table></figure></p>
+<p>这个方法可以模拟键盘的按键动作。因此，解决方法就比较的明显了：</p>
+<ol>
+<li>模拟键盘上面的“Print Screen” 键按下</li>
+<li>从剪贴板中读取出截图</li>
+<li>将截图保存到本地 </li>
+</ol>
+<p>第一步非常的简单，实用win32api 和 win32con，两行代码就能实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import win32api</div><div class="line">import win32con</div><div class="line">win32api.keybd_event(win32con.VK_SNAPSHOT, 0)</div></pre></td></tr></table></figure></p>
+<p>其中win32con这个库里面包含了很多定义好的和Windows相关的常量，而VK_SNAPSHOT就是Print Screen键的键位码。后面的数字0表示截取整个屏幕。如果改成数字1，表示截取当前窗口。</p>
+<p>那么现在问题来了，在不实用PIL的情况下，如何将剪贴板你们的图片保存到本地？</p>
+<p>win32api有一个模块 win32clipboard 是负责剪贴板相关的操作。它有一个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(formats)</div></pre></td></tr></table></figure></p>
+<p>这个方法可以从剪贴板里面读取数据。但是需要指定数据的格式。从<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff729168\(v=vs.85\" target="_blank" rel="external">这里</a>.aspx)可以查看到更多的标准剪贴板格式(<em>Standard Clipboard Formats</em>).</p>
+<p>一开始我使用的formats是<strong>CF_BITMAP</strong>，程序返回的是一串整数，怀疑应该是一个内存地址。这也和这个format的描述：</p>
+<blockquote>
+<p>A handle to a bitmap (<strong>HBITMAP</strong>).</p>
+</blockquote>
+<p>是一致的，它是一个handle。</p>
+<p>我也尝试过CF_TIFF, 不过程序直接报错了，可见我使用Print Screen截图以后，剪贴板里面的图片格式并不是TIFF。</p>
+<p>经过查阅其他资料，我最后确定使用了CF_DIB。</p>
+<blockquote>
+<p>A memory object containing a BITMAPINFO structure followed by the bitmap bits.</p>
+</blockquote>
+<p>这个描述说明，CF_DIB返回的是一个内存对象，包含了BIT格式图片的信息。经过测试使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(win32con.CF_DIB)</div></pre></td></tr></table></figure></p>
+<p>以后，可以得到一个很大的字符串。显然这个字符串就是图片的内容了。但是当我把这个字符串写入到bmp格式的文件后，却发现图片无法打开。</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在StackOverflow上，我遇到了一个非常好的老先生： <a href="http://stackoverflow.com/users/355230/martineau" target="_blank" rel="external">Mr. martineau</a>他为了解答了问题，并给我提供了解决办法。以下内容翻译自martineau先生的回答，原文请戳-&gt;<a href="http://stackoverflow.com/a/35885108/3922976" target="_blank" rel="external">http://stackoverflow.com/a/35885108/3922976</a></p>
+<blockquote>
+<p>你的方法的主要问题在于，你写入文件的字符串缺少了.bmp 文件头，这个文件头是<code>BITMAPFILEHEADER</code>结构。</p>
+<p>为了创建这个文件头，使用<code>GetClipboardData()</code>返回的字符串必须要进行解码(<em>decoded</em>)。对于<code>CF_DIB</code>格式来说，返回的字符串的前面一部分就是<code>BOTMAPINFOHEADER</code>。</p>
+<p>对于各种各样有不同种类压缩的<code>DIB</code>来说，这种文件头结构是非常的普遍的。不过幸好对截图来说，只需要简单的无压缩的RGBA像素。</p>
+<p>由于<code>BOTMAPFILEHEADER</code>被放在了bf0ffBits的区域里，所以事情就变得很容易了。而其他的情况，例如大尺度的颜色表跟在<code>BITMAPINFOHEADER</code> 和像素数组的开头。</p>
+<p>（这一段我看不太懂，还请如果有能正确解释这段话的朋友指正。原文是：</p>
+<blockquote>
+<p>That fact makes things much easier because otherwise determining the value to put in the bfOffBits field of the BITMAPFILEHEADER would be complicated by the fact that in most other cases there’s also a variably-sized color table following the BITMAPINFOHEADER and the start of the pixel array.）</p>
+</blockquote>
+<p>下面的代码是一个简单的例子（仅仅针对这个需求）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">import ctypes</div><div class="line">from ctypes.wintypes import *</div><div class="line">import win32clipboard</div><div class="line">from win32con import *</div><div class="line">import sys</div><div class="line"></div><div class="line">class BITMAPFILEHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;bfType&apos;, WORD),  # file type (&quot;BM&quot;)</div><div class="line">        (&apos;bfSize&apos;, DWORD),  # file size in bytes</div><div class="line">        (&apos;bfReserved1&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfReserved2&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfOffBits&apos;, DWORD),  # byte offset to the pixel array</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPFILEHEADER = ctypes.sizeof(BITMAPFILEHEADER)</div><div class="line"></div><div class="line">class BITMAPINFOHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;biSize&apos;, DWORD),</div><div class="line">        (&apos;biWidth&apos;, LONG),</div><div class="line">        (&apos;biHeight&apos;, LONG),</div><div class="line">        (&apos;biPLanes&apos;, WORD),</div><div class="line">        (&apos;biBitCount&apos;, WORD),</div><div class="line">        (&apos;biCompression&apos;, DWORD),</div><div class="line">        (&apos;biSizeImage&apos;, DWORD),</div><div class="line">        (&apos;biXPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biYPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biClrUsed&apos;, DWORD),</div><div class="line">        (&apos;biClrImportant&apos;, DWORD)</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPINFOHEADER = ctypes.sizeof(BITMAPINFOHEADER)</div><div class="line"></div><div class="line">win32clipboard.OpenClipboard()</div><div class="line">try:</div><div class="line">    if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_DIB):</div><div class="line">        data = win32clipboard.GetClipboardData(win32clipboard.CF_DIB)</div><div class="line">    else:</div><div class="line">        print(&apos;clipboard does not contain an image in DIB format&apos;)</div><div class="line">        sys.exit(1)</div><div class="line">finally:</div><div class="line">    win32clipboard.CloseClipboard()</div><div class="line"></div><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div><div class="line"></div><div class="line">if bmih.biCompression != BI_BITFIELDS:  # RGBA?</div><div class="line">    print(&apos;insupported compression type &#123;&#125;&apos;.format(bmih.biCompression))</div><div class="line">    sys.exit(1)</div><div class="line"></div><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0, SIZEOF_BITMAPFILEHEADER)  # zero structure</div><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div><div class="line">bmfh.bfSize = SIZEOF_BITMAPFILEHEADER + len(data)  # file size</div><div class="line">SIZEOF_COLORTABLE = 0</div><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div><div class="line"></div><div class="line">bmp_filename = &apos;clipboard.bmp&apos;</div><div class="line">with open(bmp_filename, &apos;wb&apos;) as bmp_file:</div><div class="line">    bmp_file.write(bmfh)</div><div class="line">    bmp_file.write(data)</div><div class="line"></div><div class="line">print(&apos;file &quot;&#123;&#125;&quot; created from clipboard image&apos;.format(bmp_filename))</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>经过测试，这一段代码成功的实现了读取剪贴板的图片并保存到本地。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这段代码使用ctypes库来实现指针的功能，从而在内存中操作数据。这里定义了两个结构体，<code>BITMAPFILEHEADER</code> 和<code>BITMAPINFOHEADER</code>，于是，使用sizeof获取到了他们的大小。那么使用指针，从使用<code>GetClipboardData()</code>获取到的数据的头部开始移动，分别移动这两个结构体的大小，也就获取到了这两个结构体在内存中的数据。</p>
+<p>代码中使用了<code>memmove</code>和<code>memset</code>两个内存操作的方法。从ctypes的官方文档上，我们可以看到这两个方法有如下的定义：</p>
+<blockquote>
+<p><code>ctypes.memmove(dst, src, count)</code></p>
+<p>Same as the standard C memmove library function: copies count bytes from src to dst. dst and src must be integers or ctypes instances that can be converted to pointers.</p>
+<p><code>ctypes.memset(dst, c, count)</code></p>
+<p>Same as the standard C memset library function: fills the memory block at address dst with count bytes of value c. dst must be an integer specifying an address, or a ctypes instance.</p>
+</blockquote>
+<p>所以可以看出，代码里面的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div></pre></td></tr></table></figure></p>
+<p>从内存中拷贝出来了<code>BITMAPINFOHEADER</code>这么大的一块的数据，并保存到了<code>bmih</code>这个变量中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0,     SIZEOF_BITMAPFILEHEADER)</div></pre></td></tr></table></figure></p>
+<p>这一段在内存中开辟出了<code>BITMAPFILEHEADER</code>这么大一块区域，并全部填充为0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div></pre></td></tr></table></figure></p>
+<p>这一行代码使用了位操作。首先<code>ord(&#39;B&#39;)</code>的值为66，换成二进制就是<code>1000010</code>；<code>ord(&#39;M&#39;)</code>的值为77，换成二进制就是<code>1001101</code>，然后向左移动8位，得到<code>100110100000000</code>，这个值再与<code>1000010</code>取位或，得到<code>100110101000010</code>。</p>
+<p>最后，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div></pre></td></tr></table></figure></p>
+<p>拼装出头部的大小。然后以二进制方式，首先写文件头, 再写剪贴板获取到的字符串到本地的<code>.bmp</code>文件中，完成图片的生成。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Python一些轮子确实非常好的提高了开发效率，例如PIL，三行代码实现了我的需求。Python在快速开发方面确实非常的方便，但是涉及到底层的一些操作的时候，还是不得不使用C语言的一些接口来进行内存的操作。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/01/19/ml2/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/19/ml2/" itemprop="url">
+                  机器学习（二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-01-19T22:32:10+08:00">
+                2016-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/01/19/ml2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/19/ml2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="多特征"><a href="#多特征" class="headerlink" title="多特征"></a>多特征</h2><p>在现实的问题中，特征变量往往不仅仅只有一个。我们评估一个人能否成为一个人生赢家，不仅仅要考虑他的家产，还有考虑他的父亲的背景，和他的X能力，他的朋友圈，他的长相，他的身高，体重，等等。这个时候，我们就得到了类似于下面这一个方程：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/newfunc.PNG" alt=""></p>
+<p>方程中，各个下标的x分别表示各个不同的特征。这里我只选择了三个特征。</p>
+<p>这就叫做多元线性回归。</p>
+<h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><h3 id="多变量的梯度下降"><a href="#多变量的梯度下降" class="headerlink" title="多变量的梯度下降"></a>多变量的梯度下降</h3><p>对于上面这种具有多个特征的情况，我们仍然可以使用梯度下降算法来求最各个下标的θ，从而使代价函数最小。</p>
+<p>多元线性规划的代价函数如图：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/mutij.PNG" alt=""></p>
+<p>通过代价函数求θ的算法如下：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/rep.PNG" alt=""></p>
+<p>可以看到，这个算法相当的复杂。不过还好现在可以让计算机帮我们计算。</p>
+<h3 id="特征缩放"><a href="#特征缩放" class="headerlink" title="特征缩放"></a>特征缩放</h3><p>用一个例子来表述什么叫做特征缩放：小时候，我一个月的零用钱只有20元，掉了5元我就会感到很心痛。但是现在，掉了100元我也觉得没有什么。对于一些土豪，一万元也只是毛毛雨。</p>
+<p>通过这个例子我想表达的是，做对比的时候应该要在同一个数量级下面，才有可比性。对于多元线性规划同样如此。</p>
+<p>对于有多个特征的情况，假设一个特征的变化是1-10，另一个特征的变化是10000-20000，在这种情况下，使用：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/newfunc.PNG" alt=""></p>
+<p>这个公式来计算的时候，较小的那个特征就会被较大的那个特征掩盖。这样造成的后果就是，使用梯度下降的时候，迭代次数会非常大才能收敛，效率非常的低。</p>
+<p>为了解决这个问题。我们就需要使用特征缩放。</p>
+<p>特征缩放分为普通的缩放和归一化特征缩放。其中普通的特征缩放是归一化特征缩放的特殊情况。我们用公式来说话：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/sc.PNG" alt=""></p>
+<p>这是归一化特征缩放的公式。在这个公式中，:=表示赋值，也就是说，这个值用缩放以后的值来代替。等号右边的分子上，减号左侧的项表示每个特征的某一个具体的样本值，减号右侧的项表示每个特征所有数据的平均值。S表示每个特征说有样本中，最大值减去最小值。</p>
+<p>对于非归一化的特征缩放，令分子中，减号右侧的项恒为零。（不支持输入上下标真是太麻烦了。。。。）</p>
+<p>这样的好处是，可以使得各个特征的样本的大小都转化到-1到1之间，减少由于差距太大导致的误差。并大大降低梯度下降的迭代次数。</p>
+<h3 id="学习率"><a href="#学习率" class="headerlink" title="学习率"></a>学习率</h3><p>我们知道，在梯度下降公式里面有一个参数ɑ， 这个参数的名字叫做学习率。这个参数决定了梯度下降的快慢。</p>
+<p>一般来说，需要根据经验选择合适的ɑ，如果ɑ太小，梯度下降会收敛很慢，需要迭代很多次才能得到结果。但是如果ɑ太大，就会导致梯度下降发散，从而完全得不到正确的结果。所谓步子太大容易扯着蛋。</p>
+<p>但是我们可以使用一个图来帮助我们确定ɑ。我们首先假设ɑ=0.1， 然后，迭代几百次（当然是用计算机来帮忙），分别计算此时代价函数的值j(θ).在一个直角坐标系上，横坐标为迭代次数，纵坐标为j(θ)作图。</p>
+<p>一般来说，会得到下图中三种不同的趋势：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/learnrate.PNG" alt=""></p>
+<p>其中绿色就是收敛比较快的，这个学习率是比较符合要求的；而蓝色的线表示学习率太低，需要稍稍增大；红色表示学习率太大，需要减小。</p>
+<p>另外，根据这个图，当图像趋近于渐进线或者随着迭代次数增加，j(θ)变化很小的时候，就表示迭代完成了，这个时候的θ值也就是我们需要的结果了。</p>
+<h2 id="特征与多项式回归"><a href="#特征与多项式回归" class="headerlink" title="特征与多项式回归"></a>特征与多项式回归</h2><p>在机器学习的过程中，涉及到的变量是有很多的，现实中的问题不会像一元线性规划那么简单。所以对于采集到的数据来说，也必然不是分布呈一条直线那么简单。如下图：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/fenbu.PNG" alt=""></p>
+<p>这个时候，拟合出来的曲线就不是一条直线了。</p>
+<p>在高等数学中可以证明，可以使用一个多项式级数（又叫<a href="https://zh.wikipedia.org/wiki/%E5%B9%82%E7%BA%A7%E6%95%B0" target="_blank" rel="external">幂级数</a>）来近似的表示一条曲线的解析式。在可以接受的误差范围内，只需要多项式的前若干项即可。</p>
+<p>所以，对于样本点，总可以找到这样一个多项式，使其代表的图像穿过尽量多的点：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/poly-1.PNG" alt=""></p>
+<p>这里我只取了前三项，在实际情况中可能会有十多项或者几十上百项。</p>
+<p>对于这种形式，我们又如何分别求各个下标的θ呢？这个时候就可以使用一个等价来处理了。</p>
+<p>我们令：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/transfer.PNG" alt=""></p>
+<p>于是方程转化为：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/newfunc.PNG" alt=""></p>
+<p>这样我们就可以使用梯度下降来求各个下标的θ了。</p>
+<h2 id="正规方程"><a href="#正规方程" class="headerlink" title="正规方程"></a>正规方程</h2><p>使用梯度下降需要设定学习率，如果学习率选定的不好，轻则梯度下降收敛慢，效率低，重则直接发散，无法得到结果。</p>
+<p>而是用正规方程就可以解决这个问题。正规方程不需要迭代，也不需要选择学习率，只需要解一个矩阵方程就能得到结果。</p>
+<p>首先看下图，这是一个三元的线性规划问题：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/n1-1.PNG" alt=""></p>
+<p>首先增加一个第0列，变成如下图所示：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/n2-1.PNG" alt=""></p>
+<p>然后我们做一个矩阵X使得：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/x.PNG" alt=""></p>
+<p>同时作一个<strong>y</strong>向量：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/y.PNG" alt=""></p>
+<p>这个时候，就有：</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/theta.PNG" alt=""></p>
+<p>使用Matlab或者Octave计算，就能得到使得代价函数最小的各个下标的θ了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一周讲的是多元线性规划和使用梯度下降求解多元线性规划的问题。同时讲解了计算梯度下降的两个技巧，分别是特征缩放和学习率的选择。最后讲解了正规方程，在特征数小于10000的时候，使用正规方程，可以大大减小计算的压力。</p>
+<h3 id="小广告："><a href="#小广告：" class="headerlink" title="小广告："></a>小广告：</h3><p>欢迎大家关注我的微信公众号：未闻Code</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/qrcode_for_gh_2873653fd7af_430--1-.jpg" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/01/11/ml-1/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/11/ml-1/" itemprop="url">
+                  机器学习（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-01-11T00:12:34+08:00">
+                2016-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/01/11/ml-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/11/ml-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>最近在Coursera 上学习斯坦福大学的机器学习。根据费曼学习法的理论，教是最好最快最有效果的学习方法。因此，我将会开一系列机器学习相关的文章，同步我的学习进度，并用我自己的理解和语言将我学到的内容写出来。</p>
+<p>为了防止拖延症的发作，我将会严格制定时间表，尽最大可能保证每周一篇文章。</p>
+<p>希望这一系列文章能让我更好的理解机器学习，也希望同时能为大家提供学习机器学习的入门参考。</p>
+<h2 id="第一周"><a href="#第一周" class="headerlink" title="第一周"></a>第一周</h2><h3 id="机器学习定义"><a href="#机器学习定义" class="headerlink" title="机器学习定义"></a>机器学习定义</h3><blockquote>
+<p>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E. ——Mitchell provides</p>
+</blockquote>
+<p>定义说的那么复杂，简单的说，机器学习就是：一个程序，这个程序可以通过一些已知的现象和结果来推测一些未知的现象应该有的结果。</p>
+<h3 id="监督学习和非监督学习"><a href="#监督学习和非监督学习" class="headerlink" title="监督学习和非监督学习"></a>监督学习和非监督学习</h3><p><strong>监督学习</strong>： 有答案的学习过程。</p>
+<p><strong>非监督学习</strong>： 没有答案的学习过程。</p>
+<p>我们回想一下自己小学时候，做作业，老师站在旁边，我做完一道题，老师看了以后说，答案是正确的。这就是监督学习的过程。</p>
+<p>我们再想想现在，大家在大学或者工作以后，接触到的东西，有时候是没有标准答案的，我们只能凭自己认为是正确的方向去做。做完以后也没有办法知道这样的做法是正确的还是错误的。这就是非监督学习的过程。</p>
+<p>当然，上面两个例子里面，我举例用的“学习”，仅仅是监督学习的“学习”的一小部分。监督学习的“学习”还包含很多内容，包括发现，探索等等。</p>
+<h3 id="回归和分类"><a href="#回归和分类" class="headerlink" title="回归和分类"></a>回归和分类</h3><p>回归和分类属于监督学习。</p>
+<p><strong>回归</strong>：回归就是根据输入的数据得到<strong>连续</strong>输出的过程。</p>
+<p><strong>分类</strong>：分类就是根据输入的数据得到<strong>离散</strong>输出的过程。</p>
+<p>所以回归和分类，本质上是一个过程，或者说算法。也就是我们常说的分类算法或者回归算法。</p>
+<p>这里用来区分回归和分类，主要的指标就是看输出是否连续。对于输入是没有特别的要求的。输入可以是连续的，也可以是离散的，决定这个算法是分类还是回归，由输出来决定。</p>
+<p>我们用房价来举例子，你有一套房子，占地100平米，可以卖多少钱？我告诉你可以卖1000万。你朋友问我他的房子120平米，可以卖多少钱，我告诉他，可以卖1200万。这样你告诉我一个大小，我告诉你可以卖多少钱，这就叫做回归。你给我不同的大小，我就给你不同的价格。</p>
+<p>同一个例子，什么是分类呢？你有一套房子，占地100平米，准备1000万出售，能不能卖出去，我告诉你，不能。你朋友的房子120平米，1200万出售，能不能卖出去，我说可以。这里的结果只有两个，“能卖出去”和不能卖出去，所以这个结果是离散的。</p>
+<h3 id="集群和关联"><a href="#集群和关联" class="headerlink" title="集群和关联"></a>集群和关联</h3><p>集群和观念属于非监督学习。</p>
+<p><strong>集群</strong>：根据一些特征来对一大群数据分组。</p>
+<p><strong>关联</strong>：已知一些已有的现象和结论，又来了一个类似的现象，把它和某个已知的结论联系起来。</p>
+<p>集群很类似于分类，不同在于是否知道正确的答案。分类是知道答案的，集群是不知道答案的。</p>
+<p>关联和有标准答案的基于规则的联系不同。关联里面，那些已知的现象和结论，都是评估出来的，并不一定正确。比如，看到流鼻涕和感冒，这就属于一种关联，但是流鼻涕并不一定都是感冒。</p>
+<h3 id="一元线性规划"><a href="#一元线性规划" class="headerlink" title="一元线性规划"></a>一元线性规划</h3><p>一元线性规划属于监督学习。</p>
+<p>对于有些事件，导致结果的因素只有一个，于是就可以用一元线性规划来估算出一个一次函数，通过这个函数来确定对于新的输入，应该有什么输出。</p>
+<p>对于学习过初中物理的同学来说，应该记得在处理实验数据的时候，老师说过这样一句话：</p>
+<blockquote>
+<p>作一条线尽量多的穿过数据点，并让不在线上的点均匀分布在线的两侧。——物理老师。</p>
+</blockquote>
+<p>如图：<br><img src="http://ghost.kingname.info/content/images/2016/01/2.jpg" alt=""></p>
+<p>所谓的一元线性规划，就是做这一条线，或者准确的说，是确定这个一次函数的过程。</p>
+<p>举个例子，按时间计费的宽带上网，上网的费用仅仅由上网的时间决定，上的多就多缴费，上得少就少缴费。知道了上网的时间，就知道了上网的费用。这就是一个一元线性规划的问题。并且可以准确的确定一个一次函数，输入时间，输出的费用就一定是上网的实际花费。</p>
+<p>当然，有一些情况下，这个一次函数只是近似情况，只能保证大多数情况在误差范围内符合。</p>
+<p>写成数学公式，我们用</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/1.jpg" alt=""></p>
+<p>来表示，其中θ0和θ1都是参数，输入是x, 输出是y或者hθ(x).</p>
+<h4 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h4><p><img src="http://ghost.kingname.info/content/images/2016/01/3.jpg" alt=""><br>看起来很复杂的样子，但是大家注意，其实这就是一个方差。只不过多除以了一个2.代价函数就是实际测量值和预测值的误差的方差除以2。</p>
+<p>代价函数是由θ0和θ1为变量的函数，通过计算代价函数求θ0和θ1，并且需要保证求出来的θ0和θ1使得由他们确定的一次函数，在误差范围内，<strong>尽可能好的</strong>符合已知情况。</p>
+<p>而一元线性规划的过程，就是求代价函数的极小值。这里我说的是极小值而不是最小值，因为<a href="https://zh.wikipedia.org/wiki/%E6%9E%81%E5%80%BC" target="_blank" rel="external">极值</a>和最值是不一样的。</p>
+<p>但是值得庆幸的是，对于一元线性规划的代价函数来说，极小值就是最小值，这在数学上是可以证明的。</p>
+<h4 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h4><p>梯度下降是一种计算θ0和θ1的算法。</p>
+<p>大家设想，现在用直升机把你放在了半山腰，然后蒙着你的眼睛，让你下到山谷去，虽然这个任务很困难，但是还是可以做到的。利用脚去感知，发现往左是坡度向上，往右坡度向下，于是你就往右慢慢挪动一小步，然后再重复刚才的动作，发现现在右前方坡度是向下的，于是你又慢慢往右挪动一小步，这样一步一步的移动，最终你会移动到某个山谷里面去。</p>
+<p>梯度下降也是同样的原理，这里的梯度就可以理解成你走的一小步，每一小步就像是下要给台阶。</p>
+<p>但是这一小步你要走多长呢？这个就是一个系数，叫做学习率。如果这个系数设定小了，那走的很慢，但是如果设定大了，比如一步垮了一光年那么远，就会导致丢失目标，甚至是结果发散。<br><img src="http://ghost.kingname.info/content/images/2016/01/4-1.jpg" alt=""><br>这就是梯度下降的算法描述了，大家可以根据代价函数的公式，自己确定一下梯度下降的具体算法。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一周讲了机器学习的基本概念以及一元线性规划，同时讲了求解一元线性规划代价函数的梯度下降算法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2015/12/02/opinionchange/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/12/02/opinionchange/" itemprop="url">
+                  对Java与设计模式态度的转变
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-12-02T00:03:08+08:00">
+                2015-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/态度/" itemprop="url" rel="index">
+                    <span itemprop="name">态度</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2015/12/02/opinionchange/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/02/opinionchange/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我一直自诩自己是Java一生黑。也从来不屑于设计模式这种东西，因为我一直认为，设计模式是为了解决Java的一些缺陷才存在的。对于Python来说，设计模式并不重要。不过最近在做一个新功能开发的时候对Java的态度有了一些改变。<more></more></p>
+<p>事情的起因是在一个大概有十万行代码的框架中重构他的写Log方式。这个框架原来的Log模块是原作者自己写的，通过打开关闭文件来写Log。现在需要更换成Python的logging模块。对于一个设计相当糟糕的系统来说，要重构是很麻烦的事情。</p>
+<p>在原来的Log方式中，文件的句柄通过参数的形式到处传，常常十多个文件句柄同时打开，还会互相影响，相当的混乱。最后由于需要一个地方来将所有模块的Log统一起来，还给系统的入口再加了一个入口，新的入口使用subprocess来执行</p>
+<pre><code>`python xxxx`
+</code></pre><p>调用原来的系统模块，并将控制台的输出重定向到文件。</p>
+<p>重构的过程相当的痛苦，花了我几乎整个Sprint的时间，细节我会在后续的文章中讲到。今天我要讲的是单例模式让我对设计模式看法的一些改变。</p>
+<p>对Python来说，是可以将一个类的实例通过参数的形式直接传递的，所以看起来似乎Python并不需要单例模式。对于新写的代码来说，这当然没有什么问题。但是对已有的代码添加新的功能的时候，这个方法就不太适用了。</p>
+<p>如果原来一个方法，它的参数已经有七八个了，这个时候你在加一个参数上去，并不确定会产生什么样的影响。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def foo(a, b, c):</div><div class="line">		do()</div><div class="line">		some()</div><div class="line">		thing()</div></pre></td></tr></table></figure>
+<p>如果想加一个新的参数，但是又不影响其他的已经在调用这个方法的地方，当然可以这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> def foo(a, b, c, d=None):</div><div class="line">do()</div><div class="line">some()</div><div class="line">thing()</div></pre></td></tr></table></figure>
+<p>如果代码量不大，当然没有问题，但是如果代码量大起来了，这样就会出问题。</p>
+<p>例如，现在有一个实例instanceA 在module1 中初始化了，而module3如果想使用instanceA，就必须想办法让instanceA 传递到module3去。但是原本module3和module1并没有什么关系，现在因为需要这个instanceA, 怎么办呢？这个时候发现instanceA 被传递到了module2, 然后又从module2传递到了module4, 最后在module4里面终于找到了一个地方，可以强行把instanceA和module3联系在一起。这样一来，这几个module他们被强制耦合在了一起。</p>
+<p>对于程序来说，耦合程度应该越低越好，所以这样的做法，非常不妥。</p>
+<p>于是，这个时候单例模式就出现了。</p>
+<p>对于module3来说，如果他想要instanceA, 他完全可以再重新new一个，由于是单例模式，于是新的instance 和instanceA是完全一样的。这样就并没有增加多余的耦合关系。</p>
+<p>另外，在极客学院录课的时候，最近有涉及到程序集之间通信。这个时候偶然发现设计模式里面的观察者模式可以对我的设计起到相当大的帮助。</p>
+<p>就像以前某人说的，你要讨厌一个东西，你必须要比喜欢这个东西的人更了解它。而我以前讨厌Java仅仅是因为Java看起来太罗嗦，太多冗余代码。而我不屑于设计模式，更是因为它是从Java来的。</p>
+<p>现在看起来，态度真的应该改变一下了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2015/10/07/lxmlencoding/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/10/07/lxmlencoding/" itemprop="url">
+                  使用etree.HTML的编码问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-07T17:56:47+08:00">
+                2015-10-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2015/10/07/lxmlencoding/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/07/lxmlencoding/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="出现问题"><a href="#出现问题" class="headerlink" title="出现问题"></a>出现问题</h2><p>今天指导一个学生爬取新浪体育手机版的时候，发现lxml.etree.HTML处理网页源代码会默认修改编码，导致打印出来的内容为乱码。爬取的网址为：<a href="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" title="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" target="_blank" rel="external">http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10</a></p>
+<p>首先导入我们需要用到的库文件，然后设置环境：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#-*_coding:utf8-*-</div><div class="line">import requests</div><div class="line">from lxml import etree</div><div class="line">import sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(&quot;utf-8&quot;)</div></pre></td></tr></table></figure>
+<p>然后获取网页的源代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">r = requests.get(url=&apos;http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10&apos;)# 最基本的GET请求</div><div class="line">r.encoding = &apos;utf-8&apos;</div><div class="line">r = r.content</div><div class="line">print r</div></pre></td></tr></table></figure></p>
+<p>打印出网页源代码，发现中文是乱码，如图：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding1.gif" alt=""></p>
+<p>这是小问题，使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>这篇文章中讲解的方法，轻松解决。</p>
+<p>将：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure></p>
+<p>修改为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content.decode(&apos;utf-8&apos;).encode(&apos;gbk&apos;)</div></pre></td></tr></table></figure></p>
+<p>可以正常显示中文，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding2.png" alt=""></p>
+<p>接下来，使用etree.HTML处理源代码，然后使用Xpath提取内容，一切似乎看起来轻车熟路。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding3.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r)</div><div class="line">title = contentTree.xpath(<span class="string">'//h1[@class="art_title_h1"]/text()'</span>)</div><div class="line"><span class="keyword">print</span> title[<span class="number">0</span>]</div></pre></td></tr></table></figure>
+<p>但是当我打印出来，才发现问题没有这么简单。如图：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding4.png" alt=""></p>
+<p>这个时候，我发现使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>讲到的办法已经不能解决问题了。</p>
+<p>通过调试，我发现抓取到的内容是乱码：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding5.png" alt=""></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="使用Scrapy"><a href="#使用Scrapy" class="headerlink" title="使用Scrapy"></a>使用Scrapy</h3><p>使用Scrapy的Xpath，正常提取需要的内容：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding6.png" alt=""></p>
+<h3 id="继续用etree"><a href="#继续用etree" class="headerlink" title="继续用etree"></a>继续用etree</h3><p>实际上，Scrapy的Xpath底层还是调用的lxml,那为什么它可以，而我直接使用lxml的etree.HTML处理源代码然后Xpath提取内容就出乱码呢？</p>
+<p>显然这应该是编码的问题，在使用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">etree.HTML(r)</div></pre></td></tr></table></figure>
+<p>处理源文件的时候，由于没有指定编码，所以它使用了一个默认编码，从而导致和UTF-8冲突，产生乱码。</p>
+<p>经过查阅lxml.etree.HTML的文档，我发现etree.HTML有一个参数是parser,这个参数不是必须的，因此省略以后它就会自动使用一个默认的parser。既然如此，那我手动指定一个：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r, parser=etree.HTMLParser(encoding=<span class="string">'utf-8'</span>))</div></pre></td></tr></table></figure>
+<p>这里我指定了etree.HTMLParser来作为一个parser,同时，etree.HTMLParser可以接受编码作为参数。于是我指定为UTF-8。</p>
+<p>运行看看效果：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding7.png" alt=""></p>
+<p>继续报错，但是出错信息改变了，提示utf8不能解码。请注意第11行，现在源代码是gbk编码，所以使用UTF-8不能解码。于是可以把第11行重新改回原来的样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure>
+<p>再一次运行，发现正常抓取信息：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding8.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一次的问题提示我们：遇到问题，通过经验解决不了的时候，请回归文档。</p>
+<p><em>原文发表在：<a href="http://blog.kingname.info/2015/10/07/lxmlencoding/" target="_blank" rel="external">http://blog.kingname.info/2015/10/07/lxmlencoding/</a>转载请注明出处！</em></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">MediaTek软件工程师，极客学院讲师。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"kingname"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

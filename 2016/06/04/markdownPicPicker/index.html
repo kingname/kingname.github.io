@@ -1,0 +1,791 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,Markdown," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="项目介绍MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&amp;lt;图片地址&amp;gt;))复制到剪贴板中。
+项目地址：https://github.com/kingname/MarkdownPicPicker
+功能介绍第0.2版有以下功能：
+
+使用七牛云作为图床。
+将图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MarkdownPicPicker - Markdown 图片上传助手">
+<meta property="og:url" content="http://kingname.info/2016/06/04/markdownPicPicker/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="项目介绍MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&amp;lt;图片地址&amp;gt;))复制到剪贴板中。
+项目地址：https://github.com/kingname/MarkdownPicPicker
+功能介绍第0.2版有以下功能：
+
+使用七牛云作为图床。
+将图">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/20160605083025.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-22-43.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-24-40.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-05-00-45-03.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-23-14-30.png">
+<meta property="og:updated_time" content="2016-11-30T13:56:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MarkdownPicPicker - Markdown 图片上传助手">
+<meta name="twitter:description" content="项目介绍MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&amp;lt;图片地址&amp;gt;))复制到剪贴板中。
+项目地址：https://github.com/kingname/MarkdownPicPicker
+功能介绍第0.2版有以下功能：
+
+使用七牛云作为图床。
+将图">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/20160605083025.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingname.info/2016/06/04/markdownPicPicker/"/>
+
+
+
+
+
+  <title> MarkdownPicPicker - Markdown 图片上传助手 | Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/06/04/markdownPicPicker/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MarkdownPicPicker - Markdown 图片上传助手
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-04T16:40:06+08:00">
+                2016-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Markdown/" itemprop="url" rel="index">
+                    <span itemprop="name">Markdown</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/06/04/markdownPicPicker/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/04/markdownPicPicker/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><p>MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&lt;图片地址&gt;))复制到剪贴板中。</p>
+<p>项目地址：<a href="https://github.com/kingname/MarkdownPicPicker" target="_blank" rel="external">https://github.com/kingname/MarkdownPicPicker</a></p>
+<h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>第0.2版有以下功能：</p>
+<ol>
+<li>使用七牛云作为图床。</li>
+<li>将图片保存在本地</li>
+<li>图片上传成功后将Markdown格式的图片地址保存到剪贴板中</li>
+<li>全局监听键盘(默认不开启)</li>
+<li>独立配置文件</li>
+</ol>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置文件保存在<code>config.ini</code>文件中，其意义分别如下：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="section">[basic]</span></div><div class="line"><span class="attr">run_method</span> = bat # 设定程序的运行方式，bat为使用bat文件触发，global_listen为全局键盘监听方式</div><div class="line"><span class="attr">picture_folder</span> = pic #设定程序的运行方式，bat为使用bat文件触发，pyHook为全局键盘监听方式</div><div class="line"><span class="attr">picture_suffix</span> = png #截图的保存格式，可以选择bmp或者png</div><div class="line"><span class="comment"># now support qiniu only</span></div><div class="line"><span class="attr">picture_bed</span> = qiniu</div><div class="line"><span class="section"></span></div><div class="line">[global_listen]</div><div class="line"><span class="attr">short_key_one</span> = Lwin #快捷键第一个按键</div><div class="line"><span class="attr">short_key_two</span> = C #快捷键第二个按键</div><div class="line"><span class="section"></span></div><div class="line">[qiniu]</div><div class="line"><span class="comment">#七牛云的相关配置</span></div><div class="line"><span class="attr">access_key</span> = Q6sS422O05AwYD5aVqM3FqCcCpF36tqvyQ75Zvzw</div><div class="line"><span class="attr">secret_key</span> = <span class="number">6</span>QtAqqTxoSxZP-<span class="number">2</span>uoXROehxPLX2CCmoOaB2aLObM</div><div class="line"><span class="attr">container_name</span> = picturebed  #七牛云的图片储存位置</div><div class="line"><span class="attr">url</span> = http://<span class="number">7</span>sbpmp.com1.z0.glb.clouddn.com/&#123;&#125; #七牛云分配的默认域名</div></pre></td></tr></table></figure></p>
+<p>其中<code>access_key</code> 和 <code>secret_key</code> 可以在七牛云的控制面板中看到，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/20160605083025.png" alt=""><br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-22-43.png" alt=""> </p>
+<p><code>container_name</code> 为下图所示内容：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-24-40.png" alt=""> </p>
+<p><code>short_key_one</code> 和 <code>short_key_two</code> 为快捷键的两个按键，默认为左侧windows徽标键(<code>Lwin</code>) 和 字母 <code>C</code>。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>将程序配置好以后运行，创建一个批处理文件markdownpicpicker.bat, 其内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;G:\github\MarkdownPicPicker\venv\Scripts\activate &amp; cd /d G:\github\MarkdownPicPicker &amp; python MarkdownPicPicker.py &amp; deactivate &amp; exit&quot;</div></pre></td></tr></table></figure></p>
+<p>路径请根据实际情况修改。</p>
+<p>由于我使用了virtualenv, 所以需要在批处理中进入virtualenv的环境才能正常运行程序。对于将requirements.txt里面包含的库直接安装在全局的情况，bat 可以简化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;cd /d &lt;MarkdownPicPicker.py脚本所在文件夹路径&gt; &amp; python MarkdownPicPicker.py &amp; exit&quot;</div></pre></td></tr></table></figure>
+<p>不论哪种方式，均不要在任何相关的路径上出现中文，否则会导致不可预知的问题。</p>
+<p>然后右键选择批处理，发送到桌面快捷方式。接着右键快捷方式，属性，在“快捷键” 这一栏按下字母Q，它将自动填充为 <code>Ctrl + Alt + Q</code>, 确定。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-05-00-45-03.png" alt=""> </p>
+<p>只需要首先使用QQ截图或者其他截图工具将图片保存到剪贴板中，然后按下设定好的快捷键即可。Markdown格式的图片链接就已经保存到剪贴板中了。在需要使用的地方直接粘贴。</p>
+<p>不过这样设定的快捷键，按下以后会有大概一秒钟的延迟。推荐大家使用AutoHotKey来触发这个bat文件。</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><h3 id="Pillow-bug修正"><a href="#Pillow-bug修正" class="headerlink" title="Pillow bug修正"></a>Pillow bug修正</h3><p>本程序使用了Pillow库中的 <code>ImageGrab.grabclipboard()</code> 方法来获取剪贴板中的数据，但是由于这个方法有一个bug, 导致可能会爆以下错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Unsupported BMP bitfields layout</div></pre></td></tr></table></figure></p>
+<p>这个问题从Pillow 2.8.0开始，一直到3.2.0都没有被官方解决。目前有一个间接的解决办法。<br>请打开Python安装目录下的\Lib\site-packages\PIL\BmpImagePlugin.py文件，将以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</div><div class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</div><div class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</div><div class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</div><div class="line">    else:</div><div class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div><div class="line">else:</div><div class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div></pre></td></tr></table></figure>
+<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</div><div class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</div><div class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</div><div class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</div><div class="line">    &apos;&apos;&apos;新增内容开始&apos;&apos;&apos;</div><div class="line">    elif file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgb_mask&apos;] == (0xff0000, 0xff00, 0xff):</div><div class="line">        pass</div><div class="line">    &apos;&apos;&apos;新增内容结束&apos;&apos;&apos;</div><div class="line">    else:</div><div class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div><div class="line">else:</div><div class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div></pre></td></tr></table></figure></p>
+<p>就能解决本问题。</p>
+<h3 id="全局键盘监听"><a href="#全局键盘监听" class="headerlink" title="全局键盘监听"></a>全局键盘监听</h3><p>本程序还有一个功能是全局监听键盘，通过特殊的快捷键组合就可以直接触发读取图片上传图片的操作。但是由于这个功能使用到了pyHook这个库。但是这个库在设计上存在缺陷，如果当前窗体的标题包含Unicode字符时，会导致Python崩溃。因此这个功能默认不启动。</p>
+<h3 id="获取键盘按键"><a href="#获取键盘按键" class="headerlink" title="获取键盘按键"></a>获取键盘按键</h3><p>如果不清楚某个键盘按键对应的字符串是什么样子的，可以运行QueryKey.py这个文件，运行以后按下某个键，控制台上就会显示相应的信息。其中<code>Key</code>就是可以设置到<code>SHORT_KEY_ONE</code>和<code>SHORT_KEY_TWO</code>的内容。如图为按下键盘左Shift键以后显示的信息。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-23-14-30.png" alt=""> </p>
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ul>
+<li>支持更多的截图方式</li>
+<li>支持更多的图床</li>
+<li>窗口隐藏</li>
+<li>解决pyHook的问题</li>
+<li>适配Linux 和 Mac OS</li>
+</ul>
+<p><strong>本文首发地址-&gt; <a href="http://kingname.info/2016/06/04/markdownPicPicker/">http://kingname.info/2016/06/04/markdownPicPicker/</a> 转载请注明出处</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/Markdown/" rel="tag"># Markdown</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/29/raspberryCI-1/" rel="next" title="搭建持续集成环境(一)">
+                <i class="fa fa-chevron-left"></i> 搭建持续集成环境(一)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/19/bean-in-python/" rel="prev" title="可爱的豆子——使用Beans思想让Python代码更易维护">
+                可爱的豆子——使用Beans思想让Python代码更易维护 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/04/markdownPicPicker/"
+           data-title="MarkdownPicPicker - Markdown 图片上传助手" data-url="http://kingname.info/2016/06/04/markdownPicPicker/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">MediaTek软件工程师，极客学院讲师。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目介绍"><span class="nav-number">1.</span> <span class="nav-text">项目介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能介绍"><span class="nav-number">2.</span> <span class="nav-text">功能介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方法"><span class="nav-number">3.</span> <span class="nav-text">使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">3.1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">3.2.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">4.</span> <span class="nav-text">说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pillow-bug修正"><span class="nav-number">4.1.</span> <span class="nav-text">Pillow bug修正</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全局键盘监听"><span class="nav-number">4.2.</span> <span class="nav-text">全局键盘监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取键盘按键"><span class="nav-number">4.3.</span> <span class="nav-text">获取键盘按键</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TODO"><span class="nav-number">5.</span> <span class="nav-text">TODO</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"kingname"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

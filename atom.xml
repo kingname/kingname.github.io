@@ -1138,11 +1138,11 @@
     
       <category term="Python" scheme="http://kingname.info/tags/Python/"/>
     
-      <category term="log" scheme="http://kingname.info/tags/log/"/>
-    
       <category term="Gmail" scheme="http://kingname.info/tags/Gmail/"/>
     
       <category term="Flask" scheme="http://kingname.info/tags/Flask/"/>
+    
+      <category term="log" scheme="http://kingname.info/tags/log/"/>
     
   </entry>
   

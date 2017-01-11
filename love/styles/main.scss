@@ -1,0 +1,204 @@
+html,
+body {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+
+body {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-filter: contrast(120%);
+    filter: contrast(120%);
+    background-color: black;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(1600px at 70% 120%, rgba(33, 39, 80, 1) 10%, #020409 100%);
+
+}
+
+.content {
+    width: inherit;
+    height: inherit;
+}
+
+#universe {
+    width: 100%;
+    height: 100%;
+}
+
+#footerContent {
+    font-family: sans-serif;
+    font-size: 110%;
+    color: rgba(200, 220, 255, .3);
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    padding: 20px;
+    text-align: center;
+    z-index: 20;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0px;
+    height: 300px;
+    width: 100%;
+}
+
+#scene {
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    margin-left: -800px;
+}
+
+a {
+    text-decoration: none;
+    color: rgba(200, 220, 255, 1);
+    opacity: .4;
+    -webkit-transition: opacity .4s ease;
+    transition: opacity .4s ease;
+}
+
+a:hover {
+    opacity: 1;
+}
+
+
+/*-----------------------------音乐-------------------------------------*/
+
+#music {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    right: 8px;
+    top: 8px;
+    z-index: 99;
+}
+
+.music {
+    width: 100%;
+    height: 100%;
+    background: url("http://statics.xiaoenai.com/v4/job/music.png") no-repeat center center;
+    background-size: 24px 24px;
+    z-index: 10;
+    position: relative
+}
+
+.play {
+    animation: rotate 1.2s linear infinite;
+    -webkit-animation: rotate 1.2s linear infinite
+}
+
+#music>span {
+    color: #fff;
+    position: absolute;
+    left: -60px;
+    top: 0;
+    line-height: 24px;
+    font-size: 14px;
+    opacity: 0;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear
+}
+
+#music>span.zshow {
+    left: -30px;
+    opacity: 1
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+@-webkit-keyframes rotate {
+    0% {
+        -webkit-transform: rotate(0)
+    }
+    100% {
+        -webkit-transform: rotate(360deg)
+    }
+}
+
+
+/*box*/
+
+#box {
+    color: #fff;
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    margin-left: -96px;
+    z-index: 100;
+    transform: rotate(-12deg);
+    -webkit-transform: rotate(-12deg);
+    font-size: 12px;
+}
+
+.txt {
+    color: hsla(0, 0%, 0%, 0);
+    text-shadow: #fff 0 0 10px;
+    transition: text-shadow 2s cubic-bezier(0, 1, 0, 1);
+}
+
+@-moz-document url-prefix() {
+    .txt {
+        text-shadow: #fff 0 0 20px;
+    }
+}
+
+
+/* FF fix */
+
+.fadeInUp {
+    -webkit-animation: fadeInUp 3s .2s ease both;
+    -moz-animation: fadeInUp 3s .2s ease both;
+}
+
+@-webkit-keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(100px)
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0)
+    }
+}
+
+@-moz-keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        -moz-transform: translateY(100px)
+    }
+    100% {
+        opacity: 1;
+        -moz-transform: translateY(0)
+    }
+}
+
+
+#canvas{
+    margin: 200px auto;
+}

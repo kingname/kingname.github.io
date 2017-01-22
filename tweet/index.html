@@ -86,32 +86,17 @@
 
 
 
-<meta name="description" content="2017.01逆波兰式通过栈来实现对表达式的运算。例如：
-
-中缀表达式: 5 + ((1 + 2)  4) − 3逆波兰式：5 1 2 + 4  + 3 −
-
-
-使用调度场算法可以将中缀表达式转换为逆波兰式。调度场算法是通过栈来实现的。操作数直接输出，符号需要判断优先级来判断应该直接压栈还是直接输出或者应该先将栈顶元素输出再压栈。">
+<meta name="description" content="2017.01在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，yield还可以接收参数供生成器内部使用。12345678910111213def generator(top):       index = 0       while index &amp;lt;= top:              value_from">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="http://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.01逆波兰式通过栈来实现对表达式的运算。例如：
-
-中缀表达式: 5 + ((1 + 2)  4) − 3逆波兰式：5 1 2 + 4  + 3 −
-
-
-使用调度场算法可以将中缀表达式转换为逆波兰式。调度场算法是通过栈来实现的。操作数直接输出，符号需要判断优先级来判断应该直接压栈还是直接输出或者应该先将栈顶元素输出再压栈。">
+<meta property="og:description" content="2017.01在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，yield还可以接收参数供生成器内部使用。12345678910111213def generator(top):       index = 0       while index &amp;lt;= top:              value_from">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-01-21T16:47:00.000Z">
+<meta property="og:updated_time" content="2017-01-22T12:26:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.01逆波兰式通过栈来实现对表达式的运算。例如：
-
-中缀表达式: 5 + ((1 + 2)  4) − 3逆波兰式：5 1 2 + 4  + 3 −
-
-
-使用调度场算法可以将中缀表达式转换为逆波兰式。调度场算法是通过栈来实现的。操作数直接输出，符号需要判断优先级来判断应该直接压栈还是直接输出或者应该先将栈顶元素输出再压栈。">
+<meta name="twitter:description" content="2017.01在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，yield还可以接收参数供生成器内部使用。12345678910111213def generator(top):       index = 0       while index &amp;lt;= top:              value_from">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
 
 
@@ -284,7 +269,11 @@
 
     
     
-      <h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p><a href="https://zh.wikipedia.org/wiki/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95" target="_blank" rel="external">逆波兰式</a>通过栈来实现对表达式的运算。例如：</p>
+      <h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>在Python中，使用<code>yield</code>实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，<code>yield</code>还可以接收参数供生成器内部使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(top)</span>:</span></div><div class="line">       index = <span class="number">0</span></div><div class="line">       <span class="keyword">while</span> index &lt;= top:</div><div class="line">              value_from_out = <span class="keyword">yield</span> index ** <span class="number">2</span></div><div class="line">              print(<span class="string">'来自外面的值为：&#123;&#125;'</span>.format(value_from_out))</div><div class="line">              index += <span class="number">1</span></div><div class="line"></div><div class="line">power_2 = generator(<span class="number">10</span>)</div><div class="line">print(next(power_2))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">"next(power_2) 相当于power_2.send(None)"</span>))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">'代码在函数和这里来回跳。'</span>))</div></pre></td></tr></table></figure></p>
+<p>输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">来自外面的值为：None</div><div class="line">1</div><div class="line">来自外面的值为：next(power_2) 相当于power_2.send(None)</div><div class="line">4</div><div class="line">来自外面的值为：None</div><div class="line">9</div><div class="line">来自外面的值为：代码在函数和这里来回跳。</div><div class="line">16</div></pre></td></tr></table></figure></p>
+<p>以上的运行方式，和协程非常的相似。</p>
+<hr>
+<p><a href="https://zh.wikipedia.org/wiki/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95" target="_blank" rel="external">逆波兰式</a>通过栈来实现对表达式的运算。例如：</p>
 <blockquote>
 <p>中缀表达式: 5 + ((1 + 2) <em> 4) − 3<br>逆波兰式：5 1 2 + 4 </em> + 3 −</p>
 </blockquote>

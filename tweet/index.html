@@ -86,17 +86,44 @@
 
 
 
-<meta name="description" content="2017.01在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，yield还可以接收参数供生成器内部使用。12345678910111213def generator(top):       index = 0       while index &amp;lt;= top:              value_from">
+<meta name="description" content="2017.01如果你想在局域网中共享一个文件，你可以通过Python 3快速完成：
+
+打开终端或者CMD
+cd 进入你需要分享的文件所在的文件夹
+输入python3 -m http.server回车
+在另一台电脑上打开浏览器，输入上一台电脑的ip地址:8000例如：192.168.2.13:8000
+下载文件
+
+
+在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="http://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.01在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，yield还可以接收参数供生成器内部使用。12345678910111213def generator(top):       index = 0       while index &amp;lt;= top:              value_from">
+<meta property="og:description" content="2017.01如果你想在局域网中共享一个文件，你可以通过Python 3快速完成：
+
+打开终端或者CMD
+cd 进入你需要分享的文件所在的文件夹
+输入python3 -m http.server回车
+在另一台电脑上打开浏览器，输入上一台电脑的ip地址:8000例如：192.168.2.13:8000
+下载文件
+
+
+在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-01-22T12:26:50.000Z">
+<meta property="og:updated_time" content="2017-01-23T14:50:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.01在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，yield还可以接收参数供生成器内部使用。12345678910111213def generator(top):       index = 0       while index &amp;lt;= top:              value_from">
+<meta name="twitter:description" content="2017.01如果你想在局域网中共享一个文件，你可以通过Python 3快速完成：
+
+打开终端或者CMD
+cd 进入你需要分享的文件所在的文件夹
+输入python3 -m http.server回车
+在另一台电脑上打开浏览器，输入上一台电脑的ip地址:8000例如：192.168.2.13:8000
+下载文件
+
+
+在Python中，使用yield实现生成器。生成器的性质是只有在被迭代的时候才运行其">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
 
 
@@ -269,7 +296,16 @@
 
     
     
-      <h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>在Python中，使用<code>yield</code>实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，<code>yield</code>还可以接收参数供生成器内部使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(top)</span>:</span></div><div class="line">       index = <span class="number">0</span></div><div class="line">       <span class="keyword">while</span> index &lt;= top:</div><div class="line">              value_from_out = <span class="keyword">yield</span> index ** <span class="number">2</span></div><div class="line">              print(<span class="string">'来自外面的值为：&#123;&#125;'</span>.format(value_from_out))</div><div class="line">              index += <span class="number">1</span></div><div class="line"></div><div class="line">power_2 = generator(<span class="number">10</span>)</div><div class="line">print(next(power_2))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">"next(power_2) 相当于power_2.send(None)"</span>))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">'代码在函数和这里来回跳。'</span>))</div></pre></td></tr></table></figure></p>
+      <h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>如果你想在局域网中共享一个文件，你可以通过Python 3快速完成：</p>
+<ul>
+<li>打开终端或者CMD</li>
+<li>cd 进入你需要分享的文件所在的文件夹</li>
+<li>输入<code>python3 -m http.server</code>回车</li>
+<li>在另一台电脑上打开浏览器，输入上一台电脑的<code>ip地址:8000</code>例如：<code>192.168.2.13:8000</code></li>
+<li>下载文件</li>
+</ul>
+<hr>
+<p>在Python中，使用<code>yield</code>实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，<code>yield</code>还可以接收参数供生成器内部使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(top)</span>:</span></div><div class="line">       index = <span class="number">0</span></div><div class="line">       <span class="keyword">while</span> index &lt;= top:</div><div class="line">              value_from_out = <span class="keyword">yield</span> index ** <span class="number">2</span></div><div class="line">              print(<span class="string">'来自外面的值为：&#123;&#125;'</span>.format(value_from_out))</div><div class="line">              index += <span class="number">1</span></div><div class="line"></div><div class="line">power_2 = generator(<span class="number">10</span>)</div><div class="line">print(next(power_2))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">"next(power_2) 相当于power_2.send(None)"</span>))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">'代码在函数和这里来回跳。'</span>))</div></pre></td></tr></table></figure></p>
 <p>输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">来自外面的值为：None</div><div class="line">1</div><div class="line">来自外面的值为：next(power_2) 相当于power_2.send(None)</div><div class="line">4</div><div class="line">来自外面的值为：None</div><div class="line">9</div><div class="line">来自外面的值为：代码在函数和这里来回跳。</div><div class="line">16</div></pre></td></tr></table></figure></p>
 <p>以上的运行方式，和协程非常的相似。</p>
 <hr>

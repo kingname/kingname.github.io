@@ -73,8 +73,6 @@
 
 
 
-  
-
 
   <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
 
@@ -88,25 +86,58 @@
 
 
 
-<meta name="description" content="2017.01正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：
+<meta name="description" content="2017.01通过二进制的位操作，可以简化很多问题的分析。
+例如现在有四个角色，分别为：读者，作者，编辑和管理员。有四个不同的权限使用四位的二进制数表示：
 
-Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。Workflowy的出现可以解决这个问题。Wo">
+阅读权限：0001
+写入权限：0010
+修改权限：0100
+删除权限：1000
+
+每个角色的权限如下：
+
+读者只能读，所以权限是0001
+作者能读也能写，所以是0011
+编辑能读能写能修改，所以是0111
+管理员能读能写能修改能删除，所以是1">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="http://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.01正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：
+<meta property="og:description" content="2017.01通过二进制的位操作，可以简化很多问题的分析。
+例如现在有四个角色，分别为：读者，作者，编辑和管理员。有四个不同的权限使用四位的二进制数表示：
 
-Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。Workflowy的出现可以解决这个问题。Wo">
+阅读权限：0001
+写入权限：0010
+修改权限：0100
+删除权限：1000
+
+每个角色的权限如下：
+
+读者只能读，所以权限是0001
+作者能读也能写，所以是0011
+编辑能读能写能修改，所以是0111
+管理员能读能写能修改能删除，所以是1">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-01-29T12:42:27.000Z">
+<meta property="og:updated_time" content="2017-01-29T13:13:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.01正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：
+<meta name="twitter:description" content="2017.01通过二进制的位操作，可以简化很多问题的分析。
+例如现在有四个角色，分别为：读者，作者，编辑和管理员。有四个不同的权限使用四位的二进制数表示：
 
-Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。Workflowy的出现可以解决这个问题。Wo">
+阅读权限：0001
+写入权限：0010
+修改权限：0100
+删除权限：1000
+
+每个角色的权限如下：
+
+读者只能读，所以权限是0001
+作者能读也能写，所以是0011
+编辑能读能写能修改，所以是0111
+管理员能读能写能修改能删除，所以是1">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 
 
@@ -279,7 +310,24 @@ Markdown在写作方面有非常好的优势，可以让写作的人不用关心
 
     
     
-      <h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif" alt="手指使用二进制计数"></p>
+      <h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>通过二进制的位操作，可以简化很多问题的分析。</p>
+<p>例如现在有四个角色，分别为：读者，作者，编辑和管理员。有四个不同的权限使用四位的二进制数表示：</p>
+<ul>
+<li>阅读权限：0001</li>
+<li>写入权限：0010</li>
+<li>修改权限：0100</li>
+<li>删除权限：1000</li>
+</ul>
+<p>每个角色的权限如下：</p>
+<ul>
+<li>读者只能读，所以权限是0001</li>
+<li>作者能读也能写，所以是0011</li>
+<li>编辑能读能写能修改，所以是0111</li>
+<li>管理员能读能写能修改能删除，所以是1111</li>
+</ul>
+<p>要判断一个角色有哪些权限，人眼可以直接看对应的位置上面是0还是1，是0就是没有权限，是1就是有权限。在程序里面可以通过和对应权限的四位二进制数取位与操作。例如，0111编辑是否有写权限？因为0111 &amp; 0010 = 0010 所以有写权限。只要角色的四位二进制数和权限的四位二进制数取位与，得到的结果还是权限的四位二进制数，那么就有这个权限。</p>
+<hr>
+<p>正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif" alt="手指使用二进制计数"></p>
 <hr>
 <p>Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。<a href="https://workflowy.com/invite/4b7e29eb.lnx" target="_blank" rel="external">Workflowy</a>的出现可以解决这个问题。Workflowy只支持文本，界面极其简洁：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png" alt=""><br>通过它来创建一个大纲，有助于理清思路。</p>
 <hr>

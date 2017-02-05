@@ -261,6 +261,193 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2016/01/11/ml-1/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/11/ml-1/" itemprop="url">
+                  机器学习（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-01-11T00:12:34+08:00">
+                2016-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/01/11/ml-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/11/ml-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>最近在Coursera 上学习斯坦福大学的机器学习。根据费曼学习法的理论，教是最好最快最有效果的学习方法。因此，我将会开一系列机器学习相关的文章，同步我的学习进度，并用我自己的理解和语言将我学到的内容写出来。</p>
+<p>为了防止拖延症的发作，我将会严格制定时间表，尽最大可能保证每周一篇文章。</p>
+<p>希望这一系列文章能让我更好的理解机器学习，也希望同时能为大家提供学习机器学习的入门参考。</p>
+<h2 id="第一周"><a href="#第一周" class="headerlink" title="第一周"></a>第一周</h2><h3 id="机器学习定义"><a href="#机器学习定义" class="headerlink" title="机器学习定义"></a>机器学习定义</h3><blockquote>
+<p>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E. ——Mitchell provides</p>
+</blockquote>
+<p>定义说的那么复杂，简单的说，机器学习就是：一个程序，这个程序可以通过一些已知的现象和结果来推测一些未知的现象应该有的结果。</p>
+<h3 id="监督学习和非监督学习"><a href="#监督学习和非监督学习" class="headerlink" title="监督学习和非监督学习"></a>监督学习和非监督学习</h3><p><strong>监督学习</strong>： 有答案的学习过程。</p>
+<p><strong>非监督学习</strong>： 没有答案的学习过程。</p>
+<p>我们回想一下自己小学时候，做作业，老师站在旁边，我做完一道题，老师看了以后说，答案是正确的。这就是监督学习的过程。</p>
+<p>我们再想想现在，大家在大学或者工作以后，接触到的东西，有时候是没有标准答案的，我们只能凭自己认为是正确的方向去做。做完以后也没有办法知道这样的做法是正确的还是错误的。这就是非监督学习的过程。</p>
+<p>当然，上面两个例子里面，我举例用的“学习”，仅仅是监督学习的“学习”的一小部分。监督学习的“学习”还包含很多内容，包括发现，探索等等。</p>
+<h3 id="回归和分类"><a href="#回归和分类" class="headerlink" title="回归和分类"></a>回归和分类</h3><p>回归和分类属于监督学习。</p>
+<p><strong>回归</strong>：回归就是根据输入的数据得到<strong>连续</strong>输出的过程。</p>
+<p><strong>分类</strong>：分类就是根据输入的数据得到<strong>离散</strong>输出的过程。</p>
+<p>所以回归和分类，本质上是一个过程，或者说算法。也就是我们常说的分类算法或者回归算法。</p>
+<p>这里用来区分回归和分类，主要的指标就是看输出是否连续。对于输入是没有特别的要求的。输入可以是连续的，也可以是离散的，决定这个算法是分类还是回归，由输出来决定。</p>
+<p>我们用房价来举例子，你有一套房子，占地100平米，可以卖多少钱？我告诉你可以卖1000万。你朋友问我他的房子120平米，可以卖多少钱，我告诉他，可以卖1200万。这样你告诉我一个大小，我告诉你可以卖多少钱，这就叫做回归。你给我不同的大小，我就给你不同的价格。</p>
+<p>同一个例子，什么是分类呢？你有一套房子，占地100平米，准备1000万出售，能不能卖出去，我告诉你，不能。你朋友的房子120平米，1200万出售，能不能卖出去，我说可以。这里的结果只有两个，“能卖出去”和不能卖出去，所以这个结果是离散的。</p>
+<h3 id="集群和关联"><a href="#集群和关联" class="headerlink" title="集群和关联"></a>集群和关联</h3><p>集群和观念属于非监督学习。</p>
+<p><strong>集群</strong>：根据一些特征来对一大群数据分组。</p>
+<p><strong>关联</strong>：已知一些已有的现象和结论，又来了一个类似的现象，把它和某个已知的结论联系起来。</p>
+<p>集群很类似于分类，不同在于是否知道正确的答案。分类是知道答案的，集群是不知道答案的。</p>
+<p>关联和有标准答案的基于规则的联系不同。关联里面，那些已知的现象和结论，都是评估出来的，并不一定正确。比如，看到流鼻涕和感冒，这就属于一种关联，但是流鼻涕并不一定都是感冒。</p>
+<h3 id="一元线性规划"><a href="#一元线性规划" class="headerlink" title="一元线性规划"></a>一元线性规划</h3><p>一元线性规划属于监督学习。</p>
+<p>对于有些事件，导致结果的因素只有一个，于是就可以用一元线性规划来估算出一个一次函数，通过这个函数来确定对于新的输入，应该有什么输出。</p>
+<p>对于学习过初中物理的同学来说，应该记得在处理实验数据的时候，老师说过这样一句话：</p>
+<blockquote>
+<p>作一条线尽量多的穿过数据点，并让不在线上的点均匀分布在线的两侧。——物理老师。</p>
+</blockquote>
+<p>如图：<br><img src="http://ghost.kingname.info/content/images/2016/01/2.jpg" alt=""></p>
+<p>所谓的一元线性规划，就是做这一条线，或者准确的说，是确定这个一次函数的过程。</p>
+<p>举个例子，按时间计费的宽带上网，上网的费用仅仅由上网的时间决定，上的多就多缴费，上得少就少缴费。知道了上网的时间，就知道了上网的费用。这就是一个一元线性规划的问题。并且可以准确的确定一个一次函数，输入时间，输出的费用就一定是上网的实际花费。</p>
+<p>当然，有一些情况下，这个一次函数只是近似情况，只能保证大多数情况在误差范围内符合。</p>
+<p>写成数学公式，我们用</p>
+<p><img src="http://ghost.kingname.info/content/images/2016/01/1.jpg" alt=""></p>
+<p>来表示，其中θ0和θ1都是参数，输入是x, 输出是y或者hθ(x).</p>
+<h4 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h4><p><img src="http://ghost.kingname.info/content/images/2016/01/3.jpg" alt=""><br>看起来很复杂的样子，但是大家注意，其实这就是一个方差。只不过多除以了一个2.代价函数就是实际测量值和预测值的误差的方差除以2。</p>
+<p>代价函数是由θ0和θ1为变量的函数，通过计算代价函数求θ0和θ1，并且需要保证求出来的θ0和θ1使得由他们确定的一次函数，在误差范围内，<strong>尽可能好的</strong>符合已知情况。</p>
+<p>而一元线性规划的过程，就是求代价函数的极小值。这里我说的是极小值而不是最小值，因为<a href="https://zh.wikipedia.org/wiki/%E6%9E%81%E5%80%BC" target="_blank" rel="external">极值</a>和最值是不一样的。</p>
+<p>但是值得庆幸的是，对于一元线性规划的代价函数来说，极小值就是最小值，这在数学上是可以证明的。</p>
+<h4 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h4><p>梯度下降是一种计算θ0和θ1的算法。</p>
+<p>大家设想，现在用直升机把你放在了半山腰，然后蒙着你的眼睛，让你下到山谷去，虽然这个任务很困难，但是还是可以做到的。利用脚去感知，发现往左是坡度向上，往右坡度向下，于是你就往右慢慢挪动一小步，然后再重复刚才的动作，发现现在右前方坡度是向下的，于是你又慢慢往右挪动一小步，这样一步一步的移动，最终你会移动到某个山谷里面去。</p>
+<p>梯度下降也是同样的原理，这里的梯度就可以理解成你走的一小步，每一小步就像是下要给台阶。</p>
+<p>但是这一小步你要走多长呢？这个就是一个系数，叫做学习率。如果这个系数设定小了，那走的很慢，但是如果设定大了，比如一步垮了一光年那么远，就会导致丢失目标，甚至是结果发散。<br><img src="http://ghost.kingname.info/content/images/2016/01/4-1.jpg" alt=""><br>这就是梯度下降的算法描述了，大家可以根据代价函数的公式，自己确定一下梯度下降的具体算法。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一周讲了机器学习的基本概念以及一元线性规划，同时讲了求解一元线性规划代价函数的梯度下降算法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://kingname.info/2015/12/02/opinionchange/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1707,184 +1894,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kingname.info/2015/01/08/如何正确使用日志log/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Kingname">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Kingname">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/01/08/如何正确使用日志log/" itemprop="url">
-                  如何正确使用日志Log
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-01-08T12:54:46+08:00">
-                2015-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2015/01/08/如何正确使用日志log/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/01/08/如何正确使用日志log/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>文章首发地址：<a href="http://kingname.info">http://kingname.info</a></p>
-<p>这篇文章不会教你在技术角度上使用log，而是告诉你为什么要使用log日志功能。</p>
-<h2 id="为什么要使用Log"><a href="#为什么要使用Log" class="headerlink" title="为什么要使用Log"></a>为什么要使用Log</h2><p>在<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/">使用微信控制你的电脑</a>这篇文章中，我写好了电脑端的程序，使用py2exe生成可执行文件，并把它们发送给我的朋友让他们进行测试。但是他们把_config.ini设置好以后，运行程序就看到一个黑色窗口一闪而过。或者有些人一开始看到程序能正常登陆邮箱，但是准备执行命令的时候，窗口自动关闭。</p>
-<p>由于没有日志记录程序的运行状态，我根据他们的描述很难定位到错误在哪个地方。于是折腾了一个下午。</p>
-<p>这个时候，我觉得添加一个日志的功能迫在眉睫。</p>
-<h2 id="哪些地方应该用Log"><a href="#哪些地方应该用Log" class="headerlink" title="哪些地方应该用Log"></a>哪些地方应该用Log</h2><p>目前网上能找到的关于如何使用日志的文章，全部都是从技术角度讲怎么使用log：在XX地方应该先imort logging，然后basicconfig设定XX内容。可是我现在的问题是：</p>
-<ul>
-<li>应该在程序的哪些地方添加日志的输出？</li>
-<li>输出什么内容？</li>
-<li>如何输出才能以方便我的监控程序的运行情况？</li>
-</ul>
-<p>于是我只有自己摸索。因此，<strong>以下内容是我自己摸索出来的野路子，可能会有错漏。希望有经验的朋友能给我指正，非常感谢。</strong></p>
-<h3 id="这些地方应该用Log"><a href="#这些地方应该用Log" class="headerlink" title="这些地方应该用Log"></a>这些地方应该用Log</h3><p>使用<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/">使用微信控制你的电脑</a>文章中涉及到的例子</p>
-<p>程序入口代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if __name__==&apos;__main__&apos;:</div><div class="line">        init()</div><div class="line">        print u&apos;等待接收命令&apos;</div><div class="line">        logging.info(u&apos;初始化完成。&apos;)</div><div class="line">        while 1:</div><div class="line">                time.sleep(int(time_limit)) #每5分钟检查一次邮箱</div><div class="line">                accp_mail()</div></pre></td></tr></table></figure>
-<p>以上代码表示程序运行以后，首先执行init()函数，于是如果init()初始化没有什么问题，成功执行完成以后，就应该在日志中输出“初始化完成”，然后进入接收邮件的循环。如果程序窗口运行以后一闪而过，而且生成的日志中没有初始化完成这样的字眼，那就说明问题出在初始化上面。</p>
-<p>然而初始化函数里面代码也有很多，又如何知道是初始化程序里面的什么地方出问题了呢？</p>
-<p>所以，再初始化函数里面，也应该有一定的日志记录。</p>
-<p>再看初始化函数的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">def init():</div><div class="line">        global username,password,host,boss_email,time_limit</div><div class="line">      	 </div><div class="line">		try:</div><div class="line">               f = open(&apos;_config.ini&apos;,&apos;r&apos;)</div><div class="line">       	except IOError,e:</div><div class="line">               logging.error(e)</div><div class="line">			exit()</div><div class="line"></div><div class="line">        info = f.readlines()</div><div class="line">		try:</div><div class="line">	        host = re.search(&apos;host:(.*?)\n&apos;,info[0],re.S).group(1)</div><div class="line">	        username = re.search(&apos;username:(.*?com)&apos;,info[1],re.S).group(1)</div><div class="line">	        password = re.search(&apos;password:(.*?)\n&apos;,info[2],re.S).group(1)</div><div class="line">	        boss_email = re.search(&apos;boss_email:(.*?com)&apos;,info[3],re.S).group(1)</div><div class="line">	        time_limit = re.search(&apos;time_limit:(.*?)\n&apos;,info[4],re.S).group(1)</div><div class="line">		except Exception,e:</div><div class="line">               logging.error(e)</div><div class="line"></div><div class="line">        logging.info(u&apos;打开配置文件成功。。。&apos;)</div><div class="line">		</div><div class="line"></div><div class="line">        #将命令生成字典，便于查询</div><div class="line">        command_start = info.index(&apos;&lt;command&gt;\n&apos;)</div><div class="line">        command_end = info.index(&apos;&lt;/command&gt;\n&apos;)</div><div class="line">        for each in info[command_start+1:command_end]:</div><div class="line">                command = each.split(&apos;=&apos;)</div><div class="line">                command_dict[command[0]] = command[1]</div><div class="line">		</div><div class="line">        logging.info(command_dict)</div><div class="line">		</div><div class="line">        open_start = info.index(&apos;&lt;open_file&gt;\n&apos;)</div><div class="line">        open_end = info.index(&apos;&lt;/open_file&gt;\n&apos;)</div><div class="line">        for each in info[open_start+1:open_end]:</div><div class="line">                open_file = each.split(&apos;=&apos;)</div><div class="line">                open_dict[open_file[0]] = open_file[1][:-1]</div><div class="line">		</div><div class="line">        logging.info(open_dict)</div><div class="line">		</div><div class="line">        f.close()</div></pre></td></tr></table></figure></p>
-<p>在这段代码中，我使用try except命令捕获异常，如果发生异常，就使用logging.error将错误写入日志中。例如当_config.ini被改名了或者被删除的时候，程序就会报错，而通过日志就能发现这个错误。</p>
-<p>经过上面的代码，如果在初始化的过程中出错，就可以很快确定问题出在什么地方。</p>
-<p>初始化完成以后，进入邮件接收阶段。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">def accp_mail():</div><div class="line">        logging.info(u&apos;开始检查邮箱&apos;)</div><div class="line">		try:</div><div class="line">	        pp = poplib.POP3_SSL(host)</div><div class="line">	        pp.set_debuglevel(1)</div><div class="line">	        pp.user(username)</div><div class="line">	        pp.pass_(password)</div><div class="line">	        ret = pp.list()</div><div class="line">	        logging.info(u&apos;登录邮箱成功。&apos;)</div><div class="line">		except Exception,e:</div><div class="line">			logging.error(e)</div><div class="line">			exit()</div><div class="line">		</div><div class="line">		logging.info(u&apos;开始抓取邮件。&apos;)</div><div class="line">		try:</div><div class="line">        	down = pp.retr(len(ret[1]))</div><div class="line">			logging.info(u抓取邮件成功。&apos;&apos;)</div><div class="line">		except Exception,e:</div><div class="line">			logging.error(e)</div><div class="line">			exit()</div><div class="line"></div><div class="line">		logging.info(u&apos;开始抓取subject和发件人&apos;)</div><div class="line">        try:</div><div class="line">               subject = re.search(&quot;Subject: (.*?)&apos;,&quot;,str(down[1]).decode(&apos;utf-8&apos;),re.S).group(1)</div><div class="line">               sender = re.search(&quot;&apos;X-Sender: (.*?)&apos;,&quot;,str(down[1]).decode(&apos;utf-8&apos;),re.S).group(1)</div><div class="line">               logging.info(u&apos;抓取subject和发件人成功&apos;)</div><div class="line">       	except Exception,e:</div><div class="line">               logging.error(e)</div><div class="line">               exit()</div><div class="line"></div><div class="line">        if subject != &apos;pass&apos;:</div><div class="line">                if sender == boss_email:</div><div class="line">                        DealCommand(subject)</div><div class="line">        pp.quit()</div></pre></td></tr></table></figure></p>
-<p>以上这段代码，对邮箱的登录与邮件的读取均作了监控，一旦有某个环节出了问题，就会体现在日志中。</p>
-<p>通过在登录环节的try except返回的错误日志，发现有很多朋友无法登录邮箱，而密码用户名都没有错，从而推断是没有在新浪邮箱的账户控制里面打开客服端接收POP3和SMTP的功能。</p>
-<p>再来看DealCommand()函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">def DealCommand(subject):</div><div class="line">        logging.info(u&apos;开始处理命令。&apos;)</div><div class="line">        send_mail(&apos;pass&apos;,&apos;slave&apos;)</div><div class="line">        if subject in command_dict:</div><div class="line">                logging.info(u&apos;执行命令&apos;)</div><div class="line">                try:</div><div class="line">                        command = command_dict[subject]</div><div class="line">                        os.system(command)</div><div class="line">                        send_mail(&apos;Success&apos;,&apos;boss&apos;)</div><div class="line">                        logging.info(u&apos;执行命令成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        send_mail(&apos;error&apos;,&apos;boss&apos;,e)</div><div class="line">        elif subject in open_dict:</div><div class="line">                logging.info(u&apos;打开文件&apos;)</div><div class="line">                try:</div><div class="line">                        open_file = open_dict[subject]</div><div class="line">                        win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</div><div class="line">                        send_mail(&apos;Success&apos;,&apos;boss&apos;)</div><div class="line">                        logging.info(u&apos;打开文件成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        send_mail(&apos;error&apos;,&apos;boss&apos;,e)</div><div class="line">        else:</div><div class="line">                send_mail(&apos;error&apos;,&apos;boss&apos;,&apos;no such command&apos;)</div></pre></td></tr></table></figure></p>
-<p>执行命令的地方可能会出错，于是果断使用try except捕获错误。并使用日志记录。</p>
-<p>最后是send_mail()函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">def send_mail(subject,flag,body=&apos;Success&apos;):</div><div class="line">        </div><div class="line">        msg = MIMEText(body,&apos;plain&apos;,&apos;utf-8&apos;)#中文需参数‘utf-8’，单字节字符不需要</div><div class="line">        msg[&apos;Subject&apos;] = subject</div><div class="line">        msg[&apos;from&apos;] = username</div><div class="line">        logging.info(&apos;开始配置发件箱。&apos;)</div><div class="line">        try:</div><div class="line">                handle = smtplib.SMTP(&apos;smtp.sina.com&apos;, 25)</div><div class="line">                handle.login(username,password)</div><div class="line">                logging.info(&apos;发件箱配置成功&apos;)</div><div class="line">        except Exception,e:</div><div class="line">                logging.error(e)</div><div class="line">                exit()</div><div class="line"></div><div class="line">        logging.info(u&apos;开始发送邮件&apos;+ &apos;to&apos; + flag)</div><div class="line">        if flag == &apos;slave&apos;:</div><div class="line">                try:</div><div class="line">                        handle.sendmail(username,username, msg.as_string())</div><div class="line">                        logging.info(u&apos;发送邮件成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        exit()</div><div class="line">        elif flag == &apos;boss&apos;:</div><div class="line">                try:</div><div class="line">                        handle.sendmail(username,boss_email, msg.as_string())</div><div class="line">                        logging.info(u&apos;发送邮件成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        exit()</div><div class="line">                </div><div class="line">        handle.close()</div><div class="line">        logging.info(u&apos;发送邮件结束&apos;+flag)</div></pre></td></tr></table></figure></p>
-<p>这里对邮件发件的部分需要特别仔细的错误捕获，然后记录进入日志中。</p>
-<p>完整的代码见：<a href="https://github.com/kingname/MCC.git" target="_blank" rel="external">https://github.com/kingname/MCC.git</a>中的auto.py</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>需要使用日志记录的地方大致有一下几处：</p>
-<ul>
-<li>所有输入输出处，无论是从文件输入还是从网络等其他地方输入</li>
-<li>执行命令处</li>
-<li>调用函数处</li>
-</ul>
-<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><p>这里我对一般信息的记录使用了info,实际上，一般用作调试的话，是使用debug更多。</p>
-<p>需要用户输入的地方，总会有想不到的错误，多小心都不为过。例如，用户可能会把time_limit设定为一个全角数字。而本文中就没有捕获这种问题到日志中。所以如果不放心的话，还可以更进一步的细化日志。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1930,7 +1939,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1938,7 +1947,7 @@
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
@@ -1947,7 +1956,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

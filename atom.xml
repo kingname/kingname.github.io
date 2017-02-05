@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingname.info/"/>
-  <updated>2017-01-07T07:45:31.000Z</updated>
+  <updated>2017-02-05T15:59:29.000Z</updated>
   <id>http://kingname.info/</id>
   
   <author>
@@ -14,6 +14,82 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>技巧收集-M1701</title>
+    <link href="http://kingname.info/2017/02/05/tweet/"/>
+    <id>http://kingname.info/2017/02/05/tweet/</id>
+    <published>2017-02-05T15:56:31.000Z</published>
+    <updated>2017-02-05T15:59:29.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="2017-02"><a href="#2017-02" class="headerlink" title="2017.02"></a>2017.02</h2><p>To use the decorator, apply it as innermost decorator to a view function. When applying further decorators, <em>always</em> remember that the <code>route()</code> decorator is the outermost.</p>
+<a id="more"></a>
+<h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>HTML的<code>&lt;select&gt;&lt;/select&gt;</code>标签可以实现下拉选择框。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">class</span>=<span class="string">"form-control"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span> <span class="attr">selected</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span>&gt;</span>viewer<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span>&gt;</span>guest<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>运行效果如下：</p>
+<p><select class="form-control"><br>    <option value="admin" selected>admin</option><br>    <option value="admin">viewer</option><br>    <option value="admin">guest</option><br></select></p>
+<hr>
+<p>通过二进制的位操作，可以简化很多问题的分析。</p>
+<p>例如现在有四个角色，分别为：读者，作者，编辑和管理员。有四个不同的权限使用四位的二进制数表示：</p>
+<ul>
+<li>阅读权限：0001</li>
+<li>写入权限：0010</li>
+<li>修改权限：0100</li>
+<li>删除权限：1000</li>
+</ul>
+<p>每个角色的权限如下：</p>
+<ul>
+<li>读者只能读，所以权限是0001</li>
+<li>作者能读也能写，所以是0011</li>
+<li>编辑能读能写能修改，所以是0111</li>
+<li>管理员能读能写能修改能删除，所以是1111</li>
+</ul>
+<p>要判断一个角色有哪些权限，人眼可以直接看对应的位置上面是0还是1，是0就是没有权限，是1就是有权限。在程序里面可以通过和对应权限的四位二进制数取位与操作。例如，0111编辑是否有写权限？因为0111 &amp; 0010 = 0010 所以有写权限。只要角色的四位二进制数和权限的四位二进制数取位与，得到的结果还是权限的四位二进制数，那么就有这个权限。</p>
+<hr>
+<p>正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif" alt="手指使用二进制计数"></p>
+<hr>
+<p>Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。<a href="https://workflowy.com/invite/4b7e29eb.lnx" target="_blank" rel="external">Workflowy</a>的出现可以解决这个问题。Workflowy只支持文本，界面极其简洁：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png" alt=""><br>通过它来创建一个大纲，有助于理清思路。</p>
+<hr>
+<p>在HTML的<code>&lt;form&gt;&lt;/form&gt;</code>表单中，有一个属性叫做<code>action</code>,它的值是空或者是一个URL的相对路径或绝对路径。如果为空，表单将会被提交到现在这个页面的URL；如果不为空，表单将会被提交到action的值对应的页面来处理。</p>
+<p>理解这一点，那些喜欢在Flask中，把GET和POST写到一个Route，同时又要为GET带参数的人，需要特别注意。因为当你POST的时候，如果action不为空，参数可能会被丢失。</p>
+<hr>
+<p>如果你想在局域网中共享一个文件，你可以通过Python 3快速完成：</p>
+<ol>
+<li>打开终端或者CMD</li>
+<li><code>cd</code> 进入你需要分享的文件所在的文件夹</li>
+<li>输入<code>python3 -m http.server</code>回车</li>
+<li>在另一台电脑上打开浏览器，输入上一台电脑的<code>ip地址:8000</code>例如：<code>192.168.2.13:8000</code></li>
+<li>下载文件</li>
+</ol>
+<hr>
+<p>在Python中，使用<code>yield</code>实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，<code>yield</code>还可以接收参数供生成器内部使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(top)</span>:</span></div><div class="line">       index = <span class="number">0</span></div><div class="line">       <span class="keyword">while</span> index &lt;= top:</div><div class="line">              value_from_out = <span class="keyword">yield</span> index ** <span class="number">2</span></div><div class="line">              print(<span class="string">'来自外面的值为：&#123;&#125;'</span>.format(value_from_out))</div><div class="line">              index += <span class="number">1</span></div><div class="line"></div><div class="line">power_2 = generator(<span class="number">10</span>)</div><div class="line">print(next(power_2))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">"next(power_2) 相当于power_2.send(None)"</span>))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">'代码在函数和这里来回跳。'</span>))</div></pre></td></tr></table></figure></p>
+<p>输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">来自外面的值为：None</div><div class="line">1</div><div class="line">来自外面的值为：next(power_2) 相当于power_2.send(None)</div><div class="line">4</div><div class="line">来自外面的值为：None</div><div class="line">9</div><div class="line">来自外面的值为：代码在函数和这里来回跳。</div><div class="line">16</div></pre></td></tr></table></figure></p>
+<p>以上的运行方式，和协程非常的相似。</p>
+<hr>
+<p><a href="https://zh.wikipedia.org/wiki/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95" target="_blank" rel="external">逆波兰式</a>通过栈来实现对表达式的运算。例如：</p>
+<blockquote>
+<p>中缀表达式: 5 + ((1 + 2) <em> 4) − 3<br>逆波兰式：5 1 2 + 4 </em> + 3 −</p>
+</blockquote>
+<hr>
+<p>使用<a href="https://zh.wikipedia.org/wiki/%E8%B0%83%E5%BA%A6%E5%9C%BA%E7%AE%97%E6%B3%95" target="_blank" rel="external">调度场算法</a>可以将中缀表达式转换为逆波兰式。调度场算法是通过栈来实现的。操作数直接输出，符号需要判断优先级来判断应该直接压栈还是直接输出或者应该先将栈顶元素输出再压栈。</p>
+<blockquote>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png" alt="调度场算法示意图"></p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;2017-02&quot;&gt;&lt;a href=&quot;#2017-02&quot; class=&quot;headerlink&quot; title=&quot;2017.02&quot;&gt;&lt;/a&gt;2017.02&lt;/h2&gt;&lt;p&gt;To use the decorator, apply it as innermost decorator to a view function. When applying further decorators, &lt;em&gt;always&lt;/em&gt; remember that the &lt;code&gt;route()&lt;/code&gt; decorator is the outermost.&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Craft" scheme="http://kingname.info/categories/Craft/"/>
+    
+    
+      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+    
+      <category term="Craft" scheme="http://kingname.info/tags/Craft/"/>
+    
+  </entry>
   
   <entry>
     <title>30秒找到藏在家里的手机</title>
@@ -1092,69 +1168,6 @@
       <category term="Github" scheme="http://kingname.info/tags/Github/"/>
     
       <category term="history" scheme="http://kingname.info/tags/history/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>如何正确使用日志Log</title>
-    <link href="http://kingname.info/2015/01/08/%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E6%97%A5%E5%BF%97log/"/>
-    <id>http://kingname.info/2015/01/08/如何正确使用日志log/</id>
-    <published>2015-01-08T04:54:46.000Z</published>
-    <updated>2016-11-30T13:56:48.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>文章首发地址：<a href="http://kingname.info">http://kingname.info</a></p>
-<p>这篇文章不会教你在技术角度上使用log，而是告诉你为什么要使用log日志功能。</p>
-<h2 id="为什么要使用Log"><a href="#为什么要使用Log" class="headerlink" title="为什么要使用Log"></a>为什么要使用Log</h2><p>在<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/">使用微信控制你的电脑</a>这篇文章中，我写好了电脑端的程序，使用py2exe生成可执行文件，并把它们发送给我的朋友让他们进行测试。但是他们把_config.ini设置好以后，运行程序就看到一个黑色窗口一闪而过。或者有些人一开始看到程序能正常登陆邮箱，但是准备执行命令的时候，窗口自动关闭。</p>
-<p>由于没有日志记录程序的运行状态，我根据他们的描述很难定位到错误在哪个地方。于是折腾了一个下午。</p>
-<p>这个时候，我觉得添加一个日志的功能迫在眉睫。</p>
-<h2 id="哪些地方应该用Log"><a href="#哪些地方应该用Log" class="headerlink" title="哪些地方应该用Log"></a>哪些地方应该用Log</h2><p>目前网上能找到的关于如何使用日志的文章，全部都是从技术角度讲怎么使用log：在XX地方应该先imort logging，然后basicconfig设定XX内容。可是我现在的问题是：</p>
-<ul>
-<li>应该在程序的哪些地方添加日志的输出？</li>
-<li>输出什么内容？</li>
-<li>如何输出才能以方便我的监控程序的运行情况？</li>
-</ul>
-<p>于是我只有自己摸索。因此，<strong>以下内容是我自己摸索出来的野路子，可能会有错漏。希望有经验的朋友能给我指正，非常感谢。</strong></p>
-<h3 id="这些地方应该用Log"><a href="#这些地方应该用Log" class="headerlink" title="这些地方应该用Log"></a>这些地方应该用Log</h3><p>使用<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/">使用微信控制你的电脑</a>文章中涉及到的例子</p>
-<p>程序入口代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if __name__==&apos;__main__&apos;:</div><div class="line">        init()</div><div class="line">        print u&apos;等待接收命令&apos;</div><div class="line">        logging.info(u&apos;初始化完成。&apos;)</div><div class="line">        while 1:</div><div class="line">                time.sleep(int(time_limit)) #每5分钟检查一次邮箱</div><div class="line">                accp_mail()</div></pre></td></tr></table></figure>
-<p>以上代码表示程序运行以后，首先执行init()函数，于是如果init()初始化没有什么问题，成功执行完成以后，就应该在日志中输出“初始化完成”，然后进入接收邮件的循环。如果程序窗口运行以后一闪而过，而且生成的日志中没有初始化完成这样的字眼，那就说明问题出在初始化上面。</p>
-<p>然而初始化函数里面代码也有很多，又如何知道是初始化程序里面的什么地方出问题了呢？</p>
-<p>所以，再初始化函数里面，也应该有一定的日志记录。</p>
-<p>再看初始化函数的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">def init():</div><div class="line">        global username,password,host,boss_email,time_limit</div><div class="line">      	 </div><div class="line">		try:</div><div class="line">               f = open(&apos;_config.ini&apos;,&apos;r&apos;)</div><div class="line">       	except IOError,e:</div><div class="line">               logging.error(e)</div><div class="line">			exit()</div><div class="line"></div><div class="line">        info = f.readlines()</div><div class="line">		try:</div><div class="line">	        host = re.search(&apos;host:(.*?)\n&apos;,info[0],re.S).group(1)</div><div class="line">	        username = re.search(&apos;username:(.*?com)&apos;,info[1],re.S).group(1)</div><div class="line">	        password = re.search(&apos;password:(.*?)\n&apos;,info[2],re.S).group(1)</div><div class="line">	        boss_email = re.search(&apos;boss_email:(.*?com)&apos;,info[3],re.S).group(1)</div><div class="line">	        time_limit = re.search(&apos;time_limit:(.*?)\n&apos;,info[4],re.S).group(1)</div><div class="line">		except Exception,e:</div><div class="line">               logging.error(e)</div><div class="line"></div><div class="line">        logging.info(u&apos;打开配置文件成功。。。&apos;)</div><div class="line">		</div><div class="line"></div><div class="line">        #将命令生成字典，便于查询</div><div class="line">        command_start = info.index(&apos;&lt;command&gt;\n&apos;)</div><div class="line">        command_end = info.index(&apos;&lt;/command&gt;\n&apos;)</div><div class="line">        for each in info[command_start+1:command_end]:</div><div class="line">                command = each.split(&apos;=&apos;)</div><div class="line">                command_dict[command[0]] = command[1]</div><div class="line">		</div><div class="line">        logging.info(command_dict)</div><div class="line">		</div><div class="line">        open_start = info.index(&apos;&lt;open_file&gt;\n&apos;)</div><div class="line">        open_end = info.index(&apos;&lt;/open_file&gt;\n&apos;)</div><div class="line">        for each in info[open_start+1:open_end]:</div><div class="line">                open_file = each.split(&apos;=&apos;)</div><div class="line">                open_dict[open_file[0]] = open_file[1][:-1]</div><div class="line">		</div><div class="line">        logging.info(open_dict)</div><div class="line">		</div><div class="line">        f.close()</div></pre></td></tr></table></figure></p>
-<p>在这段代码中，我使用try except命令捕获异常，如果发生异常，就使用logging.error将错误写入日志中。例如当_config.ini被改名了或者被删除的时候，程序就会报错，而通过日志就能发现这个错误。</p>
-<p>经过上面的代码，如果在初始化的过程中出错，就可以很快确定问题出在什么地方。</p>
-<p>初始化完成以后，进入邮件接收阶段。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">def accp_mail():</div><div class="line">        logging.info(u&apos;开始检查邮箱&apos;)</div><div class="line">		try:</div><div class="line">	        pp = poplib.POP3_SSL(host)</div><div class="line">	        pp.set_debuglevel(1)</div><div class="line">	        pp.user(username)</div><div class="line">	        pp.pass_(password)</div><div class="line">	        ret = pp.list()</div><div class="line">	        logging.info(u&apos;登录邮箱成功。&apos;)</div><div class="line">		except Exception,e:</div><div class="line">			logging.error(e)</div><div class="line">			exit()</div><div class="line">		</div><div class="line">		logging.info(u&apos;开始抓取邮件。&apos;)</div><div class="line">		try:</div><div class="line">        	down = pp.retr(len(ret[1]))</div><div class="line">			logging.info(u抓取邮件成功。&apos;&apos;)</div><div class="line">		except Exception,e:</div><div class="line">			logging.error(e)</div><div class="line">			exit()</div><div class="line"></div><div class="line">		logging.info(u&apos;开始抓取subject和发件人&apos;)</div><div class="line">        try:</div><div class="line">               subject = re.search(&quot;Subject: (.*?)&apos;,&quot;,str(down[1]).decode(&apos;utf-8&apos;),re.S).group(1)</div><div class="line">               sender = re.search(&quot;&apos;X-Sender: (.*?)&apos;,&quot;,str(down[1]).decode(&apos;utf-8&apos;),re.S).group(1)</div><div class="line">               logging.info(u&apos;抓取subject和发件人成功&apos;)</div><div class="line">       	except Exception,e:</div><div class="line">               logging.error(e)</div><div class="line">               exit()</div><div class="line"></div><div class="line">        if subject != &apos;pass&apos;:</div><div class="line">                if sender == boss_email:</div><div class="line">                        DealCommand(subject)</div><div class="line">        pp.quit()</div></pre></td></tr></table></figure></p>
-<p>以上这段代码，对邮箱的登录与邮件的读取均作了监控，一旦有某个环节出了问题，就会体现在日志中。</p>
-<p>通过在登录环节的try except返回的错误日志，发现有很多朋友无法登录邮箱，而密码用户名都没有错，从而推断是没有在新浪邮箱的账户控制里面打开客服端接收POP3和SMTP的功能。</p>
-<p>再来看DealCommand()函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">def DealCommand(subject):</div><div class="line">        logging.info(u&apos;开始处理命令。&apos;)</div><div class="line">        send_mail(&apos;pass&apos;,&apos;slave&apos;)</div><div class="line">        if subject in command_dict:</div><div class="line">                logging.info(u&apos;执行命令&apos;)</div><div class="line">                try:</div><div class="line">                        command = command_dict[subject]</div><div class="line">                        os.system(command)</div><div class="line">                        send_mail(&apos;Success&apos;,&apos;boss&apos;)</div><div class="line">                        logging.info(u&apos;执行命令成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        send_mail(&apos;error&apos;,&apos;boss&apos;,e)</div><div class="line">        elif subject in open_dict:</div><div class="line">                logging.info(u&apos;打开文件&apos;)</div><div class="line">                try:</div><div class="line">                        open_file = open_dict[subject]</div><div class="line">                        win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</div><div class="line">                        send_mail(&apos;Success&apos;,&apos;boss&apos;)</div><div class="line">                        logging.info(u&apos;打开文件成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        send_mail(&apos;error&apos;,&apos;boss&apos;,e)</div><div class="line">        else:</div><div class="line">                send_mail(&apos;error&apos;,&apos;boss&apos;,&apos;no such command&apos;)</div></pre></td></tr></table></figure></p>
-<p>执行命令的地方可能会出错，于是果断使用try except捕获错误。并使用日志记录。</p>
-<p>最后是send_mail()函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">def send_mail(subject,flag,body=&apos;Success&apos;):</div><div class="line">        </div><div class="line">        msg = MIMEText(body,&apos;plain&apos;,&apos;utf-8&apos;)#中文需参数‘utf-8’，单字节字符不需要</div><div class="line">        msg[&apos;Subject&apos;] = subject</div><div class="line">        msg[&apos;from&apos;] = username</div><div class="line">        logging.info(&apos;开始配置发件箱。&apos;)</div><div class="line">        try:</div><div class="line">                handle = smtplib.SMTP(&apos;smtp.sina.com&apos;, 25)</div><div class="line">                handle.login(username,password)</div><div class="line">                logging.info(&apos;发件箱配置成功&apos;)</div><div class="line">        except Exception,e:</div><div class="line">                logging.error(e)</div><div class="line">                exit()</div><div class="line"></div><div class="line">        logging.info(u&apos;开始发送邮件&apos;+ &apos;to&apos; + flag)</div><div class="line">        if flag == &apos;slave&apos;:</div><div class="line">                try:</div><div class="line">                        handle.sendmail(username,username, msg.as_string())</div><div class="line">                        logging.info(u&apos;发送邮件成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        exit()</div><div class="line">        elif flag == &apos;boss&apos;:</div><div class="line">                try:</div><div class="line">                        handle.sendmail(username,boss_email, msg.as_string())</div><div class="line">                        logging.info(u&apos;发送邮件成功&apos;)</div><div class="line">                except Exception,e:</div><div class="line">                        logging.error(e)</div><div class="line">                        exit()</div><div class="line">                </div><div class="line">        handle.close()</div><div class="line">        logging.info(u&apos;发送邮件结束&apos;+flag)</div></pre></td></tr></table></figure></p>
-<p>这里对邮件发件的部分需要特别仔细的错误捕获，然后记录进入日志中。</p>
-<p>完整的代码见：<a href="https://github.com/kingname/MCC.git" target="_blank" rel="external">https://github.com/kingname/MCC.git</a>中的auto.py</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>需要使用日志记录的地方大致有一下几处：</p>
-<ul>
-<li>所有输入输出处，无论是从文件输入还是从网络等其他地方输入</li>
-<li>执行命令处</li>
-<li>调用函数处</li>
-</ul>
-<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><p>这里我对一般信息的记录使用了info,实际上，一般用作调试的话，是使用debug更多。</p>
-<p>需要用户输入的地方，总会有想不到的错误，多小心都不为过。例如，用户可能会把time_limit设定为一个全角数字。而本文中就没有捕获这种问题到日志中。所以如果不放心的话，还可以更进一步的细化日志。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;文章首发地址：&lt;a href=&quot;http://kingname.info&quot;&gt;http://kingname.info&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;这篇文章不会教你在技术角度上使用log，而是告诉你为什么要使用log日志功能。&lt;/p&gt;
-&lt;h2 id=&quot;为什么要使用Log&quot;&gt;&lt;a h
-    
-    </summary>
-    
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
-    
-      <category term="log" scheme="http://kingname.info/tags/log/"/>
     
   </entry>
   

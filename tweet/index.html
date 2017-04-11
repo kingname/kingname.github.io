@@ -86,28 +86,19 @@
 
 
 
-<meta name="description" content="2017.04在VIM粘贴Python代码的时候，缩进会一不小心爆炸。为了避免这个问题，应该先在normal模式输入1:set paste
-回车，再按i，再粘贴。这样Python的缩进就不会乱掉了。
-
-Selenium的Debug级的Log有时候打得太多了，为了去掉Selenium的Debug Log又不影响其他部份的Debug Log，可以使用如下命令完成：123import loggingfr">
+<meta name="description" content="2017.04在MongoDB中，通过_id来更新数据：1234from bson.objectid import ObjectIdimport pymongoconn = pymongo.MongoClient().XX.YYconn.update(&amp;#123;&apos;_id&apos;: ObjectId(&apos;adf84a8fafasf3213&apos;), &amp;#123;&apos;$set&apos;: &amp;#123;&apos;name&apos;: &apos;a">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="http://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.04在VIM粘贴Python代码的时候，缩进会一不小心爆炸。为了避免这个问题，应该先在normal模式输入1:set paste
-回车，再按i，再粘贴。这样Python的缩进就不会乱掉了。
-
-Selenium的Debug级的Log有时候打得太多了，为了去掉Selenium的Debug Log又不影响其他部份的Debug Log，可以使用如下命令完成：123import loggingfr">
+<meta property="og:description" content="2017.04在MongoDB中，通过_id来更新数据：1234from bson.objectid import ObjectIdimport pymongoconn = pymongo.MongoClient().XX.YYconn.update(&amp;#123;&apos;_id&apos;: ObjectId(&apos;adf84a8fafasf3213&apos;), &amp;#123;&apos;$set&apos;: &amp;#123;&apos;name&apos;: &apos;a">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-04-06T16:11:56.000Z">
+<meta property="og:updated_time" content="2017-04-11T13:27:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.04在VIM粘贴Python代码的时候，缩进会一不小心爆炸。为了避免这个问题，应该先在normal模式输入1:set paste
-回车，再按i，再粘贴。这样Python的缩进就不会乱掉了。
-
-Selenium的Debug级的Log有时候打得太多了，为了去掉Selenium的Debug Log又不影响其他部份的Debug Log，可以使用如下命令完成：123import loggingfr">
+<meta name="twitter:description" content="2017.04在MongoDB中，通过_id来更新数据：1234from bson.objectid import ObjectIdimport pymongoconn = pymongo.MongoClient().XX.YYconn.update(&amp;#123;&apos;_id&apos;: ObjectId(&apos;adf84a8fafasf3213&apos;), &amp;#123;&apos;$set&apos;: &amp;#123;&apos;name&apos;: &apos;a">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 
 
@@ -280,7 +271,13 @@ Selenium的Debug级的Log有时候打得太多了，为了去掉Selenium的Debug
 
     
     
-      <h2 id="2017-04"><a href="#2017-04" class="headerlink" title="2017.04"></a>2017.04</h2><p>在VIM粘贴Python代码的时候，缩进会一不小心爆炸。为了避免这个问题，应该先在normal模式输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:set paste</div></pre></td></tr></table></figure></p>
+      <h2 id="2017-04"><a href="#2017-04" class="headerlink" title="2017.04"></a>2017.04</h2><p>在MongoDB中，通过_id来更新数据：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bson.objectid <span class="keyword">import</span> ObjectId</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line">conn = pymongo.MongoClient().XX.YY</div><div class="line">conn.update(&#123;<span class="string">'_id'</span>: ObjectId(<span class="string">'adf84a8fafasf3213'</span>), &#123;<span class="string">'$set'</span>: &#123;<span class="string">'name'</span>: <span class="string">'aaa'</span>&#125;&#125;&#125;)</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在Python 3中，将两个时间点相隔的秒数算出来：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line">start = datetime.datetime.now()</div><div class="line"><span class="comment">#do something </span></div><div class="line">end = datetime.datetime.now()</div><div class="line">total_seconds = (end - start).total_seconds()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>Scrapy中，通过覆写items.py中，每个item的<strong>repr</strong>方法，可以减少打印出来的Log信息。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">XXXItem</span><span class="params">(Item)</span>:</span></div><div class="line">    name = Field()</div><div class="line">    age = Field()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'======data has been stored.======='</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>在VIM粘贴Python代码的时候，缩进会一不小心爆炸。为了避免这个问题，应该先在normal模式输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:set paste</div></pre></td></tr></table></figure></p>
 <p>回车，再按i，再粘贴。这样Python的缩进就不会乱掉了。</p>
 <hr>
 <p>Selenium的Debug级的Log有时候打得太多了，为了去掉Selenium的Debug Log又不影响其他部份的Debug Log，可以使用如下命令完成：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">from</span> selenium.webdriver.remote.remote_connection <span class="keyword">import</span> LOGGER</div><div class="line">LOGGER.setLevel(logging.WARNING)</div></pre></td></tr></table></figure></p>

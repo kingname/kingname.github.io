@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Python,email," />
+  <meta name="keywords" content="Python," />
 
 
 
@@ -86,36 +86,24 @@
 
 
 
-<meta name="description" content="A totally amazing!!!
-源代码请戳-&amp;gt;https://github.com/kingname/MCC
-实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~
-文件结构程序由两部分构成:
-
-_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令
-auto.py为程序的主体文件，相关的实现代码均在里">
+<meta name="description" content="Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用微信控制你的电脑">
-<meta property="og:url" content="http://kingname.info/2014/12/23/A-Totally-Amazing/index.html">
+<meta property="og:title" content="记住变量类型的三种方式">
+<meta property="og:url" content="http://kingname.info/2017/06/11/type-hints-in-python3/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="A totally amazing!!!
-源代码请戳-&amp;gt;https://github.com/kingname/MCC
-实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~
-文件结构程序由两部分构成:
-
-_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令
-auto.py为程序的主体文件，相关的实现代码均在里">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/MCCliuchen.png">
-<meta property="og:updated_time" content="2016-11-30T13:56:12.000Z">
+<meta property="og:description" content="Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-24-35.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-27-49.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-32-23.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-35-15.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-41-12.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-48-18.png">
+<meta property="og:updated_time" content="2017-06-11T08:58:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用微信控制你的电脑">
-<meta name="twitter:description" content="A totally amazing!!!
-源代码请戳-&amp;gt;https://github.com/kingname/MCC
-实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~
-文件结构程序由两部分构成:
-
-_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令
-auto.py为程序的主体文件，相关的实现代码均在里">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/MCCliuchen.png">
+<meta name="twitter:title" content="记住变量类型的三种方式">
+<meta name="twitter:description" content="Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png">
 
 
 
@@ -143,13 +131,13 @@ auto.py为程序的主体文件，相关的实现代码均在里">
 
 
 
-  <link rel="canonical" href="http://kingname.info/2014/12/23/A-Totally-Amazing/"/>
+  <link rel="canonical" href="http://kingname.info/2017/06/11/type-hints-in-python3/"/>
 
 
 
 
 
-  <title> 使用微信控制你的电脑 | Kingname </title>
+  <title> 记住变量类型的三种方式 | Kingname </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -280,7 +268,7 @@ auto.py为程序的主体文件，相关的实现代码均在里">
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://kingname.info/2014/12/23/A-Totally-Amazing/">
+  <link itemprop="mainEntityOfPage" href="http://kingname.info/2017/06/11/type-hints-in-python3/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Kingname">
@@ -304,7 +292,7 @@ auto.py为程序的主体文件，相关的实现代码均在里">
             
             
               
-                使用微信控制你的电脑
+                记住变量类型的三种方式
               
             
           </h1>
@@ -317,8 +305,8 @@ auto.py为程序的主体文件，相关的实现代码均在里">
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-12-23T22:44:20+08:00">
-                2014-12-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-11T15:25:03+08:00">
+                2017-06-11
               </time>
             
 
@@ -351,8 +339,8 @@ auto.py为程序的主体文件，相关的实现代码均在里">
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2014/12/23/A-Totally-Amazing/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2014/12/23/A-Totally-Amazing/" itemprop="commentCount"></span>
+                <a href="/2017/06/11/type-hints-in-python3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/11/type-hints-in-python3/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -378,62 +366,28 @@ auto.py为程序的主体文件，相关的实现代码均在里">
       
 
       
-        <p>A totally amazing!!!</p>
-<p>源代码请戳-&gt;<a href="https://github.com/kingname/MCC" target="_blank" rel="external">https://github.com/kingname/MCC</a></p>
-<p>实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~</p>
-<h2 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h2><p>程序由两部分构成:</p>
-<ul>
-<li>_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令</li>
-<li>auto.py为程序的主体文件，相关的实现代码均在里面</li>
-</ul>
-<h2 id="软件原理"><a href="#软件原理" class="headerlink" title="软件原理"></a>软件原理</h2><p>本程序需要使用两个邮箱，我给他们取名字为【主人邮箱】和【奴隶邮箱】。建议奴隶邮箱使用小号。主人邮箱使用大号，我是使用的我的QQ邮箱作为主人邮箱，临时申请的一个新浪邮箱作为奴隶邮箱。目前奴隶邮箱使用新浪邮箱测试通过，其他邮箱未做测试。各位有兴趣的朋友可以测试一下并反馈给我，非常感谢~</p>
-<p>本程序使用Python的poplib提供的函数，周期性读取奴隶邮箱最新的一封邮件，如果这封邮件是主人邮箱发送的，并且标题在_config.ini文件中有定义，则执行本标题定义的操作。</p>
-<p>例如，_config.ini文件中有如下定义：</p>
-<pre><code>music=D:\backup\Music\Intro.mp3
-</code></pre><p>主人邮箱发送一份邮件，标题为music，电脑就会调用默认播放器，播放D盘中的这个名叫Intro.mp3的音乐。如果这个Intro.mp3本身只有1秒钟，且没有内容，而音乐播放器设置为随机播放，就间接地实现了打开播放器随机播放音乐的目的。</p>
-<p>目前程序可以实现两类功能：<br>运行命令与打开文件。</p>
-<h3 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h3><p>其中运行命令的原理是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">os.system(command)</div></pre></td></tr></table></figure>
-<p>理论上任何在CMD命令提示符下可以执行的命令，在这里都可以执行。_config.ini中默认提供了两个样例，一个关闭计算机：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shutdown=shutdown -f -s -t 10 -c closing...</div></pre></td></tr></table></figure>
-<p>另一个是列出当前目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dir=dir</div></pre></td></tr></table></figure></p>
-<p>等号左侧为此命令的名字，也就是在邮件中可以发送的标题内容，等号右侧为命令本身。注意等号左右均不能有空格。</p>
-<h3 id="打开文件"><a href="#打开文件" class="headerlink" title="打开文件"></a>打开文件</h3><p>打开文件的原理是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</div></pre></td></tr></table></figure></p>
-<p>其中，open_file为文件在电脑中的位置。函数调用Windows的API来运行程序，效果和用鼠标双击相同。</p>
-<h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p>程序运行以后，先加载_config.ini，配置主人邮箱和奴隶邮箱，并确定扫描频率（time_limit）为多少秒检查一次邮箱。同时使用字典将命令的名称和命令本身添加到内存中。接下来的操作如下：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/MCCliuchen.png" alt=""></p>
-<p>使用主人邮箱发送相应的命令名称以后，就能触发电脑的相关操作。</p>
-<h2 id="程序配置"><a href="#程序配置" class="headerlink" title="程序配置"></a>程序配置</h2><p>打开_config.ini文件:</p>
-<ul>
-<li><p>host填写奴隶邮箱的pop3服务器，例如新浪的pop3服务器为</p>
-<pre><code>pop.sina.com
-</code></pre></li>
-<li><p>username为奴隶邮箱的邮箱号</p>
-</li>
-<li>password为奴隶邮箱的密码</li>
-<li>boss_email为主人邮箱号</li>
-<li>time_limit控制程序检查邮箱的评论，默认为300秒，也就是5分钟</li>
-<li><p>＜command＞与＜/command＞之间为命令区，此处可以使用任何能在CMD命令提示符中执行的命令格式为：</p>
-<pre><code>名字=命令
-</code></pre><p>注意=左右不能出现空格</p>
-</li>
-<li><p>＜open_file＞＜/open_file＞之间为可以打开的文件。任何在电脑上可以使用鼠标双击打开的程序、文件均可把其地址写在此处。格式为：</p>
-<pre><code>名字=地址
-</code></pre><p>注意=左右不能出现空格</p>
-</li>
-</ul>
-<h2 id="编译程序"><a href="#编译程序" class="headerlink" title="编译程序"></a>编译程序</h2><p>使用py2exe编译。进入代码目测，执行以下代码：</p>
-<pre><code>python mysetup.py py2exe
-</code></pre><h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>接下来的版本升级中</p>
-<ul>
-<li>会添加更多的操作进去</li>
-<li>开发图像界面，使配置更方便</li>
-<li>动态调整检查频率</li>
-<li>通过邮件的内容返回命令的执行状态</li>
-<li>通过邮件内容返回文件列表</li>
-<li>解决打开的文件功能在文件名和路径不能有汉字的bug</li>
-</ul>
-<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>感谢知乎用户 <a href="http://www.zhihu.com/people/yin-fitz" title="@印如意fitz" target="_blank" rel="external">@印如意fitz</a>的启发与思路提供。</p>
+        <p>Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。</p>
+<a id="more"></a>
+<p>假设有一个变量<code>is_request_finished</code>，从名字上来看，这个变量的值应该为<code>True</code>或者<code>False</code>，在写代码的时候，最初也确实是这样定义的。但是可能由于某些原因，在某一次赋值的时候，<code>is_request_finished = &#39;True&#39;</code>。此时，如果代码的单元测试不够完善，那么<code>if is_request_finished</code>在 <code>is_request_finished = True</code> 和 <code>is_request_finished = &#39;True&#39;</code>的时候都成立，问题被隐藏了。但是当<code>is_request_finished = &#39;False&#39;</code>的时候，由于<code>&#39;False&#39;</code>作为一个非空字符串，就会使得<code>if is_request_finished</code> 依然成立，从而使程序的行为发现异常。</p>
+<p>单个变量的类型异常也许还容易发现，但是如果变量是放在字典或者列表里面，那就比较麻烦了。假设需要保存一段个人信息，于是创建了下面这样一个列表套字典的数据结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">person_list = [&#123;</div><div class="line">        &apos;name&apos;: &apos;kingname&apos;,</div><div class="line">        &apos;age&apos;: 23,</div><div class="line">        &apos;sex&apos;: &apos;male&apos;</div><div class="line">        &apos;detail&apos;: &#123;</div><div class="line">                    &apos;address&apos;: &apos;xxx&apos;,</div><div class="line">                    &apos;work&apos;: &apos;engineer&apos;,</div><div class="line">                    &apos;salary&apos;: 100000</div><div class="line">            &#125;</div><div class="line">&#125;,</div><div class="line">&#123;</div><div class="line">        &apos;name&apos;: &apos;xiaoming&apos;,</div><div class="line">        &apos;age&apos;: 65,</div><div class="line">        &apos;sex&apos;: &apos;male&apos;</div><div class="line">        &apos;detail&apos;: &#123;</div><div class="line">                    &apos;address&apos;: &apos;yyy&apos;,</div><div class="line">                    &apos;work&apos;: &apos;pm&apos;,</div><div class="line">                    &apos;salary&apos;: 0.5</div><div class="line">            &#125;</div><div class="line">&#125;]</div></pre></td></tr></table></figure>
+<p>这种方式开发起来非常的快速而方便，但是其他人甚至是开发者自己在一段时间以后读代码，都会有一种想抽死自己的冲动。因为根本不知道这个变量里面保存的是什么东西。</p>
+<p>针对以上问题，常见的解决办法有三种。</p>
+<h2 id="Type-Hints-与-Variable-Annotations"><a href="#Type-Hints-与-Variable-Annotations" class="headerlink" title="Type Hints 与 Variable Annotations"></a>Type Hints 与 Variable Annotations</h2><p>在<a href="https://www.python.org/dev/peps/pep-0484/" target="_blank" rel="external">PEP 484</a>中，引入了Type Hints，在<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">PEP 526</a>中引入了Variable Annotations。它使得Python 3.6及以后的Python 代码拥有了“声明”变量类型的能力。这里的“声明”之所以会打引号，是因为这个声明是给IDE和人看的。这个声明对 Python 的解释器无效。</p>
+<h3 id="Type-Hints"><a href="#Type-Hints" class="headerlink" title="Type Hints"></a>Type Hints</h3><p>PyCharm现在已经可以比较好地支持Type Hints了。例如下面这一段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url)</span>:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p>模拟一段上传文件的函数，上传成功以后返回True。接收一个参数<code>url</code>。在正常情况下，这个<code>url</code>应该是一个字符串。于是，使用Type Hints，代码可以变为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url: str)</span> -&gt; bool:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p>如果直接运行，其运行效果如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png" alt=""></p>
+<p>现在假设传递一个不是字符串的变量给<code>upload</code>函数，此时PyCharm就会提示类型有问题，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-24-35.png" alt=""><br>但提示归提示，强行运行也是没有问题的。这就说明Type Hints主要是给IDE和人用的，解释器并不会关心类型正不正确。</p>
+<p>如果修改这个函数的返回值，让它不返回<code>True</code> 或者<code>False</code>，PyCharm 也会发出警告：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-27-49.png" alt=""></p>
+<p>Type Hints的官方文档，可以参阅：<a href="https://docs.python.org/3/library/typing.html" target="_blank" rel="external">typing — Support for type hints</a></p>
+<h3 id="Variable-Annotations"><a href="#Variable-Annotations" class="headerlink" title="Variable Annotations"></a>Variable Annotations</h3><p>对于Variable Annotations，如下图所示，虽然目前PyCharm还不能很好地提示变量类型不对，但是人在读代码的时候，还是会起到一定的帮助。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-32-23.png" alt=""></p>
+<p>除了这种写法外，Variable Annotations还支持把类型写在注释中，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-35-15.png" alt=""></p>
+<p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-41-12.png" alt=""></p>
+<p>关于Variable Annotations的更多用法，可以参阅：<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">Syntax for Variable Annotations</a><br>关于Mypy，可以参阅它的官方文档：<a href="http://mypy.readthedocs.io/en/stable/index.html" target="_blank" rel="external">Mypy documentation</a></p>
+<h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
+<h2 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h2><p>这种方法来自与Java Bean的思想，它主要用来解决列表套字典，字典套字典，字典套列表，列表套列表这种深层的嵌套关系。关于这个方法，请参阅另一篇文章：<a href="http://kingname.info/2016/06/19/bean-in-python/">可爱的豆子——使用Beans思想让Python代码更易维护</a></p>
 
       
     </div>
@@ -459,8 +413,6 @@ auto.py为程序的主体文件，相关的实现代码均在里">
           
             <a href="/tags/Python/" rel="tag"># Python</a>
           
-            <a href="/tags/email/" rel="tag"># email</a>
-          
         </div>
       
 
@@ -468,8 +420,8 @@ auto.py为程序的主体文件，相关的实现代码均在里">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2014/12/21/Python正则表达式中的re-S/" rel="next" title="Python正则表达式中的re.S">
-                <i class="fa fa-chevron-left"></i> Python正则表达式中的re.S
+              <a href="/2017/04/17/decorate-for-method/" rel="next" title="Python 装饰器装饰类中的方法">
+                <i class="fa fa-chevron-left"></i> Python 装饰器装饰类中的方法
               </a>
             
           </div>
@@ -477,10 +429,6 @@ auto.py为程序的主体文件，相关的实现代码均在里">
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" rel="prev" title="对一个罗马数字与阿拉伯数字转换算法的分析">
-                对一个罗马数字与阿拉伯数字转换算法的分析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -660,7 +608,7 @@ auto.py为程序的主体文件，相关的实现代码均在里">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文件结构"><span class="nav-number">1.</span> <span class="nav-text">文件结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件原理"><span class="nav-number">2.</span> <span class="nav-text">软件原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运行命令"><span class="nav-number">2.1.</span> <span class="nav-text">运行命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打开文件"><span class="nav-number">2.2.</span> <span class="nav-text">打开文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行流程"><span class="nav-number">3.</span> <span class="nav-text">运行流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序配置"><span class="nav-number">4.</span> <span class="nav-text">程序配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译程序"><span class="nav-number">5.</span> <span class="nav-text">编译程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Todo"><span class="nav-number">6.</span> <span class="nav-text">Todo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#致谢"><span class="nav-number">7.</span> <span class="nav-text">致谢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-Hints-与-Variable-Annotations"><span class="nav-number">1.</span> <span class="nav-text">Type Hints 与 Variable Annotations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Type-Hints"><span class="nav-number">1.1.</span> <span class="nav-text">Type Hints</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable-Annotations"><span class="nav-number">1.2.</span> <span class="nav-text">Variable Annotations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docstring"><span class="nav-number">2.</span> <span class="nav-text">docstring</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean"><span class="nav-number">3.</span> <span class="nav-text">Bean</span></a></li></ol></div>
             
 
           </div>

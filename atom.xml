@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingname.info/"/>
-  <updated>2017-04-17T13:25:32.000Z</updated>
+  <updated>2017-06-11T08:58:41.000Z</updated>
   <id>http://kingname.info/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>记住变量类型的三种方式</title>
+    <link href="http://kingname.info/2017/06/11/type-hints-in-python3/"/>
+    <id>http://kingname.info/2017/06/11/type-hints-in-python3/</id>
+    <published>2017-06-11T07:25:03.000Z</published>
+    <updated>2017-06-11T08:58:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。</p>
+<a id="more"></a>
+<p>假设有一个变量<code>is_request_finished</code>，从名字上来看，这个变量的值应该为<code>True</code>或者<code>False</code>，在写代码的时候，最初也确实是这样定义的。但是可能由于某些原因，在某一次赋值的时候，<code>is_request_finished = &#39;True&#39;</code>。此时，如果代码的单元测试不够完善，那么<code>if is_request_finished</code>在 <code>is_request_finished = True</code> 和 <code>is_request_finished = &#39;True&#39;</code>的时候都成立，问题被隐藏了。但是当<code>is_request_finished = &#39;False&#39;</code>的时候，由于<code>&#39;False&#39;</code>作为一个非空字符串，就会使得<code>if is_request_finished</code> 依然成立，从而使程序的行为发现异常。</p>
+<p>单个变量的类型异常也许还容易发现，但是如果变量是放在字典或者列表里面，那就比较麻烦了。假设需要保存一段个人信息，于是创建了下面这样一个列表套字典的数据结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">person_list = [&#123;</div><div class="line">        &apos;name&apos;: &apos;kingname&apos;,</div><div class="line">        &apos;age&apos;: 23,</div><div class="line">        &apos;sex&apos;: &apos;male&apos;</div><div class="line">        &apos;detail&apos;: &#123;</div><div class="line">                    &apos;address&apos;: &apos;xxx&apos;,</div><div class="line">                    &apos;work&apos;: &apos;engineer&apos;,</div><div class="line">                    &apos;salary&apos;: 100000</div><div class="line">            &#125;</div><div class="line">&#125;,</div><div class="line">&#123;</div><div class="line">        &apos;name&apos;: &apos;xiaoming&apos;,</div><div class="line">        &apos;age&apos;: 65,</div><div class="line">        &apos;sex&apos;: &apos;male&apos;</div><div class="line">        &apos;detail&apos;: &#123;</div><div class="line">                    &apos;address&apos;: &apos;yyy&apos;,</div><div class="line">                    &apos;work&apos;: &apos;pm&apos;,</div><div class="line">                    &apos;salary&apos;: 0.5</div><div class="line">            &#125;</div><div class="line">&#125;]</div></pre></td></tr></table></figure>
+<p>这种方式开发起来非常的快速而方便，但是其他人甚至是开发者自己在一段时间以后读代码，都会有一种想抽死自己的冲动。因为根本不知道这个变量里面保存的是什么东西。</p>
+<p>针对以上问题，常见的解决办法有三种。</p>
+<h2 id="Type-Hints-与-Variable-Annotations"><a href="#Type-Hints-与-Variable-Annotations" class="headerlink" title="Type Hints 与 Variable Annotations"></a>Type Hints 与 Variable Annotations</h2><p>在<a href="https://www.python.org/dev/peps/pep-0484/" target="_blank" rel="external">PEP 484</a>中，引入了Type Hints，在<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">PEP 526</a>中引入了Variable Annotations。它使得Python 3.6及以后的Python 代码拥有了“声明”变量类型的能力。这里的“声明”之所以会打引号，是因为这个声明是给IDE和人看的。这个声明对 Python 的解释器无效。</p>
+<h3 id="Type-Hints"><a href="#Type-Hints" class="headerlink" title="Type Hints"></a>Type Hints</h3><p>PyCharm现在已经可以比较好地支持Type Hints了。例如下面这一段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url)</span>:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p>模拟一段上传文件的函数，上传成功以后返回True。接收一个参数<code>url</code>。在正常情况下，这个<code>url</code>应该是一个字符串。于是，使用Type Hints，代码可以变为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url: str)</span> -&gt; bool:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p>如果直接运行，其运行效果如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png" alt=""></p>
+<p>现在假设传递一个不是字符串的变量给<code>upload</code>函数，此时PyCharm就会提示类型有问题，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-24-35.png" alt=""><br>但提示归提示，强行运行也是没有问题的。这就说明Type Hints主要是给IDE和人用的，解释器并不会关心类型正不正确。</p>
+<p>如果修改这个函数的返回值，让它不返回<code>True</code> 或者<code>False</code>，PyCharm 也会发出警告：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-27-49.png" alt=""></p>
+<p>Type Hints的官方文档，可以参阅：<a href="https://docs.python.org/3/library/typing.html" target="_blank" rel="external">typing — Support for type hints</a></p>
+<h3 id="Variable-Annotations"><a href="#Variable-Annotations" class="headerlink" title="Variable Annotations"></a>Variable Annotations</h3><p>对于Variable Annotations，如下图所示，虽然目前PyCharm还不能很好地提示变量类型不对，但是人在读代码的时候，还是会起到一定的帮助。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-32-23.png" alt=""></p>
+<p>除了这种写法外，Variable Annotations还支持把类型写在注释中，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-35-15.png" alt=""></p>
+<p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-41-12.png" alt=""></p>
+<p>关于Variable Annotations的更多用法，可以参阅：<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">Syntax for Variable Annotations</a><br>关于Mypy，可以参阅它的官方文档：<a href="http://mypy.readthedocs.io/en/stable/index.html" target="_blank" rel="external">Mypy documentation</a></p>
+<h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
+<h2 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h2><p>这种方法来自与Java Bean的思想，它主要用来解决列表套字典，字典套字典，字典套列表，列表套列表这种深层的嵌套关系。关于这个方法，请参阅另一篇文章：<a href="http://kingname.info/2016/06/19/bean-in-python/">可爱的豆子——使用Beans思想让Python代码更易维护</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+    
+  </entry>
   
   <entry>
     <title>Python 装饰器装饰类中的方法</title>
@@ -1135,49 +1179,6 @@
       <category term="BootStrap" scheme="http://kingname.info/tags/BootStrap/"/>
     
       <category term="匿名聊天" scheme="http://kingname.info/tags/%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>xpath提取多个标签下的text</title>
-    <link href="http://kingname.info/2015/01/17/xpath%E6%8F%90%E5%8F%96%E5%A4%9A%E4%B8%AA%E6%A0%87%E7%AD%BE%E4%B8%8B%E7%9A%84text/"/>
-    <id>http://kingname.info/2015/01/17/xpath提取多个标签下的text/</id>
-    <published>2015-01-17T08:01:07.000Z</published>
-    <updated>2016-11-30T13:56:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在写爬虫的时候，经常会使用xpath进行数据的提取，对于如下的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test1&quot;&gt;大家好！&lt;/div&gt;</div></pre></td></tr></table></figure></p>
-<p>使用xpath提取是非常方便的。假设网页的源代码在selector中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test1&quot;]/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>就可以把“大家好！”提取到data变量中去。</p>
-<p>然而如果遇到下面这段代码呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test2&quot;&gt;美女，&lt;font color=red&gt;你的微信是多少？&lt;/font&gt;&lt;div&gt;</div></pre></td></tr></table></figure></p>
-<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>只能提取到“美女，”；</p>
-<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/font/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>又只能提取到“你的微信是多少？”</p>
-<p>可是我本意是想把“美女，你的微信是多少？”这一整个句子提取出来。</p>
-<p>这还不是最糟糕的，还有第三段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test3&quot;&gt;我左青龙，&lt;span id=&quot;tiger&quot;&gt;右白虎，&lt;ul&gt;上朱雀，&lt;li&gt;下玄武。&lt;/li&gt;&lt;/ul&gt;老牛在当中，&lt;/span&gt;龙头在胸口。&lt;div&gt;</div></pre></td></tr></table></figure></p>
-<p>而且内部的标签还不固定，如果我有一百段这样类似的html代码，又如何使用xpath表达式，以最快最方便的方式提取出来？</p>
-<p>我差一点就去用正则表达式替换了。还好我去Stack Overflow上面提了问。于是很快就有人给我解答了。</p>
-<p><strong>使用xpath的string(.)</strong></p>
-<p>以第三段代码为例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test3&quot;]&apos;)</div><div class="line">info = data.xpath(&apos;string(.)&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>这样，就可以把“我左青龙，右白虎，上朱雀，下玄武。老牛在当中，龙头在胸口”整个句子提取出来，赋值给info变量。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在写爬虫的时候，经常会使用xpath进行数据的提取，对于如下的代码：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;
-    
-    </summary>
-    
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
-    
-      <category term="xpath" scheme="http://kingname.info/tags/xpath/"/>
-    
-      <category term="xml" scheme="http://kingname.info/tags/xml/"/>
-    
-      <category term="scrapy" scheme="http://kingname.info/tags/scrapy/"/>
     
   </entry>
   

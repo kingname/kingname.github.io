@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingname.info/"/>
-  <updated>2017-06-11T08:58:41.000Z</updated>
+  <updated>2017-06-17T17:26:07.000Z</updated>
   <id>http://kingname.info/</id>
   
   <author>
@@ -14,6 +14,64 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Tenacity——Exception Retry 从此无比简单</title>
+    <link href="http://kingname.info/2017/06/18/easy-retry/"/>
+    <id>http://kingname.info/2017/06/18/easy-retry/</id>
+    <published>2017-06-17T16:17:47.000Z</published>
+    <updated>2017-06-17T17:26:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://kingname.info/2017/04/17/decorate-for-method/">Python 装饰器装饰类中的方法</a>这篇文章，使用了装饰器来捕获代码异常。这种方式可以让代码变得更加简洁和Pythonic。</p>
+<p>在写代码的过程中，处理异常并重试是一个非常常见的需求。但是如何把捕获异常并重试写得简洁高效，这就是一个技术活了。</p>
+<p>以爬虫开发为例，由于网页返回的源代码有各种不同的情况，因此捕获异常并重试是很常见的要求。下面这几段代码是我多年以前，在刚开始学习爬虫的时候，由于捕获异常并重试导致代码混乱化过程。</p>
+<p>代码一开始的逻辑非常简单，获取网页后台API返回的JSON字符串，转化成字典，提取出里面<code>data</code>的数据，然后传递给<code>save()</code>函数:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
+<p>代码运行一段时间，发现有时候JSON会随机出现解析错误。于是添加捕获异常并重试的功能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).text</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        info_dict = json.loads(info_json)</div><div class="line">    <span class="keyword">except</span> Exception:</div><div class="line">        print(<span class="string">'网页返回的不是有效的JSON格式字符串，重试！'</span>)</div><div class="line">        extract(url)</div><div class="line">        <span class="keyword">return</span></div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
+<p>后来又发现，有部份的URL会导致递归深度超过最大值。这是因为有一些URL返回的是数据始终是错误的，而有些URL，重试几次又能返回正常的JSON数据，于是限制只重试3次：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).text</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        info_dict = json.loads(info_json)</div><div class="line">    <span class="keyword">except</span> Exception:</div><div class="line">        print(<span class="string">'网页返回的不是有效的JSON格式字符串，重试！'</span>)</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">            <span class="keyword">if</span> extract(url):</div><div class="line">                <span class="keyword">break</span></div><div class="line"></div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p>后来又发现，不能立刻重试，重试要有时间间隔，并且时间间隔逐次增大……</p>
+<p>从上面的例子中可以看到，对于异常的捕获和处理，一不小心就让整个代码变得很难看很难维护。为了解决这个问题，就需要通过装饰器来完成处理异常并重试的功能。</p>
+<p>Python 有一个第三方库，叫做<a href="http://tenacity.readthedocs.io/en/latest/" target="_blank" rel="external">Tenacity</a>，它实现了一种优雅的重试功能。</p>
+<p>以上面爬虫最初的无限重试版本为例，如果想实现遇到异常就重试。只需要添加两行代码，爬虫的主体函数完全不需要做修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tenacity <span class="keyword">import</span> retry</div><div class="line"></div><div class="line"><span class="meta">@retry</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
+<p>现在要限制重试次数为3次，代码总行数不需要新增一行就能实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tenacity <span class="keyword">import</span> retry</div><div class="line"></div><div class="line"><span class="meta">@retry(stop=stop_after_attempt(3))</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
+<p>现在想每5秒钟重试一次，代码行数也不需要增加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tenacity <span class="keyword">import</span> retry</div><div class="line"></div><div class="line"><span class="meta">@retry(wait=wait_fixed(5))</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
+<p>甚至重试的时间间隔想指数级递增，代码行数也不需要增加：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tenacity <span class="keyword">import</span> retry</div><div class="line"></div><div class="line"><span class="meta">@retry(wait=wait_exponential(multiplier=1, max=10)) # 重试时间间隔满足：2^n * multiplier, n为重试次数，但最多间隔10秒</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure></p>
+<p>重试不仅可以限制次数和间隔时间，还可以针对特定的异常进行重试。在爬虫主体中，其实有三个地方可能出现异常: </p>
+<ul>
+<li>requests获取网页出错</li>
+<li>解析JSON出错</li>
+<li>info_dict字典里面没有<code>data</code>这个key</li>
+</ul>
+<p>如果只需要在JSON解析错误时重试，由于异常类型为<code>json.decoder.JSONDecodeError</code>，所以就可以通过参数来进行限制：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tenacity <span class="keyword">import</span> retry</div><div class="line"><span class="keyword">from</span> json.decoder <span class="keyword">import</span> JSONDecodeError</div><div class="line"></div><div class="line"><span class="meta">@retry(retry=retry_if_exception_type(JSONDecodeError))</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
+<p>当然，这些特性都可以进行组合，例如只对<code>JSONDecodeError</code> 进行重试，每次间隔5秒，重试三次，那就写成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tenacity <span class="keyword">import</span> retry</div><div class="line"><span class="keyword">from</span> json.decoder <span class="keyword">import</span> JSONDecodeError</div><div class="line"></div><div class="line"><span class="meta">@retry(retry=retry_if_exception_type(JSONDecodeError), wait=wait_fixed(5), stop=stop_after_attempt(3))</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
+<p>自始至终，爬虫主体的代码完全不需要做任何修改。</p>
+<p>Tenacity是我见过的，最 Pythonic ，最优雅的第三方库。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://kingname.info/2017/04/17/decorate-for-method/&quot;&gt;Python 装饰器装饰类中的方法&lt;/a&gt;这篇文章，使用了装饰器来捕获代码异常。这种方式可以让代码变得更加简洁和Pythonic。&lt;/p&gt;
+&lt;p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+    
+      <category term="Exception" scheme="http://kingname.info/tags/Exception/"/>
+    
+      <category term="Tenacity" scheme="http://kingname.info/tags/Tenacity/"/>
+    
+  </entry>
   
   <entry>
     <title>记住变量类型的三种方式</title>
@@ -1144,41 +1202,6 @@
       <category term="Python" scheme="http://kingname.info/tags/Python/"/>
     
       <category term="单元测试" scheme="http://kingname.info/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>未知道——广场式的真匿名交流网站（一）</title>
-    <link href="http://kingname.info/2015/01/30/%E6%9C%AA%E7%9F%A5%E9%81%93%E2%80%94%E2%80%94%E5%B9%BF%E5%9C%BA%E5%BC%8F%E7%9A%84%E7%9C%9F%E5%8C%BF%E5%90%8D%E4%BA%A4%E6%B5%81%E7%BD%91%E7%AB%99/"/>
-    <id>http://kingname.info/2015/01/30/未知道——广场式的真匿名交流网站/</id>
-    <published>2015-01-30T07:24:35.000Z</published>
-    <updated>2016-11-30T13:56:54.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近在学习Flask，本着学以致用的原则，开发了“未知道”这个网站。未知道的宗旨是，不注册，不审核，不删帖，无私聊，不记录任何信息。是一个派对式的或者说广场式的真·匿名聊天环境。</p>
-<p>网站地址请戳-&gt;<a href="http://unknown.kingname.info/" target="_blank" rel="external">http://unknown.kingname.info/</a></p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/unknown/QQ截图20150130152847.jpg" alt=""></p>
-<p>网站上线首日访问量突破2000，上线第二日访问量突破10000。</p>
-<p>现在到处都在要求实名制，请珍惜这少有的一片匿名的净土。</p>
-<p>这个网站目前仍然在每天增加新的功能，我会开一个系列文章，用以记录在这个网站的开发过程中遇到的问题以及解决方案。请大家保持关注。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近在学习Flask，本着学以致用的原则，开发了“未知道”这个网站。未知道的宗旨是，不注册，不审核，不删帖，无私聊，不记录任何信息。是一个派对式的或者说广场式的真·匿名聊天环境。&lt;/p&gt;
-&lt;p&gt;网站地址请戳-&amp;gt;&lt;a href=&quot;http://unknown.kingn
-    
-    </summary>
-    
-      <category term="未知道" scheme="http://kingname.info/categories/%E6%9C%AA%E7%9F%A5%E9%81%93/"/>
-    
-    
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
-    
-      <category term="Flask" scheme="http://kingname.info/tags/Flask/"/>
-    
-      <category term="BootStrap" scheme="http://kingname.info/tags/BootStrap/"/>
-    
-      <category term="匿名聊天" scheme="http://kingname.info/tags/%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9/"/>
     
   </entry>
   

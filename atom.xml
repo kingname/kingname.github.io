@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingname.info/"/>
-  <updated>2017-06-17T17:26:07.000Z</updated>
+  <updated>2017-06-17T17:28:20.000Z</updated>
   <id>http://kingname.info/</id>
   
   <author>
@@ -20,10 +20,11 @@
     <link href="http://kingname.info/2017/06/18/easy-retry/"/>
     <id>http://kingname.info/2017/06/18/easy-retry/</id>
     <published>2017-06-17T16:17:47.000Z</published>
-    <updated>2017-06-17T17:26:07.000Z</updated>
+    <updated>2017-06-17T17:28:20.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://kingname.info/2017/04/17/decorate-for-method/">Python 装饰器装饰类中的方法</a>这篇文章，使用了装饰器来捕获代码异常。这种方式可以让代码变得更加简洁和Pythonic。</p>
 <p>在写代码的过程中，处理异常并重试是一个非常常见的需求。但是如何把捕获异常并重试写得简洁高效，这就是一个技术活了。</p>
+<a id="more"></a>
 <p>以爬虫开发为例，由于网页返回的源代码有各种不同的情况，因此捕获异常并重试是很常见的要求。下面这几段代码是我多年以前，在刚开始学习爬虫的时候，由于捕获异常并重试导致代码混乱化过程。</p>
 <p>代码一开始的逻辑非常简单，获取网页后台API返回的JSON字符串，转化成字典，提取出里面<code>data</code>的数据，然后传递给<code>save()</code>函数:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract</span><span class="params">(url)</span>:</span></div><div class="line">    info_json = requests.get(url).content.decode()</div><div class="line">    info_dict = json.loads(info_json)</div><div class="line">    data = info_dict[<span class="string">'data'</span>]</div><div class="line">    save(data)</div></pre></td></tr></table></figure>
@@ -58,7 +59,7 @@
     <summary type="html">
     
       &lt;p&gt;&lt;a href=&quot;https://kingname.info/2017/04/17/decorate-for-method/&quot;&gt;Python 装饰器装饰类中的方法&lt;/a&gt;这篇文章，使用了装饰器来捕获代码异常。这种方式可以让代码变得更加简洁和Pythonic。&lt;/p&gt;
-&lt;p&gt;
+&lt;p&gt;在写代码的过程中，处理异常并重试是一个非常常见的需求。但是如何把捕获异常并重试写得简洁高效，这就是一个技术活了。&lt;/p&gt;
     
     </summary>
     

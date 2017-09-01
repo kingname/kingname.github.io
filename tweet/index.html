@@ -86,20 +86,35 @@
 
 
 
-<meta name="description" content="2017.07在Python中，pymongo的find方法返回的是一个生成器，只有在迭代的时候才会执行里面的具体代码去读MongoDB。但是在Golang的Mgo包中，如果想让Find返回一个迭代器而不是直接把所有结果全部返回，就需要手动指定：12345678910type xInfo struct &amp;#123;	ID int `bson:&quot;mt_poi_id&quot;`	Count int `bson">
+<meta name="description" content="2017.08在SSH + Tmux中，如果想复制，按住Alt或者Option键再选择就可以复制了。
+
+关闭requests的SSL警告12import requestsrequests.packages.urllib3.disable_warnings()
+
+在VIM中，Crtl + V Ctrl + A可以输出特殊符合^A，把A改为可以得到^M
+2017.07在Python中，pymongo的">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="http://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.07在Python中，pymongo的find方法返回的是一个生成器，只有在迭代的时候才会执行里面的具体代码去读MongoDB。但是在Golang的Mgo包中，如果想让Find返回一个迭代器而不是直接把所有结果全部返回，就需要手动指定：12345678910type xInfo struct &amp;#123;	ID int `bson:&quot;mt_poi_id&quot;`	Count int `bson">
+<meta property="og:description" content="2017.08在SSH + Tmux中，如果想复制，按住Alt或者Option键再选择就可以复制了。
+
+关闭requests的SSL警告12import requestsrequests.packages.urllib3.disable_warnings()
+
+在VIM中，Crtl + V Ctrl + A可以输出特殊符合^A，把A改为可以得到^M
+2017.07在Python中，pymongo的">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-08-09T01:48:26.000Z">
+<meta property="og:updated_time" content="2017-09-01T01:40:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.07在Python中，pymongo的find方法返回的是一个生成器，只有在迭代的时候才会执行里面的具体代码去读MongoDB。但是在Golang的Mgo包中，如果想让Find返回一个迭代器而不是直接把所有结果全部返回，就需要手动指定：12345678910type xInfo struct &amp;#123;	ID int `bson:&quot;mt_poi_id&quot;`	Count int `bson">
+<meta name="twitter:description" content="2017.08在SSH + Tmux中，如果想复制，按住Alt或者Option键再选择就可以复制了。
+
+关闭requests的SSL警告12import requestsrequests.packages.urllib3.disable_warnings()
+
+在VIM中，Crtl + V Ctrl + A可以输出特殊符合^A，把A改为可以得到^M
+2017.07在Python中，pymongo的">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 
 
@@ -272,7 +287,12 @@
 
     
     
-      <h2 id="2017-07"><a href="#2017-07" class="headerlink" title="2017.07"></a>2017.07</h2><p>在Python中，pymongo的find方法返回的是一个生成器，只有在迭代的时候才会执行里面的具体代码去读MongoDB。但是在Golang的Mgo包中，如果想让Find返回一个迭代器而不是直接把所有结果全部返回，就需要手动指定：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> xInfo <span class="keyword">struct</span> &#123;</div><div class="line">	ID <span class="keyword">int</span> <span class="string">`bson:"mt_poi_id"`</span></div><div class="line">	Count <span class="keyword">int</span> <span class="string">`bson:"count"`</span></div><div class="line">&#125;</div><div class="line">resultIter = m.handler.Find(<span class="literal">nil</span>).Select(bson.M&#123;<span class="string">"_id"</span>: <span class="number">0</span>, <span class="string">"mt_poi_id"</span>: <span class="number">1</span>, <span class="string">"count"</span>: <span class="number">1</span>&#125;).Iter()</div><div class="line"><span class="keyword">var</span> x xInfo</div><div class="line"><span class="keyword">for</span> resultIter.Next(&amp;xInfo) &#123;</div><div class="line">    fmt.Println(xInfo.Id)</div><div class="line">    fmt.Println(xInfo.Count)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+      <h2 id="2017-08"><a href="#2017-08" class="headerlink" title="2017.08"></a>2017.08</h2><p>在SSH + Tmux中，如果想复制，按住<code>Alt</code>或者<code>Option</code>键再选择就可以复制了。</p>
+<hr>
+<p>关闭requests的SSL警告<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line">requests.packages.urllib3.disable_warnings()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在VIM中，<code>Crtl</code> + <code>V</code> <code>Ctrl</code> + <code>A</code>可以输出特殊符合<code>^A</code>，把A改为可以得到<code>^M</code></p>
+<h2 id="2017-07"><a href="#2017-07" class="headerlink" title="2017.07"></a>2017.07</h2><p>在Python中，pymongo的find方法返回的是一个生成器，只有在迭代的时候才会执行里面的具体代码去读MongoDB。但是在Golang的Mgo包中，如果想让Find返回一个迭代器而不是直接把所有结果全部返回，就需要手动指定：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> xInfo <span class="keyword">struct</span> &#123;</div><div class="line">	ID <span class="keyword">int</span> <span class="string">`bson:"mt_poi_id"`</span></div><div class="line">	Count <span class="keyword">int</span> <span class="string">`bson:"count"`</span></div><div class="line">&#125;</div><div class="line">resultIter = m.handler.Find(<span class="literal">nil</span>).Select(bson.M&#123;<span class="string">"_id"</span>: <span class="number">0</span>, <span class="string">"mt_poi_id"</span>: <span class="number">1</span>, <span class="string">"count"</span>: <span class="number">1</span>&#125;).Iter()</div><div class="line"><span class="keyword">var</span> x xInfo</div><div class="line"><span class="keyword">for</span> resultIter.Next(&amp;xInfo) &#123;</div><div class="line">    fmt.Println(xInfo.Id)</div><div class="line">    fmt.Println(xInfo.Count)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="2017-06"><a href="#2017-06" class="headerlink" title="2017.06"></a>2017.06</h2><p>在Golang中，使用MySQL的事务：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// paraArray为一个channel，里面是更新所需要的参数</span></div><div class="line">tx, _ := db.Begin()</div><div class="line">    <span class="keyword">for</span> _, para := <span class="keyword">range</span> paraArray&#123;</div><div class="line">        tx.Exec(<span class="string">"update....."</span>, para) </div><div class="line">    &#125;</div><div class="line">    tx.Commit()</div></pre></td></tr></table></figure></p>
 <hr>
 <p>由于更新MySQL会锁表，因此使用多个goroutine来更新MySQL，效果可能还不如直接在主线程中更新来的高。</p>

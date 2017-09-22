@@ -73,6 +73,8 @@
 
 
 
+  
+
 
   <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
 
@@ -86,23 +88,35 @@
 
 
 
-<meta name="description" content="2017.09使用Python打开一个未知编码的文件：1234with open(&quot;your_file&quot;, &apos;rb&apos;) as fp:    file_data = fp.read()    result = chardet.detect(file_data)    file_content = file_data.decode(encoding=result[&apos;encoding&apos;])
-2017.0">
+<meta name="description" content="2017.09在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：Command + Option + C
+
+以KB，MB，GB方式显示文件大小1ls -lh
+
+删除超大文本文件的特定行数
+1sed -e &apos;10000,50000d&apos; xxx.txt &amp;gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="http://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.09使用Python打开一个未知编码的文件：1234with open(&quot;your_file&quot;, &apos;rb&apos;) as fp:    file_data = fp.read()    result = chardet.detect(file_data)    file_content = file_data.decode(encoding=result[&apos;encoding&apos;])
-2017.0">
+<meta property="og:description" content="2017.09在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：Command + Option + C
+
+以KB，MB，GB方式显示文件大小1ls -lh
+
+删除超大文本文件的特定行数
+1sed -e &apos;10000,50000d&apos; xxx.txt &amp;gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-09-21T13:31:54.000Z">
+<meta property="og:updated_time" content="2017-09-22T14:38:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.09使用Python打开一个未知编码的文件：1234with open(&quot;your_file&quot;, &apos;rb&apos;) as fp:    file_data = fp.read()    result = chardet.detect(file_data)    file_content = file_data.decode(encoding=result[&apos;encoding&apos;])
-2017.0">
+<meta name="twitter:description" content="2017.09在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：Command + Option + C
+
+以KB，MB，GB方式显示文件大小1ls -lh
+
+删除超大文本文件的特定行数
+1sed -e &apos;10000,50000d&apos; xxx.txt &amp;gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 
 
@@ -275,7 +289,20 @@
 
     
     
-      <h2 id="2017-09"><a href="#2017-09" class="headerlink" title="2017.09"></a>2017.09</h2><p>使用Python打开一个未知编码的文件：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">"your_file"</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> fp:</div><div class="line">    file_data = fp.read()</div><div class="line">    result = chardet.detect(file_data)</div><div class="line">    file_content = file_data.decode(encoding=result[<span class="string">'encoding'</span>])</div></pre></td></tr></table></figure></p>
+      <h2 id="2017-09"><a href="#2017-09" class="headerlink" title="2017.09"></a>2017.09</h2><p>在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：<code>Command</code> + <code>Option</code> + <code>C</code></p>
+<hr>
+<p>以KB，MB，GB方式显示文件大小<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -lh</div></pre></td></tr></table></figure></p>
+<hr>
+<p>删除超大文本文件的特定行数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed <span class="_">-e</span> <span class="string">'10000,50000d'</span> xxx.txt &gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.txt</div></pre></td></tr></table></figure>
+<hr>
+<p>切分超大文本文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">split -b 2G <span class="_">-d</span> <span class="_">-a</span> 2 deletelines.txt  da  //把超大文件切分为多个文件，每个文件2GB，前缀为da，后缀为2位数字</div></pre></td></tr></table></figure>
+<hr>
+<p>修改Linux当前用户密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">passwd</div></pre></td></tr></table></figure>
+<hr>
+<p>使用Python打开一个未知编码的文件：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">"your_file"</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> fp:</div><div class="line">    file_data = fp.read()</div><div class="line">    result = chardet.detect(file_data)</div><div class="line">    file_content = file_data.decode(encoding=result[<span class="string">'encoding'</span>])</div></pre></td></tr></table></figure></p>
 <h2 id="2017-08"><a href="#2017-08" class="headerlink" title="2017.08"></a>2017.08</h2><p>在SSH + Tmux中，如果想复制，按住<code>Alt</code>或者<code>Option</code>键再选择就可以复制了。</p>
 <hr>
 <p>关闭requests的SSL警告<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line">requests.packages.urllib3.disable_warnings()</div></pre></td></tr></table></figure></p>
@@ -415,7 +442,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

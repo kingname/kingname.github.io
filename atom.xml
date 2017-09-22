@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingname.info/"/>
-  <updated>2017-07-21T13:58:39.000Z</updated>
+  <updated>2017-09-22T14:47:25.000Z</updated>
   <id>http://kingname.info/</id>
   
   <author>
@@ -14,6 +14,67 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>技巧收集-M1709</title>
+    <link href="http://kingname.info/2017/09/22/tweet-201709/"/>
+    <id>http://kingname.info/2017/09/22/tweet-201709/</id>
+    <published>2017-09-22T14:34:01.000Z</published>
+    <updated>2017-09-22T14:47:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="2017-09"><a href="#2017-09" class="headerlink" title="2017.09"></a>2017.09</h2><p>在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：<code>Command</code> + <code>Option</code> + <code>C</code></p>
+<hr>
+<p>以KB，MB，GB方式显示文件大小<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -lh</div></pre></td></tr></table></figure></p>
+<hr>
+<p>删除超大文本文件的特定行数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed <span class="_">-e</span> <span class="string">'10000,50000d'</span> xxx.txt &gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.txt</div></pre></td></tr></table></figure>
+<hr>
+<a id="more"></a>
+<p>切分超大文本文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">split -b 2G <span class="_">-d</span> <span class="_">-a</span> 2 deletelines.txt  da  //把超大文件切分为多个文件，每个文件2GB，前缀为da，后缀为2位数字</div></pre></td></tr></table></figure>
+<hr>
+<p>修改Linux当前用户密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">passwd</div></pre></td></tr></table></figure>
+<hr>
+<p>使用Python打开一个未知编码的文件：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">"your_file"</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> fp:</div><div class="line">    file_data = fp.read()</div><div class="line">    result = chardet.detect(file_data)</div><div class="line">    file_content = file_data.decode(encoding=result[<span class="string">'encoding'</span>])</div></pre></td></tr></table></figure></p>
+<h2 id="2017-08"><a href="#2017-08" class="headerlink" title="2017.08"></a>2017.08</h2><p>在SSH + Tmux中，如果想复制，按住<code>Alt</code>或者<code>Option</code>键再选择就可以复制了。</p>
+<hr>
+<p>关闭requests的SSL警告<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line">requests.packages.urllib3.disable_warnings()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在VIM中，<code>Crtl</code> + <code>V</code> <code>Ctrl</code> + <code>A</code>可以输出特殊符合<code>^A</code>，把A改为可以得到<code>^M</code></p>
+<h2 id="2017-07"><a href="#2017-07" class="headerlink" title="2017.07"></a>2017.07</h2><p>在Python中，pymongo的find方法返回的是一个生成器，只有在迭代的时候才会执行里面的具体代码去读MongoDB。但是在Golang的Mgo包中，如果想让Find返回一个迭代器而不是直接把所有结果全部返回，就需要手动指定：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> xInfo <span class="keyword">struct</span> &#123;</div><div class="line">	ID <span class="keyword">int</span> <span class="string">`bson:"mt_poi_id"`</span></div><div class="line">	Count <span class="keyword">int</span> <span class="string">`bson:"count"`</span></div><div class="line">&#125;</div><div class="line">resultIter = m.handler.Find(<span class="literal">nil</span>).Select(bson.M&#123;<span class="string">"_id"</span>: <span class="number">0</span>, <span class="string">"mt_poi_id"</span>: <span class="number">1</span>, <span class="string">"count"</span>: <span class="number">1</span>&#125;).Iter()</div><div class="line"><span class="keyword">var</span> x xInfo</div><div class="line"><span class="keyword">for</span> resultIter.Next(&amp;xInfo) &#123;</div><div class="line">    fmt.Println(xInfo.Id)</div><div class="line">    fmt.Println(xInfo.Count)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="2017-06"><a href="#2017-06" class="headerlink" title="2017.06"></a>2017.06</h2><p>在Golang中，使用MySQL的事务：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// paraArray为一个channel，里面是更新所需要的参数</span></div><div class="line">tx, _ := db.Begin()</div><div class="line">    <span class="keyword">for</span> _, para := <span class="keyword">range</span> paraArray&#123;</div><div class="line">        tx.Exec(<span class="string">"update....."</span>, para) </div><div class="line">    &#125;</div><div class="line">    tx.Commit()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>由于更新MySQL会锁表，因此使用多个goroutine来更新MySQL，效果可能还不如直接在主线程中更新来的高。</p>
+<hr>
+<p>在Golang中，使用goroutine太多反而会导致性能下降。</p>
+<h2 id="2017-05"><a href="#2017-05" class="headerlink" title="2017.05"></a>2017.05</h2><p>在Python中，可以使用<code>&gt;</code>或者<code>&gt;=</code>来判断一个集合是不是另一个集合的子集。只有是子集才会返回<code>True</code><br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png" alt=""></p>
+<h2 id="2017-04"><a href="#2017-04" class="headerlink" title="2017.04"></a>2017.04</h2><p>在MongoDB中，通过_id来更新数据：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bson.objectid <span class="keyword">import</span> ObjectId</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line">conn = pymongo.MongoClient().XX.YY</div><div class="line">conn.update(&#123;<span class="string">'_id'</span>: ObjectId(<span class="string">'adf84a8fafasf3213'</span>), &#123;<span class="string">'$set'</span>: &#123;<span class="string">'name'</span>: <span class="string">'aaa'</span>&#125;&#125;&#125;)</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在Python 3中，计算两个日期相隔了多少秒：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"></div><div class="line">start = <span class="string">'2017-03-21 17:21:30'</span></div><div class="line">end = <span class="string">'2017-03-21 18:10:13'</span></div><div class="line"></div><div class="line">start_datetime = datetime.datetime.strptime(start, <span class="string">'%Y-%m-%d %H:%M:%S'</span>)</div><div class="line">end_datetime = datetime.datetime.strptime(end, <span class="string">'%Y-%m-%d %H:%M:%S'</span>)</div><div class="line"></div><div class="line">total_seconds = (end_datetime - start_datetime).total_seconds()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>Scrapy中，通过覆写items.py中，每个item的__repr__方法，可以减少打印出来的Log信息。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">XXXItem</span><span class="params">(Item)</span>:</span></div><div class="line">    name = Field()</div><div class="line">    age = Field()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'======data has been stored.======='</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>在VIM粘贴Python代码的时候，缩进会一不小心爆炸。为了避免这个问题，应该先在normal模式输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:set paste</div></pre></td></tr></table></figure></p>
+<p>回车，再按i，再粘贴。这样Python的缩进就不会乱掉了。</p>
+<hr>
+<p>Selenium的Debug级的Log有时候打得太多了，为了去掉Selenium的Debug Log又不影响其他部份的Debug Log，可以使用如下命令完成：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">from</span> selenium.webdriver.remote.remote_connection <span class="keyword">import</span> LOGGER</div><div class="line">LOGGER.setLevel(logging.WARNING)</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;2017-09&quot;&gt;&lt;a href=&quot;#2017-09&quot; class=&quot;headerlink&quot; title=&quot;2017.09&quot;&gt;&lt;/a&gt;2017.09&lt;/h2&gt;&lt;p&gt;在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：&lt;code&gt;Command&lt;/code&gt; + &lt;code&gt;Option&lt;/code&gt; + &lt;code&gt;C&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;以KB，MB，GB方式显示文件大小&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ls -lh&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;删除超大文本文件的特定行数&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;sed &lt;span class=&quot;_&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;10000,50000d&#39;&lt;/span&gt; xxx.txt &amp;gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.txt&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;hr&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Tenacity——Exception Retry 从此无比简单</title>
@@ -1091,49 +1152,6 @@
       <category term="BootStrap" scheme="http://kingname.info/tags/BootStrap/"/>
     
       <category term="匿名聊天" scheme="http://kingname.info/tags/%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>xpath提取多个标签下的text</title>
-    <link href="http://kingname.info/2015/01/17/xpath%E6%8F%90%E5%8F%96%E5%A4%9A%E4%B8%AA%E6%A0%87%E7%AD%BE%E4%B8%8B%E7%9A%84text/"/>
-    <id>http://kingname.info/2015/01/17/xpath提取多个标签下的text/</id>
-    <published>2015-01-17T08:01:07.000Z</published>
-    <updated>2016-11-30T13:56:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在写爬虫的时候，经常会使用xpath进行数据的提取，对于如下的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test1&quot;&gt;大家好！&lt;/div&gt;</div></pre></td></tr></table></figure></p>
-<p>使用xpath提取是非常方便的。假设网页的源代码在selector中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test1&quot;]/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>就可以把“大家好！”提取到data变量中去。</p>
-<p>然而如果遇到下面这段代码呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test2&quot;&gt;美女，&lt;font color=red&gt;你的微信是多少？&lt;/font&gt;&lt;div&gt;</div></pre></td></tr></table></figure></p>
-<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>只能提取到“美女，”；</p>
-<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/font/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>又只能提取到“你的微信是多少？”</p>
-<p>可是我本意是想把“美女，你的微信是多少？”这一整个句子提取出来。</p>
-<p>这还不是最糟糕的，还有第三段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test3&quot;&gt;我左青龙，&lt;span id=&quot;tiger&quot;&gt;右白虎，&lt;ul&gt;上朱雀，&lt;li&gt;下玄武。&lt;/li&gt;&lt;/ul&gt;老牛在当中，&lt;/span&gt;龙头在胸口。&lt;div&gt;</div></pre></td></tr></table></figure></p>
-<p>而且内部的标签还不固定，如果我有一百段这样类似的html代码，又如何使用xpath表达式，以最快最方便的方式提取出来？</p>
-<p>我差一点就去用正则表达式替换了。还好我去Stack Overflow上面提了问。于是很快就有人给我解答了。</p>
-<p><strong>使用xpath的string(.)</strong></p>
-<p>以第三段代码为例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test3&quot;]&apos;)</div><div class="line">info = data.xpath(&apos;string(.)&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
-<p>这样，就可以把“我左青龙，右白虎，上朱雀，下玄武。老牛在当中，龙头在胸口”整个句子提取出来，赋值给info变量。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在写爬虫的时候，经常会使用xpath进行数据的提取，对于如下的代码：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;
-    
-    </summary>
-    
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
-    
-      <category term="xpath" scheme="http://kingname.info/tags/xpath/"/>
-    
-      <category term="xml" scheme="http://kingname.info/tags/xml/"/>
-    
-      <category term="scrapy" scheme="http://kingname.info/tags/scrapy/"/>
     
   </entry>
   

@@ -4,9 +4,9 @@
   <subtitle>给时光以生命。</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://kingname.info/"/>
+  <link href="https://kingname.info/"/>
   <updated>2017-10-04T09:13:35.000Z</updated>
-  <id>http://kingname.info/</id>
+  <id>https://kingname.info/</id>
   
   <author>
     <name>Kingname</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>TeamFlowy——结合Teambition与Workflowy</title>
-    <link href="http://kingname.info/2017/10/03/teamflowy/"/>
-    <id>http://kingname.info/2017/10/03/teamflowy/</id>
+    <link href="https://kingname.info/2017/10/03/teamflowy/"/>
+    <id>https://kingname.info/2017/10/03/teamflowy/</id>
     <published>2017-10-03T15:29:05.000Z</published>
     <updated>2017-10-04T09:13:35.000Z</updated>
     
@@ -105,21 +105,21 @@
     
     </summary>
     
-      <category term="Craft" scheme="http://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Teambition" scheme="http://kingname.info/tags/Teambition/"/>
+      <category term="Teambition" scheme="https://kingname.info/tags/Teambition/"/>
     
-      <category term="Workflowy" scheme="http://kingname.info/tags/Workflowy/"/>
+      <category term="Workflowy" scheme="https://kingname.info/tags/Workflowy/"/>
     
   </entry>
   
   <entry>
     <title>技巧收集-M1709</title>
-    <link href="http://kingname.info/2017/09/22/tweet-201709/"/>
-    <id>http://kingname.info/2017/09/22/tweet-201709/</id>
+    <link href="https://kingname.info/2017/09/22/tweet-201709/"/>
+    <id>https://kingname.info/2017/09/22/tweet-201709/</id>
     <published>2017-09-22T14:34:01.000Z</published>
     <updated>2017-09-22T14:54:39.000Z</updated>
     
@@ -174,23 +174,23 @@
     
     </summary>
     
-      <category term="Craft" scheme="http://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Golang" scheme="http://kingname.info/tags/Golang/"/>
+      <category term="Golang" scheme="https://kingname.info/tags/Golang/"/>
     
-      <category term="Linux" scheme="http://kingname.info/tags/Linux/"/>
+      <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
     
-      <category term="Craft" scheme="http://kingname.info/tags/Craft/"/>
+      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
     
   </entry>
   
   <entry>
     <title>Tenacity——Exception Retry 从此无比简单</title>
-    <link href="http://kingname.info/2017/06/18/easy-retry/"/>
-    <id>http://kingname.info/2017/06/18/easy-retry/</id>
+    <link href="https://kingname.info/2017/06/18/easy-retry/"/>
+    <id>https://kingname.info/2017/06/18/easy-retry/</id>
     <published>2017-06-17T16:17:47.000Z</published>
     <updated>2017-07-21T13:58:39.000Z</updated>
     
@@ -235,21 +235,21 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Exception" scheme="http://kingname.info/tags/Exception/"/>
+      <category term="Exception" scheme="https://kingname.info/tags/Exception/"/>
     
-      <category term="Tenacity" scheme="http://kingname.info/tags/Tenacity/"/>
+      <category term="Tenacity" scheme="https://kingname.info/tags/Tenacity/"/>
     
   </entry>
   
   <entry>
     <title>记住变量类型的三种方式</title>
-    <link href="http://kingname.info/2017/06/11/type-hints-in-python3/"/>
-    <id>http://kingname.info/2017/06/11/type-hints-in-python3/</id>
+    <link href="https://kingname.info/2017/06/11/type-hints-in-python3/"/>
+    <id>https://kingname.info/2017/06/11/type-hints-in-python3/</id>
     <published>2017-06-11T07:25:03.000Z</published>
     <updated>2017-06-11T08:58:41.000Z</updated>
     
@@ -283,17 +283,17 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
   </entry>
   
   <entry>
     <title>Python 装饰器装饰类中的方法</title>
-    <link href="http://kingname.info/2017/04/17/decorate-for-method/"/>
-    <id>http://kingname.info/2017/04/17/decorate-for-method/</id>
+    <link href="https://kingname.info/2017/04/17/decorate-for-method/"/>
+    <id>https://kingname.info/2017/04/17/decorate-for-method/</id>
     <published>2017-04-17T12:44:31.000Z</published>
     <updated>2017-04-17T13:25:32.000Z</updated>
     
@@ -321,19 +321,19 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Decorate" scheme="http://kingname.info/tags/Decorate/"/>
+      <category term="Decorate" scheme="https://kingname.info/tags/Decorate/"/>
     
   </entry>
   
   <entry>
     <title>技巧收集-M1701</title>
-    <link href="http://kingname.info/2017/02/05/tweet/"/>
-    <id>http://kingname.info/2017/02/05/tweet/</id>
+    <link href="https://kingname.info/2017/02/05/tweet/"/>
+    <id>https://kingname.info/2017/02/05/tweet/</id>
     <published>2017-02-05T15:56:31.000Z</published>
     <updated>2017-02-05T15:59:29.000Z</updated>
     
@@ -397,19 +397,19 @@
     
     </summary>
     
-      <category term="Craft" scheme="http://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Craft" scheme="http://kingname.info/tags/Craft/"/>
+      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
     
   </entry>
   
   <entry>
     <title>30秒找到藏在家里的手机</title>
-    <link href="http://kingname.info/2017/01/07/findmyphone/"/>
-    <id>http://kingname.info/2017/01/07/findmyphone/</id>
+    <link href="https://kingname.info/2017/01/07/findmyphone/"/>
+    <id>https://kingname.info/2017/01/07/findmyphone/</id>
     <published>2017-01-07T06:02:02.000Z</published>
     <updated>2017-01-07T07:45:31.000Z</updated>
     
@@ -455,21 +455,21 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Workflow" scheme="http://kingname.info/tags/Workflow/"/>
+      <category term="Workflow" scheme="https://kingname.info/tags/Workflow/"/>
     
-      <category term="Automatic" scheme="http://kingname.info/tags/Automatic/"/>
+      <category term="Automatic" scheme="https://kingname.info/tags/Automatic/"/>
     
   </entry>
   
   <entry>
     <title>用图像识别来自动确认网页加载成功</title>
-    <link href="http://kingname.info/2016/12/04/how-to-know-webpage-loaded/"/>
-    <id>http://kingname.info/2016/12/04/how-to-know-webpage-loaded/</id>
+    <link href="https://kingname.info/2016/12/04/how-to-know-webpage-loaded/"/>
+    <id>https://kingname.info/2016/12/04/how-to-know-webpage-loaded/</id>
     <published>2016-12-04T10:10:33.000Z</published>
     <updated>2016-12-04T13:31:26.000Z</updated>
     
@@ -505,20 +505,20 @@
     </summary>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="PIL" scheme="http://kingname.info/tags/PIL/"/>
+      <category term="PIL" scheme="https://kingname.info/tags/PIL/"/>
     
-      <category term="Android" scheme="http://kingname.info/tags/Android/"/>
+      <category term="Android" scheme="https://kingname.info/tags/Android/"/>
     
-      <category term="自动化测试" scheme="http://kingname.info/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/"/>
+      <category term="自动化测试" scheme="https://kingname.info/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   
   <entry>
     <title>如果我提前起床，闹钟你就别响</title>
-    <link href="http://kingname.info/2016/11/07/autoalarmclock/"/>
-    <id>http://kingname.info/2016/11/07/autoalarmclock/</id>
+    <link href="https://kingname.info/2016/11/07/autoalarmclock/"/>
+    <id>https://kingname.info/2016/11/07/autoalarmclock/</id>
     <published>2016-11-07T14:56:21.000Z</published>
     <updated>2016-12-04T12:24:13.000Z</updated>
     
@@ -567,21 +567,21 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Automate" scheme="http://kingname.info/tags/Automate/"/>
+      <category term="Automate" scheme="https://kingname.info/tags/Automate/"/>
     
-      <category term="Workflow" scheme="http://kingname.info/tags/Workflow/"/>
+      <category term="Workflow" scheme="https://kingname.info/tags/Workflow/"/>
     
   </entry>
   
   <entry>
     <title>alias导致virtualenv异常的分析和解法</title>
-    <link href="http://kingname.info/2016/06/27/alias-vs-virtualenv/"/>
-    <id>http://kingname.info/2016/06/27/alias-vs-virtualenv/</id>
+    <link href="https://kingname.info/2016/06/27/alias-vs-virtualenv/"/>
+    <id>https://kingname.info/2016/06/27/alias-vs-virtualenv/</id>
     <published>2016-06-27T15:40:56.000Z</published>
     <updated>2016-11-30T13:56:11.000Z</updated>
     
@@ -635,23 +635,23 @@
     
     </summary>
     
-      <category term="OS X" scheme="http://kingname.info/categories/OS-X/"/>
+      <category term="OS X" scheme="https://kingname.info/categories/OS-X/"/>
     
     
-      <category term="OS X" scheme="http://kingname.info/tags/OS-X/"/>
+      <category term="OS X" scheme="https://kingname.info/tags/OS-X/"/>
     
-      <category term="ZSH" scheme="http://kingname.info/tags/ZSH/"/>
+      <category term="ZSH" scheme="https://kingname.info/tags/ZSH/"/>
     
-      <category term="alias" scheme="http://kingname.info/tags/alias/"/>
+      <category term="alias" scheme="https://kingname.info/tags/alias/"/>
     
-      <category term="virtualenv" scheme="http://kingname.info/tags/virtualenv/"/>
+      <category term="virtualenv" scheme="https://kingname.info/tags/virtualenv/"/>
     
   </entry>
   
   <entry>
     <title>可爱的豆子——使用Beans思想让Python代码更易维护</title>
-    <link href="http://kingname.info/2016/06/19/bean-in-python/"/>
-    <id>http://kingname.info/2016/06/19/bean-in-python/</id>
+    <link href="https://kingname.info/2016/06/19/bean-in-python/"/>
+    <id>https://kingname.info/2016/06/19/bean-in-python/</id>
     <published>2016-06-19T13:43:33.000Z</published>
     <updated>2016-11-30T13:56:15.000Z</updated>
     
@@ -700,21 +700,21 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Java" scheme="http://kingname.info/tags/Java/"/>
+      <category term="Java" scheme="https://kingname.info/tags/Java/"/>
     
-      <category term="经验" scheme="http://kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
+      <category term="经验" scheme="https://kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
     
   </entry>
   
   <entry>
     <title>MarkdownPicPicker - Markdown 图片上传助手</title>
-    <link href="http://kingname.info/2016/06/04/markdownPicPicker/"/>
-    <id>http://kingname.info/2016/06/04/markdownPicPicker/</id>
+    <link href="https://kingname.info/2016/06/04/markdownPicPicker/"/>
+    <id>https://kingname.info/2016/06/04/markdownPicPicker/</id>
     <published>2016-06-04T08:40:06.000Z</published>
     <updated>2016-11-30T13:56:22.000Z</updated>
     
@@ -764,19 +764,19 @@
     
     </summary>
     
-      <category term="Markdown" scheme="http://kingname.info/categories/Markdown/"/>
+      <category term="Markdown" scheme="https://kingname.info/categories/Markdown/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Markdown" scheme="http://kingname.info/tags/Markdown/"/>
+      <category term="Markdown" scheme="https://kingname.info/tags/Markdown/"/>
     
   </entry>
   
   <entry>
     <title>搭建持续集成环境(一)</title>
-    <link href="http://kingname.info/2016/05/29/raspberryCI-1/"/>
-    <id>http://kingname.info/2016/05/29/raspberryCI-1/</id>
+    <link href="https://kingname.info/2016/05/29/raspberryCI-1/"/>
+    <id>https://kingname.info/2016/05/29/raspberryCI-1/</id>
     <published>2016-05-29T06:04:49.000Z</published>
     <updated>2016-11-30T13:56:40.000Z</updated>
     
@@ -829,19 +829,19 @@
     
     </summary>
     
-      <category term="持续集成" scheme="http://kingname.info/categories/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
+      <category term="持续集成" scheme="https://kingname.info/categories/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
     
     
-      <category term="Jenkins" scheme="http://kingname.info/tags/Jenkins/"/>
+      <category term="Jenkins" scheme="https://kingname.info/tags/Jenkins/"/>
     
-      <category term="持续集成" scheme="http://kingname.info/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
+      <category term="持续集成" scheme="https://kingname.info/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
     
   </entry>
   
   <entry>
     <title>使用Python保存截图</title>
-    <link href="http://kingname.info/2016/05/19/screenshot/"/>
-    <id>http://kingname.info/2016/05/19/screenshot/</id>
+    <link href="https://kingname.info/2016/05/19/screenshot/"/>
+    <id>https://kingname.info/2016/05/19/screenshot/</id>
     <published>2016-05-19T14:47:29.000Z</published>
     <updated>2016-11-30T13:56:41.000Z</updated>
     
@@ -908,19 +908,19 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Win32Api" scheme="http://kingname.info/tags/Win32Api/"/>
+      <category term="Win32Api" scheme="https://kingname.info/tags/Win32Api/"/>
     
   </entry>
   
   <entry>
     <title>对Java与设计模式态度的转变</title>
-    <link href="http://kingname.info/2015/12/02/opinionchange/"/>
-    <id>http://kingname.info/2015/12/02/opinionchange/</id>
+    <link href="https://kingname.info/2015/12/02/opinionchange/"/>
+    <id>https://kingname.info/2015/12/02/opinionchange/</id>
     <published>2015-12-01T16:03:08.000Z</published>
     <updated>2016-11-30T13:56:32.000Z</updated>
     
@@ -953,21 +953,21 @@
     
     </summary>
     
-      <category term="态度" scheme="http://kingname.info/categories/%E6%80%81%E5%BA%A6/"/>
+      <category term="态度" scheme="https://kingname.info/categories/%E6%80%81%E5%BA%A6/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Java" scheme="http://kingname.info/tags/Java/"/>
+      <category term="Java" scheme="https://kingname.info/tags/Java/"/>
     
-      <category term="设计模式" scheme="http://kingname.info/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+      <category term="设计模式" scheme="https://kingname.info/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   
   <entry>
     <title>使用etree.HTML的编码问题</title>
-    <link href="http://kingname.info/2015/10/07/lxmlencoding/"/>
-    <id>http://kingname.info/2015/10/07/lxmlencoding/</id>
+    <link href="https://kingname.info/2015/10/07/lxmlencoding/"/>
+    <id>https://kingname.info/2015/10/07/lxmlencoding/</id>
     <published>2015-10-07T09:56:47.000Z</published>
     <updated>2016-11-30T13:56:19.000Z</updated>
     
@@ -1014,21 +1014,21 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="lxml" scheme="http://kingname.info/tags/lxml/"/>
+      <category term="lxml" scheme="https://kingname.info/tags/lxml/"/>
     
-      <category term="Xpath" scheme="http://kingname.info/tags/Xpath/"/>
+      <category term="Xpath" scheme="https://kingname.info/tags/Xpath/"/>
     
   </entry>
   
   <entry>
     <title>我的编码规范</title>
-    <link href="http://kingname.info/2015/07/19/mycodestyle/"/>
-    <id>http://kingname.info/2015/07/19/mycodestyle/</id>
+    <link href="https://kingname.info/2015/07/19/mycodestyle/"/>
+    <id>https://kingname.info/2015/07/19/mycodestyle/</id>
     <published>2015-07-19T08:31:54.000Z</published>
     <updated>2016-11-30T13:56:28.000Z</updated>
     
@@ -1087,19 +1087,19 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="CodeStyle" scheme="http://kingname.info/tags/CodeStyle/"/>
+      <category term="CodeStyle" scheme="https://kingname.info/tags/CodeStyle/"/>
     
   </entry>
   
   <entry>
     <title>requests的content与text导致lxml的解析问题</title>
-    <link href="http://kingname.info/2015/04/29/lxmloldbug/"/>
-    <id>http://kingname.info/2015/04/29/lxmloldbug/</id>
+    <link href="https://kingname.info/2015/04/29/lxmloldbug/"/>
+    <id>https://kingname.info/2015/04/29/lxmloldbug/</id>
     <published>2015-04-29T14:49:31.000Z</published>
     <updated>2016-11-30T13:56:21.000Z</updated>
     
@@ -1126,21 +1126,21 @@
     
     </summary>
     
-      <category term="经验" scheme="http://kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
+      <category term="经验" scheme="https://kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="lxml" scheme="http://kingname.info/tags/lxml/"/>
+      <category term="lxml" scheme="https://kingname.info/tags/lxml/"/>
     
-      <category term="etree" scheme="http://kingname.info/tags/etree/"/>
+      <category term="etree" scheme="https://kingname.info/tags/etree/"/>
     
   </entry>
   
   <entry>
     <title>Python的单元测试（二）</title>
-    <link href="http://kingname.info/2015/03/04/pythonunittest2/"/>
-    <id>http://kingname.info/2015/03/04/pythonunittest2/</id>
+    <link href="https://kingname.info/2015/03/04/pythonunittest2/"/>
+    <id>https://kingname.info/2015/03/04/pythonunittest2/</id>
     <published>2015-03-04T11:08:20.000Z</published>
     <updated>2017-01-09T13:21:36.000Z</updated>
     
@@ -1181,19 +1181,19 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="单元测试" scheme="http://kingname.info/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
+      <category term="单元测试" scheme="https://kingname.info/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   
   <entry>
     <title>Python的单元测试（一）</title>
-    <link href="http://kingname.info/2015/02/27/Python%E7%9A%84%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
-    <id>http://kingname.info/2015/02/27/Python的单元测试/</id>
+    <link href="https://kingname.info/2015/02/27/Python%E7%9A%84%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
+    <id>https://kingname.info/2015/02/27/Python的单元测试/</id>
     <published>2015-02-27T14:50:47.000Z</published>
     <updated>2016-11-30T13:56:36.000Z</updated>
     
@@ -1222,12 +1222,12 @@
     
     </summary>
     
-      <category term="Python" scheme="http://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="http://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="单元测试" scheme="http://kingname.info/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
+      <category term="单元测试" scheme="https://kingname.info/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   

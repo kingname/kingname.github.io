@@ -86,35 +86,20 @@
 
 
 
-<meta name="description" content="2017.09在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：Command + Option + C
-
-以KB，MB，GB方式显示文件大小1ls -lh
-
-删除超大文本文件的特定行数
-1sed -e &apos;10000,50000d&apos; xxx.txt &amp;gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.">
+<meta name="description" content="2017.10使用urlpare从URL中获取Host：12345&amp;gt;&amp;gt;&amp;gt; from urllib.parse import urlparse&amp;gt;&amp;gt;&amp;gt; url = &apos;https://nanjirenlk.tmall.com/shop/view_shop.htm&apos;&amp;gt;&amp;gt;&amp;gt; x = urlparse(url)&amp;gt;&amp;gt;&amp;gt; x.netloc&apos;n">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="https://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.09在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：Command + Option + C
-
-以KB，MB，GB方式显示文件大小1ls -lh
-
-删除超大文本文件的特定行数
-1sed -e &apos;10000,50000d&apos; xxx.txt &amp;gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.">
+<meta property="og:description" content="2017.10使用urlpare从URL中获取Host：12345&amp;gt;&amp;gt;&amp;gt; from urllib.parse import urlparse&amp;gt;&amp;gt;&amp;gt; url = &apos;https://nanjirenlk.tmall.com/shop/view_shop.htm&apos;&amp;gt;&amp;gt;&amp;gt; x = urlparse(url)&amp;gt;&amp;gt;&amp;gt; x.netloc&apos;n">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-09-22T14:38:11.000Z">
+<meta property="og:updated_time" content="2017-11-13T15:09:29.572Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.09在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：Command + Option + C
-
-以KB，MB，GB方式显示文件大小1ls -lh
-
-删除超大文本文件的特定行数
-1sed -e &apos;10000,50000d&apos; xxx.txt &amp;gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.">
+<meta name="twitter:description" content="2017.10使用urlpare从URL中获取Host：12345&amp;gt;&amp;gt;&amp;gt; from urllib.parse import urlparse&amp;gt;&amp;gt;&amp;gt; url = &apos;https://nanjirenlk.tmall.com/shop/view_shop.htm&apos;&amp;gt;&amp;gt;&amp;gt; x = urlparse(url)&amp;gt;&amp;gt;&amp;gt; x.netloc&apos;n">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 
 
@@ -287,7 +272,20 @@
 
     
     
-      <h2 id="2017-09"><a href="#2017-09" class="headerlink" title="2017.09"></a>2017.09</h2><p>在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：<code>Command</code> + <code>Option</code> + <code>C</code></p>
+      <h2 id="2017-10"><a href="#2017-10" class="headerlink" title="2017.10"></a>2017.10</h2><p>使用<code>urlpare</code>从URL中获取Host：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urlparse</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'https://nanjirenlk.tmall.com/shop/view_shop.htm'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x = urlparse(url)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x.netloc</div><div class="line"><span class="string">'nanjirenlk.tmall.com'</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>解压<code>tar.gz</code>压缩文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zxvf 文件名</div></pre></td></tr></table></figure>
+<hr>
+<p>根据进程名字在Linux里杀进程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ps -ef | grep <span class="string">"进程关键字"</span> | grep -v grep | awk <span class="string">'&#123;print $2&#125;'</span> | xargs <span class="built_in">kill</span> -9</div></pre></td></tr></table></figure>
+<hr>
+<p>在Python 的<code>try ... except Exception ...</code>中显示tracebook:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> traceback</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="number">1</span> + <span class="string">'a'</span></div><div class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">    tb = traceback.format_exc()</div><div class="line">    print(tb)</div></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">2</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">TypeError: unsupported operand type(s) <span class="keyword">for</span> +: <span class="string">'int'</span> <span class="keyword">and</span> <span class="string">'str'</span></div></pre></td></tr></table></figure>
+<p>这个功能在多层<code>try ... except Exception ...</code> 嵌套的时候特别有用。</p>
+<h2 id="2017-09"><a href="#2017-09" class="headerlink" title="2017.09"></a>2017.09</h2><p>在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：<code>Command</code> + <code>Option</code> + <code>C</code></p>
 <hr>
 <p>以KB，MB，GB方式显示文件大小<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -lh</div></pre></td></tr></table></figure></p>
 <hr>

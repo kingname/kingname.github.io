@@ -1,0 +1,821 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,FSM,有限状态机," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="缩写
+提出问题使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。
+代码是如何一步一步恶化的单词与空格对于只有单词和空格，不含其他符号的英语句子，可以使用空格来切分单词。于是对于句子I am kingname, 一个字符一个字符的进行遍历。首先遍历到I，发现它是一个字母，于是把它存到一个变量word中，然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用有限状态机原理实现英文分词">
+<meta property="og:url" content="https://kingname.info/2017/12/10/use-fsm/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="缩写
+提出问题使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。
+代码是如何一步一步恶化的单词与空格对于只有单词和空格，不含其他符号的英语句子，可以使用空格来切分单词。于是对于句子I am kingname, 一个字符一个字符的进行遍历。首先遍历到I，发现它是一个字母，于是把它存到一个变量word中，然">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-03-28.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-04-07.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-06-53.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-09-39.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-12-26.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-21-15.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-24-52.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-36-20.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-42-16.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-14-13-43.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/split_fms3.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-15-50-27.png">
+<meta property="og:updated_time" content="2017-12-10T07:52:47.983Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用有限状态机原理实现英文分词">
+<meta name="twitter:description" content="缩写
+提出问题使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。
+代码是如何一步一步恶化的单词与空格对于只有单词和空格，不含其他符号的英语句子，可以使用空格来切分单词。于是对于句子I am kingname, 一个字符一个字符的进行遍历。首先遍历到I，发现它是一个字母，于是把它存到一个变量word中，然">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-03-28.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingname.info/2017/12/10/use-fsm/"/>
+
+
+
+
+
+  <title> 使用有限状态机原理实现英文分词 | Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tweet">
+          <a href="/tweet" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-twitter"></i> <br />
+            
+            时间
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://kingname.info/2017/12/10/use-fsm/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用有限状态机原理实现英文分词
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-10T12:12:55+08:00">
+                2017-12-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/12/10/use-fsm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/10/use-fsm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>缩写</p>
+<h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。</p>
+<h2 id="代码是如何一步一步恶化的"><a href="#代码是如何一步一步恶化的" class="headerlink" title="代码是如何一步一步恶化的"></a>代码是如何一步一步恶化的</h2><h3 id="单词与空格"><a href="#单词与空格" class="headerlink" title="单词与空格"></a>单词与空格</h3><p>对于只有单词和空格，不含其他符号的英语句子，可以使用空格来切分单词。于是对于句子<code>I am kingname</code>, 一个字符一个字符的进行遍历。首先遍历到<code>I</code>，发现它是一个字母，于是把它存到一个变量<code>word</code>中，然后遍历到空格，于是把变量<code>word</code>的值添加到变量<code>word_list</code>中，再把<code>word</code>清空。接下来遍历到字母<code>a</code>，又把<code>a</code>放到变量<code>word</code>中。再遍历到<code>m</code>，发现它还是一个字母，于是把字母<code>m</code>拼接到变量<code>word</code>的末尾。此时变量<code>word</code>的值为<code>am</code>。再遍历到第二个空格，于是把<code>word</code>的值添加到<code>word_list</code>中，清空<code>word</code>。</p>
+<p>最后，由于第三个单词<code>kingname</code>的末尾没有空格，所以需要手动把它添加到列表<code>word_list</code>中。</p>
+<p>完整的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter == <span class="string">' '</span>:</div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-03-28.png" alt=""></p>
+<h3 id="单词空格与逗号句号"><a href="#单词空格与逗号句号" class="headerlink" title="单词空格与逗号句号"></a>单词空格与逗号句号</h3><p>现在不仅仅只有单词和空格，还有逗号和句号。有这样一个句子：”I am kingname,you should remember me.”如果使用上一小节的程序，那么代码就会出现问题，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-04-07.png" alt=""></p>
+<p>其中，”kingname,you”应该是两个单词，但是在这里变成了一个单词。所以现在不仅遇到空格要进行切分，遇到逗号句号还需要进行切分。那么对代码做一些修改，变成如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">' '</span>, <span class="string">','</span>, <span class="string">'.'</span>]:</div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname,you should remember me.'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
+<p>现在运行起来看上去没有问题了，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-06-53.png" alt=""></p>
+<p>然而，有些人写英文的时候喜欢在标点符号右侧加一个空格，例如：”I am kingname, you should remember me.”这样小小的一修改，上面的代码又出问题了，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-09-39.png" alt=""></p>
+<p>分词出来的结果里面凭空多出来一个空字符串。为了解决这个问题，再加一层判断，只有发现<code>word</code>不为空字符串的时候才把它加入到<code>word_list</code>中，代码继续修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">' '</span>, <span class="string">','</span>, <span class="string">'.'</span>]:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname, you should remember me.'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
+<p>代码看起来又可以正常工作了。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-12-26.png" alt=""></p>
+<h3 id="单词空格与各种标点符号"><a href="#单词空格与各种标点符号" class="headerlink" title="单词空格与各种标点符号"></a>单词空格与各种标点符号</h3><p>标点符号可不仅仅只有逗号句号。现在又出现了冒号分号双引号感叹号问号等等杂七杂八的符号。英文句子变为：”I am kingname, you should say: “Kingname Oba” to me, will you?”</p>
+<p>使用上面的代码，发现运行起来又出问题了。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-21-15.png" alt=""></p>
+<p>为了能覆盖到所有的标点符号，现在修改一下逻辑。原来是“遇到空格/逗号/句号”就把<code>word</code>放到<code>word_list</code>中。现在要改为“如果当前字符不是字母，就把<code>word</code>放到<code>word_list</code>中”。于是代码进一步做修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname, you should say: "Kingname Oba" to me, will you?'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
+<p>代码修改以后又可以正常工作了，其运行效果如下图所示：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-24-52.png" alt=""></p>
+<h3 id="奇奇怪怪的单引号"><a href="#奇奇怪怪的单引号" class="headerlink" title="奇奇怪怪的单引号"></a>奇奇怪怪的单引号</h3><p>如果双引号包含的句子里面还需要用到引号，那么就需要在内部使用单引号。例如有这样一个句子：“I am kingname, you should say: “Kingname Oba, I always remember your motto: ‘kingname is genius’” to me, will you?”</p>
+<p>使用前面的代码，运行起来似乎没有问题，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-36-20.png" alt=""></p>
+<p>但是，单引号还有其他用途——有人喜欢把两个单词合并成一个单词，例如：</p>
+<ul>
+<li>“do not” == “don’t”</li>
+<li>“is not” == “isn’t”</li>
+<li>“I will” == “I’ll”</li>
+<li>“I have” == “I’ve”</li>
+</ul>
+<p>在这种情况下，就应该把单引号连接的两部分看作是一个单词，不应该把它们切开。</p>
+<p>如果句子变成：<code>I&#39;m kingname, you should say: &quot;Kingname Oba, I always remember your motto: &#39;kingname&#39;s genius&#39;&quot; to me, won&#39;t you?</code>继续使用上面的代码，就发现返回的单词列表又不对了。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-42-16.png" alt=""></p>
+<p>要解决这个问题，就需要确定单引号具体是做普通的引号来使用，还是放在缩写里使用。</p>
+<p>作为普通单引号使用的时候，如果是前单引号，那么它的左边必定不是字母，如果作为后单引号，那么它的右边必定不是字母。而缩写里面的单引号，它左右两侧必定都是字母。并且需要注意，如果是句子里面第一个符号就是单引号，那么此时它左边没有字符；如果句子里面最后一个符号是单引号，那么它右边没有字符，此时如果使用下标来查找，就需要当心下标越界。</p>
+<p>对代码进一步修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> index, letter <span class="keyword">in</span> enumerate(target):</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant <span class="keyword">and</span> letter != <span class="string">"'"</span>:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">elif</span> letter == <span class="string">"'"</span>:</div><div class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt; index &lt; len(target) - <span class="number">1</span> \</div><div class="line">                    <span class="keyword">and</span> target[index - <span class="number">1</span>] <span class="keyword">in</span> constant \</div><div class="line">                    <span class="keyword">and</span> target[index + <span class="number">1</span>] <span class="keyword">in</span> constant:</div><div class="line">                word += letter</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'''I'm kingname, you should say: "Kingname Oba, </span></div><div class="line">                  I always remember your motto: 'kingname's genius'" to me, won't you?'''</div><div class="line">    result_word_list = split(sentence)</div><div class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> result_word_list:</div><div class="line">        print(word)</div></pre></td></tr></table></figure>
+<p>现在代码又可以成功运行了，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-14-13-43.png" alt=""></p>
+<p>但是请细看代码，现在已经混乱到难以阅读难以理解了。如果再增加一个连字符又怎么改？如果单词内部出现了两个单引号怎么改？这种为了增加一个功能，要把很多不相干代码也进行修改的编码方式，相信可以击中很多初学者甚至是不少自称为软件工程师的人。</p>
+<h2 id="状态转义图"><a href="#状态转义图" class="headerlink" title="状态转义图"></a>状态转义图</h2><p>根据分词逻辑，遇到各种符号应该怎么处理，画一个分词的状态转移图出来。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/split_fms3.png" alt=""></p>
+<p>从这个图上可以看出来，其实程序只需要知道当前是什么状态，以及遇到什么字符需要转移到什么状态就可以了。没有必要知道自己是从哪个状态转移过来的，也没有必要知道和自己不相干的其他状态。</p>
+<p>举一个例子：<code>I&#39;m kingname, you should say: &quot;Kingname Oba, I always remember your motto: &#39;kingname&#39;s genius&#39;&quot; to me, won&#39;t you?</code>这个句子中，<code>should</code>这个单词就是处于“单词状态”。它不在单引号内部，它也不是一个缩写。当我们对句子每个字符进行遍历的时候，遍历到“should”的“s”时进入“单词状态”，在单词状态，只需要关心接下来过来的下一个字符是什么，如果是字母，那依然是单词状态，把字母直接拼接上来即可。如果是单引号，那么进入“单引号在单词中状态”。至于“单引号在单词中状态”有什么逻辑，单词状态的代码根本不需要知道。这就像是接力赛，我把棒交给下一个人，我的任务就做完了，下一个人是跑到终点还是爬到终点，都和我没有关系。</p>
+<p>这就是有限状态机FSM的原理。</p>
+<h2 id="使用状态机"><a href="#使用状态机" class="headerlink" title="使用状态机"></a>使用状态机</h2><p>根据这个原理，使用状态和转移关系来改写代码，就可以让代码的逻辑变得非常清晰。改进以后的代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Spliter</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></div><div class="line">        self.state = <span class="string">'初始状态'</span></div><div class="line">        self.word = <span class="string">''</span></div><div class="line">        self.word_list = []</div><div class="line">        self.state_dict = &#123;<span class="string">'初始状态'</span>: self.parse_init,</div><div class="line">                           <span class="string">'单词状态'</span>: self.parse_word,</div><div class="line">                           <span class="string">'单引号在单词中状态'</span>: self.parse_contraction&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_init</span><span class="params">(self, letter)</span>:</span></div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</div><div class="line">            self.state = <span class="string">'单词状态'</span></div><div class="line">            self.word += letter</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_word</span><span class="params">(self, letter)</span>:</span></div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</div><div class="line">            self.word += letter</div><div class="line">        <span class="keyword">elif</span> letter == <span class="string">"'"</span>:</div><div class="line">            self.state = <span class="string">'单引号在单词中状态'</span></div><div class="line">            self.word += <span class="string">"'"</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.word_list.append(self.word)</div><div class="line">            self.state = <span class="string">'初始状态'</span></div><div class="line">            self.word = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_contraction</span><span class="params">(self, letter)</span>:</span></div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</div><div class="line">            self.word += letter</div><div class="line">            self.state = <span class="string">'单词状态'</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.word_list.append(self.word[:<span class="number">-1</span>])</div><div class="line">            self.word = <span class="string">''</span></div><div class="line">            self.state = <span class="string">'初始状态'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(self, target)</span>:</span></div><div class="line">        <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">            self.state_dict[self.state](letter)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> self.word_list</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    spliter = Spliter()</div><div class="line">    sentence = <span class="string">'''I'm kingname, you should say: "Kingname Oba, </span></div><div class="line">                      I always remember your motto: 'kingname's genius'" to me, won't you?'''</div><div class="line">    print(spliter.split(sentence))</div></pre></td></tr></table></figure></p>
+<p>代码运行效果如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-15-50-27.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="Kingname wechat" style="width: 200px; max-width: 100%;"/>
+    <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/FSM/" rel="tag"># FSM</a>
+          
+            <a href="/tags/有限状态机/" rel="tag"># 有限状态机</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/03/teamflowy/" rel="next" title="TeamFlowy——结合Teambition与Workflowy">
+                <i class="fa fa-chevron-left"></i> TeamFlowy——结合Teambition与Workflowy
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTA1MS81NjIw">
+			<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+			</script>
+		<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chuangzaoshi.com/" title="创造狮" target="_blank">创造狮</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#提出问题"><span class="nav-number">1.</span> <span class="nav-text">提出问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码是如何一步一步恶化的"><span class="nav-number">2.</span> <span class="nav-text">代码是如何一步一步恶化的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单词与空格"><span class="nav-number">2.1.</span> <span class="nav-text">单词与空格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单词空格与逗号句号"><span class="nav-number">2.2.</span> <span class="nav-text">单词空格与逗号句号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单词空格与各种标点符号"><span class="nav-number">2.3.</span> <span class="nav-text">单词空格与各种标点符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#奇奇怪怪的单引号"><span class="nav-number">2.4.</span> <span class="nav-text">奇奇怪怪的单引号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#状态转义图"><span class="nav-number">3.</span> <span class="nav-text">状态转义图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用状态机"><span class="nav-number">4.</span> <span class="nav-text">使用状态机</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

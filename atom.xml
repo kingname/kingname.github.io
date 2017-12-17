@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2017-12-17T12:57:18.798Z</updated>
+  <updated>2017-12-17T13:11:58.399Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -20,48 +20,50 @@
     <link href="https://kingname.info/2017/12/17/auto-deploy-blog/"/>
     <id>https://kingname.info/2017/12/17/auto-deploy-blog/</id>
     <published>2017-12-17T11:48:10.000Z</published>
-    <updated>2017-12-17T12:57:18.798Z</updated>
+    <updated>2017-12-17T13:11:58.399Z</updated>
     
     <content type="html"><![CDATA[<p>这篇文章比较简单，适合初学<code>持续集成</code>的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。</p>
 <a id="more"></a>
-<p>为了使用HTTPS，我将博客从Github Pages迁移到了我的服务器上。由于博客基于Hexo，在迁移之前，我的工作流程是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到Github-&gt;Github Pages自动使用最新内容</div></pre></td></tr></table></figure>
+<h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>为了使用HTTPS，我将博客从GitHub Pages迁移到了我的服务器上。由于博客基于Hexo，在迁移之前，我的工作流程是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到GitHub-&gt;GitHub Pages自动使用最新内容</div></pre></td></tr></table></figure>
 <p>现在由于Hexo渲染以后的HTML文件需要放到服务器上，那么工作流程变为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到Github-&gt;手动登录服务器</div><div class="line">-&gt;进入放博客文章的文件夹-&gt;执行命令git pull</div></pre></td></tr></table></figure>
-<p>增加的两步虽然说操作量不大，但是总显得很麻烦。于是我希望，在我把博客的HTML文件push到Github以后，服务器能自动从Github上把HTML内容拉下来。由于使用了Nginx，所以只要博客的HTML发送了更新，那么使用浏览器访问<a href="https://kingname.info">https://kingname.info</a>时，新内容自动就会出现。这样一来，对我来说，看起来就像是我刚刚push了网页内容到Github，博客就自动更新了。</p>
-<p>让服务器从Github上面拉代码，这个操作本身很简单。人来操作就一行代码<code>git pull</code>。写个Python脚本也就两行代码。但问题是，服务器怎么知道Github发生了更新？</p>
-<p>有人说，Kingname，你不是做爬虫吗？你写个爬虫，每一秒检查一下Github不就可以了吗？这种办法当然可以。但问题是，我一周就更新一次博客，但这个爬虫为了等这一次更新，一周要访问Github高达604800次？更何况我有时候一个月都不更新。</p>
-<p>所以显然不能让服务器主动检查Github更新，这种“轮询”操作效率太低。那么如果反过来，一旦Github有更新，它就通知服务器，然后服务器再去拉代码，这不就简单高效了吗？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到GitHub-&gt;手动登录服务器</div><div class="line">-&gt;进入放博客文章的文件夹-&gt;执行命令git pull</div></pre></td></tr></table></figure>
+<p>增加的两步虽然说操作量不大，但是总显得很麻烦。于是我希望，在我把博客的HTML文件push到GitHub以后，服务器能自动从GitHub上把HTML内容拉下来。由于使用了Nginx，所以只要博客的HTML发生了更新，那么使用浏览器访问<a href="https://kingname.info">https://kingname.info</a>时，新内容自动就会出现。这样一来，对我来说，看起来就像是我刚刚push了网页内容到GitHub，博客就自动更新了。</p>
+<p>让服务器从GitHub上面拉代码，这个操作本身很简单。人来操作就一行代码<code>git pull</code>。写个Python脚本也就两行代码。但问题是，服务器怎么知道GitHub发生了更新？</p>
+<p>有人说，Kingname，你不是做爬虫吗？你写个爬虫，每一秒检查一下GitHub不就可以了吗？这种办法当然可以。但问题是，我一周就更新一次博客，但这个爬虫为了等这一次更新，一周要访问GitHub高达604800次？更何况我有时候一个月都不更新。</p>
+<p>所以显然不能让服务器主动检查GitHub更新，这种“轮询”操作效率太低。那么如果反过来，一旦GitHub有更新，它就通知服务器，然后服务器再去拉代码，这不就简单高效了吗？</p>
 <p>为了实现这个目的，就需要使用一些持续集成的工具。本文使用的是Jenkins。</p>
 <p>Jenkins在<a href="https://zh.wikipedia.org/wiki/%E6%95%8F%E6%8D%B7%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91" target="_blank" rel="external">敏捷开发</a>界可以说是大名鼎鼎了。使用Jenkins搭建一整套<a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="external">持续集成</a>环境，可以实现开发者往代码仓库一提交代码，代码自动进行单元测试，覆盖率测试，代码风格检查自动生成报告，自动通知部门同事开始Code Review。当代码被合并入主干以后，服务器自动拉下最新代码，自动编译，自动在几千几万台服务器上部署。在整个过程中，开发者只需要做一件事，那就是<code>git push</code>（当然在实际情况下，后面还会加一些参数）。</p>
 <p>本文实现的是博客的自动部署，没有任何测试，也没有Code Review，也没有编译，服务器也只有一台，复杂程度当然远远低于持续集成。不过管中窥豹，来看看这个简单地流程是如何走通的，对初学者也会有帮助。</p>
-<p>本文假设你已经在服务器上面假设好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
-<h2 id="设置Github"><a href="#设置Github" class="headerlink" title="设置Github"></a>设置Github</h2><p>在Github中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
+<p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><h3 id="设置GitHub"><a href="#设置GitHub" class="headerlink" title="设置GitHub"></a>设置GitHub</h3><p>在GitHub中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png" alt=""></p>
 <p>在设置页面，单击左侧的<code>Integrations &amp; services</code>，并选择<code>Add service</code>，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-25-25.png" alt=""></p>
-<p>从下来菜单中，选中<code>Jenkins (GitHub plugin)</code>。在新打开的界面，填写Jenkins的信息，如下图所示。</p>
+<p>从下拉菜单中，选中<code>Jenkins (GitHub plugin)</code>。在新打开的界面，填写Jenkins的信息，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-27-06.png" alt=""></p>
-<p>其中<code>Jenkins hook url</code>填写的是我的服务器的Jenkins地址加上<code>/github-webhook/</code>，所以完整的地址为<code>http://xx.xx.xx.xx:8080/github-webhook/</code>。把这里的<code>xx</code>换成实际的IP地址或者域名即可。需要注意的是，网址末尾的斜杠一定不能省略。</p>
+<p>其中<code>Jenkins hook url</code>填写的是我的服务器的Jenkins地址加上<code>/GitHub-webhook/</code>，所以完整的地址为<code>http://xx.xx.xx.xx:8080/GitHub-webhook/</code>。把这里的<code>xx</code>换成实际的IP地址或者域名即可。需要注意的是，网址末尾的斜杠一定不能省略。</p>
 <p>填写好信息以后保存，GitHub就配置好了。</p>
-<h2 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h2><p>Jenkins需要安装<code>GitHub Plugin</code>才能接收到GitHub发来的通知。进入Jenkins的<code>系统管理</code>-<code>管理插件</code>，在<code>可选插件</code>选项卡中，搜索<code>GitHub plugin</code>并安装，安装完成Jenkins会重启。重启以后可以在<code>已安装</code>选项卡下面发现<code>GitHub plugin</code>，如下图所示。</p>
+<h3 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h3><p>Jenkins需要安装<code>GitHub Plugin</code>才能接收到GitHub发来的通知。进入Jenkins的<code>系统管理</code>-<code>管理插件</code>，在<code>可选插件</code>选项卡中，搜索<code>GitHub plugin</code>并安装，安装完成Jenkins会重启。重启以后可以在<code>已安装</code>选项卡下面发现<code>GitHub plugin</code>，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-35-50.png" alt=""></p>
 <p>回到Jenkins首页，单击左上角<code>新建</code>按钮，新建一个项目，项目类型为<code>构建一个自由风格的软件项目</code>。任务的配置信息如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-37-57.png" alt=""></p>
 <p>其中的<code>项目名称</code>和<code>描述</code>可以随意填写。勾选<code>GitHub project</code>，并把博客对应的GitHub Repo的地址填入。往下拉，看到<code>源码管理</code>，点选<code>Git</code>，依然填写博客对应的Repo地址。如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-39-09.png" alt=""></p>
-<p>继续往下拉，在<code>构建触发器</code>单击<code>增加构建步骤</code>，在弹出的下拉菜单中选择<code>Execute shell</code>。勾选<code>GitHub hook trigger for GITScm polling</code>。在<code>Execute shell</code>对于的输入框中输入命令，将当前目录下的所有文件和文件夹全部复制到<code>/home/bexercise/kingname.github.io/</code>文件夹下。这个文件夹下面存放的是博客的所有HTML文件。如下图所示。</p>
+<p>继续往下拉，在<code>构建触发器</code>单击<code>增加构建步骤</code>，在弹出的下拉菜单中选择<code>Execute shell</code>。勾选<code>GitHub hook trigger for GITScm polling</code>。在<code>Execute shell</code>对应的输入框中输入命令，将当前目录下的所有文件和文件夹全部复制到<code>/home/bexercise/kingname.github.io/</code>文件夹下。如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-43-09.png" alt=""></p>
-<p>这里需要解释一些这一条命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -r ./* /home/bexercise/kingname.github.io/</div></pre></td></tr></table></figure>
-<p>其中的<code>cp -r</code>表示复制文件和文件夹。<code>./</code>表示当前目录。<code>./*</code>表示当前目录下面的所有内容。因此整条命令的意思是把当前目录下的所有内容全部复制到<code>/home/bexercise/kingname.github.io/</code>下，并且如果文件名相同，就会直接覆盖。需要注意的是，<code>kingname.github.io</code>这仅仅是一个普通的文件夹而已，别看它的名字长得像个网址，但其实它只是一个名字比较怪的普通文件夹而已，没有什么特殊的意义。</p>
+<p>其中，文件夹<code>/home/bexercise/kingname.GitHub.io/</code>里面的内容如下图所示。这是Hexo生成的HTML文件和资源文件。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-06-45.png" alt=""></p>
+<p>这里需要解释一下这一条命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -r ./* /home/bexercise/kingname.GitHub.io/</div></pre></td></tr></table></figure>
+<p>其中的<code>cp -r</code>表示复制文件和文件夹。<code>./</code>表示当前目录。<code>./*</code>表示当前目录下面的所有内容。因此整条命令的意思是把当前目录下的所有内容全部复制到<code>/home/bexercise/kingname.GitHub.io/</code>下，并且如果文件名相同，就会直接覆盖。需要注意的是，<code>kingname.GitHub.io</code>这仅仅是一个普通的文件夹而已，别看它的名字长得像个网址，但其实它只是一个名字比较怪的普通文件夹而已，没有什么特殊的意义。</p>
 <p>这个项目在构建的时候，它会自动从GitHub上面对应Repo所有的文件拉取到当前的文件夹下，所以执行了这一条复制命令以后，博客HTML文件自然就被复制到了网站的根目录下。</p>
-<h2 id="修改权限"><a href="#修改权限" class="headerlink" title="修改权限"></a>修改权限</h2><p>由于Jenkins在安装的时候，会自动创建一个名为<code>jenkins</code>的普通账号，这个账号没有管理员权限。jenkins执行命令的时候，它也会使用这个账号。但是由于<code>kingname.github.io</code>这个文件夹是用户<code>bexercise</code>创建的，所以<code>jenkins</code>账号默认是没有权限读写这个文件夹的。使用<code>bexercise</code>这个账号登录服务器，使用以下命令给<code>jenkins</code>赋予权限，让它可以读写<code>kingname.github.io</code>文件夹：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chown -R jenkins:jenkins /home/bexercise/kingname.github.io</div></pre></td></tr></table></figure>
+<h3 id="修改权限"><a href="#修改权限" class="headerlink" title="修改权限"></a>修改权限</h3><p>由于Jenkins在安装的时候，会自动创建一个名为<code>jenkins</code>的普通账号，这个账号没有管理员权限。jenkins执行命令的时候，它也会使用这个账号。但是由于<code>kingname.GitHub.io</code>这个文件夹是用户<code>bexercise</code>创建的，所以<code>jenkins</code>账号默认是没有权限读写这个文件夹的。现在需要给<code>jenkins</code>账号授予权限。使用<code>bexercise</code>这个账号登录服务器，使用以下命令给<code>jenkins</code>赋予权限，让它可以读写<code>kingname.GitHub.io</code>文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chown -R jenkins:jenkins /home/bexercise/kingname.GitHub.io</div></pre></td></tr></table></figure>
 <p>执行完成这一行命令以后，jenkins才可以把其他地方的文件复制到这个文件夹里面。</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>没有什么复杂的使用方法，在Hexo中，执行命令<code>hexo d</code>就可以把本地生成好的HTML文件提交到GitHub中。然后打开浏览器，打开博客，发现新的文章已经出现在首页了。</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>没有什么复杂的使用方法，在Hexo中，执行命令<code>hexo d</code>就可以把本地生成好的HTML文件提交到GitHub中。然后打开浏览器，打开博客，发现新的文章已经出现在首页了。</p>
 <p>在Jenkins项目的执行历史里面，也可以看到它被自动触发而产生的历史记录。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-57-12.png" alt=""></p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-11-50.png" alt=""></p>
 ]]></content>
     
     <summary type="html">

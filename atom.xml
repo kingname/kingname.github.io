@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2017-12-17T13:13:45.545Z</updated>
+  <updated>2017-12-17T13:18:31.142Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://kingname.info/2017/12/17/auto-deploy-blog/"/>
     <id>https://kingname.info/2017/12/17/auto-deploy-blog/</id>
     <published>2017-12-17T11:48:10.000Z</published>
-    <updated>2017-12-17T13:13:45.545Z</updated>
+    <updated>2017-12-17T13:18:31.142Z</updated>
     
     <content type="html"><![CDATA[<p>这篇文章比较简单，适合初学<code>持续集成</code>的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。</p>
 <a id="more"></a>
@@ -64,6 +64,7 @@
 <h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>没有什么复杂的使用方法，在Hexo中，执行命令<code>hexo d</code>就可以把本地生成好的HTML文件提交到GitHub中。然后打开浏览器，打开博客，发现新的文章已经出现在首页了。</p>
 <p>在Jenkins项目的执行历史里面，也可以看到它被自动触发而产生的历史记录。如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-11-50.png" alt=""></p>
+<h2 id="举一反三"><a href="#举一反三" class="headerlink" title="举一反三"></a>举一反三</h2><p>由于Jenkins可以运行Shell命令，进行单元测试本质上也是运行一条命令，那这不就可以实现自动进行单元测试了吗？那么如果把Shell命令改成运行一个Python脚本，那不就可以做任何事情了吗？如果Python脚本里面写了发送邮件的代码，那不就实现了你一提交代码，其他人就收到邮件了吗？</p>
 ]]></content>
     
     <summary type="html">
@@ -1106,9 +1107,9 @@
     
       <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="设计模式" scheme="https://kingname.info/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
       <category term="Java" scheme="https://kingname.info/tags/Java/"/>
+    
+      <category term="设计模式" scheme="https://kingname.info/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   

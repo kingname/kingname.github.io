@@ -101,7 +101,7 @@
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-43-09.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-06-45.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-11-50.png">
-<meta property="og:updated_time" content="2017-12-17T13:11:58.399Z">
+<meta property="og:updated_time" content="2017-12-17T13:13:45.545Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Jenkins自动部署博客">
 <meta name="twitter:description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
@@ -378,11 +378,11 @@
 <p>让服务器从GitHub上面拉代码，这个操作本身很简单。人来操作就一行代码<code>git pull</code>。写个Python脚本也就两行代码。但问题是，服务器怎么知道GitHub发生了更新？</p>
 <p>有人说，Kingname，你不是做爬虫吗？你写个爬虫，每一秒检查一下GitHub不就可以了吗？这种办法当然可以。但问题是，我一周就更新一次博客，但这个爬虫为了等这一次更新，一周要访问GitHub高达604800次？更何况我有时候一个月都不更新。</p>
 <p>所以显然不能让服务器主动检查GitHub更新，这种“轮询”操作效率太低。那么如果反过来，一旦GitHub有更新，它就通知服务器，然后服务器再去拉代码，这不就简单高效了吗？</p>
-<p>为了实现这个目的，就需要使用一些持续集成的工具。本文使用的是Jenkins。</p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>为了实现这个目的，就需要使用一些持续集成的工具。本文使用的是Jenkins。</p>
 <p>Jenkins在<a href="https://zh.wikipedia.org/wiki/%E6%95%8F%E6%8D%B7%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91" target="_blank" rel="external">敏捷开发</a>界可以说是大名鼎鼎了。使用Jenkins搭建一整套<a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="external">持续集成</a>环境，可以实现开发者往代码仓库一提交代码，代码自动进行单元测试，覆盖率测试，代码风格检查自动生成报告，自动通知部门同事开始Code Review。当代码被合并入主干以后，服务器自动拉下最新代码，自动编译，自动在几千几万台服务器上部署。在整个过程中，开发者只需要做一件事，那就是<code>git push</code>（当然在实际情况下，后面还会加一些参数）。</p>
 <p>本文实现的是博客的自动部署，没有任何测试，也没有Code Review，也没有编译，服务器也只有一台，复杂程度当然远远低于持续集成。不过管中窥豹，来看看这个简单地流程是如何走通的，对初学者也会有帮助。</p>
 <p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
-<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><h3 id="设置GitHub"><a href="#设置GitHub" class="headerlink" title="设置GitHub"></a>设置GitHub</h3><p>在GitHub中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
+<h3 id="设置GitHub"><a href="#设置GitHub" class="headerlink" title="设置GitHub"></a>设置GitHub</h3><p>在GitHub中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png" alt=""></p>
 <p>在设置页面，单击左侧的<code>Integrations &amp; services</code>，并选择<code>Add service</code>，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-25-25.png" alt=""></p>

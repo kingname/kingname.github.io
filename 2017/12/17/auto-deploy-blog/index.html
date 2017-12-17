@@ -1,0 +1,794 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Jenkins,CI," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Jenkins自动部署博客">
+<meta property="og:url" content="https://kingname.info/2017/12/17/auto-deploy-blog/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-25-25.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-27-06.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-35-50.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-37-57.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-39-09.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-43-09.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-57-12.png">
+<meta property="og:updated_time" content="2017-12-17T12:57:18.798Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Jenkins自动部署博客">
+<meta name="twitter:description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingname.info/2017/12/17/auto-deploy-blog/"/>
+
+
+
+
+
+  <title> 使用Jenkins自动部署博客 | Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tweet">
+          <a href="/tweet" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-twitter"></i> <br />
+            
+            时间
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://kingname.info/2017/12/17/auto-deploy-blog/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用Jenkins自动部署博客
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-17T19:48:10+08:00">
+                2017-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Jenkins/" itemprop="url" rel="index">
+                    <span itemprop="name">Jenkins</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/12/17/auto-deploy-blog/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/17/auto-deploy-blog/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章比较简单，适合初学<code>持续集成</code>的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。</p>
+<a id="more"></a>
+<p>为了使用HTTPS，我将博客从Github Pages迁移到了我的服务器上。由于博客基于Hexo，在迁移之前，我的工作流程是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到Github-&gt;Github Pages自动使用最新内容</div></pre></td></tr></table></figure>
+<p>现在由于Hexo渲染以后的HTML文件需要放到服务器上，那么工作流程变为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到Github-&gt;手动登录服务器</div><div class="line">-&gt;进入放博客文章的文件夹-&gt;执行命令git pull</div></pre></td></tr></table></figure>
+<p>增加的两步虽然说操作量不大，但是总显得很麻烦。于是我希望，在我把博客的HTML文件push到Github以后，服务器能自动从Github上把HTML内容拉下来。由于使用了Nginx，所以只要博客的HTML发送了更新，那么使用浏览器访问<a href="https://kingname.info">https://kingname.info</a>时，新内容自动就会出现。这样一来，对我来说，看起来就像是我刚刚push了网页内容到Github，博客就自动更新了。</p>
+<p>让服务器从Github上面拉代码，这个操作本身很简单。人来操作就一行代码<code>git pull</code>。写个Python脚本也就两行代码。但问题是，服务器怎么知道Github发生了更新？</p>
+<p>有人说，Kingname，你不是做爬虫吗？你写个爬虫，每一秒检查一下Github不就可以了吗？这种办法当然可以。但问题是，我一周就更新一次博客，但这个爬虫为了等这一次更新，一周要访问Github高达604800次？更何况我有时候一个月都不更新。</p>
+<p>所以显然不能让服务器主动检查Github更新，这种“轮询”操作效率太低。那么如果反过来，一旦Github有更新，它就通知服务器，然后服务器再去拉代码，这不就简单高效了吗？</p>
+<p>为了实现这个目的，就需要使用一些持续集成的工具。本文使用的是Jenkins。</p>
+<p>Jenkins在<a href="https://zh.wikipedia.org/wiki/%E6%95%8F%E6%8D%B7%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91" target="_blank" rel="external">敏捷开发</a>界可以说是大名鼎鼎了。使用Jenkins搭建一整套<a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="external">持续集成</a>环境，可以实现开发者往代码仓库一提交代码，代码自动进行单元测试，覆盖率测试，代码风格检查自动生成报告，自动通知部门同事开始Code Review。当代码被合并入主干以后，服务器自动拉下最新代码，自动编译，自动在几千几万台服务器上部署。在整个过程中，开发者只需要做一件事，那就是<code>git push</code>（当然在实际情况下，后面还会加一些参数）。</p>
+<p>本文实现的是博客的自动部署，没有任何测试，也没有Code Review，也没有编译，服务器也只有一台，复杂程度当然远远低于持续集成。不过管中窥豹，来看看这个简单地流程是如何走通的，对初学者也会有帮助。</p>
+<p>本文假设你已经在服务器上面假设好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
+<h2 id="设置Github"><a href="#设置Github" class="headerlink" title="设置Github"></a>设置Github</h2><p>在Github中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png" alt=""></p>
+<p>在设置页面，单击左侧的<code>Integrations &amp; services</code>，并选择<code>Add service</code>，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-25-25.png" alt=""></p>
+<p>从下来菜单中，选中<code>Jenkins (GitHub plugin)</code>。在新打开的界面，填写Jenkins的信息，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-27-06.png" alt=""></p>
+<p>其中<code>Jenkins hook url</code>填写的是我的服务器的Jenkins地址加上<code>/github-webhook/</code>，所以完整的地址为<code>http://xx.xx.xx.xx:8080/github-webhook/</code>。把这里的<code>xx</code>换成实际的IP地址或者域名即可。需要注意的是，网址末尾的斜杠一定不能省略。</p>
+<p>填写好信息以后保存，GitHub就配置好了。</p>
+<h2 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h2><p>Jenkins需要安装<code>GitHub Plugin</code>才能接收到GitHub发来的通知。进入Jenkins的<code>系统管理</code>-<code>管理插件</code>，在<code>可选插件</code>选项卡中，搜索<code>GitHub plugin</code>并安装，安装完成Jenkins会重启。重启以后可以在<code>已安装</code>选项卡下面发现<code>GitHub plugin</code>，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-35-50.png" alt=""></p>
+<p>回到Jenkins首页，单击左上角<code>新建</code>按钮，新建一个项目，项目类型为<code>构建一个自由风格的软件项目</code>。任务的配置信息如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-37-57.png" alt=""></p>
+<p>其中的<code>项目名称</code>和<code>描述</code>可以随意填写。勾选<code>GitHub project</code>，并把博客对应的GitHub Repo的地址填入。往下拉，看到<code>源码管理</code>，点选<code>Git</code>，依然填写博客对应的Repo地址。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-39-09.png" alt=""></p>
+<p>继续往下拉，在<code>构建触发器</code>单击<code>增加构建步骤</code>，在弹出的下拉菜单中选择<code>Execute shell</code>。勾选<code>GitHub hook trigger for GITScm polling</code>。在<code>Execute shell</code>对于的输入框中输入命令，将当前目录下的所有文件和文件夹全部复制到<code>/home/bexercise/kingname.github.io/</code>文件夹下。这个文件夹下面存放的是博客的所有HTML文件。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-43-09.png" alt=""></p>
+<p>这里需要解释一些这一条命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -r ./* /home/bexercise/kingname.github.io/</div></pre></td></tr></table></figure>
+<p>其中的<code>cp -r</code>表示复制文件和文件夹。<code>./</code>表示当前目录。<code>./*</code>表示当前目录下面的所有内容。因此整条命令的意思是把当前目录下的所有内容全部复制到<code>/home/bexercise/kingname.github.io/</code>下，并且如果文件名相同，就会直接覆盖。需要注意的是，<code>kingname.github.io</code>这仅仅是一个普通的文件夹而已，别看它的名字长得像个网址，但其实它只是一个名字比较怪的普通文件夹而已，没有什么特殊的意义。</p>
+<p>这个项目在构建的时候，它会自动从GitHub上面对应Repo所有的文件拉取到当前的文件夹下，所以执行了这一条复制命令以后，博客HTML文件自然就被复制到了网站的根目录下。</p>
+<h2 id="修改权限"><a href="#修改权限" class="headerlink" title="修改权限"></a>修改权限</h2><p>由于Jenkins在安装的时候，会自动创建一个名为<code>jenkins</code>的普通账号，这个账号没有管理员权限。jenkins执行命令的时候，它也会使用这个账号。但是由于<code>kingname.github.io</code>这个文件夹是用户<code>bexercise</code>创建的，所以<code>jenkins</code>账号默认是没有权限读写这个文件夹的。使用<code>bexercise</code>这个账号登录服务器，使用以下命令给<code>jenkins</code>赋予权限，让它可以读写<code>kingname.github.io</code>文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chown -R jenkins:jenkins /home/bexercise/kingname.github.io</div></pre></td></tr></table></figure>
+<p>执行完成这一行命令以后，jenkins才可以把其他地方的文件复制到这个文件夹里面。</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>没有什么复杂的使用方法，在Hexo中，执行命令<code>hexo d</code>就可以把本地生成好的HTML文件提交到GitHub中。然后打开浏览器，打开博客，发现新的文章已经出现在首页了。</p>
+<p>在Jenkins项目的执行历史里面，也可以看到它被自动触发而产生的历史记录。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-57-12.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="Kingname wechat" style="width: 200px; max-width: 100%;"/>
+    <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Jenkins/" rel="tag"># Jenkins</a>
+          
+            <a href="/tags/CI/" rel="tag"># CI</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/10/use-fsm/" rel="next" title="使用有限状态机原理实现英文分词">
+                <i class="fa fa-chevron-left"></i> 使用有限状态机原理实现英文分词
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTA1MS81NjIw">
+			<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+			</script>
+		<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chuangzaoshi.com/" title="创造狮" target="_blank">创造狮</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#设置Github"><span class="nav-number">1.</span> <span class="nav-text">设置Github</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置Jenkins"><span class="nav-number">2.</span> <span class="nav-text">配置Jenkins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改权限"><span class="nav-number">3.</span> <span class="nav-text">修改权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方法"><span class="nav-number">4.</span> <span class="nav-text">使用方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

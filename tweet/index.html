@@ -86,32 +86,20 @@
 
 
 
-<meta name="description" content="2017.11修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:1Chown -R elasticsearch:elasticsearch /mnt/es/
-然后再修改elasticsearch的配置文件。
-
-在postgres中，占位符是$1, $2而不是MySQL中的？
-2017.10使">
+<meta name="description" content="2017.12firewalld对特定IP开放特定端口：1firewall-cmd --permanent --zone=public --add-rich-rule=&amp;apos;rule family=&amp;quot;ipv4&amp;quot; source address=&amp;quot;特定IP&amp;quot; port protocol=&amp;quot;tcp&amp;quot; port=&amp;quot;特定端口&amp;quo">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="https://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.11修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:1Chown -R elasticsearch:elasticsearch /mnt/es/
-然后再修改elasticsearch的配置文件。
-
-在postgres中，占位符是$1, $2而不是MySQL中的？
-2017.10使">
+<meta property="og:description" content="2017.12firewalld对特定IP开放特定端口：1firewall-cmd --permanent --zone=public --add-rich-rule=&amp;apos;rule family=&amp;quot;ipv4&amp;quot; source address=&amp;quot;特定IP&amp;quot; port protocol=&amp;quot;tcp&amp;quot; port=&amp;quot;特定端口&amp;quo">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-12-17T11:44:53.780Z">
+<meta property="og:updated_time" content="2017-12-19T12:14:17.500Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.11修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:1Chown -R elasticsearch:elasticsearch /mnt/es/
-然后再修改elasticsearch的配置文件。
-
-在postgres中，占位符是$1, $2而不是MySQL中的？
-2017.10使">
+<meta name="twitter:description" content="2017.12firewalld对特定IP开放特定端口：1firewall-cmd --permanent --zone=public --add-rich-rule=&amp;apos;rule family=&amp;quot;ipv4&amp;quot; source address=&amp;quot;特定IP&amp;quot; port protocol=&amp;quot;tcp&amp;quot; port=&amp;quot;特定端口&amp;quo">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 
 
@@ -284,7 +272,19 @@
 
     
     
-      <h2 id="2017-11"><a href="#2017-11" class="headerlink" title="2017.11"></a>2017.11</h2><p>修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Chown -R elasticsearch:elasticsearch /mnt/es/</div></pre></td></tr></table></figure></p>
+      <h2 id="2017-12"><a href="#2017-12" class="headerlink" title="2017.12"></a>2017.12</h2><p>firewalld对特定IP开放特定端口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --zone=public --add-rich-rule=&apos;rule family=&quot;ipv4&quot; source address=&quot;特定IP&quot; port protocol=&quot;tcp&quot; port=&quot;特定端口&quot; accept&apos;</div></pre></td></tr></table></figure></p>
+<hr>
+<p>生成文件树并过滤特定文件或文件夹：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tree -I <span class="string">'__pycache__|pyc|Logs'</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>统计代码行数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find . -name <span class="string">"*.py"</span> | xargs wc <span class="_">-l</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>为pip设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip3.6 --proxy http://代理IP:端口 install -r requirements.txt</div></pre></td></tr></table></figure></p>
+<hr>
+<p>为Git设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN git config --global http.proxy http://代理IP:端口</div><div class="line">RUN git config --global http.sslverify <span class="string">"false"</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>为Ubuntu的<code>apt-get</code>设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/apt/apt.conf.d/01turnkey</div></pre></td></tr></table></figure></p>
+<p>在里面插入一行：<br><code>Acquire::http::Proxy &quot;http://your.proxy.here:port/&quot;;</code><br>保存以后，下一次执行<code>apt-get</code>命令就会使用代理了。</p>
+<h2 id="2017-11"><a href="#2017-11" class="headerlink" title="2017.11"></a>2017.11</h2><p>修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Chown -R elasticsearch:elasticsearch /mnt/es/</div></pre></td></tr></table></figure></p>
 <p>然后再修改elasticsearch的配置文件。</p>
 <hr>
 <p>在postgres中，占位符是<code>$1</code>, <code>$2</code>而不是MySQL中的<code>？</code></p>

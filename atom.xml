@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2017-12-31T14:34:13.589Z</updated>
+  <updated>2017-12-31T16:26:16.605Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -14,6 +14,86 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>不用甘特图，你做什么项目管理</title>
+    <link href="https://kingname.info/2017/12/31/you-should-use-gantt/"/>
+    <id>https://kingname.info/2017/12/31/you-should-use-gantt/</id>
+    <published>2017-12-31T14:45:55.000Z</published>
+    <updated>2017-12-31T16:26:16.605Z</updated>
+    
+    <content type="html"><![CDATA[<p>我非常喜欢使用甘特图来做项目管理。不用甘特图的公司，我觉得很奇怪。<br><a id="more"></a></p>
+<h2 id="什么是甘特图"><a href="#什么是甘特图" class="headerlink" title="什么是甘特图"></a>什么是甘特图</h2><p>什么是甘特图呢？下面这张图就是甘特图。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-22-53-21.png" alt=""></p>
+<p>这张图是我12月离职做交接时候的甘特图。</p>
+<ul>
+<li>不同的颜色表示不同的人</li>
+<li>每一行表示一个任务</li>
+<li>红色竖线表示今天应该完成的任务</li>
+<li>任务与任务之间的黑色箭头表示任务之间的依赖关系，必需完成前面的才能完成后面的</li>
+<li>带中心黑线的任务表示已经完成的任务</li>
+</ul>
+<p>通过这一张甘特图，我能一眼看出以下信息：</p>
+<ol>
+<li>今天谁应该做什么任务</li>
+<li>这个任务从什么时候开始，到什么时候结束</li>
+<li>一个人在一段时间有哪些任务</li>
+<li>应该先做哪些任务再做哪些任务</li>
+<li>哪些任务可以同时做</li>
+<li>这个任务是否被其他任务依赖，如果是，那么这个任务就不能推迟，必需按时完成或者提前完成，否则会影响后面的任务</li>
+<li>每个任务已经完成多少还剩多少</li>
+<li>大任务下面有哪些子任务</li>
+<li>任务的里程碑是什么时候</li>
+</ol>
+<h2 id="为什么要用甘特图"><a href="#为什么要用甘特图" class="headerlink" title="为什么要用甘特图"></a>为什么要用甘特图</h2><p>因为为了绘制出甘特图，你必需强迫自己完成以下几件事情：</p>
+<ol>
+<li>确定每一个任务的开始时间和结束时间</li>
+<li>确定任务的依赖关系</li>
+<li>分离可以同时运行的任务</li>
+<li>确定不同人的任务间的时间关系</li>
+</ol>
+<p>当你根据以上的规则绘制好第一版甘特图以后，你会发现有些地方是可以继续调整的，但是这种调整，在你没有画图之前是不能发现的。于是你会在调整甘特图的过程中，让项目的规划越来越清晰。</p>
+<h2 id="怎么做甘特图"><a href="#怎么做甘特图" class="headerlink" title="怎么做甘特图"></a>怎么做甘特图</h2><p>你可以在纸上做甘特图，也可以用Excel来做。下面这张图是来自网络。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-23-20-03.png" alt=""></p>
+<p>这是使用Excel做出来的效果，但是做起来稍显麻烦。</p>
+<p>Omniplan和MS Project都是非常专业的甘特图制作软件，但是价格非常高。比较这是生产力软件，使用这个软件你是可以赚大钱的，自然软件本身就会比较贵。</p>
+<p>开源的甘特图软件也有不少，不过不是功能不全就是界面丑陋。这里介绍一个相对比较完整的甘特图制作软件：GanttProject</p>
+<p>GanttProject的官方网站为<a href="http://www.ganttproject.biz/" target="_blank" rel="external">http://www.ganttproject.biz/</a>，在这里你可以下载到macOS，Windows或者Linux版本的软件。</p>
+<p>GanttProject运行以后的界面如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-23-47-11.png" alt=""></p>
+<p>在左侧任务面板右键或者按下键盘<code>Command</code> + <code>T</code>就可以添加任务，Windows和Linux对应的快捷键为<code>Ctrl</code> + <code>T</code>。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-23-48-11.png" alt=""></p>
+<p>创建好了一个任务，它默认的开始时间和结束时间都是今天。在任务上面右键，选择<code>任务属性</code>，可以打开任务属性设置界面，在这里可以设置任务的开始时间和任务时长。但是你不能设置任务结束时间。因为任务结束时间会根据开始时间和任务时长自动计算。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-03-16.png" alt=""></p>
+<p>在这个界面，还可以设置任务的演示，实现不同人不同颜色，或者不同项目不同颜色。也可以在这里更新任务进度。</p>
+<p>创建多个任务，如果后面的任务依赖前面的任务，那么在右侧被依赖的任务色条上单击鼠标左键，按住并拖动到依赖它的任务上。依赖它的任务的起始时间自动就会变为被依赖任务的结束时间，如下图所示。此时，后一个任务只能设置任务的时长，不能修改任务的起始时间。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-08-17.png" alt=""></p>
+<p>如果依赖关系设置错误，打开依赖任务的任务属性，定位到<code>前置任务</code>选项卡，在这里可以删除被依赖的任务或者修改被依赖任务。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-11-10.png" alt=""></p>
+<p>如果你需要移动任务的顺序，鼠标单击选中它，按下键盘上的<code>Alt</code> + <code>方向键上或下</code>即可移动任务。</p>
+<p>我认为甘特图有一个非常重要的元素，就是竖直红线，它指向了今天的任务。要打开这跟红线，需要单击菜单栏的<code>编辑</code>-<code>设置</code>，定位到<code>甘特图设定</code>，在<code>将今天显示为红色</code>点选为<code>是</code>，如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-20-55.png" alt=""><br>单击确定回到甘特图的界面，可以看到图中出现了一条红色竖线。这条竖线指向了今天应该做的事情。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-23-06.png" alt=""></p>
+<p>每天打开甘特图，这根红线都会指向当天。</p>
+<p>GanttProject可以把做好的甘特图导出为图片或者XML文件。单击<code>项目</code>-<code>导出</code>，点选<code>Raster图像文件</code>，并单击<code>下一步</code>，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-24-34.png" alt=""></p>
+<p>设置保存路径和甘特图的日期范围即可导出为png文件，以方便分享。</p>
+<p>GanttProject还有更多功能，你可以安装以后慢慢研究。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我非常喜欢使用甘特图来做项目管理。不用甘特图的公司，我觉得很奇怪。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="经验" scheme="https://kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
+    
+    
+      <category term="经验" scheme="https://kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+      <category term="甘特图" scheme="https://kingname.info/tags/%E7%94%98%E7%89%B9%E5%9B%BE/"/>
+    
+  </entry>
   
   <entry>
     <title>2017年终总结</title>
@@ -1218,77 +1298,6 @@
       <category term="lxml" scheme="https://kingname.info/tags/lxml/"/>
     
       <category term="Xpath" scheme="https://kingname.info/tags/Xpath/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>我的编码规范</title>
-    <link href="https://kingname.info/2015/07/19/mycodestyle/"/>
-    <id>https://kingname.info/2015/07/19/mycodestyle/</id>
-    <published>2015-07-19T08:31:54.000Z</published>
-    <updated>2016-11-30T13:56:28.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="开篇闲扯"><a href="#开篇闲扯" class="headerlink" title="开篇闲扯"></a>开篇闲扯</h2><p>距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实习的过程中逐步接手了一些维护的工作，并提交了不少代码。7月6号正式入职以后，我加入了一个Amazing的新项目的创建，目前我们做出来的Demo真是非常的Amazing。不过可惜的是，这样一个项目在最近几年是不会对外公布的。</p>
-<p>在6月之前，每晚回家就是做毕设了，这段时间休息的都比较晚，头发都白了很多。</p>
-<p>还有就是给极客学院录课，第一个系列课程《定向爬虫入门》已经全部录制完毕了，一共8课，大家可以在about me 里面找到前7课的链接，最后一课目前正在后期制作当中，上线以后会更新链接。接下来我会讲解远程控制软件的编写，欢迎大家在极客学院关注我，我的名字叫kingname~</p>
-<p>闲话完毕，那我们开始正题。</p>
-<p>##本题由来<br>其实以前我是不太注意编码风格的，觉得程序可以运行了就行。甚至网上还有一种说法：</p>
-<blockquote>
-<p>如果你急急忙忙写一个程序，都没有注重编码规范，程序可能一次就跑通了；但是如果你仔细编码，而且还把单元测试做的非常完善，很有可能程序会出现大bug,而且还难以找到原因。</p>
-</blockquote>
-<p>然而在我实习的过程中，读了公司的很多代码，才发现编码规范是如此的重要，以至于可以显著影响对代码的理解。而且由于在部门里面code review做的比较严格，因此代码的风格不统一的话，是不能merge的，于是在多次提交代码以后渐渐的总结出了一些规律。</p>
-<p>##变量命名<br>在我大一学编程的时候，老师告诉我们变量命名最后使用匈牙利命名法，例如，经常出现hszStr、istuNum之类的变量名，如果对代码不熟悉的话，都不知道是什么意思。</p>
-<p>现在我们并不使用匈牙利命名法，而是直接将变量的含义通过单纯完整拼写处理。例如：</p>
-<blockquote>
-<p>deviceSerialDict： 用于保存设备串号的字典<br>deviceSerialDictList： 用于保存设备串号字典的列表<br>unusedSerialNumList： 未使用的序列号列表</p>
-</blockquote>
-<p>我们约定：</p>
-<ul>
-<li>变量名首字母小写</li>
-<li>多个单词的构成的变量，从第二个开始首字母大写</li>
-<li>缩写词做单词处理，例如ACM在变量名中应该写为Acm而不是ACM</li>
-<li>常量大写，每个单词使用_下划线分割</li>
-<li>不允许出现Magic Number</li>
-<li>使用名词或者动宾结构</li>
-</ul>
-<p>##类与方法</p>
-<p>使用面向对象编程，这一点在我做毕业设计的程序时，帮了我大忙，大大减轻了我的工作压力。</p>
-<p>我们的风格其实有点像Java了，文件名和类名相同，如果一个文件里面有多个类，那文件名与主要的类名相同。</p>
-<p>我们约定：</p>
-<ul>
-<li>非私有的方法，首字母小写，动宾结构，例如getSerialNum</li>
-<li>对于和类本身没有什么大关系的方法，要使用@staticmethod</li>
-<li>只有类自己使用的方法需要设为私有，也就是名称前加两个下划线</li>
-</ul>
-<p>##代码细节</p>
-<ul>
-<li>逗号后面要有一个空格</li>
-<li>每一行代码后面不能有空格</li>
-<li>文件的最后要有一个空行</li>
-<li>等号左右都需要有空格，但是作为参数的时候不需要空格</li>
-<li>方法的参数大于6个，则使用列表或者字典来传递</li>
-</ul>
-<p>##总结</p>
-<p>挂一漏万，以上的规范使用Pylint都可以帮忙检查出来。没有说到的地方请大家补充，除了以上的规范以外，还有Python自己本身的编码规范，请戳-&gt;<a href="https://www.python.org/dev/peps/pep-0008/" target="_blank" rel="external">https://www.python.org/dev/peps/pep-0008/</a>。 </p>
-<p>最近重构了MCC,请大家对比</p>
-<p><a href="https://github.com/kingname/MCC" target="_blank" rel="external">https://github.com/kingname/MCC</a> </p>
-<p>与 重构之前 </p>
-<p><a href="https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb" target="_blank" rel="external">https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb</a></p>
-<p>的区别。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;开篇闲扯&quot;&gt;&lt;a href=&quot;#开篇闲扯&quot; class=&quot;headerlink&quot; title=&quot;开篇闲扯&quot;&gt;&lt;/a&gt;开篇闲扯&lt;/h2&gt;&lt;p&gt;距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实
-    
-    </summary>
-    
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
-    
-      <category term="CodeStyle" scheme="https://kingname.info/tags/CodeStyle/"/>
     
   </entry>
   

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2017-12-31T16:32:10.641Z</updated>
+  <updated>2018-01-01T03:52:07.504Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -14,6 +14,79 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>任务管理，项目管理和目标管理</title>
+    <link href="https://kingname.info/2018/01/01/task-project-target/"/>
+    <id>https://kingname.info/2018/01/01/task-project-target/</id>
+    <published>2018-01-01T02:11:14.000Z</published>
+    <updated>2018-01-01T03:52:07.504Z</updated>
+    
+    <content type="html"><![CDATA[<p>我是一个工具控，经常尝试各种生产力工具。我发现任务管理App汗牛充栋，项目管理工具乏善可陈，而目标管理App更是少得可怜。</p>
+<h2 id="任务管理App"><a href="#任务管理App" class="headerlink" title="任务管理App"></a>任务管理App</h2><p>任务管理App，包括常见的Things 3，Todoist，Teambition，Trello。其中Things 3和Todoist，本质上就像是一个增强版的提醒工具，你要做什么事情，填上去，设置好Deadline，事情做完了勾掉。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-10-22-53.png" alt=""></p>
+<p>但这种类型的App有一个缺点——任务只有<code>未做</code>和<code>完成</code>两个状态，没有<code>正在做</code>的状态。</p>
+<p>而Teambition与Trello稍微进步一点，引入了看板的概念，于是能够显示任务在各个阶段的状态，如下图所示。这张图是少数派的Trello看板，用来让作者选题。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-10-26-51.png" alt=""></p>
+<p>这种类型的App有一个很大的问题：你做了很多任务，但是你不知道你做这些任务是为了什么。任务管理类App适合用来记录和追踪各种琐碎的任务和相关性不强的任务。就像是少数派的每一篇文章，文章与文章之间不是一个系列的关系，他们各自独立，谁都可以领选题写文章，哪个选题先写哪个选题后写，关系不大。</p>
+<p>一旦要规划一个项目，对于规划项目的人和做项目的人，用任务管理类App都会让人觉得使不上劲。对于做任务的人，看到每一个独立的任务，对项目没有整体的概念；对于规划项目的人，不知道任务是不是已经切分得足够细，是否有遗漏。举一个例子，下面是一些任务：</p>
+<ul>
+<li>找IT申请服务器</li>
+<li>配置Dockerfile</li>
+<li>配置Docker Swarm</li>
+<li>搭建Jenkins</li>
+<li>配置Github Hook</li>
+<li>选择三个Repo测试</li>
+</ul>
+<p>现在看到上面的几个任务，你知道我是想做什么吗？我想实现持续集成（CI），实现开发人员把代码一推到Github，系统自动使用Jenkins把代码拉到测试服务器，检查代码风格，做单元测试，做功能测试，自动生成Code Review申请发送给相关人员，Code Review以后自动把代码集成到主干并部署。但是对于做任务的人，却很难根据上面的任务发现要做这个事情。对于规划任务的人，也很难发现是否漏掉了任务，以及是否其中的一个或者多个任务可以继续拆分。</p>
+<p>再一个问题，在为每一个任务设定时间的时候，任务一旦多，很难把控每个任务的具体时长。也难以发现哪些任务可以同时做，哪些任务有依赖必需先做这个再做那个，前置任务必需按时完成。即使设置了任务优先级，但是对于同级的任务谁先做谁后做，你却无法把控，只有看App上哪个排前面就先做哪个。</p>
+<p>我曾经有一篇文章，就是因为考虑到Teambition的这个问题，所以把Teambition与大纲工具Workflowy结合起来使用。文章地址为：<a href="https://kingname.info/2017/10/03/teamflowy/">TeamFlowy——结合Teambition与Workflowy
+</a></p>
+<h2 id="项目管理"><a href="#项目管理" class="headerlink" title="项目管理"></a>项目管理</h2><p>正是由于任务管理App存在诸多不便，于是在规划一个项目的时候，必需使用一些项目管理的方法或者软件来提高效率。</p>
+<p>关于项目管理，我个人最推崇使用甘特图。在我的另一篇文章<a href="https://kingname.info/2017/12/31/you-should-use-gantt/">不用甘特图，你做什么项目管理</a>中，我讲到了从一张甘特图里面，你将会额外获得哪些信息。</p>
+<p>甘特图是一张二维的图表，它的横轴是时间，纵轴是任务。从甘特图上可以一目了然看到一个任务从什么时候开始什么时候结束，不同任务之间是否有时间重叠，以及哪些任务可以同时做哪些任务必需有先后顺序。</p>
+<p>我个人认为，在项目管理中，任务周期是非常重要的，任务的开始时间和结束时间一定要把控好。使用甘特图就可以实现这样一个目的。</p>
+<p>对于规划任务的人，在用甘特图规划任务的时候，如果你发现一个任务时间太长，无论怎么调整都会和后面的任务有重叠，那么你就会发现这个任务可能需要拆分为更小的任务。而且由于甘特图立足于项目的整体，你也可以更容易发现是否有任务漏掉了。</p>
+<p>对于做任务的人，甘特图也可以帮他们了解到他们所做的任务在整个项目中处于一个什么样的位置，从而让他们知道自己正在做的任务是不是非常重要必需按时完成。</p>
+<p>如果你是要开发一个App，或者是要写一本书，或者是要做一个其他什么项目，只要它是由一系列不同的任务构成的，那么你就可以考虑使用甘特图来帮你提高效率。</p>
+<h2 id="目标管理"><a href="#目标管理" class="headerlink" title="目标管理"></a>目标管理</h2><p>今天是2018年第一天，不知道有多少人把2017年第一天许下的新年愿望原封不动的搬到了今天。为什么很多人的目标总是不能实现呢？因为他们没有做好目标管理。</p>
+<p>关于目标管理，我推崇的是OKR系统。这虽然是一个发源于Intel后被Google发扬光大的企业管理系统，但是对个人依然有用。OKR的意思是<code>Objective and Key Results</code>目标和关键成果。很多人的目标之所以没有实现，是因为他们只设定目标，却不设定成果检查。例如一个人的目标是打算学好英语，但是由于没有设定结果，那么他在设定目标的第二天背了三个单词，在他的潜意识里面就会认为自己已经完成了这个任务，自然后面就会越来越松懈。但如果一个人设定目标为学好英语，再设定几个关键成果，例如：</p>
+<ul>
+<li>4月1之前，与10个以上美国人聊天</li>
+<li>在3月10日节之前，单词书随意翻开一页，这一页的单词至少认识90%</li>
+<li>在4月1日前面试三个国外的公司，不为工作就为面着玩</li>
+</ul>
+<p>这样的目标，就更容易实现了。</p>
+<p>使用OKR方法，用纸和笔就可以完成，在设定目标关键结果的时候，一定要使用<code>Smart</code>法则：</p>
+<ul>
+<li>Specific-具体的</li>
+<li>Measurable-可衡量的</li>
+<li>Attainable-可实现的</li>
+<li>Relevant-相关的</li>
+<li>Time-based-有时限的</li>
+</ul>
+<p>关键结果要足够具体，这样它才是可衡量的。而所谓的可衡量，自然就是可以量化的，可以用数字来定量的检查这个关键结果是否完成，如果没有完全完成，那么完成了多少。如果目标是学好英语，那么关键结果里面肯定不能是“每个月吃一次素菜”。因为这个关键结果和这个目标无关。最后也是非常重要的一点，设定Deadline，防止拖延。</p>
+<p>如果你基于OKR系统订好了几个目标和他们的关键结果，然后你100%完成了所有目标。那么恭喜你，你的这个OKR系统是<code>不成功</code>的。100%完成的基于OKR系统的目标对你的帮助不会太大，因为你设定得太简单了。一个完美的<code>OKR</code>系统，应该是在你用尽全力绞尽脑汁的情况下，完成了70%的目标。这样它才会促使你不断挑战自己的极限，不断变得更好。</p>
+<p>基于OKR系统的目标，时间也不应该设置太长，以季度为节点检查一次，增加新的目标或者关键结果。最长也需要保证半年至少检查一次，否则很容易出现赶Deadline的情况。</p>
+<h2 id="结合"><a href="#结合" class="headerlink" title="结合"></a>结合</h2><p>一个目标，最终会被拆分为一个或者多个项目，每个项目又会被拆分为一个或者多个具体的任务。所以在我自己的实践中，我会把本文讲到的三个东西结合起来。通过OKR系统制定我的目标，使用甘特图来规划我的项目，而使用Todoist来做任务管理。</p>
+<p>当我形成了这样一个工作流以后，我发现他们之间可以合作得很好，并不会让人手忙脚乱。我在季度开始的时候制定OKR，然后每周检查一次。在绘制好甘特图以后，我每天也只在下班的时候看一次，更新好项目进度，然后把明天要做的任务添加到Todoist里面。所以我每天使用最多的，更新得最多的还是Todoist。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我是一个工具控，经常尝试各种生产力工具。我发现任务管理App汗牛充栋，项目管理工具乏善可陈，而目标管理App更是少得可怜。&lt;/p&gt;
+&lt;h2 id=&quot;任务管理App&quot;&gt;&lt;a href=&quot;#任务管理App&quot; class=&quot;headerlink&quot; title=&quot;任务管理App&quot;&gt;
+    
+    </summary>
+    
+      <category term="经验" scheme="https://kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
+    
+    
+      <category term="生产力" scheme="https://kingname.info/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B/"/>
+    
+      <category term="效率" scheme="https://kingname.info/tags/%E6%95%88%E7%8E%87/"/>
+    
+  </entry>
   
   <entry>
     <title>不用甘特图，你做什么项目管理</title>
@@ -1237,67 +1310,6 @@
       <category term="Java" scheme="https://kingname.info/tags/Java/"/>
     
       <category term="设计模式" scheme="https://kingname.info/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用etree.HTML的编码问题</title>
-    <link href="https://kingname.info/2015/10/07/lxmlencoding/"/>
-    <id>https://kingname.info/2015/10/07/lxmlencoding/</id>
-    <published>2015-10-07T09:56:47.000Z</published>
-    <updated>2016-11-30T13:56:19.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="出现问题"><a href="#出现问题" class="headerlink" title="出现问题"></a>出现问题</h2><p>今天指导一个学生爬取新浪体育手机版的时候，发现lxml.etree.HTML处理网页源代码会默认修改编码，导致打印出来的内容为乱码。爬取的网址为：<a href="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" title="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" target="_blank" rel="external">http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10</a></p>
-<p>首先导入我们需要用到的库文件，然后设置环境：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#-*_coding:utf8-*-</div><div class="line">import requests</div><div class="line">from lxml import etree</div><div class="line">import sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(&quot;utf-8&quot;)</div></pre></td></tr></table></figure>
-<p>然后获取网页的源代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">r = requests.get(url=&apos;http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10&apos;)# 最基本的GET请求</div><div class="line">r.encoding = &apos;utf-8&apos;</div><div class="line">r = r.content</div><div class="line">print r</div></pre></td></tr></table></figure></p>
-<p>打印出网页源代码，发现中文是乱码，如图：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding1.gif" alt=""></p>
-<p>这是小问题，使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>这篇文章中讲解的方法，轻松解决。</p>
-<p>将：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure></p>
-<p>修改为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content.decode(&apos;utf-8&apos;).encode(&apos;gbk&apos;)</div></pre></td></tr></table></figure></p>
-<p>可以正常显示中文，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding2.png" alt=""></p>
-<p>接下来，使用etree.HTML处理源代码，然后使用Xpath提取内容，一切似乎看起来轻车熟路。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding3.png" alt=""></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r)</div><div class="line">title = contentTree.xpath(<span class="string">'//h1[@class="art_title_h1"]/text()'</span>)</div><div class="line"><span class="keyword">print</span> title[<span class="number">0</span>]</div></pre></td></tr></table></figure>
-<p>但是当我打印出来，才发现问题没有这么简单。如图：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding4.png" alt=""></p>
-<p>这个时候，我发现使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>讲到的办法已经不能解决问题了。</p>
-<p>通过调试，我发现抓取到的内容是乱码：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding5.png" alt=""></p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="使用Scrapy"><a href="#使用Scrapy" class="headerlink" title="使用Scrapy"></a>使用Scrapy</h3><p>使用Scrapy的Xpath，正常提取需要的内容：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding6.png" alt=""></p>
-<h3 id="继续用etree"><a href="#继续用etree" class="headerlink" title="继续用etree"></a>继续用etree</h3><p>实际上，Scrapy的Xpath底层还是调用的lxml,那为什么它可以，而我直接使用lxml的etree.HTML处理源代码然后Xpath提取内容就出乱码呢？</p>
-<p>显然这应该是编码的问题，在使用:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">etree.HTML(r)</div></pre></td></tr></table></figure>
-<p>处理源文件的时候，由于没有指定编码，所以它使用了一个默认编码，从而导致和UTF-8冲突，产生乱码。</p>
-<p>经过查阅lxml.etree.HTML的文档，我发现etree.HTML有一个参数是parser,这个参数不是必须的，因此省略以后它就会自动使用一个默认的parser。既然如此，那我手动指定一个：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r, parser=etree.HTMLParser(encoding=<span class="string">'utf-8'</span>))</div></pre></td></tr></table></figure>
-<p>这里我指定了etree.HTMLParser来作为一个parser,同时，etree.HTMLParser可以接受编码作为参数。于是我指定为UTF-8。</p>
-<p>运行看看效果：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding7.png" alt=""></p>
-<p>继续报错，但是出错信息改变了，提示utf8不能解码。请注意第11行，现在源代码是gbk编码，所以使用UTF-8不能解码。于是可以把第11行重新改回原来的样子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure>
-<p>再一次运行，发现正常抓取信息：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding8.png" alt=""></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一次的问题提示我们：遇到问题，通过经验解决不了的时候，请回归文档。</p>
-<p><em>原文发表在：<a href="http://blog.kingname.info/2015/10/07/lxmlencoding/" target="_blank" rel="external">http://blog.kingname.info/2015/10/07/lxmlencoding/</a>转载请注明出处！</em></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;出现问题&quot;&gt;&lt;a href=&quot;#出现问题&quot; class=&quot;headerlink&quot; title=&quot;出现问题&quot;&gt;&lt;/a&gt;出现问题&lt;/h2&gt;&lt;p&gt;今天指导一个学生爬取新浪体育手机版的时候，发现lxml.etree.HTML处理网页源代码会默认修改编码，导致打印出来的内容
-    
-    </summary>
-    
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
-    
-      <category term="lxml" scheme="https://kingname.info/tags/lxml/"/>
-    
-      <category term="Xpath" scheme="https://kingname.info/tags/Xpath/"/>
     
   </entry>
   

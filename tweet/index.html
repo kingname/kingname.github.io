@@ -86,20 +86,29 @@
 
 
 
-<meta name="description" content="2017.12firewalld对特定IP开放特定端口：1firewall-cmd --permanent --zone=public --add-rich-rule=&amp;apos;rule family=&amp;quot;ipv4&amp;quot; source address=&amp;quot;特定IP&amp;quot; port protocol=&amp;quot;tcp&amp;quot; port=&amp;quot;特定端口&amp;quo">
+<meta name="description" content="2018.01使用grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
+
+使用rsync通过SSH从服务器拉取数据：1rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv
+如果有SSH Key的话，使用下面的命令：1rsync -avzP -e &quot;ssh">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="https://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2017.12firewalld对特定IP开放特定端口：1firewall-cmd --permanent --zone=public --add-rich-rule=&amp;apos;rule family=&amp;quot;ipv4&amp;quot; source address=&amp;quot;特定IP&amp;quot; port protocol=&amp;quot;tcp&amp;quot; port=&amp;quot;特定端口&amp;quo">
+<meta property="og:description" content="2018.01使用grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
+
+使用rsync通过SSH从服务器拉取数据：1rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv
+如果有SSH Key的话，使用下面的命令：1rsync -avzP -e &quot;ssh">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2017-12-19T12:14:17.500Z">
+<meta property="og:updated_time" content="2018-01-14T16:02:11.927Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2017.12firewalld对特定IP开放特定端口：1firewall-cmd --permanent --zone=public --add-rich-rule=&amp;apos;rule family=&amp;quot;ipv4&amp;quot; source address=&amp;quot;特定IP&amp;quot; port protocol=&amp;quot;tcp&amp;quot; port=&amp;quot;特定端口&amp;quo">
+<meta name="twitter:description" content="2018.01使用grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
+
+使用rsync通过SSH从服务器拉取数据：1rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv
+如果有SSH Key的话，使用下面的命令：1rsync -avzP -e &quot;ssh">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 
 
@@ -272,7 +281,22 @@
 
     
     
-      <h2 id="2017-12"><a href="#2017-12" class="headerlink" title="2017.12"></a>2017.12</h2><p>firewalld对特定IP开放特定端口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --zone=public --add-rich-rule=&apos;rule family=&quot;ipv4&quot; source address=&quot;特定IP&quot; port protocol=&quot;tcp&quot; port=&quot;特定端口&quot; accept&apos;</div></pre></td></tr></table></figure></p>
+      <h2 id="2018-01"><a href="#2018-01" class="headerlink" title="2018.01"></a>2018.01</h2><p>使用grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
+<hr>
+<p>使用rsync通过SSH从服务器拉取数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
+<p>如果有SSH Key的话，使用下面的命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP <span class="_">-e</span> <span class="string">"ssh -i ~/sshkey.pem"</span> ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在Ubuntu中修改时区：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</div></pre></td></tr></table></figure></p>
+<hr>
+<p>使用XPath获取名称包含特定字符的属性的属性值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">//span/img/@*[contains(name(), <span class="string">"src"</span>)]</div></pre></td></tr></table></figure></p>
+<hr>
+<p>AWS在一年免费期间内，换机房不用给钱。先在老的实例生成AMI，再把AMI复制到新的城市，再从新城市的AMI创建实例。然后把老城市的实例彻底终结，取消老城市和新城市的AMI。全程不收费。</p>
+<hr>
+<p>在Python中执行Shell命令并获取返回结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line">shell_result = subprocess.check_output(<span class="string">'ps -ef | grep 进程名 | grep -v grep'</span>, shell=<span class="keyword">True</span>).decode().strip().split(<span class="string">'\n)</span></div></pre></td></tr></table></figure></p>
+<p>如果命令本身没有返回，则会抛出一个<code>subprocess.CalledProcessError</code></p>
+<hr>
+<p>在Shell中判断一个进程是否存在：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ps -ef | grep 进程名 | grep -v grep &gt; /dev/null</div><div class="line"><span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程存在"</span></div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程不存在"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure></p>
+<h2 id="2017-12"><a href="#2017-12" class="headerlink" title="2017.12"></a>2017.12</h2><p>firewalld对特定IP开放特定端口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --zone=public --add-rich-rule=&apos;rule family=&quot;ipv4&quot; source address=&quot;特定IP&quot; port protocol=&quot;tcp&quot; port=&quot;特定端口&quot; accept&apos;</div></pre></td></tr></table></figure></p>
 <hr>
 <p>生成文件树并过滤特定文件或文件夹：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tree -I <span class="string">'__pycache__|pyc|Logs'</span></div></pre></td></tr></table></figure></p>
 <hr>

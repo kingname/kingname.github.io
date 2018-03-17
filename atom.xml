@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2018-01-01T03:58:02.618Z</updated>
+  <updated>2018-03-17T03:32:01.282Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -16,11 +16,89 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>从Workflowy到印象笔记</title>
+    <link href="https://kingname.info/2018/03/17/from-workflowy-to-evernote/"/>
+    <id>https://kingname.info/2018/03/17/from-workflowy-to-evernote/</id>
+    <published>2018-03-17T02:05:54.000Z</published>
+    <updated>2018-03-17T03:32:01.282Z</updated>
+    
+    <content type="html"><![CDATA[<p>Workflowy是一个极简风格的大纲写作工具，使用它提供的无限层级缩进和各种快捷键，可以非常方便的理清思路，写出一个好看而实用的大纲。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-17-58.png" alt=""></p>
+<p>印象笔记更是家喻户晓，无人不知。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。</p>
+<p>如果能够把用Workflowy写大纲的便利性，与印象笔记强大的搜索功能结合起来，那岂不是如虎添翼？如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-21-31.png" alt=""></p>
+<p>EverFlowy就是这样一个小工具。它可以自动把Workflowy上面的条目拉下来再同步到印象笔记中。如果Workflowy有更新，再运行一下这个小工具，它就会同步更新印象笔记上面的内容。Workflowy负责写，印象笔记负责存，各尽其能，各得其所。</p>
+<a id="more"></a>
+<h2 id="工具介绍"><a href="#工具介绍" class="headerlink" title="工具介绍"></a>工具介绍</h2><p>Everflowy基于Python 3开发，代码托管在Github中，地址为：<a href="https://github.com/kingname/EverFlowy" target="_blank" rel="external">https://github.com/kingname/EverFlowy</a>这个小工具在持续在开发中，目前可以实现Workflowy单向同步到印象笔记和差异更新。由于印象笔记的Oauth验证方式需要申请才能对正式的账号使用，但它又不会通过这种个人小工具的申请，所以目前暂时使用开发者Token。关于如何申请开通正式账号的开发者Token，在后文会有详细的说明。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>首先需要保证电脑中安装了Python 3，否则无法运行这个小工具。代码的依赖关系使用Pipenv来管理，所以需要首先使用pip安装pipenv：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 -m pip install pipenv</div></pre></td></tr></table></figure>
+<p>有了Pipenv以后，使用Git把代码拉到本地再安装依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/kingname/EverFlowy.git</div><div class="line"><span class="built_in">cd</span> EverFlowy</div><div class="line">pipenv install</div><div class="line">pipenv shell</div></pre></td></tr></table></figure>
+<p>运行了上面的4条命令以后，你的终端窗口应该如下图类似。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-43-11.png" alt=""></p>
+<p>Pipenv会自动创建一个基于Virtualenv的虚拟环境，然后把EverFlowy依赖的第三方库自动安装到这个虚拟环境中，再自动激活这个虚拟环境。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>在代码的根目录，有一个config.json文件，打开以后如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-46-26.png" alt=""></p>
+<p>你需要修改三个地方，分别是<code>username</code>，<code>password</code>和<code>dev_token</code>。其中<code>username</code>和<code>password</code>分别对应了Workflowy的用户名和密码，而<code>dev_token</code>是印象笔记的开发者Token。</p>
+<p>这里需要说明一下印象笔记的开发者Token。印象笔记的开发者Token有两套，分别是沙盒环境的开发者Token和生产环境的开发者Token。所谓沙盒环境，就是一个测试开发环境，这个环境是专门为了快速开发印象笔记App而设计的，它的地址为：<a href="https://sandbox.evernote.com" target="_blank" rel="external">https://sandbox.evernote.com</a>。打开这个网址，可以看到页面上弹出了警告，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-56-01.png" alt=""></p>
+<p>无论你之前是否有印象笔记的账号，要使用沙盒环境，都必需重新注册。注册完成以后，通过访问<a href="https://sandbox.evernote.com/api/DeveloperToken.action" target="_blank" rel="external">https://sandbox.evernote.com/api/DeveloperToken.action</a>获取沙盒环境的开发者Token。</p>
+<p>关于印象笔记的沙盒环境，我将另外开一篇文章来说明。本文主要介绍如何申请生产环境的开发者Token，从而可以使用正式的印象笔记账号。</p>
+<p>在2017年6月以后，印象笔记关闭了生产环境开发者Token的申请通道，如果打开申请网址：<a href="https://app.yinxiang.com/api/DeveloperToken.action" target="_blank" rel="external">https://app.yinxiang.com/api/DeveloperToken.action</a>，你会发现申请的按钮是灰色的且无法点击。要解决这个问题，就需要让印象笔记的客服帮忙。</p>
+<p>登录自己的印象笔记正式账号，打开印象笔记首页，把页面拉到最下面，可以看到有一个“联系我们”，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-13-41.png" alt=""></p>
+<p>进入“联系我们”，点击“联系客服”，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-14-06.png" alt=""></p>
+<p>在联系客服的页面填写如下信息，最后一项“简要描述问题”填写“我需要基于印象笔记API开发，请帮我开通生产环境开发者Token”并提交。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-17-01.png" alt=""></p>
+<p>大约24小时内，就可以受到客服回复的邮件，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-19-02.png" alt=""></p>
+<p>此时再次打开<a href="https://app.yinxiang.com/api/DeveloperToken.action" target="_blank" rel="external">https://app.yinxiang.com/api/DeveloperToken.action</a>就可以申请开发者Token了，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-20-23.png" alt=""></p>
+<p>需要注意的是，开发者Token只会显示一次，所以你需要立刻把它记录下来。</p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>有了生产环境的开发者Token以后，把它填写到config.json中，配置就算完成了。在终端输入命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 EverFlowy.py</div></pre></td></tr></table></figure>
+<p>程序就可以开始同步Workflowy的数据到印象笔记了。</p>
+<p>同步完成以后，你会发现程序的根目录出现了一个history.db文件。这是一个sqllite的文件，里面就是你在Workflowy中的所有大纲内容和对应的印象笔记GUID和enml格式的内容。这是为了实现数据的差异更新而生成的。你可以使用各种能够浏览sqllite的工具来查看里面的内容。</p>
+<h2 id="已知问题"><a href="#已知问题" class="headerlink" title="已知问题"></a>已知问题</h2><ul>
+<li>如果删除了history.db，那么再次运行Everflowy，Workflowy中的所有内容都会再次写入印象笔记。</li>
+<li>如果单独删除了EverFlowy写入印象笔记中的某一条目，却不删除history.db中的对应条目，WorkFlowy会因为找不到GUID而抛出异常。</li>
+<li>没有测试国际版印象笔记账号是否可用。</li>
+<li>如过你想测试沙盒环境的开发者账号，请修改<code>evernote_util/EverNoteUtil.py</code>第98行，把</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">client = EvernoteClient(token=self.dev_token, sandbox=<span class="keyword">False</span>, service_host=<span class="string">'app.yinxiang.com'</span>)</div></pre></td></tr></table></figure>
+<p>修改为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">client = EvernoteClient(token=self.dev_token)</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Workflowy是一个极简风格的大纲写作工具，使用它提供的无限层级缩进和各种快捷键，可以非常方便的理清思路，写出一个好看而实用的大纲。如下图所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-17-58.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;印象笔记更是家喻户晓，无人不知。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。&lt;/p&gt;
+&lt;p&gt;如果能够把用Workflowy写大纲的便利性，与印象笔记强大的搜索功能结合起来，那岂不是如虎添翼？如下图所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-21-31.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;EverFlowy就是这样一个小工具。它可以自动把Workflowy上面的条目拉下来再同步到印象笔记中。如果Workflowy有更新，再运行一下这个小工具，它就会同步更新印象笔记上面的内容。Workflowy负责写，印象笔记负责存，各尽其能，各得其所。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
+    
+    
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+    
+      <category term="Workflowy" scheme="https://kingname.info/tags/Workflowy/"/>
+    
+      <category term="Evernote" scheme="https://kingname.info/tags/Evernote/"/>
+    
+  </entry>
+  
+  <entry>
     <title>任务管理，项目管理和目标管理</title>
     <link href="https://kingname.info/2018/01/01/task-project-target/"/>
     <id>https://kingname.info/2018/01/01/task-project-target/</id>
     <published>2018-01-01T02:11:14.000Z</published>
-    <updated>2018-01-01T03:58:02.618Z</updated>
+    <updated>2018-03-17T02:06:59.789Z</updated>
     
     <content type="html"><![CDATA[<p>我是一个工具控，经常尝试各种生产力工具。我发现任务管理App汗牛充栋，项目管理工具乏善可陈，而目标管理App更是少得可怜。</p>
 <a id="more"></a>
@@ -412,9 +490,9 @@
     
       <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Teambition" scheme="https://kingname.info/tags/Teambition/"/>
-    
       <category term="Workflowy" scheme="https://kingname.info/tags/Workflowy/"/>
+    
+      <category term="Teambition" scheme="https://kingname.info/tags/Teambition/"/>
     
   </entry>
   
@@ -481,11 +559,11 @@
     
       <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
+      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
+    
       <category term="Golang" scheme="https://kingname.info/tags/Golang/"/>
     
       <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
-    
-      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
     
   </entry>
   
@@ -1263,67 +1341,6 @@
       <category term="Java" scheme="https://kingname.info/tags/Java/"/>
     
       <category term="设计模式" scheme="https://kingname.info/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用etree.HTML的编码问题</title>
-    <link href="https://kingname.info/2015/10/07/lxmlencoding/"/>
-    <id>https://kingname.info/2015/10/07/lxmlencoding/</id>
-    <published>2015-10-07T09:56:47.000Z</published>
-    <updated>2016-11-30T13:56:19.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="出现问题"><a href="#出现问题" class="headerlink" title="出现问题"></a>出现问题</h2><p>今天指导一个学生爬取新浪体育手机版的时候，发现lxml.etree.HTML处理网页源代码会默认修改编码，导致打印出来的内容为乱码。爬取的网址为：<a href="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" title="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" target="_blank" rel="external">http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10</a></p>
-<p>首先导入我们需要用到的库文件，然后设置环境：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#-*_coding:utf8-*-</div><div class="line">import requests</div><div class="line">from lxml import etree</div><div class="line">import sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(&quot;utf-8&quot;)</div></pre></td></tr></table></figure>
-<p>然后获取网页的源代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">r = requests.get(url=&apos;http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10&apos;)# 最基本的GET请求</div><div class="line">r.encoding = &apos;utf-8&apos;</div><div class="line">r = r.content</div><div class="line">print r</div></pre></td></tr></table></figure></p>
-<p>打印出网页源代码，发现中文是乱码，如图：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding1.gif" alt=""></p>
-<p>这是小问题，使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>这篇文章中讲解的方法，轻松解决。</p>
-<p>将：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure></p>
-<p>修改为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content.decode(&apos;utf-8&apos;).encode(&apos;gbk&apos;)</div></pre></td></tr></table></figure></p>
-<p>可以正常显示中文，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding2.png" alt=""></p>
-<p>接下来，使用etree.HTML处理源代码，然后使用Xpath提取内容，一切似乎看起来轻车熟路。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding3.png" alt=""></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r)</div><div class="line">title = contentTree.xpath(<span class="string">'//h1[@class="art_title_h1"]/text()'</span>)</div><div class="line"><span class="keyword">print</span> title[<span class="number">0</span>]</div></pre></td></tr></table></figure>
-<p>但是当我打印出来，才发现问题没有这么简单。如图：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding4.png" alt=""></p>
-<p>这个时候，我发现使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>讲到的办法已经不能解决问题了。</p>
-<p>通过调试，我发现抓取到的内容是乱码：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding5.png" alt=""></p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="使用Scrapy"><a href="#使用Scrapy" class="headerlink" title="使用Scrapy"></a>使用Scrapy</h3><p>使用Scrapy的Xpath，正常提取需要的内容：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding6.png" alt=""></p>
-<h3 id="继续用etree"><a href="#继续用etree" class="headerlink" title="继续用etree"></a>继续用etree</h3><p>实际上，Scrapy的Xpath底层还是调用的lxml,那为什么它可以，而我直接使用lxml的etree.HTML处理源代码然后Xpath提取内容就出乱码呢？</p>
-<p>显然这应该是编码的问题，在使用:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">etree.HTML(r)</div></pre></td></tr></table></figure>
-<p>处理源文件的时候，由于没有指定编码，所以它使用了一个默认编码，从而导致和UTF-8冲突，产生乱码。</p>
-<p>经过查阅lxml.etree.HTML的文档，我发现etree.HTML有一个参数是parser,这个参数不是必须的，因此省略以后它就会自动使用一个默认的parser。既然如此，那我手动指定一个：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r, parser=etree.HTMLParser(encoding=<span class="string">'utf-8'</span>))</div></pre></td></tr></table></figure>
-<p>这里我指定了etree.HTMLParser来作为一个parser,同时，etree.HTMLParser可以接受编码作为参数。于是我指定为UTF-8。</p>
-<p>运行看看效果：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding7.png" alt=""></p>
-<p>继续报错，但是出错信息改变了，提示utf8不能解码。请注意第11行，现在源代码是gbk编码，所以使用UTF-8不能解码。于是可以把第11行重新改回原来的样子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure>
-<p>再一次运行，发现正常抓取信息：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding8.png" alt=""></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一次的问题提示我们：遇到问题，通过经验解决不了的时候，请回归文档。</p>
-<p><em>原文发表在：<a href="http://blog.kingname.info/2015/10/07/lxmlencoding/" target="_blank" rel="external">http://blog.kingname.info/2015/10/07/lxmlencoding/</a>转载请注明出处！</em></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;出现问题&quot;&gt;&lt;a href=&quot;#出现问题&quot; class=&quot;headerlink&quot; title=&quot;出现问题&quot;&gt;&lt;/a&gt;出现问题&lt;/h2&gt;&lt;p&gt;今天指导一个学生爬取新浪体育手机版的时候，发现lxml.etree.HTML处理网页源代码会默认修改编码，导致打印出来的内容
-    
-    </summary>
-    
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
-    
-      <category term="lxml" scheme="https://kingname.info/tags/lxml/"/>
-    
-      <category term="Xpath" scheme="https://kingname.info/tags/Xpath/"/>
     
   </entry>
   

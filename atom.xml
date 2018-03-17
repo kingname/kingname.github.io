@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2018-03-17T03:32:01.282Z</updated>
+  <updated>2018-03-17T05:41:51.891Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -20,11 +20,11 @@
     <link href="https://kingname.info/2018/03/17/from-workflowy-to-evernote/"/>
     <id>https://kingname.info/2018/03/17/from-workflowy-to-evernote/</id>
     <published>2018-03-17T02:05:54.000Z</published>
-    <updated>2018-03-17T03:32:01.282Z</updated>
+    <updated>2018-03-17T05:41:51.891Z</updated>
     
     <content type="html"><![CDATA[<p>Workflowy是一个极简风格的大纲写作工具，使用它提供的无限层级缩进和各种快捷键，可以非常方便的理清思路，写出一个好看而实用的大纲。如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-17-58.png" alt=""></p>
-<p>印象笔记更是家喻户晓，无人不知。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。</p>
+<p>印象笔记更是家喻户晓，无人不知的跨平台笔记应用。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。</p>
 <p>如果能够把用Workflowy写大纲的便利性，与印象笔记强大的搜索功能结合起来，那岂不是如虎添翼？如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-21-31.png" alt=""></p>
 <p>EverFlowy就是这样一个小工具。它可以自动把Workflowy上面的条目拉下来再同步到印象笔记中。如果Workflowy有更新，再运行一下这个小工具，它就会同步更新印象笔记上面的内容。Workflowy负责写，印象笔记负责存，各尽其能，各得其所。</p>
@@ -75,7 +75,7 @@
     
       &lt;p&gt;Workflowy是一个极简风格的大纲写作工具，使用它提供的无限层级缩进和各种快捷键，可以非常方便的理清思路，写出一个好看而实用的大纲。如下图所示。&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-17-58.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;印象笔记更是家喻户晓，无人不知。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。&lt;/p&gt;
+&lt;p&gt;印象笔记更是家喻户晓，无人不知的跨平台笔记应用。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。&lt;/p&gt;
 &lt;p&gt;如果能够把用Workflowy写大纲的便利性，与印象笔记强大的搜索功能结合起来，那岂不是如虎添翼？如下图所示。&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-21-31.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;EverFlowy就是这样一个小工具。它可以自动把Workflowy上面的条目拉下来再同步到印象笔记中。如果Workflowy有更新，再运行一下这个小工具，它就会同步更新印象笔记上面的内容。Workflowy负责写，印象笔记负责存，各尽其能，各得其所。&lt;/p&gt;

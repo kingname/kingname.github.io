@@ -1,0 +1,775 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,经验," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="通过本文你会知道Python里面什么时候用yield最合适。本文不会给你讲生成器是什么，所以你需要先了解Python的yield，再来看本文。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用生成器把Kafka写入速度提高1000倍">
+<meta property="og:url" content="https://kingname.info/2018/04/13/the-suitable-situation-for-yield/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="通过本文你会知道Python里面什么时候用yield最合适。本文不会给你讲生成器是什么，所以你需要先了解Python的yield，再来看本文。">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-21-45-55.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-21-51-37.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/witoutyield1.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/witoutyield2.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-22-29-40.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-22-35-05.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/withyield.png">
+<meta property="og:updated_time" content="2018-04-13T14:59:12.121Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用生成器把Kafka写入速度提高1000倍">
+<meta name="twitter:description" content="通过本文你会知道Python里面什么时候用yield最合适。本文不会给你讲生成器是什么，所以你需要先了解Python的yield，再来看本文。">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-21-45-55.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingname.info/2018/04/13/the-suitable-situation-for-yield/"/>
+
+
+
+
+
+  <title> 使用生成器把Kafka写入速度提高1000倍 | Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tweet">
+          <a href="/tweet" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-twitter"></i> <br />
+            
+            时间
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://kingname.info/2018/04/13/the-suitable-situation-for-yield/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用生成器把Kafka写入速度提高1000倍
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-13T21:35:09+08:00">
+                2018-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/04/13/the-suitable-situation-for-yield/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/04/13/the-suitable-situation-for-yield/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>通过本文你会知道Python里面什么时候用yield最合适。本文不会给你讲生成器是什么，所以你需要先了解Python的yield，再来看本文。</p>
+<a id="more"></a>
+<h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><p>多年以前，当我刚刚开始学习Python协程的时候，我看到绝大多数的文章都举了一个生产者-消费者的例子，用来表示在生产者内部可以随时调用消费者，达到和多线程相同的效果。这里凭记忆简单还原一下当年我看到的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></div><div class="line">    product = <span class="string">''</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        <span class="keyword">if</span> product:</div><div class="line">            print(<span class="string">'consumer: &#123;&#125;'</span>.format(product))</div><div class="line">        product = <span class="keyword">yield</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">producer</span><span class="params">()</span>:</span></div><div class="line">    c = consumer()</div><div class="line">    next(c)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        c.send(i)</div><div class="line"></div><div class="line">start = time.time()</div><div class="line">producer()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-21-45-55.png" alt=""></p>
+<p>这些文章的说法，就像统一好了口径一样，说这样写可以减少线程切换开销，从而大大提高程序的运行效率。但是当年我始终想不明白，这种写法与直接调用函数有什么区别，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-21-51-37.png" alt=""></p>
+<p>直到后来我需要操作Kafka的时候，我明白了使用yield的好处。</p>
+<h2 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h2><p>为了便于理解，我会把实际场景做一些简化，以方便说明事件的产生发展和解决过程。事件的起因是我需要把一些信息写入到Kafka中，我的代码一开始是这样的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(product)</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        producer.produce(str(product).encode())</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        consumer(i)</div><div class="line"></div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
+<p>这段代码的运行效果如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/witoutyield1.png" alt=""></p>
+<p>写入10条数据需要100秒，这样的龟速显然是有问题的。问题就出在这一句代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer</div></pre></td></tr></table></figure>
+<p>获得Kafka生产者对象是一个非常耗费时间的过程，每获取一次都需要10秒钟才能完成。所以写入10个数据就获取十次生产者对象。这消耗的100秒主要就是在获取生产者对象，而真正写入数据的时间短到可以忽略不计。</p>
+<p>由于生产者对象是可以复用的，于是我对代码作了一些修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line">products = []</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(product_list)</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        <span class="keyword">for</span> product <span class="keyword">in</span> product_list:</div><div class="line">            producer.produce(str(product).encode())</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        products.append(i)</div><div class="line">    consumer(products)</div><div class="line"></div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
+<p>首先把所有数据存放在一个列表中，最后再一次性给consumer函数。在一个Kafka生产者对象中展开列表，再把数据一条一条塞入Kafka。这样由于只需要获取一次生产者对象，所以需要耗费的时间大大缩短，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/witoutyield2.png" alt=""></p>
+<p>这种写法在数据量小的时候是没有问题的，但数据量一旦大起来，如果全部先放在一个列表里面的话，服务器内存就爆了。</p>
+<p>于是我又修改了代码。每100条数据保存一次，并清空暂存的列表：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(product_list)</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        <span class="keyword">for</span> product <span class="keyword">in</span> product_list:</div><div class="line">            producer.produce(str(product).encode())</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    products = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1003</span>):</div><div class="line">        products.append(i)</div><div class="line">        <span class="keyword">if</span> len(products) &gt;= <span class="number">100</span>:</div><div class="line">            consumer(products)</div><div class="line">            products = []</div><div class="line"></div><div class="line">    <span class="keyword">if</span> products:</div><div class="line">        consumer(products)</div><div class="line"></div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
+<p>由于最后一轮循环可能无法凑够100条数据，所以<code>feed</code>函数里面，循环结束以后还需要判断<code>products</code>列表是否为空，如果不为空，还要再消费一次。这样的写法，在上面这段代码中，一共1003条数据，每100条数据获取一次生产者对象，那么需要获取11次生产者对象，耗时至少为110秒。</p>
+<p>显然，要解决这个问题，最直接的办法就是减少获取Kafka生产者对象的次数并最大限度复用生产者对象。如果读者举一反三的能力比较强，那么根据开关文件的两种写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 写法一</span></div><div class="line"><span class="keyword">with</span> open(<span class="string">'test.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">    f.write(<span class="string">'xxx'</span>)</div><div class="line">    </div><div class="line"><span class="comment"># 写法二</span></div><div class="line">f = open(<span class="string">'test.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>)</div><div class="line">f.write(<span class="string">'xxx'</span>)</div><div class="line">f.close()</div></pre></td></tr></table></figure>
+<p>可以推测出获取Kafka生产者对象的另一种写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 写法二</span></div><div class="line">producer = topic.get_producer(delivery_reports=<span class="keyword">True</span>)</div><div class="line">producer.produce(<span class="string">b'xxxx'</span>)</div><div class="line">producer.close()</div></pre></td></tr></table></figure>
+<p>这样一来，只要获取一次生产者对象并把它作为全局变量就可以一直使用了。</p>
+<p>然而，pykafka的官方文档中使用的是第一种写法，通过上下文管理器<code>with</code>来获得生产者对象。暂且不论第二种方式是否会报错，只从写法上来说，第二种方式必需要手动关闭对象。开发者经常会出现开了忘记关的情况，从而导致很多问题。而且如果中间出现了异常，使用上下文管理器的第一种方式会自动关闭生产者对象，但第二种方式仍然需要开发者手动关闭。</p>
+<h2 id="函数VS生成器"><a href="#函数VS生成器" class="headerlink" title="函数VS生成器"></a>函数VS生成器</h2><p>但是如果使用第一种方式，怎么能在一个上下文里面接收生产者传进来的数据呢？这个时候才是yield派上用场的时候。</p>
+<p>首先需要明白，使用yield以后，函数就变成了一个生成器。生成器与普通函数的不同之处可以通过下面两段代码来进行说明：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">funciton</span><span class="params">(i)</span>:</span></div><div class="line">    print(<span class="string">'进入'</span>)</div><div class="line">    print(i)</div><div class="line">    print(<span class="string">'结束'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</div><div class="line">    funciton(i)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-22-29-40.png" alt=""></p>
+<p>函数在被调用的时候，函数会从里面的第一行代码一直运行到某个<code>return</code>或者函数的最后一行才会退出。</p>
+<p>而生成器可以从中间开始运行，从中间跳出。例如下面的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'进入'</span>)</div><div class="line">    i = <span class="keyword">None</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        <span class="keyword">if</span> i:</div><div class="line">            print(i)</div><div class="line">        print(<span class="string">'跳出'</span>)</div><div class="line">        i = <span class="keyword">yield</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">g = generator()</div><div class="line">next(g)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</div><div class="line">    g.send(i)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-22-35-05.png" alt=""></p>
+<p>从图中可以看到，<code>进入</code>只打印了一次。代码运行到<code>i = yield None</code>后就跳到外面，外面的数据可以通过<code>g.send(i)</code>的形式传进生成器，生成器内部拿到外面传进来的数据以后继续执行下一轮<code>while</code>循环，打印出被传进来的内容，然后到<code>i = yield None</code>的时候又跳出。如此反复。</p>
+<p>所以回到最开始的Kafka问题。如果把<code>with topic.get_producer(delivery_reports=True) as producer</code>写在上面这一段代码的<code>print(&#39;进入&#39;)</code>这个位置上，那岂不是只需要获取一次Kafka生产者对象，然后就可以一直使用了？</p>
+<p>根据这个逻辑，设计如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        print(<span class="string">'init finished..'</span>)</div><div class="line">        next_data = <span class="string">''</span></div><div class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">            <span class="keyword">if</span> next_data:</div><div class="line">                producer.produce(str(next_data).encode())</div><div class="line">            next_data = <span class="keyword">yield</span> <span class="keyword">True</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    c = consumer()</div><div class="line">    next(c)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</div><div class="line">        c.send(i)</div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
+<p>这一次直接插入1000条数据，总共只需要10秒钟，想比于插入一次都获取一次Kafka生产者对象的方法，效率提高了1000倍。运行效果如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/withyield.png" alt=""></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>读者如果仔细对比第一段代码和最后一段代码，就会发现他们本质上是一回事。但是第一段代码，也就是网上很多人讲yield的时候举的生产者-消费者的例子之所以会让人觉得毫无用处，就在于他们的消费者几乎就是秒运行，这样看不出和函数调用的差别。而我最后这一段代码，它的消费者分成两个部分，第一部分是获取Kafka生产者对象，这个过程非常耗时；第二部分是把数据通过Kafka生产者对象插入Kafka，这一部分运行速度极快。在这种情况下，使用生成器把这个消费者代码分开，让耗时长的部分只运行一次，让耗时短的反复运行，这样就能体现出生成器的优势。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="Kingname wechat" style="width: 200px; max-width: 100%;"/>
+    <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/经验/" rel="tag"># 经验</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/17/from-workflowy-to-evernote/" rel="next" title="从Workflowy到印象笔记">
+                <i class="fa fa-chevron-left"></i> 从Workflowy到印象笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chuangzaoshi.com/" title="创造狮" target="_blank">创造狮</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#疑惑"><span class="nav-number">1.</span> <span class="nav-text">疑惑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#探索"><span class="nav-number">2.</span> <span class="nav-text">探索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数VS生成器"><span class="nav-number">3.</span> <span class="nav-text">函数VS生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

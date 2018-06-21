@@ -86,30 +86,46 @@
 
 
 
-<meta name="description" content="2018.02在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的--password 密码参数的同时，还必须指定--authenticationDatabase admin
-2018.01使用grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
+<meta name="description" content="2018.05grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
 
-使用rsync通过SSH">
+
+根据index读list，时间复杂度为O(1)但deque是O(n)
+在两头插入数据，deque的时间复杂度为O(1), list为O(n)
+deque是一个双向链表，所以操作头尾非常简单。
+随机往中间插入数据，deque与list的时间复杂度都是O(n)
+
+2">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="https://kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2018.02在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的--password 密码参数的同时，还必须指定--authenticationDatabase admin
-2018.01使用grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
+<meta property="og:description" content="2018.05grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
 
-使用rsync通过SSH">
+
+根据index读list，时间复杂度为O(1)但deque是O(n)
+在两头插入数据，deque的时间复杂度为O(1), list为O(n)
+deque是一个双向链表，所以操作头尾非常简单。
+随机往中间插入数据，deque与list的时间复杂度都是O(n)
+
+2">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2018-03-01T15:18:04.655Z">
+<meta property="og:updated_time" content="2018-06-21T14:34:29.033Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2018.02在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的--password 密码参数的同时，还必须指定--authenticationDatabase admin
-2018.01使用grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
+<meta name="twitter:description" content="2018.05grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
 
-使用rsync通过SSH">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
+
+根据index读list，时间复杂度为O(1)但deque是O(n)
+在两头插入数据，deque的时间复杂度为O(1), list为O(n)
+deque是一个双向链表，所以操作头尾非常简单。
+随机往中间插入数据，deque与list的时间复杂度都是O(n)
+
+2">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
 
 
 
@@ -281,7 +297,31 @@
 
     
     
-      <h2 id="2018-02"><a href="#2018-02" class="headerlink" title="2018.02"></a>2018.02</h2><p>在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的<code>--password 密码</code>参数的同时，还必须指定<code>--authenticationDatabase admin</code></p>
+      <h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
+<hr>
+<ul>
+<li>根据index读list，时间复杂度为O(1)但deque是O(n)</li>
+<li>在两头插入数据，deque的时间复杂度为O(1), list为O(n)</li>
+<li>deque是一个双向链表，所以操作头尾非常简单。</li>
+<li>随机往中间插入数据，deque与list的时间复杂度都是O(n)</li>
+</ul>
+<h2 id="2018-04"><a href="#2018-04" class="headerlink" title="2018.04"></a>2018.04</h2><p>MongoDB的聚合查询中，<code>$substr</code>只能匹配ASCII的数据，对于中文要使用<code>$substrCP</code></p>
+<hr>
+<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)print(current_app.name)</div></pre></td></tr></table></figure></p>
+<p>会报错：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RuntimeError: working outside of application context</div></pre></td></tr></table></figure></p>
+<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():    print(current_app.name)</div></pre></td></tr></table></figure></p>
+<hr>
+<p>扩展AWS的磁盘空间：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png" alt=""></p>
+<p>点击<code>修改卷</code>增加磁盘配额，SSH进入服务器，输入以下代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">lsblk  <span class="comment">#这条命令用来确定当前可用的磁盘空间小于磁盘配额</span></div><div class="line">sudo growpart /dev/xvda 1</div><div class="line">sudo resize2fs /dev/xvda1</div></pre></td></tr></table></figure>
+<p>再次执行<code>df -h</code>可以看到已经使用了新的空间</p>
+<h2 id="2018-03"><a href="#2018-03" class="headerlink" title="2018.03"></a>2018.03</h2><p>在Docker查看正在运行的容器是通过什么命令启动的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker ps -a --no-trunc</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在全新的Ubuntu中安装pip：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade</div><div class="line">sudo apt-get install python3-pip</div><div class="line">sudo apt-get install build-essential libssl-dev libffi-dev python3-dev</div></pre></td></tr></table></figure></p>
+<hr>
+<p>tar压缩文件的时候排除特定文件和文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar --exclude=&apos;./folder&apos; --exclude=&apos;./upload/folder2&apos; -zcvf /backup/filename.tgz .</div></pre></td></tr></table></figure></p>
+<h2 id="2018-02"><a href="#2018-02" class="headerlink" title="2018.02"></a>2018.02</h2><p>在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的<code>--password 密码</code>参数的同时，还必须指定<code>--authenticationDatabase admin</code></p>
 <h2 id="2018-01"><a href="#2018-01" class="headerlink" title="2018.01"></a>2018.01</h2><p>使用grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
 <hr>
 <p>使用rsync通过SSH从服务器拉取数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
@@ -455,7 +495,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -472,7 +512,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

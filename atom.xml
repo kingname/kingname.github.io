@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2018-04-13T15:10:42.833Z</updated>
+  <updated>2018-06-21T14:38:56.152Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -14,6 +14,105 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>技巧收集-M1806</title>
+    <link href="https://kingname.info/2018/06/21/tweet-201806/"/>
+    <id>https://kingname.info/2018/06/21/tweet-201806/</id>
+    <published>2018-06-21T14:36:39.000Z</published>
+    <updated>2018-06-21T14:38:56.152Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
+<hr>
+<ul>
+<li>根据index读list，时间复杂度为O(1)但deque是O(n)</li>
+<li>在两头插入数据，deque的时间复杂度为O(1), list为O(n)</li>
+<li>deque是一个双向链表，所以操作头尾非常简单。</li>
+<li>随机往中间插入数据，deque与list的时间复杂度都是O(n)</li>
+</ul>
+<h2 id="2018-04"><a href="#2018-04" class="headerlink" title="2018.04"></a>2018.04</h2><p>MongoDB的聚合查询中，<code>$substr</code>只能匹配ASCII的数据，对于中文要使用<code>$substrCP</code></p>
+<hr>
+<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)print(current_app.name)</div></pre></td></tr></table></figure></p>
+<p>会报错：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RuntimeError: working outside of application context</div></pre></td></tr></table></figure></p>
+<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():    print(current_app.name)</div></pre></td></tr></table></figure></p>
+<hr>
+<p>扩展AWS的磁盘空间：</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png" alt=""></p>
+<p>点击<code>修改卷</code>增加磁盘配额，SSH进入服务器，输入以下代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">lsblk  <span class="comment">#这条命令用来确定当前可用的磁盘空间小于磁盘配额</span></div><div class="line">sudo growpart /dev/xvda 1</div><div class="line">sudo resize2fs /dev/xvda1</div></pre></td></tr></table></figure>
+<p>再次执行<code>df -h</code>可以看到已经使用了新的空间</p>
+<h2 id="2018-03"><a href="#2018-03" class="headerlink" title="2018.03"></a>2018.03</h2><p>在Docker查看正在运行的容器是通过什么命令启动的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker ps -a --no-trunc</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在全新的Ubuntu中安装pip：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade</div><div class="line">sudo apt-get install python3-pip</div><div class="line">sudo apt-get install build-essential libssl-dev libffi-dev python3-dev</div></pre></td></tr></table></figure></p>
+<hr>
+<p>tar压缩文件的时候排除特定文件和文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar --exclude=&apos;./folder&apos; --exclude=&apos;./upload/folder2&apos; -zcvf /backup/filename.tgz .</div></pre></td></tr></table></figure></p>
+<h2 id="2018-02"><a href="#2018-02" class="headerlink" title="2018.02"></a>2018.02</h2><p>在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的<code>--password 密码</code>参数的同时，还必须指定<code>--authenticationDatabase admin</code></p>
+<h2 id="2018-01"><a href="#2018-01" class="headerlink" title="2018.01"></a>2018.01</h2><p>使用grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
+<hr>
+<p>使用rsync通过SSH从服务器拉取数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
+<p>如果有SSH Key的话，使用下面的命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP <span class="_">-e</span> <span class="string">"ssh -i ~/sshkey.pem"</span> ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在Ubuntu中修改时区：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</div></pre></td></tr></table></figure></p>
+<hr>
+<p>使用XPath获取名称包含特定字符的属性的属性值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">//span/img/@*[contains(name(), <span class="string">"src"</span>)]</div></pre></td></tr></table></figure></p>
+<hr>
+<p>AWS在一年免费期间内，换机房不用给钱。先在老的实例生成AMI，再把AMI复制到新的城市，再从新城市的AMI创建实例。然后把老城市的实例彻底终结，取消老城市和新城市的AMI。全程不收费。</p>
+<hr>
+<p>在Python中执行Shell命令并获取返回结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line">shell_result = subprocess.check_output(<span class="string">'ps -ef | grep 进程名 | grep -v grep'</span>, shell=<span class="keyword">True</span>).decode().strip().split(<span class="string">'\n)</span></div></pre></td></tr></table></figure></p>
+<p>如果命令本身没有返回，则会抛出一个<code>subprocess.CalledProcessError</code></p>
+<hr>
+<p>在Shell中判断一个进程是否存在：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ps -ef | grep 进程名 | grep -v grep &gt; /dev/null</div><div class="line"><span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程存在"</span></div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程不存在"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure></p>
+<h2 id="2017-12"><a href="#2017-12" class="headerlink" title="2017.12"></a>2017.12</h2><p>firewalld对特定IP开放特定端口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --zone=public --add-rich-rule=&apos;rule family=&quot;ipv4&quot; source address=&quot;特定IP&quot; port protocol=&quot;tcp&quot; port=&quot;特定端口&quot; accept&apos;</div></pre></td></tr></table></figure></p>
+<hr>
+<p>生成文件树并过滤特定文件或文件夹：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tree -I <span class="string">'__pycache__|pyc|Logs'</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>统计代码行数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find . -name <span class="string">"*.py"</span> | xargs wc <span class="_">-l</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>为pip设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip3.6 --proxy http://代理IP:端口 install -r requirements.txt</div></pre></td></tr></table></figure></p>
+<hr>
+<p>为Git设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN git config --global http.proxy http://代理IP:端口</div><div class="line">RUN git config --global http.sslverify <span class="string">"false"</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>为Ubuntu的<code>apt-get</code>设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/apt/apt.conf.d/01turnkey</div></pre></td></tr></table></figure></p>
+<p>在里面插入一行：<br><code>Acquire::http::Proxy &quot;http://your.proxy.here:port/&quot;;</code><br>保存以后，下一次执行<code>apt-get</code>命令就会使用代理了。</p>
+<h2 id="2017-11"><a href="#2017-11" class="headerlink" title="2017.11"></a>2017.11</h2><p>修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Chown -R elasticsearch:elasticsearch /mnt/es/</div></pre></td></tr></table></figure></p>
+<p>然后再修改elasticsearch的配置文件。</p>
+<hr>
+<p>在postgres中，占位符是<code>$1</code>, <code>$2</code>而不是MySQL中的<code>？</code></p>
+<h2 id="2017-10"><a href="#2017-10" class="headerlink" title="2017.10"></a>2017.10</h2><p>使用<code>urlpare</code>从URL中获取Host：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urlparse</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'https://nanjirenlk.tmall.com/shop/view_shop.htm'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x = urlparse(url)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x.netloc</div><div class="line"><span class="string">'nanjirenlk.tmall.com'</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>解压<code>tar.gz</code>压缩文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zxvf 文件名</div></pre></td></tr></table></figure>
+<hr>
+<p>根据进程名字在Linux里杀进程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ps -ef | grep <span class="string">"进程关键字"</span> | grep -v grep | awk <span class="string">'&#123;print $2&#125;'</span> | xargs <span class="built_in">kill</span> -9</div></pre></td></tr></table></figure>
+<hr>
+<p>在Python 的<code>try ... except Exception ...</code>中显示tracebook:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> traceback</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="number">1</span> + <span class="string">'a'</span></div><div class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">    tb = traceback.format_exc()</div><div class="line">    print(tb)</div></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">2</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">TypeError: unsupported operand type(s) <span class="keyword">for</span> +: <span class="string">'int'</span> <span class="keyword">and</span> <span class="string">'str'</span></div></pre></td></tr></table></figure>
+<p>这个功能在多层<code>try ... except Exception ...</code> 嵌套的时候特别有用。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;2018-05&quot;&gt;&lt;a href=&quot;#2018-05&quot; class=&quot;headerlink&quot; title=&quot;2018.05&quot;&gt;&lt;/a&gt;2018.05&lt;/h2&gt;&lt;p&gt;grep持续监控Log：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;ta
+    
+    </summary>
+    
+      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
+    
+    
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+    
+      <category term="MongoDB" scheme="https://kingname.info/tags/MongoDB/"/>
+    
+      <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
+    
+      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
+    
+      <category term="Docker" scheme="https://kingname.info/tags/Docker/"/>
+    
+  </entry>
   
   <entry>
     <title>使用生成器把Kafka写入速度提高1000倍</title>
@@ -629,11 +728,11 @@
     
       <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="Golang" scheme="https://kingname.info/tags/Golang/"/>
-    
       <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
+    
+      <category term="Golang" scheme="https://kingname.info/tags/Golang/"/>
     
   </entry>
   
@@ -1285,85 +1384,6 @@
       <category term="Jenkins" scheme="https://kingname.info/tags/Jenkins/"/>
     
       <category term="持续集成" scheme="https://kingname.info/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用Python保存截图</title>
-    <link href="https://kingname.info/2016/05/19/screenshot/"/>
-    <id>https://kingname.info/2016/05/19/screenshot/</id>
-    <published>2016-05-19T14:47:29.000Z</published>
-    <updated>2016-11-30T13:56:41.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>在<a href="http://jikexueyuan.com" target="_blank" rel="external">极客学院</a>讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。</p>
-<p>如果使用PIL，这个需求只需要三行代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</div><div class="line">pic = ImageGrab.grab()</div><div class="line">pic.save(<span class="string">'1.jpg'</span>)</div></pre></td></tr></table></figure></p>
-<p>但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实现截图的功能。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于被控端使用了win32api, 因此有一个方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32api.keybd_event</div></pre></td></tr></table></figure></p>
-<p>这个方法可以模拟键盘的按键动作。因此，解决方法就比较的明显了：</p>
-<ol>
-<li>模拟键盘上面的“Print Screen” 键按下</li>
-<li>从剪贴板中读取出截图</li>
-<li>将截图保存到本地 </li>
-</ol>
-<p>第一步非常的简单，实用win32api 和 win32con，两行代码就能实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import win32api</div><div class="line">import win32con</div><div class="line">win32api.keybd_event(win32con.VK_SNAPSHOT, 0)</div></pre></td></tr></table></figure></p>
-<p>其中win32con这个库里面包含了很多定义好的和Windows相关的常量，而VK_SNAPSHOT就是Print Screen键的键位码。后面的数字0表示截取整个屏幕。如果改成数字1，表示截取当前窗口。</p>
-<p>那么现在问题来了，在不实用PIL的情况下，如何将剪贴板你们的图片保存到本地？</p>
-<p>win32api有一个模块 win32clipboard 是负责剪贴板相关的操作。它有一个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(formats)</div></pre></td></tr></table></figure></p>
-<p>这个方法可以从剪贴板里面读取数据。但是需要指定数据的格式。从<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff729168\(v=vs.85\" target="_blank" rel="external">这里</a>.aspx)可以查看到更多的标准剪贴板格式(<em>Standard Clipboard Formats</em>).</p>
-<p>一开始我使用的formats是<strong>CF_BITMAP</strong>，程序返回的是一串整数，怀疑应该是一个内存地址。这也和这个format的描述：</p>
-<blockquote>
-<p>A handle to a bitmap (<strong>HBITMAP</strong>).</p>
-</blockquote>
-<p>是一致的，它是一个handle。</p>
-<p>我也尝试过CF_TIFF, 不过程序直接报错了，可见我使用Print Screen截图以后，剪贴板里面的图片格式并不是TIFF。</p>
-<p>经过查阅其他资料，我最后确定使用了CF_DIB。</p>
-<blockquote>
-<p>A memory object containing a BITMAPINFO structure followed by the bitmap bits.</p>
-</blockquote>
-<p>这个描述说明，CF_DIB返回的是一个内存对象，包含了BIT格式图片的信息。经过测试使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(win32con.CF_DIB)</div></pre></td></tr></table></figure></p>
-<p>以后，可以得到一个很大的字符串。显然这个字符串就是图片的内容了。但是当我把这个字符串写入到bmp格式的文件后，却发现图片无法打开。</p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在StackOverflow上，我遇到了一个非常好的老先生： <a href="http://stackoverflow.com/users/355230/martineau" target="_blank" rel="external">Mr. martineau</a>他为了解答了问题，并给我提供了解决办法。以下内容翻译自martineau先生的回答，原文请戳-&gt;<a href="http://stackoverflow.com/a/35885108/3922976" target="_blank" rel="external">http://stackoverflow.com/a/35885108/3922976</a></p>
-<blockquote>
-<p>你的方法的主要问题在于，你写入文件的字符串缺少了.bmp 文件头，这个文件头是<code>BITMAPFILEHEADER</code>结构。</p>
-<p>为了创建这个文件头，使用<code>GetClipboardData()</code>返回的字符串必须要进行解码(<em>decoded</em>)。对于<code>CF_DIB</code>格式来说，返回的字符串的前面一部分就是<code>BOTMAPINFOHEADER</code>。</p>
-<p>对于各种各样有不同种类压缩的<code>DIB</code>来说，这种文件头结构是非常的普遍的。不过幸好对截图来说，只需要简单的无压缩的RGBA像素。</p>
-<p>由于<code>BOTMAPFILEHEADER</code>被放在了bf0ffBits的区域里，所以事情就变得很容易了。而其他的情况，例如大尺度的颜色表跟在<code>BITMAPINFOHEADER</code> 和像素数组的开头。</p>
-<p>（这一段我看不太懂，还请如果有能正确解释这段话的朋友指正。原文是：</p>
-<blockquote>
-<p>That fact makes things much easier because otherwise determining the value to put in the bfOffBits field of the BITMAPFILEHEADER would be complicated by the fact that in most other cases there’s also a variably-sized color table following the BITMAPINFOHEADER and the start of the pixel array.）</p>
-</blockquote>
-<p>下面的代码是一个简单的例子（仅仅针对这个需求）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">import ctypes</div><div class="line">from ctypes.wintypes import *</div><div class="line">import win32clipboard</div><div class="line">from win32con import *</div><div class="line">import sys</div><div class="line"></div><div class="line">class BITMAPFILEHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;bfType&apos;, WORD),  # file type (&quot;BM&quot;)</div><div class="line">        (&apos;bfSize&apos;, DWORD),  # file size in bytes</div><div class="line">        (&apos;bfReserved1&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfReserved2&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfOffBits&apos;, DWORD),  # byte offset to the pixel array</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPFILEHEADER = ctypes.sizeof(BITMAPFILEHEADER)</div><div class="line"></div><div class="line">class BITMAPINFOHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;biSize&apos;, DWORD),</div><div class="line">        (&apos;biWidth&apos;, LONG),</div><div class="line">        (&apos;biHeight&apos;, LONG),</div><div class="line">        (&apos;biPLanes&apos;, WORD),</div><div class="line">        (&apos;biBitCount&apos;, WORD),</div><div class="line">        (&apos;biCompression&apos;, DWORD),</div><div class="line">        (&apos;biSizeImage&apos;, DWORD),</div><div class="line">        (&apos;biXPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biYPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biClrUsed&apos;, DWORD),</div><div class="line">        (&apos;biClrImportant&apos;, DWORD)</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPINFOHEADER = ctypes.sizeof(BITMAPINFOHEADER)</div><div class="line"></div><div class="line">win32clipboard.OpenClipboard()</div><div class="line">try:</div><div class="line">    if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_DIB):</div><div class="line">        data = win32clipboard.GetClipboardData(win32clipboard.CF_DIB)</div><div class="line">    else:</div><div class="line">        print(&apos;clipboard does not contain an image in DIB format&apos;)</div><div class="line">        sys.exit(1)</div><div class="line">finally:</div><div class="line">    win32clipboard.CloseClipboard()</div><div class="line"></div><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div><div class="line"></div><div class="line">if bmih.biCompression != BI_BITFIELDS:  # RGBA?</div><div class="line">    print(&apos;insupported compression type &#123;&#125;&apos;.format(bmih.biCompression))</div><div class="line">    sys.exit(1)</div><div class="line"></div><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0, SIZEOF_BITMAPFILEHEADER)  # zero structure</div><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div><div class="line">bmfh.bfSize = SIZEOF_BITMAPFILEHEADER + len(data)  # file size</div><div class="line">SIZEOF_COLORTABLE = 0</div><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div><div class="line"></div><div class="line">bmp_filename = &apos;clipboard.bmp&apos;</div><div class="line">with open(bmp_filename, &apos;wb&apos;) as bmp_file:</div><div class="line">    bmp_file.write(bmfh)</div><div class="line">    bmp_file.write(data)</div><div class="line"></div><div class="line">print(&apos;file &quot;&#123;&#125;&quot; created from clipboard image&apos;.format(bmp_filename))</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>经过测试，这一段代码成功的实现了读取剪贴板的图片并保存到本地。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这段代码使用ctypes库来实现指针的功能，从而在内存中操作数据。这里定义了两个结构体，<code>BITMAPFILEHEADER</code> 和<code>BITMAPINFOHEADER</code>，于是，使用sizeof获取到了他们的大小。那么使用指针，从使用<code>GetClipboardData()</code>获取到的数据的头部开始移动，分别移动这两个结构体的大小，也就获取到了这两个结构体在内存中的数据。</p>
-<p>代码中使用了<code>memmove</code>和<code>memset</code>两个内存操作的方法。从ctypes的官方文档上，我们可以看到这两个方法有如下的定义：</p>
-<blockquote>
-<p><code>ctypes.memmove(dst, src, count)</code></p>
-<p>Same as the standard C memmove library function: copies count bytes from src to dst. dst and src must be integers or ctypes instances that can be converted to pointers.</p>
-<p><code>ctypes.memset(dst, c, count)</code></p>
-<p>Same as the standard C memset library function: fills the memory block at address dst with count bytes of value c. dst must be an integer specifying an address, or a ctypes instance.</p>
-</blockquote>
-<p>所以可以看出，代码里面的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div></pre></td></tr></table></figure></p>
-<p>从内存中拷贝出来了<code>BITMAPINFOHEADER</code>这么大的一块的数据，并保存到了<code>bmih</code>这个变量中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0,     SIZEOF_BITMAPFILEHEADER)</div></pre></td></tr></table></figure></p>
-<p>这一段在内存中开辟出了<code>BITMAPFILEHEADER</code>这么大一块区域，并全部填充为0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div></pre></td></tr></table></figure></p>
-<p>这一行代码使用了位操作。首先<code>ord(&#39;B&#39;)</code>的值为66，换成二进制就是<code>1000010</code>；<code>ord(&#39;M&#39;)</code>的值为77，换成二进制就是<code>1001101</code>，然后向左移动8位，得到<code>100110100000000</code>，这个值再与<code>1000010</code>取位或，得到<code>100110101000010</code>。</p>
-<p>最后，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div></pre></td></tr></table></figure></p>
-<p>拼装出头部的大小。然后以二进制方式，首先写文件头, 再写剪贴板获取到的字符串到本地的<code>.bmp</code>文件中，完成图片的生成。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Python一些轮子确实非常好的提高了开发效率，例如PIL，三行代码实现了我的需求。Python在快速开发方面确实非常的方便，但是涉及到底层的一些操作的时候，还是不得不使用C语言的一些接口来进行内存的操作。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;起因&quot;&gt;&lt;a href=&quot;#起因&quot; class=&quot;headerlink&quot; title=&quot;起因&quot;&gt;&lt;/a&gt;起因&lt;/h2&gt;&lt;p&gt;在&lt;a href=&quot;http://jikexueyuan.com&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;极客学院&lt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
-    
-      <category term="Win32Api" scheme="https://kingname.info/tags/Win32Api/"/>
     
   </entry>
   

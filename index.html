@@ -363,8 +363,7 @@
 
       
         
-          
-            <h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
+          <h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
 <hr>
 <ul>
 <li>根据index读list，时间复杂度为O(1)但deque是O(n)</li>
@@ -372,69 +371,13 @@
 <li>deque是一个双向链表，所以操作头尾非常简单。</li>
 <li>随机往中间插入数据，deque与list的时间复杂度都是O(n)</li>
 </ul>
-<h2 id="2018-04"><a href="#2018-04" class="headerlink" title="2018.04"></a>2018.04</h2><p>MongoDB的聚合查询中，<code>$substr</code>只能匹配ASCII的数据，对于中文要使用<code>$substrCP</code></p>
-<hr>
-<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)print(current_app.name)</div></pre></td></tr></table></figure></p>
-<p>会报错：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RuntimeError: working outside of application context</div></pre></td></tr></table></figure></p>
-<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():    print(current_app.name)</div></pre></td></tr></table></figure></p>
-<hr>
-<p>扩展AWS的磁盘空间：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png" alt=""></p>
-<p>点击<code>修改卷</code>增加磁盘配额，SSH进入服务器，输入以下代码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">lsblk  <span class="comment">#这条命令用来确定当前可用的磁盘空间小于磁盘配额</span></div><div class="line">sudo growpart /dev/xvda 1</div><div class="line">sudo resize2fs /dev/xvda1</div></pre></td></tr></table></figure>
-<p>再次执行<code>df -h</code>可以看到已经使用了新的空间</p>
-<h2 id="2018-03"><a href="#2018-03" class="headerlink" title="2018.03"></a>2018.03</h2><p>在Docker查看正在运行的容器是通过什么命令启动的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker ps -a --no-trunc</div></pre></td></tr></table></figure></p>
-<hr>
-<p>在全新的Ubuntu中安装pip：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade</div><div class="line">sudo apt-get install python3-pip</div><div class="line">sudo apt-get install build-essential libssl-dev libffi-dev python3-dev</div></pre></td></tr></table></figure></p>
-<hr>
-<p>tar压缩文件的时候排除特定文件和文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar --exclude=&apos;./folder&apos; --exclude=&apos;./upload/folder2&apos; -zcvf /backup/filename.tgz .</div></pre></td></tr></table></figure></p>
-<h2 id="2018-02"><a href="#2018-02" class="headerlink" title="2018.02"></a>2018.02</h2><p>在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的<code>--password 密码</code>参数的同时，还必须指定<code>--authenticationDatabase admin</code></p>
-<h2 id="2018-01"><a href="#2018-01" class="headerlink" title="2018.01"></a>2018.01</h2><p>使用grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
-<hr>
-<p>使用rsync通过SSH从服务器拉取数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
-<p>如果有SSH Key的话，使用下面的命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP <span class="_">-e</span> <span class="string">"ssh -i ~/sshkey.pem"</span> ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
-<hr>
-<p>在Ubuntu中修改时区：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</div></pre></td></tr></table></figure></p>
-<hr>
-<p>使用XPath获取名称包含特定字符的属性的属性值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">//span/img/@*[contains(name(), <span class="string">"src"</span>)]</div></pre></td></tr></table></figure></p>
-<hr>
-<p>AWS在一年免费期间内，换机房不用给钱。先在老的实例生成AMI，再把AMI复制到新的城市，再从新城市的AMI创建实例。然后把老城市的实例彻底终结，取消老城市和新城市的AMI。全程不收费。</p>
-<hr>
-<p>在Python中执行Shell命令并获取返回结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line">shell_result = subprocess.check_output(<span class="string">'ps -ef | grep 进程名 | grep -v grep'</span>, shell=<span class="keyword">True</span>).decode().strip().split(<span class="string">'\n)</span></div></pre></td></tr></table></figure></p>
-<p>如果命令本身没有返回，则会抛出一个<code>subprocess.CalledProcessError</code></p>
-<hr>
-<p>在Shell中判断一个进程是否存在：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ps -ef | grep 进程名 | grep -v grep &gt; /dev/null</div><div class="line"><span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程存在"</span></div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程不存在"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure></p>
-<h2 id="2017-12"><a href="#2017-12" class="headerlink" title="2017.12"></a>2017.12</h2><p>firewalld对特定IP开放特定端口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --zone=public --add-rich-rule=&apos;rule family=&quot;ipv4&quot; source address=&quot;特定IP&quot; port protocol=&quot;tcp&quot; port=&quot;特定端口&quot; accept&apos;</div></pre></td></tr></table></figure></p>
-<hr>
-<p>生成文件树并过滤特定文件或文件夹：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tree -I <span class="string">'__pycache__|pyc|Logs'</span></div></pre></td></tr></table></figure></p>
-<hr>
-<p>统计代码行数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find . -name <span class="string">"*.py"</span> | xargs wc <span class="_">-l</span></div></pre></td></tr></table></figure></p>
-<hr>
-<p>为pip设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip3.6 --proxy http://代理IP:端口 install -r requirements.txt</div></pre></td></tr></table></figure></p>
-<hr>
-<p>为Git设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN git config --global http.proxy http://代理IP:端口</div><div class="line">RUN git config --global http.sslverify <span class="string">"false"</span></div></pre></td></tr></table></figure></p>
-<hr>
-<p>为Ubuntu的<code>apt-get</code>设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/apt/apt.conf.d/01turnkey</div></pre></td></tr></table></figure></p>
-<p>在里面插入一行：<br><code>Acquire::http::Proxy &quot;http://your.proxy.here:port/&quot;;</code><br>保存以后，下一次执行<code>apt-get</code>命令就会使用代理了。</p>
-<h2 id="2017-11"><a href="#2017-11" class="headerlink" title="2017.11"></a>2017.11</h2><p>修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Chown -R elasticsearch:elasticsearch /mnt/es/</div></pre></td></tr></table></figure></p>
-<p>然后再修改elasticsearch的配置文件。</p>
-<hr>
-<p>在postgres中，占位符是<code>$1</code>, <code>$2</code>而不是MySQL中的<code>？</code></p>
-<h2 id="2017-10"><a href="#2017-10" class="headerlink" title="2017.10"></a>2017.10</h2><p>使用<code>urlpare</code>从URL中获取Host：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urlparse</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'https://nanjirenlk.tmall.com/shop/view_shop.htm'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x = urlparse(url)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x.netloc</div><div class="line"><span class="string">'nanjirenlk.tmall.com'</span></div></pre></td></tr></table></figure></p>
-<hr>
-<p>解压<code>tar.gz</code>压缩文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zxvf 文件名</div></pre></td></tr></table></figure>
-<hr>
-<p>根据进程名字在Linux里杀进程。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ps -ef | grep <span class="string">"进程关键字"</span> | grep -v grep | awk <span class="string">'&#123;print $2&#125;'</span> | xargs <span class="built_in">kill</span> -9</div></pre></td></tr></table></figure>
-<hr>
-<p>在Python 的<code>try ... except Exception ...</code>中显示tracebook:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> traceback</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="number">1</span> + <span class="string">'a'</span></div><div class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">    tb = traceback.format_exc()</div><div class="line">    print(tb)</div></pre></td></tr></table></figure>
-<p>输出如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">2</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">TypeError: unsupported operand type(s) <span class="keyword">for</span> +: <span class="string">'int'</span> <span class="keyword">and</span> <span class="string">'str'</span></div></pre></td></tr></table></figure>
-<p>这个功能在多层<code>try ... except Exception ...</code> 嵌套的时候特别有用。</p>
-
-          
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/06/21/tweet-201806/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2018-06-21T14:38:56.152Z</updated>
+  <updated>2018-06-21T14:49:57.416Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://kingname.info/2018/06/21/tweet-201806/"/>
     <id>https://kingname.info/2018/06/21/tweet-201806/</id>
     <published>2018-06-21T14:36:39.000Z</published>
-    <updated>2018-06-21T14:38:56.152Z</updated>
+    <updated>2018-06-21T14:49:57.416Z</updated>
     
     <content type="html"><![CDATA[<h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
 <hr>
@@ -30,6 +30,7 @@
 <li>deque是一个双向链表，所以操作头尾非常简单。</li>
 <li>随机往中间插入数据，deque与list的时间复杂度都是O(n)</li>
 </ul>
+<a id="more"></a>
 <h2 id="2018-04"><a href="#2018-04" class="headerlink" title="2018.04"></a>2018.04</h2><p>MongoDB的聚合查询中，<code>$substr</code>只能匹配ASCII的数据，对于中文要使用<code>$substrCP</code></p>
 <hr>
 <p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)print(current_app.name)</div></pre></td></tr></table></figure></p>
@@ -95,7 +96,14 @@
     
     <summary type="html">
     
-      &lt;h2 id=&quot;2018-05&quot;&gt;&lt;a href=&quot;#2018-05&quot; class=&quot;headerlink&quot; title=&quot;2018.05&quot;&gt;&lt;/a&gt;2018.05&lt;/h2&gt;&lt;p&gt;grep持续监控Log：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;ta
+      &lt;h2 id=&quot;2018-05&quot;&gt;&lt;a href=&quot;#2018-05&quot; class=&quot;headerlink&quot; title=&quot;2018.05&quot;&gt;&lt;/a&gt;2018.05&lt;/h2&gt;&lt;p&gt;grep持续监控Log：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;tail &lt;span class=&quot;_&quot;&gt;-f&lt;/span&gt; file | grep --line-buffered my_pattern&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;根据index读list，时间复杂度为O(1)但deque是O(n)&lt;/li&gt;
+&lt;li&gt;在两头插入数据，deque的时间复杂度为O(1), list为O(n)&lt;/li&gt;
+&lt;li&gt;deque是一个双向链表，所以操作头尾非常简单。&lt;/li&gt;
+&lt;li&gt;随机往中间插入数据，deque与list的时间复杂度都是O(n)&lt;/li&gt;
+&lt;/ul&gt;
     
     </summary>
     
@@ -104,11 +112,11 @@
     
       <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
-      <category term="MongoDB" scheme="https://kingname.info/tags/MongoDB/"/>
-    
       <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
+    
+      <category term="MongoDB" scheme="https://kingname.info/tags/MongoDB/"/>
     
       <category term="Docker" scheme="https://kingname.info/tags/Docker/"/>
     
@@ -728,11 +736,11 @@
     
       <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
+      <category term="Golang" scheme="https://kingname.info/tags/Golang/"/>
+    
       <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
-    
-      <category term="Golang" scheme="https://kingname.info/tags/Golang/"/>
     
   </entry>
   

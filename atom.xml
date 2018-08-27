@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://kingname.info/"/>
-  <updated>2018-06-21T14:54:45.000Z</updated>
+  <updated>2018-08-27T15:12:33.405Z</updated>
   <id>https://kingname.info/</id>
   
   <author>
@@ -14,6 +14,80 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>正则表达式re.sub替换不完整的问题现象及其根本原因</title>
+    <link href="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
+    <id>https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/</id>
+    <published>2018-08-27T13:48:22.000Z</published>
+    <updated>2018-08-27T15:12:33.405Z</updated>
+    
+    <content type="html"><![CDATA[<p>问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import re</div><div class="line"></div><div class="line"></div><div class="line">def remove_tag(html):</div><div class="line">    text = re.sub(&apos;&lt;.*?&gt;&apos;, &apos;&apos;, html, re.S)</div><div class="line">    return text</div></pre></td></tr></table></figure>
+<p>这段代码的使用了正则表达式的替换方法<code>re.sub</code>。这个方法的第一个参数表示需要被替换的内容的正则表达式，由于HTML标签都是使用尖括号包起来的，因此使用<code>&lt;.*?&gt;</code>就可以匹配所有<code>&lt;xxx yyy=&quot;zzz&quot;&gt;</code>和<code>&lt;/xxx&gt;</code>。</p>
+<p>第二个参数表示被匹配到的内容将要被替换成什么内容。由于我需要提前正文，那么只要把所有HTML标签都替换为空字符串即可。第三个参数就是需要被替换的文本，在这个例子中是网站源代码。</p>
+<p>至于<code>re.S</code>，在4年前的一篇文章中我讲到了它的用法：<a href="https://www.kingname.info/2014/12/21/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84re-S/" target="_blank" rel="external">Python正则表达式中的re.S</a>。</p>
+<p>现在使用一段HTML代码来测试一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line"></div><div class="line">source_1 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;今天的主角是&lt;a href="xxx"&gt;kingname&lt;/a&gt;，我们掌声欢迎！&lt;/div&gt;</div><div class="line">'''</div><div class="line"></div><div class="line"></div><div class="line">text = remove_tag(source_1)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示，功能完全符合预期</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png" alt=""></p>
+<p>再来测试一下代码中有换行符的情况：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line">source_2 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;</div><div class="line">    今天的主角是</div><div class="line">    &lt;a href="xxx"&gt;kingname&lt;/a&gt;</div><div class="line">    ，我们掌声欢迎！</div><div class="line">&lt;/div&gt;</div><div class="line">'''</div><div class="line">text = remove_tag(source_2)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示，完全符合预期。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png" alt=""></p>
+<p>经过测试，在绝大多数情况下，能够从的HTML代码段中提取出正文。但也有例外。</p>
+<a id="more"></a>
+<h2 id="例外情况"><a href="#例外情况" class="headerlink" title="例外情况"></a>例外情况</h2><p>有一段HTML代码段比较长，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span class=&apos;url-icon&apos;&gt;&lt; img &apos;&gt;&lt;/span&gt;&lt;span &gt;温柔&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span &gt;#青南#&lt;/span&gt;&lt;/a &gt; &lt;br /&gt;就在这里…&lt;br /&gt;我的小侯爷呢？？？</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示，最后两个HTML标签替换失败。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-31-59.png" alt=""></p>
+<p>一开始我以为是HTML里面的空格或者引号引起的问题，于是我把HTML代码进行简化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;&lt;img&gt;&lt;/span&gt;&lt;span&gt;温柔&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;#青南#&lt;/span&gt;&lt;/a&gt;&lt;br/&gt;就在这里…&lt;br/&gt;我的小侯爷呢</div></pre></td></tr></table></figure>
+<p>问题依然存在，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-36-14.png" alt=""></p>
+<p>而且更令人惊讶的是，如果把第一个标签<code>&lt;img&gt;</code>删了，那么替换结果你们就少了一个标签，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-45-09.png" alt=""></p>
+<p>实际上，不仅仅是删除第一个标签，前面任意一个标签删了都可以减少结果里面的一个标签。如果删除呢前面两个标签，那么结果就正常了。</p>
+<h2 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h2><p>这个看起来很奇怪的问题，根本原因在re.sub的第4个参数。从函数原型可以看到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def sub(pattern, repl, string, count=0, flags=0)</div></pre></td></tr></table></figure>
+<p>第四个参数是count表示替换个数，re.S如果要用，应该作为第五个参数。所以如果把<code>remove_tag</code>函数做一些修改，那么结果就正确了:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def remove_tag(html):</div><div class="line">    text = re.sub(&apos;&lt;.*?&gt;&apos;, &apos;&apos;, html, flags=re.S)</div><div class="line">    return text</div></pre></td></tr></table></figure>
+<p>那么问题来了，把re.S放在count的位置，为什么代码没有报错？难道<code>re.S</code>是数字？实际上，如果打印一下就会发现，<code>re.S</code>确实可以作为数字：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import re</div><div class="line">&gt;&gt;&gt; print(int(re.S))</div><div class="line">16</div></pre></td></tr></table></figure>
+<p>现在回头数一数出问题的HTML代码，发现最后多出来的两个<code>&lt;br&gt;</code>标签，刚刚好是第17和18个标签，而由于<code>count</code>填写的<code>re.S</code>可以当做16来处理，那么Python就会把前16个标签替换为空字符串，从而留下最后两个。</p>
+<p>至此问题的原因搞清楚了。</p>
+<p>这个问题没有被及早发现，有以下几个原因：</p>
+<ol>
+<li>被替换的HTML代码是代码段，大多数情况下HTML标签不足16个，所以问题被隐藏。</li>
+<li><code>re.S</code>是一个对象，但也是数字，count接收的参数刚好也是数字。</li>
+<li><code>re.S</code> 处理的情况是<code>&lt;div class=&quot;123&quot; \n&gt;</code> 而不是<code>&lt;div class=&quot;123&quot;&gt;\n&lt;/div&gt;</code>但测试的代码段标签都是第二种情况，所以在代码段里面实际上加不加<code>re.S</code>效果是一样的。</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;import re&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;def remove_tag(html):&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    text = re.sub(&amp;apos;&amp;lt;.*?&amp;gt;&amp;apos;, &amp;apos;&amp;apos;, html, re.S)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    return text&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这段代码的使用了正则表达式的替换方法&lt;code&gt;re.sub&lt;/code&gt;。这个方法的第一个参数表示需要被替换的内容的正则表达式，由于HTML标签都是使用尖括号包起来的，因此使用&lt;code&gt;&amp;lt;.*?&amp;gt;&lt;/code&gt;就可以匹配所有&lt;code&gt;&amp;lt;xxx yyy=&amp;quot;zzz&amp;quot;&amp;gt;&lt;/code&gt;和&lt;code&gt;&amp;lt;/xxx&amp;gt;&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;第二个参数表示被匹配到的内容将要被替换成什么内容。由于我需要提前正文，那么只要把所有HTML标签都替换为空字符串即可。第三个参数就是需要被替换的文本，在这个例子中是网站源代码。&lt;/p&gt;
+&lt;p&gt;至于&lt;code&gt;re.S&lt;/code&gt;，在4年前的一篇文章中我讲到了它的用法：&lt;a href=&quot;https://www.kingname.info/2014/12/21/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84re-S/&quot;&gt;Python正则表达式中的re.S&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;现在使用一段HTML代码来测试一下：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; re&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;remove_tag&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(html)&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    text = re.sub(&lt;span class=&quot;string&quot;&gt;&#39;&amp;lt;.*?&amp;gt;&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;&#39;&lt;/span&gt;, html, re.S)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; text&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;source_1 = &lt;span class=&quot;string&quot;&gt;&#39;&#39;&#39;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;div class=&quot;content&quot;&amp;gt;今天的主角是&amp;lt;a href=&quot;xxx&quot;&amp;gt;kingname&amp;lt;/a&amp;gt;，我们掌声欢迎！&amp;lt;/div&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&#39;&#39;&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;text = remove_tag(source_1)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;print(text)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;运行效果如下图所示，功能完全符合预期&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;再来测试一下代码中有换行符的情况：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; re&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;remove_tag&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(html)&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    text = re.sub(&lt;span class=&quot;string&quot;&gt;&#39;&amp;lt;.*?&amp;gt;&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;&#39;&lt;/span&gt;, html, re.S)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; text&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;source_2 = &lt;span class=&quot;string&quot;&gt;&#39;&#39;&#39;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;div class=&quot;content&quot;&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    今天的主角是&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;lt;a href=&quot;xxx&quot;&amp;gt;kingname&amp;lt;/a&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    ，我们掌声欢迎！&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;/div&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&#39;&#39;&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;text = remove_tag(source_2)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;print(text)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;运行效果如下图所示，完全符合预期。&lt;br&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;经过测试，在绝大多数情况下，能够从的HTML代码段中提取出正文。但也有例外。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+    
+      <category term="正则表达式" scheme="https://kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>技巧收集-M1806</title>
@@ -1329,71 +1403,6 @@
       <category term="Python" scheme="https://kingname.info/tags/Python/"/>
     
       <category term="Markdown" scheme="https://kingname.info/tags/Markdown/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>搭建持续集成环境(一)</title>
-    <link href="https://kingname.info/2016/05/29/raspberryCI-1/"/>
-    <id>https://kingname.info/2016/05/29/raspberryCI-1/</id>
-    <published>2016-05-29T06:04:49.000Z</published>
-    <updated>2016-11-30T13:56:40.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="开题说明"><a href="#开题说明" class="headerlink" title="开题说明"></a>开题说明</h2><p>软件开发的过程是一个从简单到复杂的过程。我们在开发的时候，会首先写出具有核心的功能的原型，满足基本的需求。但是这个原型使用非常的麻烦，有无数的配置，数据的格式也需要严格的规定，稍微一个不合法的输入输出就有可能导致程序的崩溃。</p>
-<p>接下来，在这个基本的原型上，我们逐渐进行完善，逐渐提高了程序的鲁棒性，用户体验逐渐的提高。新的需求出现了，于是又添加新的功能来满足新的需求。</p>
-<p>在这样一个逐渐搭建（迭代）起来的过程中，我们要进行不间断的测试来保证修改没有破坏代码的已有功能，也要防止引入新的bug.如果是团队开发，要保持代码风格的一致。如果多个人同时开发，又要防止代码修改的地方出现冲突。一个版本的代码开发完成了，测试也没有问题了，同时部署到几百台服务器上，完成新功能的上线。</p>
-<p>这样一个流程，如果手动来完成是相当痛苦的。于是，就需要持续集成来帮助我们完成这些琐碎的工作。开发者开发好了程序，本地测试没有问题了。使用Git提交到代码仓库，然后触发一系列的检查流程，如果出问题就给提交者发邮件提示问题，如果一切正常就开始代码审核(code review)，审核完成，合并代码。合并完成以后，会自动做好部署前面的集成测试，然后等待下一次部署周期到达以后自动将代码部署到各个服务器。</p>
-<p>持续集成这个系列的文章，就是要完成以上各个环节的搭建工作，从而让开发者把精力放在开发上，而不是一些无谓的体力劳动上。</p>
-<p>我会使用树莓派2 来搭建持续集成的环境，树莓派的系统为ArchLinux.</p>
-<h2 id="Jenkins"><a href="#Jenkins" class="headerlink" title="Jenkins"></a>Jenkins</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Jenkins是一个用Java编写的开源的持续集成工具。它是持续集成的核心部分，扮演了一个总管的角色，统筹联系各个部分。</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -S jenkins</div></pre></td></tr></table></figure>
-<p>由于jenkins是Java写的，所以这个时候如果你的系统中没有Java的运行环境，他就会让你选择安装jre7-openjdk 或者是jre8-openjdk, 我选择的是安装jre8-openjdk. 这个时候我没有意识到，隐患已经埋下来了。</p>
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>在ArchLinux中，什么东西都喜欢使用systemd来启动，所以执行以下命令来启动Jenkins：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
-<p>理论上这样就能使用了。但是当我在浏览器打开<code>http://192.168.2.107:8090</code>的时候却发现网页无法打开。于是检查它的log:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">journalctl -u jenkins</div></pre></td></tr></table></figure></p>
-<p>发现原来报错了。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/openjdkerror.png" alt=""></p>
-<p>难道说Java环境有问题？于是我是用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
-<p>来检查Java环境，果然, 连查看Java 的版本都报错了，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/javaversion.png" alt=""></p>
-<h3 id="重装"><a href="#重装" class="headerlink" title="重装"></a>重装</h3><p>对于这种情况，看起来不能使用openJDK了，于是去安装Oracle的JDK。</p>
-<p>首先要卸载openJdk:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -Rdd jre8-openjdk</div></pre></td></tr></table></figure>
-<p>这里使用<code>-Rdd</code> 而不是<code>-R</code>就是为了忽略依赖性。如果直接使用<code>-R</code>的话，会报错，无法卸载。</p>
-<p>如何判断卸载是否完成呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure>
-<p>提示找不到Java的时候，就说明卸载完成了。如果此时依然会爆出上面的core dumpd的错误, 就说明openJDK没有卸载干净。输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -Rdd jre</div></pre></td></tr></table></figure></p>
-<p>然后按键盘上面的Tab键，让自动完成功能来探测到底是哪个部分还没有卸载。</p>
-<p>完全卸载干净openJDK以后，就可以安装Oracle的JDK了。</p>
-<p>由于Oracle的JDK不能直接使用pacman来安装，所以需要使用AUR。树莓派的CPU是ARM架构，所以使用使用<a href="https://aur.archlinux.org/packages/jdk-arm/" target="_blank" rel="external">arm版的JDK</a>。如果有朋友是在X86的电脑上面安装的话，可以使用<a href="https://aur.archlinux.org/packages/jdk" target="_blank" rel="external">x86版的JDK</a>。</p>
-<p>对于安装AUR的文件，首先从左侧<a href="https://aur.archlinux.org/cgit/aur.git/snapshot/jdk-arm.tar.gz" target="_blank" rel="external">Download snapshot</a>下载pkg文件，然后使用以下命令来安装：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tar -xvf jdk-arm.tar.gz</div><div class="line">cd jdk-arm</div><div class="line">makepkg -sri</div></pre></td></tr></table></figure>
-<p>然后就等待下载安装文件然后完成安装。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/aurinstall.png" alt=""></p>
-<p>完成以后，我们再执行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
-<p>就可以正常看到Java的版本信息了。</p>
-<h3 id="再启动"><a href="#再启动" class="headerlink" title="再启动"></a>再启动</h3><p>再一次启动Jenkins:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
-<p>也可以正常启动了。（输入命令以后等待1分钟左右，让服务完全启动起来。）如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/jenkins.png" alt=""></p>
-<p>根据它的提示读取密码，并填写到网页上，于是Jenkins就算是安装成功了。</p>
-<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>插件是Jenkins的精华，在第一次进入的时候，Jenkins就会让你选择插件。这里我选择<br><code>Select plugins to install</code>.<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/plugin.png" alt=""></p>
-<p>它默认已经勾选了一些插件，我增加了以下的插件：</p>
-<ul>
-<li>Source Code Management 下面的Github plugin</li>
-<li>Notifications and Publishing下面的 SSH plugin</li>
-<li>Pipelines and Continuous Delivery 下面的 Parameterized Trigger plugin</li>
-</ul>
-<p>选择好以后点击 install就可以等待它安装了。如果发现漏选了或者多选了也没有关系，因为之后还可以手动管理这些插件。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这一篇讲到了如何在树莓派上面搭建Jenkins并安装插件。下一篇将会讲到Jenkins Job的创建和配置和使用。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;开题说明&quot;&gt;&lt;a href=&quot;#开题说明&quot; class=&quot;headerlink&quot; title=&quot;开题说明&quot;&gt;&lt;/a&gt;开题说明&lt;/h2&gt;&lt;p&gt;软件开发的过程是一个从简单到复杂的过程。我们在开发的时候，会首先写出具有核心的功能的原型，满足基本的需求。但是这个原型使用非
-    
-    </summary>
-    
-      <category term="持续集成" scheme="https://kingname.info/categories/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
-    
-    
-      <category term="Jenkins" scheme="https://kingname.info/tags/Jenkins/"/>
-    
-      <category term="持续集成" scheme="https://kingname.info/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
     
   </entry>
   

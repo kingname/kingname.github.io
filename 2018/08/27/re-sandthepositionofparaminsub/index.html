@@ -1,0 +1,771 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,正则表达式," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：
+123456import redef remove_tag(html):    text = re.sub(&amp;apos;&amp;lt;.*?&amp;gt;&amp;apos;, &amp;apos;&amp;apos;, html, re.S)    return text
+这段代码的使用了正则表达式的替换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式re.sub替换不完整的问题现象及其根本原因">
+<meta property="og:url" content="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：
+123456import redef remove_tag(html):    text = re.sub(&amp;apos;&amp;lt;.*?&amp;gt;&amp;apos;, &amp;apos;&amp;apos;, html, re.S)    return text
+这段代码的使用了正则表达式的替换">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-31-59.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-36-14.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-45-09.png">
+<meta property="og:updated_time" content="2018-08-27T15:12:33.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则表达式re.sub替换不完整的问题现象及其根本原因">
+<meta name="twitter:description" content="问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：
+123456import redef remove_tag(html):    text = re.sub(&amp;apos;&amp;lt;.*?&amp;gt;&amp;apos;, &amp;apos;&amp;apos;, html, re.S)    return text
+这段代码的使用了正则表达式的替换">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
+
+
+
+
+
+  <title> 正则表达式re.sub替换不完整的问题现象及其根本原因 | Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tweet">
+          <a href="/tweet" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-twitter"></i> <br />
+            
+            时间
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                正则表达式re.sub替换不完整的问题现象及其根本原因
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-27T21:48:22+08:00">
+                2018-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/08/27/re-sandthepositionofparaminsub/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/08/27/re-sandthepositionofparaminsub/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import re</div><div class="line"></div><div class="line"></div><div class="line">def remove_tag(html):</div><div class="line">    text = re.sub(&apos;&lt;.*?&gt;&apos;, &apos;&apos;, html, re.S)</div><div class="line">    return text</div></pre></td></tr></table></figure>
+<p>这段代码的使用了正则表达式的替换方法<code>re.sub</code>。这个方法的第一个参数表示需要被替换的内容的正则表达式，由于HTML标签都是使用尖括号包起来的，因此使用<code>&lt;.*?&gt;</code>就可以匹配所有<code>&lt;xxx yyy=&quot;zzz&quot;&gt;</code>和<code>&lt;/xxx&gt;</code>。</p>
+<p>第二个参数表示被匹配到的内容将要被替换成什么内容。由于我需要提前正文，那么只要把所有HTML标签都替换为空字符串即可。第三个参数就是需要被替换的文本，在这个例子中是网站源代码。</p>
+<p>至于<code>re.S</code>，在4年前的一篇文章中我讲到了它的用法：<a href="https://www.kingname.info/2014/12/21/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84re-S/" target="_blank" rel="external">Python正则表达式中的re.S</a>。</p>
+<p>现在使用一段HTML代码来测试一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line"></div><div class="line">source_1 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;今天的主角是&lt;a href="xxx"&gt;kingname&lt;/a&gt;，我们掌声欢迎！&lt;/div&gt;</div><div class="line">'''</div><div class="line"></div><div class="line"></div><div class="line">text = remove_tag(source_1)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示，功能完全符合预期</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png" alt=""></p>
+<p>再来测试一下代码中有换行符的情况：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line">source_2 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;</div><div class="line">    今天的主角是</div><div class="line">    &lt;a href="xxx"&gt;kingname&lt;/a&gt;</div><div class="line">    ，我们掌声欢迎！</div><div class="line">&lt;/div&gt;</div><div class="line">'''</div><div class="line">text = remove_tag(source_2)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示，完全符合预期。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png" alt=""></p>
+<p>经过测试，在绝大多数情况下，能够从的HTML代码段中提取出正文。但也有例外。</p>
+<a id="more"></a>
+<h2 id="例外情况"><a href="#例外情况" class="headerlink" title="例外情况"></a>例外情况</h2><p>有一段HTML代码段比较长，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span class=&apos;url-icon&apos;&gt;&lt; img &apos;&gt;&lt;/span&gt;&lt;span &gt;温柔&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span &gt;#青南#&lt;/span&gt;&lt;/a &gt; &lt;br /&gt;就在这里…&lt;br /&gt;我的小侯爷呢？？？</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示，最后两个HTML标签替换失败。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-31-59.png" alt=""></p>
+<p>一开始我以为是HTML里面的空格或者引号引起的问题，于是我把HTML代码进行简化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;&lt;img&gt;&lt;/span&gt;&lt;span&gt;温柔&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;#青南#&lt;/span&gt;&lt;/a&gt;&lt;br/&gt;就在这里…&lt;br/&gt;我的小侯爷呢</div></pre></td></tr></table></figure>
+<p>问题依然存在，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-36-14.png" alt=""></p>
+<p>而且更令人惊讶的是，如果把第一个标签<code>&lt;img&gt;</code>删了，那么替换结果你们就少了一个标签，如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-45-09.png" alt=""></p>
+<p>实际上，不仅仅是删除第一个标签，前面任意一个标签删了都可以减少结果里面的一个标签。如果删除呢前面两个标签，那么结果就正常了。</p>
+<h2 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h2><p>这个看起来很奇怪的问题，根本原因在re.sub的第4个参数。从函数原型可以看到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def sub(pattern, repl, string, count=0, flags=0)</div></pre></td></tr></table></figure>
+<p>第四个参数是count表示替换个数，re.S如果要用，应该作为第五个参数。所以如果把<code>remove_tag</code>函数做一些修改，那么结果就正确了:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def remove_tag(html):</div><div class="line">    text = re.sub(&apos;&lt;.*?&gt;&apos;, &apos;&apos;, html, flags=re.S)</div><div class="line">    return text</div></pre></td></tr></table></figure>
+<p>那么问题来了，把re.S放在count的位置，为什么代码没有报错？难道<code>re.S</code>是数字？实际上，如果打印一下就会发现，<code>re.S</code>确实可以作为数字：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import re</div><div class="line">&gt;&gt;&gt; print(int(re.S))</div><div class="line">16</div></pre></td></tr></table></figure>
+<p>现在回头数一数出问题的HTML代码，发现最后多出来的两个<code>&lt;br&gt;</code>标签，刚刚好是第17和18个标签，而由于<code>count</code>填写的<code>re.S</code>可以当做16来处理，那么Python就会把前16个标签替换为空字符串，从而留下最后两个。</p>
+<p>至此问题的原因搞清楚了。</p>
+<p>这个问题没有被及早发现，有以下几个原因：</p>
+<ol>
+<li>被替换的HTML代码是代码段，大多数情况下HTML标签不足16个，所以问题被隐藏。</li>
+<li><code>re.S</code>是一个对象，但也是数字，count接收的参数刚好也是数字。</li>
+<li><code>re.S</code> 处理的情况是<code>&lt;div class=&quot;123&quot; \n&gt;</code> 而不是<code>&lt;div class=&quot;123&quot;&gt;\n&lt;/div&gt;</code>但测试的代码段标签都是第二种情况，所以在代码段里面实际上加不加<code>re.S</code>效果是一样的。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="Kingname wechat" style="width: 200px; max-width: 100%;"/>
+    <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/正则表达式/" rel="tag"># 正则表达式</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/21/tweet-201806/" rel="next" title="技巧收集-M1806">
+                <i class="fa fa-chevron-left"></i> 技巧收集-M1806
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">66</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chuangzaoshi.com/" title="创造狮" target="_blank">创造狮</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#例外情况"><span class="nav-number">1.</span> <span class="nav-text">例外情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#答疑解惑"><span class="nav-number">2.</span> <span class="nav-text">答疑解惑</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

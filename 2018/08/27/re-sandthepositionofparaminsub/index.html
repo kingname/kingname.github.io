@@ -91,7 +91,7 @@
 这段代码的使用了正则表达式的替换功能re.sub。这个函数的第一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="正则表达式re.sub替换不完整的问题现象及其根本原因">
-<meta property="og:url" content="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/index.html">
+<meta property="og:url" content="https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/index.html">
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="问题描述问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：
 123456import redef remove_tag(html):    text = re.sub(&apos;&amp;lt;.*?&amp;gt;&apos;, &apos;&apos;, html, re.S)    return text
@@ -101,7 +101,7 @@
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-31-59.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-36-14.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-45-09.png">
-<meta property="og:updated_time" content="2018-08-27T15:19:46.923Z">
+<meta property="og:updated_time" content="2018-08-27T23:39:52.813Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式re.sub替换不完整的问题现象及其根本原因">
 <meta name="twitter:description" content="问题描述问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：
@@ -135,7 +135,7 @@
 
 
 
-  <link rel="canonical" href="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
+  <link rel="canonical" href="https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
 
 
 
@@ -272,7 +272,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/">
+  <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Kingname">
@@ -374,7 +374,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div></pre></td></tr></table></figure>
 <p>这段代码的使用了正则表达式的替换功能<code>re.sub</code>。这个函数的第一个参数表示需要被替换的内容的正则表达式，由于HTML标签都是使用尖括号包起来的，因此使用<code>&lt;.*?&gt;</code>就可以匹配所有<code>&lt;xxx yyy=&quot;zzz&quot;&gt;</code>和<code>&lt;/xxx&gt;</code>。</p>
 <p>第二个参数表示被匹配到的内容将要被替换成什么内容。由于我需要提取正文，那么只要把所有HTML标签都替换为空字符串即可。第三个参数就是需要被替换的文本，在这个例子中是HTML源代码段。</p>
-<p>至于<code>re.S</code>，在4年前的一篇文章中我讲到了它的用法：<a href="https://www.kingname.info/2014/12/21/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84re-S/" target="_blank" rel="external">Python正则表达式中的re.S</a>。</p>
+<p>至于<code>re.S</code>，在4年前的一篇文章中我讲到了它的用法：<a href="https://www.kingname.info/2014/12/21/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84re-S/">Python正则表达式中的re.S</a>。</p>
 <p>现在使用一段HTML代码来测试一下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line"></div><div class="line">source_1 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;今天的主角是&lt;a href="xxx"&gt;kingname&lt;/a&gt;，我们掌声欢迎！&lt;/div&gt;</div><div class="line">'''</div><div class="line"></div><div class="line"></div><div class="line">text = remove_tag(source_1)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示，功能完全符合预期</p>
@@ -405,7 +405,7 @@
 <p>这个问题没有被及早发现，有以下几个原因：</p>
 <ol>
 <li>被替换的HTML代码是代码段，大多数情况下HTML标签不足16个，所以问题被隐藏。</li>
-<li><code>re.S</code>是一个对象，但也是数字，count接收的参数刚好也是数字。</li>
+<li><code>re.S</code>是一个对象，但也是数字，count接收的参数刚好也是数字。在很多编程语言里面，常量都会使用数字，然后用一个有意义的大写字母来表示。</li>
 <li><code>re.S</code> 处理的情况是<code>&lt;div class=&quot;123&quot; \n&gt;</code> 而不是<code>&lt;div class=&quot;123&quot;&gt;\n&lt;/div&gt;</code>但测试的代码段标签都是第二种情况，所以在代码段里面实际上加不加<code>re.S</code>效果是一样的。</li>
 </ol>
 
@@ -513,7 +513,7 @@
                src="/images/avatar.png"
                alt="Kingname" />
           <p class="site-author-name" itemprop="name">Kingname</p>
-          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">

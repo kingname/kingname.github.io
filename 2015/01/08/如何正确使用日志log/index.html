@@ -91,7 +91,7 @@
 为什么要使用Log在使用微信控制你的电脑这篇文章中，我写好了电脑端的程序，使用py2exe生成可执行文件，并把它们发送给我的朋友让他们进行测试。但是他们把_config.ini设置好以后，运行程序就看到一个黑色窗口一闪而过。或者有些人一开始看到程序能正常登陆邮箱，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何正确使用日志Log">
-<meta property="og:url" content="https://kingname.info/2015/01/08/如何正确使用日志log/index.html">
+<meta property="og:url" content="https://www.kingname.info/2015/01/08/如何正确使用日志log/index.html">
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="文章首发地址：http://kingname.info
 这篇文章不会教你在技术角度上使用log，而是告诉你为什么要使用log日志功能。
@@ -129,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="https://kingname.info/2015/01/08/如何正确使用日志log/"/>
+  <link rel="canonical" href="https://www.kingname.info/2015/01/08/如何正确使用日志log/"/>
 
 
 
@@ -266,7 +266,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://kingname.info/2015/01/08/如何正确使用日志log/">
+  <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/08/如何正确使用日志log/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Kingname">
@@ -364,9 +364,9 @@
       
 
       
-        <p>文章首发地址：<a href="http://kingname.info">http://kingname.info</a></p>
+        <p>文章首发地址：<a href="http://kingname.info" target="_blank" rel="external">http://kingname.info</a></p>
 <p>这篇文章不会教你在技术角度上使用log，而是告诉你为什么要使用log日志功能。</p>
-<h2 id="为什么要使用Log"><a href="#为什么要使用Log" class="headerlink" title="为什么要使用Log"></a>为什么要使用Log</h2><p>在<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/">使用微信控制你的电脑</a>这篇文章中，我写好了电脑端的程序，使用py2exe生成可执行文件，并把它们发送给我的朋友让他们进行测试。但是他们把_config.ini设置好以后，运行程序就看到一个黑色窗口一闪而过。或者有些人一开始看到程序能正常登陆邮箱，但是准备执行命令的时候，窗口自动关闭。</p>
+<h2 id="为什么要使用Log"><a href="#为什么要使用Log" class="headerlink" title="为什么要使用Log"></a>为什么要使用Log</h2><p>在<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="external">使用微信控制你的电脑</a>这篇文章中，我写好了电脑端的程序，使用py2exe生成可执行文件，并把它们发送给我的朋友让他们进行测试。但是他们把_config.ini设置好以后，运行程序就看到一个黑色窗口一闪而过。或者有些人一开始看到程序能正常登陆邮箱，但是准备执行命令的时候，窗口自动关闭。</p>
 <p>由于没有日志记录程序的运行状态，我根据他们的描述很难定位到错误在哪个地方。于是折腾了一个下午。</p>
 <p>这个时候，我觉得添加一个日志的功能迫在眉睫。</p>
 <h2 id="哪些地方应该用Log"><a href="#哪些地方应该用Log" class="headerlink" title="哪些地方应该用Log"></a>哪些地方应该用Log</h2><p>目前网上能找到的关于如何使用日志的文章，全部都是从技术角度讲怎么使用log：在XX地方应该先imort logging，然后basicconfig设定XX内容。可是我现在的问题是：</p>
@@ -376,7 +376,7 @@
 <li>如何输出才能以方便我的监控程序的运行情况？</li>
 </ul>
 <p>于是我只有自己摸索。因此，<strong>以下内容是我自己摸索出来的野路子，可能会有错漏。希望有经验的朋友能给我指正，非常感谢。</strong></p>
-<h3 id="这些地方应该用Log"><a href="#这些地方应该用Log" class="headerlink" title="这些地方应该用Log"></a>这些地方应该用Log</h3><p>使用<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/">使用微信控制你的电脑</a>文章中涉及到的例子</p>
+<h3 id="这些地方应该用Log"><a href="#这些地方应该用Log" class="headerlink" title="这些地方应该用Log"></a>这些地方应该用Log</h3><p>使用<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="external">使用微信控制你的电脑</a>文章中涉及到的例子</p>
 <p>程序入口代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if __name__==&apos;__main__&apos;:</div><div class="line">        init()</div><div class="line">        print u&apos;等待接收命令&apos;</div><div class="line">        logging.info(u&apos;初始化完成。&apos;)</div><div class="line">        while 1:</div><div class="line">                time.sleep(int(time_limit)) #每5分钟检查一次邮箱</div><div class="line">                accp_mail()</div></pre></td></tr></table></figure>
 <p>以上代码表示程序运行以后，首先执行init()函数，于是如果init()初始化没有什么问题，成功执行完成以后，就应该在日志中输出“初始化完成”，然后进入接收邮件的循环。如果程序窗口运行以后一闪而过，而且生成的日志中没有初始化完成这样的字眼，那就说明问题出在初始化上面。</p>
@@ -510,7 +510,7 @@
                src="/images/avatar.png"
                alt="Kingname" />
           <p class="site-author-name" itemprop="name">Kingname</p>
-          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">

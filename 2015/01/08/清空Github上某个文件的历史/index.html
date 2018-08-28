@@ -92,7 +92,7 @@ Google一圈以后，终于找到了解决办法。把某个文件的历史版�
 首先cd 进入项目文件夹下，然后执行以下代码：1234567891011git filter-branch">
 <meta property="og:type" content="article">
 <meta property="og:title" content="清空Github上某个文件的历史">
-<meta property="og:url" content="https://kingname.info/2015/01/08/清空Github上某个文件的历史/index.html">
+<meta property="og:url" content="https://www.kingname.info/2015/01/08/清空Github上某个文件的历史/index.html">
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="文章首发地址：http://kingname.info
 今天在Github更新代码的时候，不小心把Gmail私钥文件更新上去了。即便我立刻删除了这个文件，可是在版本历史里面仍然可以看到这个文件的内容。这可把我吓坏了。
@@ -132,7 +132,7 @@ Google一圈以后，终于找到了解决办法。把某个文件的历史版�
 
 
 
-  <link rel="canonical" href="https://kingname.info/2015/01/08/清空Github上某个文件的历史/"/>
+  <link rel="canonical" href="https://www.kingname.info/2015/01/08/清空Github上某个文件的历史/"/>
 
 
 
@@ -269,7 +269,7 @@ Google一圈以后，终于找到了解决办法。把某个文件的历史版�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://kingname.info/2015/01/08/清空Github上某个文件的历史/">
+  <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/08/清空Github上某个文件的历史/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Kingname">
@@ -367,7 +367,7 @@ Google一圈以后，终于找到了解决办法。把某个文件的历史版�
       
 
       
-        <p>文章首发地址：<a href="http://kingname.info">http://kingname.info</a></p>
+        <p>文章首发地址：<a href="http://kingname.info" target="_blank" rel="external">http://kingname.info</a></p>
 <p>今天在Github更新代码的时候，不小心把Gmail私钥文件更新上去了。即便我立刻删除了这个文件，可是在版本历史里面仍然可以看到这个文件的内容。这可把我吓坏了。</p>
 <p>Google一圈以后，终于找到了解决办法。把某个文件的历史版本全部清空。</p>
 <p>首先cd 进入项目文件夹下，然后执行以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">git filter-branch --force --index-filter &apos;git rm --cached --ignore-unmatch 文件名&apos; --prune-empty --tag-name-filter cat -- --all</div><div class="line"></div><div class="line">git push origin master --force</div><div class="line"></div><div class="line">rm -rf .git/refs/original/</div><div class="line"></div><div class="line">git reflog expire --expire=now --all</div><div class="line"></div><div class="line">git gc --prune=now</div><div class="line"></div><div class="line">git gc --aggressive --prune=now</div></pre></td></tr></table></figure></p>
@@ -472,7 +472,7 @@ Google一圈以后，终于找到了解决办法。把某个文件的历史版�
                src="/images/avatar.png"
                alt="Kingname" />
           <p class="site-author-name" itemprop="name">Kingname</p>
-          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">

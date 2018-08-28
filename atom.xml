@@ -4,9 +4,9 @@
   <subtitle>给时光以生命。</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://kingname.info/"/>
-  <updated>2018-08-27T15:19:46.923Z</updated>
-  <id>https://kingname.info/</id>
+  <link href="https://www.kingname.info/"/>
+  <updated>2018-08-27T23:39:52.813Z</updated>
+  <id>https://www.kingname.info/</id>
   
   <author>
     <name>Kingname</name>
@@ -17,16 +17,16 @@
   
   <entry>
     <title>正则表达式re.sub替换不完整的问题现象及其根本原因</title>
-    <link href="https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
-    <id>https://kingname.info/2018/08/27/re-sandthepositionofparaminsub/</id>
+    <link href="https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
+    <id>https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/</id>
     <published>2018-08-27T13:48:22.000Z</published>
-    <updated>2018-08-27T15:19:46.923Z</updated>
+    <updated>2018-08-27T23:39:52.813Z</updated>
     
     <content type="html"><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div></pre></td></tr></table></figure>
 <p>这段代码的使用了正则表达式的替换功能<code>re.sub</code>。这个函数的第一个参数表示需要被替换的内容的正则表达式，由于HTML标签都是使用尖括号包起来的，因此使用<code>&lt;.*?&gt;</code>就可以匹配所有<code>&lt;xxx yyy=&quot;zzz&quot;&gt;</code>和<code>&lt;/xxx&gt;</code>。</p>
 <p>第二个参数表示被匹配到的内容将要被替换成什么内容。由于我需要提取正文，那么只要把所有HTML标签都替换为空字符串即可。第三个参数就是需要被替换的文本，在这个例子中是HTML源代码段。</p>
-<p>至于<code>re.S</code>，在4年前的一篇文章中我讲到了它的用法：<a href="https://www.kingname.info/2014/12/21/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84re-S/" target="_blank" rel="external">Python正则表达式中的re.S</a>。</p>
+<p>至于<code>re.S</code>，在4年前的一篇文章中我讲到了它的用法：<a href="https://www.kingname.info/2014/12/21/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E7%9A%84re-S/">Python正则表达式中的re.S</a>。</p>
 <p>现在使用一段HTML代码来测试一下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line"></div><div class="line">source_1 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;今天的主角是&lt;a href="xxx"&gt;kingname&lt;/a&gt;，我们掌声欢迎！&lt;/div&gt;</div><div class="line">'''</div><div class="line"></div><div class="line"></div><div class="line">text = remove_tag(source_1)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示，功能完全符合预期</p>
@@ -57,7 +57,7 @@
 <p>这个问题没有被及早发现，有以下几个原因：</p>
 <ol>
 <li>被替换的HTML代码是代码段，大多数情况下HTML标签不足16个，所以问题被隐藏。</li>
-<li><code>re.S</code>是一个对象，但也是数字，count接收的参数刚好也是数字。</li>
+<li><code>re.S</code>是一个对象，但也是数字，count接收的参数刚好也是数字。在很多编程语言里面，常量都会使用数字，然后用一个有意义的大写字母来表示。</li>
 <li><code>re.S</code> 处理的情况是<code>&lt;div class=&quot;123&quot; \n&gt;</code> 而不是<code>&lt;div class=&quot;123&quot;&gt;\n&lt;/div&gt;</code>但测试的代码段标签都是第二种情况，所以在代码段里面实际上加不加<code>re.S</code>效果是一样的。</li>
 </ol>
 ]]></content>
@@ -80,19 +80,19 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="正则表达式" scheme="https://kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+      <category term="正则表达式" scheme="https://www.kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
     
   </entry>
   
   <entry>
     <title>技巧收集-M1806</title>
-    <link href="https://kingname.info/2018/06/21/tweet-201806/"/>
-    <id>https://kingname.info/2018/06/21/tweet-201806/</id>
+    <link href="https://www.kingname.info/2018/06/21/tweet-201806/"/>
+    <id>https://www.kingname.info/2018/06/21/tweet-201806/</id>
     <published>2018-06-21T14:36:39.000Z</published>
     <updated>2018-06-21T14:54:45.000Z</updated>
     
@@ -183,25 +183,25 @@
     
     </summary>
     
-      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
+      <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
-      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
     
-      <category term="MongoDB" scheme="https://kingname.info/tags/MongoDB/"/>
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
     
-      <category term="Docker" scheme="https://kingname.info/tags/Docker/"/>
+      <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
     
   </entry>
   
   <entry>
     <title>使用生成器把Kafka写入速度提高1000倍</title>
-    <link href="https://kingname.info/2018/04/13/the-suitable-situation-for-yield/"/>
-    <id>https://kingname.info/2018/04/13/the-suitable-situation-for-yield/</id>
+    <link href="https://www.kingname.info/2018/04/13/the-suitable-situation-for-yield/"/>
+    <id>https://www.kingname.info/2018/04/13/the-suitable-situation-for-yield/</id>
     <published>2018-04-13T13:35:09.000Z</published>
     <updated>2018-04-13T15:10:42.833Z</updated>
     
@@ -259,19 +259,19 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="经验" scheme="https://kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
+      <category term="经验" scheme="https://www.kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
     
   </entry>
   
   <entry>
     <title>从Workflowy到印象笔记</title>
-    <link href="https://kingname.info/2018/03/17/from-workflowy-to-evernote/"/>
-    <id>https://kingname.info/2018/03/17/from-workflowy-to-evernote/</id>
+    <link href="https://www.kingname.info/2018/03/17/from-workflowy-to-evernote/"/>
+    <id>https://www.kingname.info/2018/03/17/from-workflowy-to-evernote/</id>
     <published>2018-03-17T02:05:54.000Z</published>
     <updated>2018-03-17T05:49:19.749Z</updated>
     
@@ -335,21 +335,21 @@
     
     </summary>
     
-      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Workflowy" scheme="https://kingname.info/tags/Workflowy/"/>
+      <category term="Workflowy" scheme="https://www.kingname.info/tags/Workflowy/"/>
     
-      <category term="Evernote" scheme="https://kingname.info/tags/Evernote/"/>
+      <category term="Evernote" scheme="https://www.kingname.info/tags/Evernote/"/>
     
   </entry>
   
   <entry>
     <title>任务管理，项目管理和目标管理</title>
-    <link href="https://kingname.info/2018/01/01/task-project-target/"/>
-    <id>https://kingname.info/2018/01/01/task-project-target/</id>
+    <link href="https://www.kingname.info/2018/01/01/task-project-target/"/>
+    <id>https://www.kingname.info/2018/01/01/task-project-target/</id>
     <published>2018-01-01T02:11:14.000Z</published>
     <updated>2018-03-17T02:06:59.789Z</updated>
     
@@ -372,10 +372,10 @@
 </ul>
 <p>现在看到上面的几个任务，你知道我是想做什么吗？我想实现持续集成（CI），实现开发人员把代码一推到Github，系统自动使用Jenkins把代码拉到测试服务器，检查代码风格，做单元测试，做功能测试，自动生成Code Review申请发送给相关人员，Code Review以后自动把代码集成到主干并部署。但是对于做任务的人，却很难根据上面的任务发现要做这个事情。对于规划任务的人，也很难发现是否漏掉了任务，以及是否其中的一个或者多个任务可以继续拆分。</p>
 <p>再一个问题，在为每一个任务设定时间的时候，任务一旦多，很难把控每个任务的具体时长。也难以发现哪些任务可以同时做，哪些任务有依赖必需先做这个再做那个，前置任务必需按时完成。即使设置了任务优先级，但是对于同级的任务谁先做谁后做，你却无法把控，只有看App上哪个排前面就先做哪个。</p>
-<p>我曾经有一篇文章，就是因为考虑到Teambition的这个问题，所以把Teambition与大纲工具Workflowy结合起来使用。文章地址为：<a href="https://kingname.info/2017/10/03/teamflowy/">TeamFlowy——结合Teambition与Workflowy
+<p>我曾经有一篇文章，就是因为考虑到Teambition的这个问题，所以把Teambition与大纲工具Workflowy结合起来使用。文章地址为：<a href="https://kingname.info/2017/10/03/teamflowy/" target="_blank" rel="external">TeamFlowy——结合Teambition与Workflowy
 </a></p>
 <h2 id="项目管理"><a href="#项目管理" class="headerlink" title="项目管理"></a>项目管理</h2><p>正是由于任务管理App存在诸多不便，于是在规划一个项目的时候，必需使用一些项目管理的方法或者软件来提高效率。</p>
-<p>关于项目管理，我个人最推崇使用甘特图。在我的另一篇文章<a href="https://kingname.info/2017/12/31/you-should-use-gantt/">不用甘特图，你做什么项目管理</a>中，我讲到了从一张甘特图里面，你将会额外获得哪些信息。</p>
+<p>关于项目管理，我个人最推崇使用甘特图。在我的另一篇文章<a href="https://kingname.info/2017/12/31/you-should-use-gantt/" target="_blank" rel="external">不用甘特图，你做什么项目管理</a>中，我讲到了从一张甘特图里面，你将会额外获得哪些信息。</p>
 <p>甘特图是一张二维的图表，它的横轴是时间，纵轴是任务。从甘特图上可以一目了然看到一个任务从什么时候开始什么时候结束，不同任务之间是否有时间重叠，以及哪些任务可以同时做哪些任务必需有先后顺序。</p>
 <p>我个人认为，在项目管理中，任务周期是非常重要的，任务的开始时间和结束时间一定要把控好。使用甘特图就可以实现这样一个目的。</p>
 <p>对于规划任务的人，在用甘特图规划任务的时候，如果你发现一个任务时间太长，无论怎么调整都会和后面的任务有重叠，那么你就会发现这个任务可能需要拆分为更小的任务。而且由于甘特图立足于项目的整体，你也可以更容易发现是否有任务漏掉了。</p>
@@ -410,19 +410,19 @@
     
     </summary>
     
-      <category term="经验" scheme="https://kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
+      <category term="经验" scheme="https://www.kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
     
     
-      <category term="生产力" scheme="https://kingname.info/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B/"/>
+      <category term="生产力" scheme="https://www.kingname.info/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B/"/>
     
-      <category term="效率" scheme="https://kingname.info/tags/%E6%95%88%E7%8E%87/"/>
+      <category term="效率" scheme="https://www.kingname.info/tags/%E6%95%88%E7%8E%87/"/>
     
   </entry>
   
   <entry>
     <title>不用甘特图，你做什么项目管理</title>
-    <link href="https://kingname.info/2017/12/31/you-should-use-gantt/"/>
-    <id>https://kingname.info/2017/12/31/you-should-use-gantt/</id>
+    <link href="https://www.kingname.info/2017/12/31/you-should-use-gantt/"/>
+    <id>https://www.kingname.info/2017/12/31/you-should-use-gantt/</id>
     <published>2017-12-31T14:45:55.000Z</published>
     <updated>2017-12-31T16:32:10.641Z</updated>
     
@@ -490,19 +490,19 @@
     
     </summary>
     
-      <category term="经验" scheme="https://kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
+      <category term="经验" scheme="https://www.kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
     
     
-      <category term="经验" scheme="https://kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
+      <category term="经验" scheme="https://www.kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
     
-      <category term="甘特图" scheme="https://kingname.info/tags/%E7%94%98%E7%89%B9%E5%9B%BE/"/>
+      <category term="甘特图" scheme="https://www.kingname.info/tags/%E7%94%98%E7%89%B9%E5%9B%BE/"/>
     
   </entry>
   
   <entry>
     <title>使用Jenkins自动部署博客</title>
-    <link href="https://kingname.info/2017/12/17/auto-deploy-blog/"/>
-    <id>https://kingname.info/2017/12/17/auto-deploy-blog/</id>
+    <link href="https://www.kingname.info/2017/12/17/auto-deploy-blog/"/>
+    <id>https://www.kingname.info/2017/12/17/auto-deploy-blog/</id>
     <published>2017-12-17T11:48:10.000Z</published>
     <updated>2017-12-17T13:18:31.142Z</updated>
     
@@ -512,14 +512,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到GitHub-&gt;GitHub Pages自动使用最新内容</div></pre></td></tr></table></figure>
 <p>现在由于Hexo渲染以后的HTML文件需要放到服务器上，那么工作流程变为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到GitHub-&gt;手动登录服务器</div><div class="line">-&gt;进入放博客文章的文件夹-&gt;执行命令git pull</div></pre></td></tr></table></figure>
-<p>增加的两步虽然说操作量不大，但是总显得很麻烦。于是我希望，在我把博客的HTML文件push到GitHub以后，服务器能自动从GitHub上把HTML内容拉下来。由于使用了Nginx，所以只要博客的HTML发生了更新，那么使用浏览器访问<a href="https://kingname.info">https://kingname.info</a>时，新内容自动就会出现。这样一来，对我来说，看起来就像是我刚刚push了网页内容到GitHub，博客就自动更新了。</p>
+<p>增加的两步虽然说操作量不大，但是总显得很麻烦。于是我希望，在我把博客的HTML文件push到GitHub以后，服务器能自动从GitHub上把HTML内容拉下来。由于使用了Nginx，所以只要博客的HTML发生了更新，那么使用浏览器访问<a href="https://kingname.info" target="_blank" rel="external">https://kingname.info</a>时，新内容自动就会出现。这样一来，对我来说，看起来就像是我刚刚push了网页内容到GitHub，博客就自动更新了。</p>
 <p>让服务器从GitHub上面拉代码，这个操作本身很简单。人来操作就一行代码<code>git pull</code>。写个Python脚本也就两行代码。但问题是，服务器怎么知道GitHub发生了更新？</p>
 <p>有人说，Kingname，你不是做爬虫吗？你写个爬虫，每一秒检查一下GitHub不就可以了吗？这种办法当然可以。但问题是，我一周就更新一次博客，但这个爬虫为了等这一次更新，一周要访问GitHub高达604800次？更何况我有时候一个月都不更新。</p>
 <p>所以显然不能让服务器主动检查GitHub更新，这种“轮询”操作效率太低。那么如果反过来，一旦GitHub有更新，它就通知服务器，然后服务器再去拉代码，这不就简单高效了吗？</p>
 <h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>为了实现这个目的，就需要使用一些持续集成的工具。本文使用的是Jenkins。</p>
 <p>Jenkins在<a href="https://zh.wikipedia.org/wiki/%E6%95%8F%E6%8D%B7%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91" target="_blank" rel="external">敏捷开发</a>界可以说是大名鼎鼎了。使用Jenkins搭建一整套<a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="external">持续集成</a>环境，可以实现开发者往代码仓库一提交代码，代码自动进行单元测试，覆盖率测试，代码风格检查自动生成报告，自动通知部门同事开始Code Review。当代码被合并入主干以后，服务器自动拉下最新代码，自动编译，自动在几千几万台服务器上部署。在整个过程中，开发者只需要做一件事，那就是<code>git push</code>（当然在实际情况下，后面还会加一些参数）。</p>
 <p>本文实现的是博客的自动部署，没有任何测试，也没有Code Review，也没有编译，服务器也只有一台，复杂程度当然远远低于持续集成。不过管中窥豹，来看看这个简单地流程是如何走通的，对初学者也会有帮助。</p>
-<p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
+<p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/" target="_blank" rel="external">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
 <h3 id="设置GitHub"><a href="#设置GitHub" class="headerlink" title="设置GitHub"></a>设置GitHub</h3><p>在GitHub中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png" alt=""></p>
 <p>在设置页面，单击左侧的<code>Integrations &amp; services</code>，并选择<code>Add service</code>，如下图所示。</p>
@@ -557,19 +557,19 @@
     
     </summary>
     
-      <category term="Jenkins" scheme="https://kingname.info/categories/Jenkins/"/>
+      <category term="Jenkins" scheme="https://www.kingname.info/categories/Jenkins/"/>
     
     
-      <category term="Jenkins" scheme="https://kingname.info/tags/Jenkins/"/>
+      <category term="Jenkins" scheme="https://www.kingname.info/tags/Jenkins/"/>
     
-      <category term="CI" scheme="https://kingname.info/tags/CI/"/>
+      <category term="CI" scheme="https://www.kingname.info/tags/CI/"/>
     
   </entry>
   
   <entry>
     <title>使用有限状态机原理实现英文分词</title>
-    <link href="https://kingname.info/2017/12/10/use-fsm/"/>
-    <id>https://kingname.info/2017/12/10/use-fsm/</id>
+    <link href="https://www.kingname.info/2017/12/10/use-fsm/"/>
+    <id>https://www.kingname.info/2017/12/10/use-fsm/</id>
     <published>2017-12-10T04:12:55.000Z</published>
     <updated>2017-12-10T08:02:50.682Z</updated>
     
@@ -637,21 +637,21 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="FSM" scheme="https://kingname.info/tags/FSM/"/>
+      <category term="FSM" scheme="https://www.kingname.info/tags/FSM/"/>
     
-      <category term="有限状态机" scheme="https://kingname.info/tags/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA/"/>
+      <category term="有限状态机" scheme="https://www.kingname.info/tags/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA/"/>
     
   </entry>
   
   <entry>
     <title>TeamFlowy——结合Teambition与Workflowy</title>
-    <link href="https://kingname.info/2017/10/03/teamflowy/"/>
-    <id>https://kingname.info/2017/10/03/teamflowy/</id>
+    <link href="https://www.kingname.info/2017/10/03/teamflowy/"/>
+    <id>https://www.kingname.info/2017/10/03/teamflowy/</id>
     <published>2017-10-03T15:29:05.000Z</published>
     <updated>2017-10-27T15:27:17.000Z</updated>
     
@@ -738,21 +738,21 @@
     
     </summary>
     
-      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Workflowy" scheme="https://kingname.info/tags/Workflowy/"/>
+      <category term="Workflowy" scheme="https://www.kingname.info/tags/Workflowy/"/>
     
-      <category term="Teambition" scheme="https://kingname.info/tags/Teambition/"/>
+      <category term="Teambition" scheme="https://www.kingname.info/tags/Teambition/"/>
     
   </entry>
   
   <entry>
     <title>技巧收集-M1709</title>
-    <link href="https://kingname.info/2017/09/22/tweet-201709/"/>
-    <id>https://kingname.info/2017/09/22/tweet-201709/</id>
+    <link href="https://www.kingname.info/2017/09/22/tweet-201709/"/>
+    <id>https://www.kingname.info/2017/09/22/tweet-201709/</id>
     <published>2017-09-22T14:34:01.000Z</published>
     <updated>2017-09-22T14:54:39.000Z</updated>
     
@@ -807,27 +807,27 @@
     
     </summary>
     
-      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Golang" scheme="https://kingname.info/tags/Golang/"/>
+      <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
     
-      <category term="Linux" scheme="https://kingname.info/tags/Linux/"/>
+      <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
-      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
     
   </entry>
   
   <entry>
     <title>Tenacity——Exception Retry 从此无比简单</title>
-    <link href="https://kingname.info/2017/06/18/easy-retry/"/>
-    <id>https://kingname.info/2017/06/18/easy-retry/</id>
+    <link href="https://www.kingname.info/2017/06/18/easy-retry/"/>
+    <id>https://www.kingname.info/2017/06/18/easy-retry/</id>
     <published>2017-06-17T16:17:47.000Z</published>
     <updated>2017-07-21T13:58:39.000Z</updated>
     
-    <content type="html"><![CDATA[<p><a href="https://kingname.info/2017/04/17/decorate-for-method/">Python 装饰器装饰类中的方法</a>这篇文章，使用了装饰器来捕获代码异常。这种方式可以让代码变得更加简洁和Pythonic。</p>
+    <content type="html"><![CDATA[<p><a href="https://kingname.info/2017/04/17/decorate-for-method/" target="_blank" rel="external">Python 装饰器装饰类中的方法</a>这篇文章，使用了装饰器来捕获代码异常。这种方式可以让代码变得更加简洁和Pythonic。</p>
 <p>在写代码的过程中，处理异常并重试是一个非常常见的需求。但是如何把捕获异常并重试写得简洁高效，这就是一个技术活了。</p>
 <a id="more"></a>
 <p>以爬虫开发为例，由于网页返回的源代码有各种不同的情况，因此捕获异常并重试是很常见的要求。下面这几段代码是我多年以前，在刚开始学习爬虫的时候，由于捕获异常并重试导致代码混乱化过程。</p>
@@ -868,21 +868,21 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Exception" scheme="https://kingname.info/tags/Exception/"/>
+      <category term="Exception" scheme="https://www.kingname.info/tags/Exception/"/>
     
-      <category term="Tenacity" scheme="https://kingname.info/tags/Tenacity/"/>
+      <category term="Tenacity" scheme="https://www.kingname.info/tags/Tenacity/"/>
     
   </entry>
   
   <entry>
     <title>记住变量类型的三种方式</title>
-    <link href="https://kingname.info/2017/06/11/type-hints-in-python3/"/>
-    <id>https://kingname.info/2017/06/11/type-hints-in-python3/</id>
+    <link href="https://www.kingname.info/2017/06/11/type-hints-in-python3/"/>
+    <id>https://www.kingname.info/2017/06/11/type-hints-in-python3/</id>
     <published>2017-06-11T07:25:03.000Z</published>
     <updated>2017-06-11T08:58:41.000Z</updated>
     
@@ -907,7 +907,7 @@
 <p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-41-12.png" alt=""></p>
 <p>关于Variable Annotations的更多用法，可以参阅：<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">Syntax for Variable Annotations</a><br>关于Mypy，可以参阅它的官方文档：<a href="http://mypy.readthedocs.io/en/stable/index.html" target="_blank" rel="external">Mypy documentation</a></p>
 <h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
-<h2 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h2><p>这种方法来自与Java Bean的思想，它主要用来解决列表套字典，字典套字典，字典套列表，列表套列表这种深层的嵌套关系。关于这个方法，请参阅另一篇文章：<a href="http://kingname.info/2016/06/19/bean-in-python/">可爱的豆子——使用Beans思想让Python代码更易维护</a></p>
+<h2 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h2><p>这种方法来自与Java Bean的思想，它主要用来解决列表套字典，字典套字典，字典套列表，列表套列表这种深层的嵌套关系。关于这个方法，请参阅另一篇文章：<a href="http://kingname.info/2016/06/19/bean-in-python/" target="_blank" rel="external">可爱的豆子——使用Beans思想让Python代码更易维护</a></p>
 ]]></content>
     
     <summary type="html">
@@ -916,17 +916,17 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   
   <entry>
     <title>Python 装饰器装饰类中的方法</title>
-    <link href="https://kingname.info/2017/04/17/decorate-for-method/"/>
-    <id>https://kingname.info/2017/04/17/decorate-for-method/</id>
+    <link href="https://www.kingname.info/2017/04/17/decorate-for-method/"/>
+    <id>https://www.kingname.info/2017/04/17/decorate-for-method/</id>
     <published>2017-04-17T12:44:31.000Z</published>
     <updated>2017-04-17T13:25:32.000Z</updated>
     
@@ -954,19 +954,19 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Decorate" scheme="https://kingname.info/tags/Decorate/"/>
+      <category term="Decorate" scheme="https://www.kingname.info/tags/Decorate/"/>
     
   </entry>
   
   <entry>
     <title>技巧收集-M1701</title>
-    <link href="https://kingname.info/2017/02/05/tweet/"/>
-    <id>https://kingname.info/2017/02/05/tweet/</id>
+    <link href="https://www.kingname.info/2017/02/05/tweet/"/>
+    <id>https://www.kingname.info/2017/02/05/tweet/</id>
     <published>2017-02-05T15:56:31.000Z</published>
     <updated>2017-02-05T15:59:29.000Z</updated>
     
@@ -1030,19 +1030,19 @@
     
     </summary>
     
-      <category term="Craft" scheme="https://kingname.info/categories/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/categories/Craft/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Craft" scheme="https://kingname.info/tags/Craft/"/>
+      <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
     
   </entry>
   
   <entry>
     <title>30秒找到藏在家里的手机</title>
-    <link href="https://kingname.info/2017/01/07/findmyphone/"/>
-    <id>https://kingname.info/2017/01/07/findmyphone/</id>
+    <link href="https://www.kingname.info/2017/01/07/findmyphone/"/>
+    <id>https://www.kingname.info/2017/01/07/findmyphone/</id>
     <published>2017-01-07T06:02:02.000Z</published>
     <updated>2017-01-07T07:45:31.000Z</updated>
     
@@ -1054,7 +1054,7 @@
 <p>看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。</p>
 <a id="more"></a>
 <p>根本原理还是让手机播放音乐，我们通过音乐来找到手机。但是在放音乐之前，需要让手机自动解除静音，并将音量调到最大声。</p>
-<p>和<a href="http://kingname.info/2016/11/07/autoalarmclock/">《如果我提前起床，闹钟你就别响》</a>一样，这一次的任务依然是借助Python语言+ Flask框架 + 安卓上面的自动化程序：Automate来完成。不过，这一次我会把这个工具提供给大家一起使用。</p>
+<p>和<a href="http://kingname.info/2016/11/07/autoalarmclock/" target="_blank" rel="external">《如果我提前起床，闹钟你就别响》</a>一样，这一次的任务依然是借助Python语言+ Flask框架 + 安卓上面的自动化程序：Automate来完成。不过，这一次我会把这个工具提供给大家一起使用。</p>
 <h2 id="四个网址"><a href="#四个网址" class="headerlink" title="四个网址"></a>四个网址</h2><p>本文将会涉及到四个网址：</p>
 <ul>
 <li>注册你的账号&gt;<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a></li>
@@ -1088,21 +1088,21 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Workflow" scheme="https://kingname.info/tags/Workflow/"/>
+      <category term="Workflow" scheme="https://www.kingname.info/tags/Workflow/"/>
     
-      <category term="Automatic" scheme="https://kingname.info/tags/Automatic/"/>
+      <category term="Automatic" scheme="https://www.kingname.info/tags/Automatic/"/>
     
   </entry>
   
   <entry>
     <title>用图像识别来自动确认网页加载成功</title>
-    <link href="https://kingname.info/2016/12/04/how-to-know-webpage-loaded/"/>
-    <id>https://kingname.info/2016/12/04/how-to-know-webpage-loaded/</id>
+    <link href="https://www.kingname.info/2016/12/04/how-to-know-webpage-loaded/"/>
+    <id>https://www.kingname.info/2016/12/04/how-to-know-webpage-loaded/</id>
     <published>2016-12-04T10:10:33.000Z</published>
     <updated>2016-12-04T13:31:26.000Z</updated>
     
@@ -1138,20 +1138,20 @@
     </summary>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="PIL" scheme="https://kingname.info/tags/PIL/"/>
+      <category term="PIL" scheme="https://www.kingname.info/tags/PIL/"/>
     
-      <category term="Android" scheme="https://kingname.info/tags/Android/"/>
+      <category term="Android" scheme="https://www.kingname.info/tags/Android/"/>
     
-      <category term="自动化测试" scheme="https://kingname.info/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/"/>
+      <category term="自动化测试" scheme="https://www.kingname.info/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   
   <entry>
     <title>如果我提前起床，闹钟你就别响</title>
-    <link href="https://kingname.info/2016/11/07/autoalarmclock/"/>
-    <id>https://kingname.info/2016/11/07/autoalarmclock/</id>
+    <link href="https://www.kingname.info/2016/11/07/autoalarmclock/"/>
+    <id>https://www.kingname.info/2016/11/07/autoalarmclock/</id>
     <published>2016-11-07T14:56:21.000Z</published>
     <updated>2016-12-04T12:24:13.000Z</updated>
     
@@ -1200,21 +1200,21 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Automate" scheme="https://kingname.info/tags/Automate/"/>
+      <category term="Automate" scheme="https://www.kingname.info/tags/Automate/"/>
     
-      <category term="Workflow" scheme="https://kingname.info/tags/Workflow/"/>
+      <category term="Workflow" scheme="https://www.kingname.info/tags/Workflow/"/>
     
   </entry>
   
   <entry>
     <title>alias导致virtualenv异常的分析和解法</title>
-    <link href="https://kingname.info/2016/06/27/alias-vs-virtualenv/"/>
-    <id>https://kingname.info/2016/06/27/alias-vs-virtualenv/</id>
+    <link href="https://www.kingname.info/2016/06/27/alias-vs-virtualenv/"/>
+    <id>https://www.kingname.info/2016/06/27/alias-vs-virtualenv/</id>
     <published>2016-06-27T15:40:56.000Z</published>
     <updated>2016-11-30T13:56:11.000Z</updated>
     
@@ -1259,7 +1259,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias python=/usr/local/bin/python3</div></pre></td></tr></table></figure>
 <p>修改为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias python=python3</div></pre></td></tr></table></figure>
-<p>本文首发地址： <a href="http://kingname.info/2016/06/27/alias-vs-virtualenv/">http://kingname.info/2016/06/27/alias-vs-virtualenv/</a>转载请注明出处。</p>
+<p>本文首发地址： <a href="http://kingname.info/2016/06/27/alias-vs-virtualenv/" target="_blank" rel="external">http://kingname.info/2016/06/27/alias-vs-virtualenv/</a>转载请注明出处。</p>
 ]]></content>
     
     <summary type="html">
@@ -1268,23 +1268,23 @@
     
     </summary>
     
-      <category term="OS X" scheme="https://kingname.info/categories/OS-X/"/>
+      <category term="OS X" scheme="https://www.kingname.info/categories/OS-X/"/>
     
     
-      <category term="OS X" scheme="https://kingname.info/tags/OS-X/"/>
+      <category term="OS X" scheme="https://www.kingname.info/tags/OS-X/"/>
     
-      <category term="ZSH" scheme="https://kingname.info/tags/ZSH/"/>
+      <category term="ZSH" scheme="https://www.kingname.info/tags/ZSH/"/>
     
-      <category term="alias" scheme="https://kingname.info/tags/alias/"/>
+      <category term="alias" scheme="https://www.kingname.info/tags/alias/"/>
     
-      <category term="virtualenv" scheme="https://kingname.info/tags/virtualenv/"/>
+      <category term="virtualenv" scheme="https://www.kingname.info/tags/virtualenv/"/>
     
   </entry>
   
   <entry>
     <title>可爱的豆子——使用Beans思想让Python代码更易维护</title>
-    <link href="https://kingname.info/2016/06/19/bean-in-python/"/>
-    <id>https://kingname.info/2016/06/19/bean-in-python/</id>
+    <link href="https://www.kingname.info/2016/06/19/bean-in-python/"/>
+    <id>https://www.kingname.info/2016/06/19/bean-in-python/</id>
     <published>2016-06-19T13:43:33.000Z</published>
     <updated>2016-11-30T13:56:15.000Z</updated>
     
@@ -1323,7 +1323,7 @@
 <p>由于这里的<code>salarv</code>是字符串，所以集成开发环境是不会报错的，只有等你运行的时候,尝试读取<code>detail[&#39;salary&#39;]</code>里面的值，Python会告诉你:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;xxx.py&quot;, line 1, in &lt;module&gt;</div><div class="line">KeyError: &apos;salary&apos;</div></pre></td></tr></table></figure>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>将JavaBeans的思想用在Python中，避免字典套字典这种深层嵌套的情况，对于一些需要反复使用的字典，使用类来表示。这样做，别人读代码的时候会更加的容易，自己开发的时候，也会避免出现问题。</p>
-<p>本文首发于：<a href="http://kingname.info/2016/06/19/bean-in-python/">http://kingname.info/2016/06/19/bean-in-python/</a> 转载请注明出处。</p>
+<p>本文首发于：<a href="http://kingname.info/2016/06/19/bean-in-python/" target="_blank" rel="external">http://kingname.info/2016/06/19/bean-in-python/</a> 转载请注明出处。</p>
 ]]></content>
     
     <summary type="html">
@@ -1333,21 +1333,21 @@
     
     </summary>
     
-      <category term="Python" scheme="https://kingname.info/categories/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Java" scheme="https://kingname.info/tags/Java/"/>
+      <category term="Java" scheme="https://www.kingname.info/tags/Java/"/>
     
-      <category term="经验" scheme="https://kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
+      <category term="经验" scheme="https://www.kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
     
   </entry>
   
   <entry>
     <title>MarkdownPicPicker - Markdown 图片上传助手</title>
-    <link href="https://kingname.info/2016/06/04/markdownPicPicker/"/>
-    <id>https://kingname.info/2016/06/04/markdownPicPicker/</id>
+    <link href="https://www.kingname.info/2016/06/04/markdownPicPicker/"/>
+    <id>https://www.kingname.info/2016/06/04/markdownPicPicker/</id>
     <published>2016-06-04T08:40:06.000Z</published>
     <updated>2016-11-30T13:56:22.000Z</updated>
     
@@ -1388,7 +1388,7 @@
 <li>解决pyHook的问题</li>
 <li>适配Linux 和 Mac OS</li>
 </ul>
-<p><strong>本文首发地址-&gt; <a href="http://kingname.info/2016/06/04/markdownPicPicker/">http://kingname.info/2016/06/04/markdownPicPicker/</a> 转载请注明出处</strong></p>
+<p><strong>本文首发地址-&gt; <a href="http://kingname.info/2016/06/04/markdownPicPicker/" target="_blank" rel="external">http://kingname.info/2016/06/04/markdownPicPicker/</a> 转载请注明出处</strong></p>
 ]]></content>
     
     <summary type="html">
@@ -1397,12 +1397,12 @@
     
     </summary>
     
-      <category term="Markdown" scheme="https://kingname.info/categories/Markdown/"/>
+      <category term="Markdown" scheme="https://www.kingname.info/categories/Markdown/"/>
     
     
-      <category term="Python" scheme="https://kingname.info/tags/Python/"/>
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Markdown" scheme="https://kingname.info/tags/Markdown/"/>
+      <category term="Markdown" scheme="https://www.kingname.info/tags/Markdown/"/>
     
   </entry>
   

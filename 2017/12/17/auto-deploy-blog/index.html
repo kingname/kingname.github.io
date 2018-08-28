@@ -89,7 +89,7 @@
 <meta name="description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Jenkins自动部署博客">
-<meta property="og:url" content="https://kingname.info/2017/12/17/auto-deploy-blog/index.html">
+<meta property="og:url" content="https://www.kingname.info/2017/12/17/auto-deploy-blog/index.html">
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png">
@@ -133,7 +133,7 @@
 
 
 
-  <link rel="canonical" href="https://kingname.info/2017/12/17/auto-deploy-blog/"/>
+  <link rel="canonical" href="https://www.kingname.info/2017/12/17/auto-deploy-blog/"/>
 
 
 
@@ -270,7 +270,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://kingname.info/2017/12/17/auto-deploy-blog/">
+  <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2017/12/17/auto-deploy-blog/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Kingname">
@@ -374,14 +374,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到GitHub-&gt;GitHub Pages自动使用最新内容</div></pre></td></tr></table></figure>
 <p>现在由于Hexo渲染以后的HTML文件需要放到服务器上，那么工作流程变为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">本地写Markdown格式文章-&gt;Hexo生成HTML并推送到GitHub-&gt;手动登录服务器</div><div class="line">-&gt;进入放博客文章的文件夹-&gt;执行命令git pull</div></pre></td></tr></table></figure>
-<p>增加的两步虽然说操作量不大，但是总显得很麻烦。于是我希望，在我把博客的HTML文件push到GitHub以后，服务器能自动从GitHub上把HTML内容拉下来。由于使用了Nginx，所以只要博客的HTML发生了更新，那么使用浏览器访问<a href="https://kingname.info">https://kingname.info</a>时，新内容自动就会出现。这样一来，对我来说，看起来就像是我刚刚push了网页内容到GitHub，博客就自动更新了。</p>
+<p>增加的两步虽然说操作量不大，但是总显得很麻烦。于是我希望，在我把博客的HTML文件push到GitHub以后，服务器能自动从GitHub上把HTML内容拉下来。由于使用了Nginx，所以只要博客的HTML发生了更新，那么使用浏览器访问<a href="https://kingname.info" target="_blank" rel="external">https://kingname.info</a>时，新内容自动就会出现。这样一来，对我来说，看起来就像是我刚刚push了网页内容到GitHub，博客就自动更新了。</p>
 <p>让服务器从GitHub上面拉代码，这个操作本身很简单。人来操作就一行代码<code>git pull</code>。写个Python脚本也就两行代码。但问题是，服务器怎么知道GitHub发生了更新？</p>
 <p>有人说，Kingname，你不是做爬虫吗？你写个爬虫，每一秒检查一下GitHub不就可以了吗？这种办法当然可以。但问题是，我一周就更新一次博客，但这个爬虫为了等这一次更新，一周要访问GitHub高达604800次？更何况我有时候一个月都不更新。</p>
 <p>所以显然不能让服务器主动检查GitHub更新，这种“轮询”操作效率太低。那么如果反过来，一旦GitHub有更新，它就通知服务器，然后服务器再去拉代码，这不就简单高效了吗？</p>
 <h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>为了实现这个目的，就需要使用一些持续集成的工具。本文使用的是Jenkins。</p>
 <p>Jenkins在<a href="https://zh.wikipedia.org/wiki/%E6%95%8F%E6%8D%B7%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91" target="_blank" rel="external">敏捷开发</a>界可以说是大名鼎鼎了。使用Jenkins搭建一整套<a href="http://www.ruanyifeng.com/blog/2015/09/continuous-integration.html" target="_blank" rel="external">持续集成</a>环境，可以实现开发者往代码仓库一提交代码，代码自动进行单元测试，覆盖率测试，代码风格检查自动生成报告，自动通知部门同事开始Code Review。当代码被合并入主干以后，服务器自动拉下最新代码，自动编译，自动在几千几万台服务器上部署。在整个过程中，开发者只需要做一件事，那就是<code>git push</code>（当然在实际情况下，后面还会加一些参数）。</p>
 <p>本文实现的是博客的自动部署，没有任何测试，也没有Code Review，也没有编译，服务器也只有一台，复杂程度当然远远低于持续集成。不过管中窥豹，来看看这个简单地流程是如何走通的，对初学者也会有帮助。</p>
-<p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
+<p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/" target="_blank" rel="external">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
 <h3 id="设置GitHub"><a href="#设置GitHub" class="headerlink" title="设置GitHub"></a>设置GitHub</h3><p>在GitHub中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
 <p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png" alt=""></p>
 <p>在设置页面，单击左侧的<code>Integrations &amp; services</code>，并选择<code>Add service</code>，如下图所示。</p>
@@ -520,7 +520,7 @@
                src="/images/avatar.png"
                alt="Kingname" />
           <p class="site-author-name" itemprop="name">Kingname</p>
-          <p class="site-description motion-element" itemprop="description">爬虫工程师，极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">

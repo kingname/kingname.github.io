@@ -86,24 +86,42 @@
 
 
 
-<meta name="description" content="2018.07为Git设置socks5代理：12git config --global http.proxy &amp;apos;socks5://127.0.0.1:1080&amp;apos;git config --global https.proxy &amp;apos;socks5://127.0.0.1:1080&amp;apos;
-2018.05grep持续监控Log：1tail -f file | grep --">
+<meta name="description" content="2018.08Docker的Log中不能显示Python print的内容，解决方法：
+在Dockerfile 中添加一行：
+1ENV PYTHONUNBUFFERED=0
+添加以后就可以在Log中看到Python print出来的log了。
+
+在Standalone-chrome找不到Chrome的问题，解决办法：
+如果是普通Docker容器，可以使用
+1-v /dev/shm:/dev/shm">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="https://www.kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2018.07为Git设置socks5代理：12git config --global http.proxy &amp;apos;socks5://127.0.0.1:1080&amp;apos;git config --global https.proxy &amp;apos;socks5://127.0.0.1:1080&amp;apos;
-2018.05grep持续监控Log：1tail -f file | grep --">
+<meta property="og:description" content="2018.08Docker的Log中不能显示Python print的内容，解决方法：
+在Dockerfile 中添加一行：
+1ENV PYTHONUNBUFFERED=0
+添加以后就可以在Log中看到Python print出来的log了。
+
+在Standalone-chrome找不到Chrome的问题，解决办法：
+如果是普通Docker容器，可以使用
+1-v /dev/shm:/dev/shm">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2018-07-28T16:11:34.880Z">
+<meta property="og:updated_time" content="2018-08-30T14:23:48.160Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2018.07为Git设置socks5代理：12git config --global http.proxy &amp;apos;socks5://127.0.0.1:1080&amp;apos;git config --global https.proxy &amp;apos;socks5://127.0.0.1:1080&amp;apos;
-2018.05grep持续监控Log：1tail -f file | grep --">
+<meta name="twitter:description" content="2018.08Docker的Log中不能显示Python print的内容，解决方法：
+在Dockerfile 中添加一行：
+1ENV PYTHONUNBUFFERED=0
+添加以后就可以在Log中看到Python print出来的log了。
+
+在Standalone-chrome找不到Chrome的问题，解决办法：
+如果是普通Docker容器，可以使用
+1-v /dev/shm:/dev/shm">
 <meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
 
 
@@ -276,7 +294,29 @@
 
     
     
-      <h2 id="2018-07"><a href="#2018-07" class="headerlink" title="2018.07"></a>2018.07</h2><p>为Git设置socks5代理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global http.proxy &apos;socks5://127.0.0.1:1080&apos;</div><div class="line">git config --global https.proxy &apos;socks5://127.0.0.1:1080&apos;</div></pre></td></tr></table></figure></p>
+      <h2 id="2018-08"><a href="#2018-08" class="headerlink" title="2018.08"></a>2018.08</h2><p>Docker的Log中不能显示Python print的内容，解决方法：</p>
+<p>在Dockerfile 中添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ENV PYTHONUNBUFFERED=0</div></pre></td></tr></table></figure>
+<p>添加以后就可以在Log中看到Python print出来的log了。</p>
+<hr>
+<p>在Standalone-chrome找不到Chrome的问题，解决办法：</p>
+<p>如果是普通Docker容器，可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-v /dev/shm:/dev/shm</div></pre></td></tr></table></figure>
+<p>如果是Docker Swarm，需要：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--mount-add type=tmpfs,dst=/dev/shm,tmpfs-size=2147483648</div></pre></td></tr></table></figure>
+<hr>
+<p>由于docker中为root用户，因此在Selenium中启动Chrome的时候，需要加–no-sandbox参数，否则会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">chrome_options = webdriver.ChromeOptions()</div><div class="line">chrome_options.add_argument(&apos;--no-sandbox&apos;)</div><div class="line">driver=webdriver.Chrome(&apos;./chromedriver&apos;, chrome_options=chrome_options)</div></pre></td></tr></table></figure>
+<hr>
+<p>在MySQL中查询重复行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select host_id, count(host_id) from host_info group by host_id, platform having count(host_id) &gt; 1</div></pre></td></tr></table></figure>
+<p>在MySQL中移除重复行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">delete t1 from host_info t1 inner join host_info t2 where t1.id&lt;t2.id and t1.host_id = t2.host_id and t1.platform = t2.platform</div></pre></td></tr></table></figure>
+<hr>
+<p>使用Python的logging模块时，不仅要给StreamHandler设定Level，还需要给Logger设level，只有这样才能正常输出内容到控制台。</p>
+<hr>
+<p>在创建Docker Service的时候，需要指定参数<code>--network=host</code>这样才能使用主机的网络。如果不使用这个参数，那么就无法访问有防火墙限制的局域网中的其他服务器。</p>
+<h2 id="2018-07"><a href="#2018-07" class="headerlink" title="2018.07"></a>2018.07</h2><p>为Git设置socks5代理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global http.proxy &apos;socks5://127.0.0.1:1080&apos;</div><div class="line">git config --global https.proxy &apos;socks5://127.0.0.1:1080&apos;</div></pre></td></tr></table></figure></p>
 <h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
 <hr>
 <ul>

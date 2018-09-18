@@ -86,43 +86,33 @@
 
 
 
-<meta name="description" content="2018.08Docker的Log中不能显示Python print的内容，解决方法：
-在Dockerfile 中添加一行：
-1ENV PYTHONUNBUFFERED=0
-添加以后就可以在Log中看到Python print出来的log了。
-
-在Standalone-chrome找不到Chrome的问题，解决办法：
-如果是普通Docker容器，可以使用
-1-v /dev/shm:/dev/shm">
+<meta name="description" content="2018.09由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。
+有这样一段代码：
+123456class Robot(object):    def __init__(self):        self.name = &apos;Cruse&apos;    def walk(self):        print(&apos;I am walk.&apos;)
+我定义了一个类Robot，">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kingname">
 <meta property="og:url" content="https://www.kingname.info/tweet/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="2018.08Docker的Log中不能显示Python print的内容，解决方法：
-在Dockerfile 中添加一行：
-1ENV PYTHONUNBUFFERED=0
-添加以后就可以在Log中看到Python print出来的log了。
-
-在Standalone-chrome找不到Chrome的问题，解决办法：
-如果是普通Docker容器，可以使用
-1-v /dev/shm:/dev/shm">
+<meta property="og:description" content="2018.09由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。
+有这样一段代码：
+123456class Robot(object):    def __init__(self):        self.name = &apos;Cruse&apos;    def walk(self):        print(&apos;I am walk.&apos;)
+我定义了一个类Robot，">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-09-18-22-01-45.png">
+<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-09-18-22-03-29.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2018-08-30T14:23:48.160Z">
+<meta property="og:updated_time" content="2018-09-18T14:11:00.204Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
-<meta name="twitter:description" content="2018.08Docker的Log中不能显示Python print的内容，解决方法：
-在Dockerfile 中添加一行：
-1ENV PYTHONUNBUFFERED=0
-添加以后就可以在Log中看到Python print出来的log了。
-
-在Standalone-chrome找不到Chrome的问题，解决办法：
-如果是普通Docker容器，可以使用
-1-v /dev/shm:/dev/shm">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
+<meta name="twitter:description" content="2018.09由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。
+有这样一段代码：
+123456class Robot(object):    def __init__(self):        self.name = &apos;Cruse&apos;    def walk(self):        print(&apos;I am walk.&apos;)
+我定义了一个类Robot，">
+<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-09-18-22-01-45.png">
 
 
 
@@ -294,7 +284,20 @@
 
     
     
-      <h2 id="2018-08"><a href="#2018-08" class="headerlink" title="2018.08"></a>2018.08</h2><p>Docker的Log中不能显示Python print的内容，解决方法：</p>
+      <h2 id="2018-09"><a href="#2018-09" class="headerlink" title="2018.09"></a>2018.09</h2><p>由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。</p>
+<p>有这样一段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Robot</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.name = <span class="string">'Cruse'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'I am walk.'</span>)</div></pre></td></tr></table></figure>
+<p>我定义了一个类<code>Robot</code>，这个类有一个属性<code>name</code>和一个方法<code>walk</code>。接下来我又定义了一个函数<code>run_a_robot</code>，这个函数接收一个参数<code>robot_instance</code>，这个参数是Robot类的一个实例。在函数里面，我希望使用这个实例的属性和方法。但此时，可以看出，PyCharm的自动补全功能失效了。它不知道robot_instance这个变量是什么东西，没有办法帮我补全这个实例的属性和方法名。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-09-18-22-01-45.png" alt=""></p>
+<p>这个时候，如果你使用的是Python 3，那么你可以使用类型标注来告诉PyCharm，这个robot_object是Robot类的一个实例，从而使PyCharm提供自动补全。如下图所示。</p>
+<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-09-18-22-03-29.png" alt=""></p>
+<p>类型标注的格式为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">变量名: 类型 = 值</div></pre></td></tr></table></figure>
+<p>举一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">age: int = <span class="number">24</span> <span class="comment"># 定义一个变量age，它的类型为int，值为24</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(name: str, age: int=<span class="number">25</span>, other_info: dict=None)</span>:</span> <span class="comment"># test函数接收两个参数，第一个参数name是str类型，第二个参数age是int型并且默认值为25，并且第三个参数other_info是字典，默认值为None</span></div><div class="line">    age = detail_info[<span class="string">'age'</span>]</div></pre></td></tr></table></figure>
+<p>关于类型标注的详细说明，请看这篇文章：<a href="https://www.kingname.info/2017/06/11/type-hints-in-python3/">https://www.kingname.info/2017/06/11/type-hints-in-python3/</a></p>
+<h2 id="2018-08"><a href="#2018-08" class="headerlink" title="2018.08"></a>2018.08</h2><p>Docker的Log中不能显示Python print的内容，解决方法：</p>
 <p>在Dockerfile 中添加一行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ENV PYTHONUNBUFFERED=0</div></pre></td></tr></table></figure>
 <p>添加以后就可以在Log中看到Python print出来的log了。</p>
@@ -515,7 +518,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

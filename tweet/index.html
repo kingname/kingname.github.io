@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png">
 <meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png">
-<meta property="og:updated_time" content="2018-09-18T14:19:54.941Z">
+<meta property="og:updated_time" content="2018-09-23T15:10:43.086Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kingname">
 <meta name="twitter:description" content="2018.09由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。
@@ -371,7 +371,9 @@
 <p>为Git设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN git config --global http.proxy http://代理IP:端口</div><div class="line">RUN git config --global http.sslverify <span class="string">"false"</span></div></pre></td></tr></table></figure></p>
 <hr>
 <p>为Ubuntu的<code>apt-get</code>设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/apt/apt.conf.d/01turnkey</div></pre></td></tr></table></figure></p>
-<p>在里面插入一行：<br><code>Acquire::http::Proxy &quot;http://your.proxy.here:port/&quot;;</code><br>保存以后，下一次执行<code>apt-get</code>命令就会使用代理了。</p>
+<p>在里面插入一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Acquire::http::Proxy &quot;http://your.proxy.here:port/&quot;;</div></pre></td></tr></table></figure>
+<p>保存以后，下一次执行<code>apt-get</code>命令就会使用代理了。</p>
 <h2 id="2017-11"><a href="#2017-11" class="headerlink" title="2017.11"></a>2017.11</h2><p>修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Chown -R elasticsearch:elasticsearch /mnt/es/</div></pre></td></tr></table></figure></p>
 <p>然后再修改elasticsearch的配置文件。</p>
 <hr>

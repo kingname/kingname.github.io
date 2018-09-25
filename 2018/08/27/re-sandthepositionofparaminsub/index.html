@@ -96,18 +96,18 @@
 <meta property="og:description" content="问题描述问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：
 123456import redef remove_tag(html):    text = re.sub(&apos;&amp;lt;.*?&amp;gt;&apos;, &apos;&apos;, html, re.S)    return text
 这段代码的使用了正则表达式的替换功能re.sub。这个函数的第一">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-31-59.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-36-14.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-45-09.png">
-<meta property="og:updated_time" content="2018-08-27T23:39:52.813Z">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-22-54.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-25-29.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-31-59.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-36-14.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-45-09.png">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.443Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式re.sub替换不完整的问题现象及其根本原因">
 <meta name="twitter:description" content="问题描述问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：
 123456import redef remove_tag(html):    text = re.sub(&apos;&amp;lt;.*?&amp;gt;&apos;, &apos;&apos;, html, re.S)    return text
 这段代码的使用了正则表达式的替换功能re.sub。这个函数的第一">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-22-54.png">
 
 
 
@@ -378,21 +378,21 @@
 <p>现在使用一段HTML代码来测试一下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line"></div><div class="line">source_1 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;今天的主角是&lt;a href="xxx"&gt;kingname&lt;/a&gt;，我们掌声欢迎！&lt;/div&gt;</div><div class="line">'''</div><div class="line"></div><div class="line"></div><div class="line">text = remove_tag(source_1)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示，功能完全符合预期</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-22-54.png" alt=""></p>
 <p>再来测试一下代码中有换行符的情况：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line">source_2 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;</div><div class="line">    今天的主角是</div><div class="line">    &lt;a href="xxx"&gt;kingname&lt;/a&gt;</div><div class="line">    ，我们掌声欢迎！</div><div class="line">&lt;/div&gt;</div><div class="line">'''</div><div class="line">text = remove_tag(source_2)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示，完全符合预期。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png" alt=""></p>
+<p>运行效果如下图所示，完全符合预期。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-25-29.png" alt=""></p>
 <p>经过测试，在绝大多数情况下，能够从的HTML代码段中提取出正文。但也有例外。</p>
 <a id="more"></a>
 <h2 id="例外情况"><a href="#例外情况" class="headerlink" title="例外情况"></a>例外情况</h2><p>有一段HTML代码段比较长，内容如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span class=&apos;url-icon&apos;&gt;&lt; img &apos;&gt;&lt;/span&gt;&lt;span &gt;温柔&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span &gt;#青南#&lt;/span&gt;&lt;/a &gt; &lt;br /&gt;就在这里…&lt;br /&gt;我的小侯爷呢？？？</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示，最后两个HTML标签替换失败。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-31-59.png" alt=""></p>
+<p>运行效果如下图所示，最后两个HTML标签替换失败。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-31-59.png" alt=""></p>
 <p>一开始我以为是HTML里面的空格或者引号引起的问题，于是我把HTML代码进行简化：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;&lt;img&gt;&lt;/span&gt;&lt;span&gt;温柔&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;#青南#&lt;/span&gt;&lt;/a&gt;&lt;br/&gt;就在这里…&lt;br/&gt;我的小侯爷呢</div></pre></td></tr></table></figure>
 <p>问题依然存在，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-36-14.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-36-14.png" alt=""></p>
 <p>而且更令人惊讶的是，如果把第一个标签<code>&lt;img&gt;</code>删了，那么替换结果里面就少了一个标签，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-45-09.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-45-09.png" alt=""></p>
 <p>实际上，不仅仅是删除第一个标签，前面任意一个标签删了都可以减少结果里面的一个标签。如果删除前面两个或以上标签，那么结果就正常了。</p>
 <h2 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h2><p>这个看起来很奇怪的问题，根本原因在re.sub的第4个参数。从函数原型可以看到：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def sub(pattern, repl, string, count=0, flags=0)</div></pre></td></tr></table></figure>

@@ -92,18 +92,18 @@
 <meta property="og:url" content="https://www.kingname.info/2017/06/11/type-hints-in-python3/index.html">
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-24-35.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-27-49.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-32-23.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-35-15.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-41-12.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-48-18.png">
-<meta property="og:updated_time" content="2017-06-11T08:58:41.000Z">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-23-11.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-24-35.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-27-49.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-32-23.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-35-15.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-41-12.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-48-18.png">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.428Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记住变量类型的三种方式">
 <meta name="twitter:description" content="Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-23-11.png">
 
 
 
@@ -378,15 +378,15 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url)</span>:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
 <p>模拟一段上传文件的函数，上传成功以后返回True。接收一个参数<code>url</code>。在正常情况下，这个<code>url</code>应该是一个字符串。于是，使用Type Hints，代码可以变为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url: str)</span> -&gt; bool:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
-<p>如果直接运行，其运行效果如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png" alt=""></p>
-<p>现在假设传递一个不是字符串的变量给<code>upload</code>函数，此时PyCharm就会提示类型有问题，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-24-35.png" alt=""><br>但提示归提示，强行运行也是没有问题的。这就说明Type Hints主要是给IDE和人用的，解释器并不会关心类型正不正确。</p>
-<p>如果修改这个函数的返回值，让它不返回<code>True</code> 或者<code>False</code>，PyCharm 也会发出警告：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-27-49.png" alt=""></p>
+<p>如果直接运行，其运行效果如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-23-11.png" alt=""></p>
+<p>现在假设传递一个不是字符串的变量给<code>upload</code>函数，此时PyCharm就会提示类型有问题，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-24-35.png" alt=""><br>但提示归提示，强行运行也是没有问题的。这就说明Type Hints主要是给IDE和人用的，解释器并不会关心类型正不正确。</p>
+<p>如果修改这个函数的返回值，让它不返回<code>True</code> 或者<code>False</code>，PyCharm 也会发出警告：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-27-49.png" alt=""></p>
 <p>Type Hints的官方文档，可以参阅：<a href="https://docs.python.org/3/library/typing.html" target="_blank" rel="external">typing — Support for type hints</a></p>
-<h3 id="Variable-Annotations"><a href="#Variable-Annotations" class="headerlink" title="Variable Annotations"></a>Variable Annotations</h3><p>对于Variable Annotations，如下图所示，虽然目前PyCharm还不能很好地提示变量类型不对，但是人在读代码的时候，还是会起到一定的帮助。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-32-23.png" alt=""></p>
-<p>除了这种写法外，Variable Annotations还支持把类型写在注释中，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-35-15.png" alt=""></p>
-<p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-41-12.png" alt=""></p>
+<h3 id="Variable-Annotations"><a href="#Variable-Annotations" class="headerlink" title="Variable Annotations"></a>Variable Annotations</h3><p>对于Variable Annotations，如下图所示，虽然目前PyCharm还不能很好地提示变量类型不对，但是人在读代码的时候，还是会起到一定的帮助。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-32-23.png" alt=""></p>
+<p>除了这种写法外，Variable Annotations还支持把类型写在注释中，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-35-15.png" alt=""></p>
+<p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-41-12.png" alt=""></p>
 <p>关于Variable Annotations的更多用法，可以参阅：<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">Syntax for Variable Annotations</a><br>关于Mypy，可以参阅它的官方文档：<a href="http://mypy.readthedocs.io/en/stable/index.html" target="_blank" rel="external">Mypy documentation</a></p>
-<h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
+<h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
 <h2 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h2><p>这种方法来自与Java Bean的思想，它主要用来解决列表套字典，字典套字典，字典套列表，列表套列表这种深层的嵌套关系。关于这个方法，请参阅另一篇文章：<a href="http://kingname.info/2016/06/19/bean-in-python/" target="_blank" rel="external">可爱的豆子——使用Beans思想让Python代码更易维护</a></p>
 
       

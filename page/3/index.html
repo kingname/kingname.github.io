@@ -375,9 +375,9 @@
 <p>由于jenkins是Java写的，所以这个时候如果你的系统中没有Java的运行环境，他就会让你选择安装jre7-openjdk 或者是jre8-openjdk, 我选择的是安装jre8-openjdk. 这个时候我没有意识到，隐患已经埋下来了。</p>
 <h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>在ArchLinux中，什么东西都喜欢使用systemd来启动，所以执行以下命令来启动Jenkins：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
 <p>理论上这样就能使用了。但是当我在浏览器打开<code>http://192.168.2.107:8090</code>的时候却发现网页无法打开。于是检查它的log:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">journalctl -u jenkins</div></pre></td></tr></table></figure></p>
-<p>发现原来报错了。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/openjdkerror.png" alt=""></p>
+<p>发现原来报错了。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/openjdkerror.png" alt=""></p>
 <p>难道说Java环境有问题？于是我是用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
-<p>来检查Java环境，果然, 连查看Java 的版本都报错了，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/javaversion.png" alt=""></p>
+<p>来检查Java环境，果然, 连查看Java 的版本都报错了，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/javaversion.png" alt=""></p>
 <h3 id="重装"><a href="#重装" class="headerlink" title="重装"></a>重装</h3><p>对于这种情况，看起来不能使用openJDK了，于是去安装Oracle的JDK。</p>
 <p>首先要卸载openJdk:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -Rdd jre8-openjdk</div></pre></td></tr></table></figure>
@@ -390,13 +390,13 @@
 <p>由于Oracle的JDK不能直接使用pacman来安装，所以需要使用AUR。树莓派的CPU是ARM架构，所以使用使用<a href="https://aur.archlinux.org/packages/jdk-arm/" target="_blank" rel="external">arm版的JDK</a>。如果有朋友是在X86的电脑上面安装的话，可以使用<a href="https://aur.archlinux.org/packages/jdk" target="_blank" rel="external">x86版的JDK</a>。</p>
 <p>对于安装AUR的文件，首先从左侧<a href="https://aur.archlinux.org/cgit/aur.git/snapshot/jdk-arm.tar.gz" target="_blank" rel="external">Download snapshot</a>下载pkg文件，然后使用以下命令来安装：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tar -xvf jdk-arm.tar.gz</div><div class="line">cd jdk-arm</div><div class="line">makepkg -sri</div></pre></td></tr></table></figure>
-<p>然后就等待下载安装文件然后完成安装。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/aurinstall.png" alt=""></p>
+<p>然后就等待下载安装文件然后完成安装。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/aurinstall.png" alt=""></p>
 <p>完成以后，我们再执行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
 <p>就可以正常看到Java的版本信息了。</p>
 <h3 id="再启动"><a href="#再启动" class="headerlink" title="再启动"></a>再启动</h3><p>再一次启动Jenkins:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
-<p>也可以正常启动了。（输入命令以后等待1分钟左右，让服务完全启动起来。）如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/jenkins.png" alt=""></p>
+<p>也可以正常启动了。（输入命令以后等待1分钟左右，让服务完全启动起来。）如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/jenkins.png" alt=""></p>
 <p>根据它的提示读取密码，并填写到网页上，于是Jenkins就算是安装成功了。</p>
-<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>插件是Jenkins的精华，在第一次进入的时候，Jenkins就会让你选择插件。这里我选择<br><code>Select plugins to install</code>.<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/plugin.png" alt=""></p>
+<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>插件是Jenkins的精华，在第一次进入的时候，Jenkins就会让你选择插件。这里我选择<br><code>Select plugins to install</code>.<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/plugin.png" alt=""></p>
 <p>它默认已经勾选了一些插件，我增加了以下的插件：</p>
 <ul>
 <li>Source Code Management 下面的Github plugin</li>
@@ -908,21 +908,21 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#-*_coding:utf8-*-</div><div class="line">import requests</div><div class="line">from lxml import etree</div><div class="line">import sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(&quot;utf-8&quot;)</div></pre></td></tr></table></figure>
 <p>然后获取网页的源代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">r = requests.get(url=&apos;http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10&apos;)# 最基本的GET请求</div><div class="line">r.encoding = &apos;utf-8&apos;</div><div class="line">r = r.content</div><div class="line">print r</div></pre></td></tr></table></figure></p>
 <p>打印出网页源代码，发现中文是乱码，如图：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding1.gif" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding1.gif" alt=""></p>
 <p>这是小问题，使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>这篇文章中讲解的方法，轻松解决。</p>
 <p>将：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure></p>
 <p>修改为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content.decode(&apos;utf-8&apos;).encode(&apos;gbk&apos;)</div></pre></td></tr></table></figure></p>
-<p>可以正常显示中文，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding2.png" alt=""></p>
+<p>可以正常显示中文，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding2.png" alt=""></p>
 <p>接下来，使用etree.HTML处理源代码，然后使用Xpath提取内容，一切似乎看起来轻车熟路。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding3.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding3.png" alt=""></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r)</div><div class="line">title = contentTree.xpath(<span class="string">'//h1[@class="art_title_h1"]/text()'</span>)</div><div class="line"><span class="keyword">print</span> title[<span class="number">0</span>]</div></pre></td></tr></table></figure>
 <p>但是当我打印出来，才发现问题没有这么简单。如图：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding4.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding4.png" alt=""></p>
 <p>这个时候，我发现使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>讲到的办法已经不能解决问题了。</p>
 <p>通过调试，我发现抓取到的内容是乱码：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding5.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding5.png" alt=""></p>
 <h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="使用Scrapy"><a href="#使用Scrapy" class="headerlink" title="使用Scrapy"></a>使用Scrapy</h3><p>使用Scrapy的Xpath，正常提取需要的内容：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding6.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding6.png" alt=""></p>
 <h3 id="继续用etree"><a href="#继续用etree" class="headerlink" title="继续用etree"></a>继续用etree</h3><p>实际上，Scrapy的Xpath底层还是调用的lxml,那为什么它可以，而我直接使用lxml的etree.HTML处理源代码然后Xpath提取内容就出乱码呢？</p>
 <p>显然这应该是编码的问题，在使用:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">etree.HTML(r)</div></pre></td></tr></table></figure>
@@ -931,11 +931,11 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r, parser=etree.HTMLParser(encoding=<span class="string">'utf-8'</span>))</div></pre></td></tr></table></figure>
 <p>这里我指定了etree.HTMLParser来作为一个parser,同时，etree.HTMLParser可以接受编码作为参数。于是我指定为UTF-8。</p>
 <p>运行看看效果：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding7.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding7.png" alt=""></p>
 <p>继续报错，但是出错信息改变了，提示utf8不能解码。请注意第11行，现在源代码是gbk编码，所以使用UTF-8不能解码。于是可以把第11行重新改回原来的样子：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure>
 <p>再一次运行，发现正常抓取信息：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/lxmlencoding8.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding8.png" alt=""></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一次的问题提示我们：遇到问题，通过经验解决不了的时候，请回归文档。</p>
 <p><em>原文发表在：<a href="http://blog.kingname.info/2015/10/07/lxmlencoding/" target="_blank" rel="external">http://blog.kingname.info/2015/10/07/lxmlencoding/</a>转载请注明出处！</em></p>
 
@@ -1750,7 +1750,7 @@
           
             <p>最近在学习Flask，本着学以致用的原则，开发了“未知道”这个网站。未知道的宗旨是，不注册，不审核，不删帖，无私聊，不记录任何信息。是一个派对式的或者说广场式的真·匿名聊天环境。</p>
 <p>网站地址请戳-&gt;<a href="http://unknown.kingname.info/" target="_blank" rel="external">http://unknown.kingname.info/</a></p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/unknown/QQ截图20150130152847.jpg" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/unknown/QQ截图20150130152847.jpg" alt=""></p>
 <p>网站上线首日访问量突破2000，上线第二日访问量突破10000。</p>
 <p>现在到处都在要求实名制，请珍惜这少有的一片匿名的净土。</p>
 <p>这个网站目前仍然在每天增加新的功能，我会开一个系列文章，用以记录在这个网站的开发过程中遇到的问题以及解决方案。请大家保持关注。</p>

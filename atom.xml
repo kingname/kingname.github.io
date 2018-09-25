@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-08-27T23:39:52.813Z</updated>
+  <updated>2018-09-25T13:33:27.443Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
     <id>https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/</id>
     <published>2018-08-27T13:48:22.000Z</published>
-    <updated>2018-08-27T23:39:52.813Z</updated>
+    <updated>2018-09-25T13:33:27.443Z</updated>
     
     <content type="html"><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>问题的起因来自于一段正则替换。为了从一段HTML代码里面提取出正文，去掉所有的HTML标签和属性，可以写一个Python函数：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div></pre></td></tr></table></figure>
@@ -30,21 +30,21 @@
 <p>现在使用一段HTML代码来测试一下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line"></div><div class="line">source_1 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;今天的主角是&lt;a href="xxx"&gt;kingname&lt;/a&gt;，我们掌声欢迎！&lt;/div&gt;</div><div class="line">'''</div><div class="line"></div><div class="line"></div><div class="line">text = remove_tag(source_1)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示，功能完全符合预期</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-22-54.png" alt=""></p>
 <p>再来测试一下代码中有换行符的情况：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line">source_2 = <span class="string">'''</span></div><div class="line">&lt;div class="content"&gt;</div><div class="line">    今天的主角是</div><div class="line">    &lt;a href="xxx"&gt;kingname&lt;/a&gt;</div><div class="line">    ，我们掌声欢迎！</div><div class="line">&lt;/div&gt;</div><div class="line">'''</div><div class="line">text = remove_tag(source_2)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示，完全符合预期。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png" alt=""></p>
+<p>运行效果如下图所示，完全符合预期。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-25-29.png" alt=""></p>
 <p>经过测试，在绝大多数情况下，能够从的HTML代码段中提取出正文。但也有例外。</p>
 <a id="more"></a>
 <h2 id="例外情况"><a href="#例外情况" class="headerlink" title="例外情况"></a>例外情况</h2><p>有一段HTML代码段比较长，内容如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span class=&apos;url-icon&apos;&gt;&lt; img &apos;&gt;&lt;/span&gt;&lt;span &gt;温柔&lt;/span&gt;&lt;/a &gt;&lt;a  &gt;&lt;span &gt;#青南#&lt;/span&gt;&lt;/a &gt; &lt;br /&gt;就在这里…&lt;br /&gt;我的小侯爷呢？？？</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示，最后两个HTML标签替换失败。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-31-59.png" alt=""></p>
+<p>运行效果如下图所示，最后两个HTML标签替换失败。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-31-59.png" alt=""></p>
 <p>一开始我以为是HTML里面的空格或者引号引起的问题，于是我把HTML代码进行简化：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img&gt;&lt;/span&gt;&lt;span&gt;遇见kingname&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;&lt;img&gt;&lt;/span&gt;&lt;span&gt;温柔&lt;/span&gt;&lt;/a&gt;&lt;a&gt;&lt;span&gt;#青南#&lt;/span&gt;&lt;/a&gt;&lt;br/&gt;就在这里…&lt;br/&gt;我的小侯爷呢</div></pre></td></tr></table></figure>
 <p>问题依然存在，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-36-14.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-36-14.png" alt=""></p>
 <p>而且更令人惊讶的是，如果把第一个标签<code>&lt;img&gt;</code>删了，那么替换结果里面就少了一个标签，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-45-09.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-45-09.png" alt=""></p>
 <p>实际上，不仅仅是删除第一个标签，前面任意一个标签删了都可以减少结果里面的一个标签。如果删除前面两个或以上标签，那么结果就正常了。</p>
 <h2 id="答疑解惑"><a href="#答疑解惑" class="headerlink" title="答疑解惑"></a>答疑解惑</h2><p>这个看起来很奇怪的问题，根本原因在re.sub的第4个参数。从函数原型可以看到：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def sub(pattern, repl, string, count=0, flags=0)</div></pre></td></tr></table></figure>
@@ -72,10 +72,10 @@
 &lt;p&gt;现在使用一段HTML代码来测试一下：&lt;/p&gt;
 &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; re&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;remove_tag&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(html)&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    text = re.sub(&lt;span class=&quot;string&quot;&gt;&#39;&amp;lt;.*?&amp;gt;&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;&#39;&lt;/span&gt;, html, re.S)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; text&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;source_1 = &lt;span class=&quot;string&quot;&gt;&#39;&#39;&#39;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;div class=&quot;content&quot;&amp;gt;今天的主角是&amp;lt;a href=&quot;xxx&quot;&amp;gt;kingname&amp;lt;/a&amp;gt;，我们掌声欢迎！&amp;lt;/div&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&#39;&#39;&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;text = remove_tag(source_1)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;print(text)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;运行效果如下图所示，功能完全符合预期&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-22-54.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;再来测试一下代码中有换行符的情况：&lt;/p&gt;
 &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; re&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;remove_tag&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(html)&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    text = re.sub(&lt;span class=&quot;string&quot;&gt;&#39;&amp;lt;.*?&amp;gt;&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;&#39;&lt;/span&gt;, html, re.S)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; text&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;source_2 = &lt;span class=&quot;string&quot;&gt;&#39;&#39;&#39;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;div class=&quot;content&quot;&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    今天的主角是&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;lt;a href=&quot;xxx&quot;&amp;gt;kingname&amp;lt;/a&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    ，我们掌声欢迎！&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;/div&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&#39;&#39;&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;text = remove_tag(source_2)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;print(text)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;运行效果如下图所示，完全符合预期。&lt;br&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;运行效果如下图所示，完全符合预期。&lt;br&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-25-29.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;经过测试，在绝大多数情况下，能够从的HTML代码段中提取出正文。但也有例外。&lt;/p&gt;
     
     </summary>
@@ -94,7 +94,7 @@
     <link href="https://www.kingname.info/2018/06/21/tweet-201806/"/>
     <id>https://www.kingname.info/2018/06/21/tweet-201806/</id>
     <published>2018-06-21T14:36:39.000Z</published>
-    <updated>2018-06-21T14:54:45.000Z</updated>
+    <updated>2018-09-25T13:33:27.427Z</updated>
     
     <content type="html"><![CDATA[<h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
 <hr>
@@ -108,12 +108,12 @@
 <a id="more"></a>
 <h2 id="2018-04"><a href="#2018-04" class="headerlink" title="2018.04"></a>2018.04</h2><p>MongoDB的聚合查询中，<code>$substr</code>只能匹配ASCII的数据，对于中文要使用<code>$substrCP</code></p>
 <hr>
-<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)print(current_app.name)</div></pre></td></tr></table></figure></p>
+<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)</div><div class="line">print(current_app.name)</div></pre></td></tr></table></figure></p>
 <p>会报错：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RuntimeError: working outside of application context</div></pre></td></tr></table></figure></p>
-<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():    print(current_app.name)</div></pre></td></tr></table></figure></p>
+<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():</div><div class="line">    print(current_app.name)</div></pre></td></tr></table></figure></p>
 <hr>
 <p>扩展AWS的磁盘空间：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-06-21-22-31-04.png" alt=""></p>
 <p>点击<code>修改卷</code>增加磁盘配额，SSH进入服务器，输入以下代码：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">lsblk  <span class="comment">#这条命令用来确定当前可用的磁盘空间小于磁盘配额</span></div><div class="line">sudo growpart /dev/xvda 1</div><div class="line">sudo resize2fs /dev/xvda1</div></pre></td></tr></table></figure>
 <p>再次执行<code>df -h</code>可以看到已经使用了新的空间</p>
@@ -203,28 +203,28 @@
     <link href="https://www.kingname.info/2018/04/13/the-suitable-situation-for-yield/"/>
     <id>https://www.kingname.info/2018/04/13/the-suitable-situation-for-yield/</id>
     <published>2018-04-13T13:35:09.000Z</published>
-    <updated>2018-04-13T15:10:42.833Z</updated>
+    <updated>2018-09-25T13:33:27.419Z</updated>
     
     <content type="html"><![CDATA[<p>通过本文你会知道Python里面什么时候用yield最合适。本文不会给你讲生成器是什么，所以你需要先了解Python的yield，再来看本文。</p>
 <a id="more"></a>
 <h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><p>多年以前，当我刚刚开始学习Python协程的时候，我看到绝大多数的文章都举了一个生产者-消费者的例子，用来表示在生产者内部可以随时调用消费者，达到和多线程相同的效果。这里凭记忆简单还原一下当年我看到的代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></div><div class="line">    product = <span class="keyword">None</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        <span class="keyword">if</span> product <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            print(<span class="string">'consumer: &#123;&#125;'</span>.format(product))</div><div class="line">        product = <span class="keyword">yield</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">producer</span><span class="params">()</span>:</span></div><div class="line">    c = consumer()</div><div class="line">    next(c)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        c.send(i)</div><div class="line"></div><div class="line">start = time.time()</div><div class="line">producer()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-23-05-55.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-04-13-23-05-55.png" alt=""></p>
 <p>这些文章的说法，就像统一好了口径一样，说这样写可以减少线程切换开销，从而大大提高程序的运行效率。但是当年我始终想不明白，这种写法与直接调用函数有什么区别，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-21-51-37.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-04-13-21-51-37.png" alt=""></p>
 <p>直到后来我需要操作Kafka的时候，我明白了使用yield的好处。</p>
 <h2 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h2><p>为了便于理解，我会把实际场景做一些简化，以方便说明事件的产生发展和解决过程。事件的起因是我需要把一些信息写入到Kafka中，我的代码一开始是这样的：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(product)</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        producer.produce(str(product).encode())</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        consumer(i)</div><div class="line"></div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
 <p>这段代码的运行效果如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/witoutyield1.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/witoutyield1.png" alt=""></p>
 <p>写入10条数据需要100秒，这样的龟速显然是有问题的。问题就出在这一句代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer</div></pre></td></tr></table></figure>
 <p>获得Kafka生产者对象是一个非常耗费时间的过程，每获取一次都需要10秒钟才能完成。所以写入10个数据就获取十次生产者对象。这消耗的100秒主要就是在获取生产者对象，而真正写入数据的时间短到可以忽略不计。</p>
 <p>由于生产者对象是可以复用的，于是我对代码作了一些修改：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line">products = []</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(product_list)</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        <span class="keyword">for</span> product <span class="keyword">in</span> product_list:</div><div class="line">            producer.produce(str(product).encode())</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        products.append(i)</div><div class="line">    consumer(products)</div><div class="line"></div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
 <p>首先把所有数据存放在一个列表中，最后再一次性给consumer函数。在一个Kafka生产者对象中展开列表，再把数据一条一条塞入Kafka。这样由于只需要获取一次生产者对象，所以需要耗费的时间大大缩短，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/witoutyield2.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/witoutyield2.png" alt=""></p>
 <p>这种写法在数据量小的时候是没有问题的，但数据量一旦大起来，如果全部先放在一个列表里面的话，服务器内存就爆了。</p>
 <p>于是我又修改了代码。每100条数据保存一次，并清空暂存的列表：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(product_list)</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        <span class="keyword">for</span> product <span class="keyword">in</span> product_list:</div><div class="line">            producer.produce(str(product).encode())</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    products = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1003</span>):</div><div class="line">        products.append(i)</div><div class="line">        <span class="keyword">if</span> len(products) &gt;= <span class="number">100</span>:</div><div class="line">            consumer(products)</div><div class="line">            products = []</div><div class="line"></div><div class="line">    <span class="keyword">if</span> products:</div><div class="line">        consumer(products)</div><div class="line"></div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
@@ -239,17 +239,17 @@
 <p>首先需要明白，使用yield以后，函数就变成了一个生成器。生成器与普通函数的不同之处可以通过下面两段代码来进行说明：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">funciton</span><span class="params">(i)</span>:</span></div><div class="line">    print(<span class="string">'进入'</span>)</div><div class="line">    print(i)</div><div class="line">    print(<span class="string">'结束'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</div><div class="line">    funciton(i)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-22-29-40.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-04-13-22-29-40.png" alt=""></p>
 <p>函数在被调用的时候，函数会从里面的第一行代码一直运行到某个<code>return</code>或者函数的最后一行才会退出。</p>
 <p>而生成器可以从中间开始运行，从中间跳出。例如下面的代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'进入'</span>)</div><div class="line">    i = <span class="keyword">None</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        <span class="keyword">if</span> i <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            print(i)</div><div class="line">        print(<span class="string">'跳出'</span>)</div><div class="line">        i = <span class="keyword">yield</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">g = generator()</div><div class="line">next(g)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</div><div class="line">    g.send(i)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-04-13-23-09-43.png" alt=""></p>
+<p>运行效果如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-04-13-23-09-43.png" alt=""></p>
 <p>从图中可以看到，<code>进入</code>只打印了一次。代码运行到<code>i = yield None</code>后就跳到外面，外面的数据可以通过<code>g.send(i)</code>的形式传进生成器，生成器内部拿到外面传进来的数据以后继续执行下一轮<code>while</code>循环，打印出被传进来的内容，然后到<code>i = yield None</code>的时候又跳出。如此反复。</p>
 <p>所以回到最开始的Kafka问题。如果把<code>with topic.get_producer(delivery_reports=True) as producer</code>写在上面这一段代码的<code>print(&#39;进入&#39;)</code>这个位置上，那岂不是只需要获取一次Kafka生产者对象，然后就可以一直使用了？</p>
 <p>根据这个逻辑，设计如下代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> pykafka <span class="keyword">import</span> KafkaClient</div><div class="line"></div><div class="line">client = KafkaClient(hosts=<span class="string">"127.0.0.1:9092"</span>)</div><div class="line">topic = client.topics[<span class="string">b'test'</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> topic.get_producer(delivery_reports=<span class="keyword">True</span>) <span class="keyword">as</span> producer:</div><div class="line">        print(<span class="string">'init finished..'</span>)</div><div class="line">        next_data = <span class="string">''</span></div><div class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">            <span class="keyword">if</span> next_data:</div><div class="line">                producer.produce(str(next_data).encode())</div><div class="line">            next_data = <span class="keyword">yield</span> <span class="keyword">True</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">feed</span><span class="params">()</span>:</span></div><div class="line">    c = consumer()</div><div class="line">    next(c)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</div><div class="line">        c.send(i)</div><div class="line"></div><div class="line">start = time.time()</div><div class="line">feed()</div><div class="line">end = time.time()</div><div class="line">print(f<span class="string">'直到把所有数据塞入Kafka，一共耗时：&#123;end - start&#125;秒'</span>)</div></pre></td></tr></table></figure>
 <p>这一次直接插入1000条数据，总共只需要10秒钟，相比于每插入一次都获取一次Kafka生产者对象的方法，效率提高了1000倍。运行效果如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/withyield.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/withyield.png" alt=""></p>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>读者如果仔细对比第一段代码和最后一段代码，就会发现他们本质上是一回事。但是第一段代码，也就是网上很多人讲yield的时候举的生产者-消费者的例子之所以会让人觉得毫无用处，就在于他们的消费者几乎就是秒运行，这样看不出和函数调用的差别。而我最后这一段代码，它的消费者分成两个部分，第一部分是获取Kafka生产者对象，这个过程非常耗时；第二部分是把数据通过Kafka生产者对象插入Kafka，这一部分运行速度极快。在这种情况下，使用生成器把这个消费者代码分开，让耗时长的部分只运行一次，让耗时短的反复运行，这样就能体现出生成器的优势。</p>
 ]]></content>
     
@@ -273,13 +273,13 @@
     <link href="https://www.kingname.info/2018/03/17/from-workflowy-to-evernote/"/>
     <id>https://www.kingname.info/2018/03/17/from-workflowy-to-evernote/</id>
     <published>2018-03-17T02:05:54.000Z</published>
-    <updated>2018-03-17T05:49:19.749Z</updated>
+    <updated>2018-09-25T13:33:27.414Z</updated>
     
     <content type="html"><![CDATA[<p>Workflowy是一个极简风格的大纲写作工具，使用它提供的无限层级缩进和各种快捷键，可以非常方便的理清思路，写出一个好看而实用的大纲。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-17-58.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-17-58.png" alt=""></p>
 <p>印象笔记更是家喻户晓，无人不知的跨平台笔记应用。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。</p>
 <p>如果能够把用Workflowy写大纲的便利性，与印象笔记强大的搜索功能结合起来，那岂不是如虎添翼？如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-21-31.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-21-31.png" alt=""></p>
 <p>EverFlowy就是这样一个小工具。它可以自动把Workflowy上面的条目拉下来再同步到印象笔记中。如果Workflowy有更新，再运行一下这个小工具，它就会同步更新印象笔记上面的内容。Workflowy负责写，印象笔记负责存，各尽其能，各得其所。</p>
 <a id="more"></a>
 <h2 id="工具介绍"><a href="#工具介绍" class="headerlink" title="工具介绍"></a>工具介绍</h2><p>Everflowy基于Python 3开发，代码托管在Github中，地址为：<a href="https://github.com/kingname/EverFlowy" target="_blank" rel="external">https://github.com/kingname/EverFlowy</a>这个小工具在持续开发中，目前可以实现Workflowy单向同步到印象笔记和差异更新。由于印象笔记的Oauth验证方式需要申请才能对正式的账号使用，但它又不会通过这种个人小工具的申请，所以目前暂时使用开发者Token。关于如何申请开通正式账号的开发者Token，在后文会有详细的说明。</p>
@@ -288,26 +288,26 @@
 <p>有了Pipenv以后，使用Git把代码拉到本地再安装依赖：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/kingname/EverFlowy.git</div><div class="line"><span class="built_in">cd</span> EverFlowy</div><div class="line">pipenv install</div><div class="line">pipenv shell</div></pre></td></tr></table></figure>
 <p>运行了上面的4条命令以后，你的终端窗口应该如下图类似。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-43-11.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-43-11.png" alt=""></p>
 <p>Pipenv会自动创建一个基于Virtualenv的虚拟环境，然后把EverFlowy依赖的第三方库自动安装到这个虚拟环境中，再自动激活这个虚拟环境。</p>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>在代码的根目录，有一个config.json文件，打开以后如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-46-26.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-46-26.png" alt=""></p>
 <p>你需要修改三个地方，分别是<code>username</code>，<code>password</code>和<code>dev_token</code>。其中<code>username</code>和<code>password</code>分别对应了Workflowy的用户名和密码，而<code>dev_token</code>是印象笔记的开发者Token。</p>
 <p>这里需要说明一下印象笔记的开发者Token。印象笔记的开发者Token有两套，分别是沙盒环境的开发者Token和生产环境的开发者Token。所谓沙盒环境，就是一个测试开发环境，这个环境是专门为了快速开发印象笔记App而设计的，它的地址为：<a href="https://sandbox.evernote.com" target="_blank" rel="external">https://sandbox.evernote.com</a>。打开这个网址，可以看到页面上弹出了警告，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-56-01.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-56-01.png" alt=""></p>
 <p>无论你之前是否有印象笔记的账号，要使用沙盒环境，都必需重新注册。注册完成以后，通过访问<a href="https://sandbox.evernote.com/api/DeveloperToken.action" target="_blank" rel="external">https://sandbox.evernote.com/api/DeveloperToken.action</a>获取沙盒环境的开发者Token。</p>
 <p>关于印象笔记的沙盒环境，我将另外开一篇文章来说明。本文主要介绍如何申请生产环境的开发者Token，从而可以使用正式的印象笔记账号。</p>
 <p>在2017年6月以后，印象笔记关闭了生产环境开发者Token的申请通道，如果打开申请网址：<a href="https://app.yinxiang.com/api/DeveloperToken.action" target="_blank" rel="external">https://app.yinxiang.com/api/DeveloperToken.action</a>，你会发现申请的按钮是灰色的且无法点击。要解决这个问题，就需要让印象笔记的客服帮忙。</p>
 <p>登录自己的印象笔记正式账号，打开印象笔记首页，把页面拉到最下面，可以看到有一个“联系我们”，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-13-41.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-11-13-41.png" alt=""></p>
 <p>进入“联系我们”，点击“联系客服”，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-14-06.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-11-14-06.png" alt=""></p>
 <p>在联系客服的页面填写如下信息，最后一项“简要描述问题”填写“我需要基于印象笔记API开发，请帮我开通生产环境开发者Token”并提交。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-17-01.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-11-17-01.png" alt=""></p>
 <p>大约24小时内，就可以受到客服回复的邮件，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-19-02.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-11-19-02.png" alt=""></p>
 <p>此时再次打开<a href="https://app.yinxiang.com/api/DeveloperToken.action" target="_blank" rel="external">https://app.yinxiang.com/api/DeveloperToken.action</a>就可以申请开发者Token了，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-11-20-23.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-11-20-23.png" alt=""></p>
 <p>需要注意的是，开发者Token只会显示一次，所以你需要立刻把它记录下来。</p>
 <h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>有了生产环境的开发者Token以后，把它填写到config.json中，配置就算完成了。在终端输入命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 EverFlowy.py</div></pre></td></tr></table></figure>
@@ -327,10 +327,10 @@
     <summary type="html">
     
       &lt;p&gt;Workflowy是一个极简风格的大纲写作工具，使用它提供的无限层级缩进和各种快捷键，可以非常方便的理清思路，写出一个好看而实用的大纲。如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-17-58.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-17-58.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;印象笔记更是家喻户晓，无人不知的跨平台笔记应用。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。&lt;/p&gt;
 &lt;p&gt;如果能够把用Workflowy写大纲的便利性，与印象笔记强大的搜索功能结合起来，那岂不是如虎添翼？如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-21-31.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-21-31.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;EverFlowy就是这样一个小工具。它可以自动把Workflowy上面的条目拉下来再同步到印象笔记中。如果Workflowy有更新，再运行一下这个小工具，它就会同步更新印象笔记上面的内容。Workflowy负责写，印象笔记负责存，各尽其能，各得其所。&lt;/p&gt;
     
     </summary>
@@ -351,15 +351,15 @@
     <link href="https://www.kingname.info/2018/01/01/task-project-target/"/>
     <id>https://www.kingname.info/2018/01/01/task-project-target/</id>
     <published>2018-01-01T02:11:14.000Z</published>
-    <updated>2018-03-17T02:06:59.789Z</updated>
+    <updated>2018-09-25T13:33:27.404Z</updated>
     
     <content type="html"><![CDATA[<p>我是一个工具控，经常尝试各种生产力工具。我发现任务管理App汗牛充栋，项目管理工具乏善可陈，而目标管理App更是少得可怜。</p>
 <a id="more"></a>
 <h2 id="任务管理App"><a href="#任务管理App" class="headerlink" title="任务管理App"></a>任务管理App</h2><p>任务管理App，包括常见的Things 3，Todoist，Teambition，Trello。其中Things 3和Todoist，本质上就像是一个增强版的提醒工具，你要做什么事情，填上去，设置好Deadline，事情做完了勾掉。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-10-22-53.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-10-22-53.png" alt=""></p>
 <p>但这种类型的App有一个缺点——任务只有<code>未做</code>和<code>完成</code>两个状态，没有<code>正在做</code>的状态。</p>
 <p>而Teambition与Trello稍微进步一点，引入了看板的概念，于是能够显示任务在各个阶段的状态，如下图所示。这张图是少数派的Trello看板，用来让作者选题。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-10-26-51.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-10-26-51.png" alt=""></p>
 <p>这种类型的App有一个很大的问题：你做了很多任务，但是你不知道你做这些任务是为了什么。任务管理类App适合用来记录和追踪各种琐碎的任务和相关性不强的任务。就像是少数派的每一篇文章，文章与文章之间不是一个系列的关系，他们各自独立，谁都可以领选题写文章，哪个选题先写哪个选题后写，关系不大。</p>
 <p>一旦要规划一个项目，对于规划项目的人和做项目的人，用任务管理类App都会让人觉得使不上劲。对于做任务的人，看到每一个独立的任务，对项目没有整体的概念；对于规划项目的人，不知道任务是不是已经切分得足够细，是否有遗漏。举一个例子，下面是一些任务：</p>
 <ul>
@@ -424,11 +424,11 @@
     <link href="https://www.kingname.info/2017/12/31/you-should-use-gantt/"/>
     <id>https://www.kingname.info/2017/12/31/you-should-use-gantt/</id>
     <published>2017-12-31T14:45:55.000Z</published>
-    <updated>2017-12-31T16:32:10.641Z</updated>
+    <updated>2018-09-25T13:33:27.450Z</updated>
     
     <content type="html"><![CDATA[<p>我非常喜欢使用甘特图来做项目管理。不用甘特图的公司，我觉得很奇怪。<br><a id="more"></a></p>
 <h2 id="什么是甘特图"><a href="#什么是甘特图" class="headerlink" title="什么是甘特图"></a>什么是甘特图</h2><p>什么是甘特图呢？下面这张图就是甘特图。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-22-53-21.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-22-53-21.png" alt=""></p>
 <p>这张图是我12月离职做交接时候的甘特图。</p>
 <ul>
 <li>不同的颜色表示不同的人</li>
@@ -458,28 +458,28 @@
 </ol>
 <p>当你根据以上的规则绘制好第一版甘特图以后，你会发现有些地方是可以继续调整的，但是这种调整，在你没有画图之前是不能发现的。于是你会在调整甘特图的过程中，让项目的规划越来越清晰。</p>
 <h2 id="怎么做甘特图"><a href="#怎么做甘特图" class="headerlink" title="怎么做甘特图"></a>怎么做甘特图</h2><p>你可以在纸上做甘特图，也可以用Excel来做。下面这张图是来自网络。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-23-20-03.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-23-20-03.png" alt=""></p>
 <p>这是使用Excel做出来的效果，但是做起来稍显麻烦。</p>
 <p>Omniplan和MS Project都是非常专业的甘特图制作软件，但是价格非常高。毕竟这是生产力软件，使用这个软件你是可以赚大钱的，自然软件本身就会比较贵。</p>
 <p>开源的甘特图软件也有不少，不过不是功能不全就是界面丑陋。这里介绍一个相对比较完整的甘特图制作软件：GanttProject</p>
 <p>GanttProject的官方网站为<a href="http://www.ganttproject.biz/" target="_blank" rel="external">http://www.ganttproject.biz/</a>，在这里你可以下载到macOS，Windows或者Linux版本的软件。</p>
 <p>GanttProject运行以后的界面如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-23-47-11.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-23-47-11.png" alt=""></p>
 <p>在左侧任务面板右键或者按下键盘<code>Command</code> + <code>T</code>就可以添加任务，Windows和Linux对应的快捷键为<code>Ctrl</code> + <code>T</code>。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-31-23-48-11.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-23-48-11.png" alt=""></p>
 <p>创建好了一个任务，它默认的开始时间和结束时间都是今天。在任务上面右键，选择<code>任务属性</code>，可以打开任务属性设置界面，在这里可以设置任务的开始时间和任务时长。但是你不能设置任务结束时间。因为任务结束时间会根据开始时间和任务时长自动计算。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-03-16.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-03-16.png" alt=""></p>
 <p>在这个界面，还可以设置任务的颜色，实现不同人不同颜色，或者不同项目不同颜色。也可以在这里更新任务进度。</p>
 <p>创建多个任务，如果后面的任务依赖前面的任务，那么在右侧被依赖的任务色条上单击鼠标左键，按住并拖动到依赖它的任务上。依赖它的任务的起始时间自动就会变为被依赖任务的结束时间，如下图所示。此时，后一个任务只能设置任务的时长，不能修改任务的起始时间。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-08-17.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-08-17.png" alt=""></p>
 <p>如果依赖关系设置错误，打开依赖任务的任务属性，定位到<code>前置任务</code>选项卡，在这里可以删除被依赖的任务或者修改被依赖任务。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-11-10.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-11-10.png" alt=""></p>
 <p>如果你需要移动任务的顺序，鼠标单击选中它，按下键盘上的<code>Alt</code> + <code>方向键上或下</code>即可移动任务。</p>
-<p>我认为甘特图有一个非常重要的元素，就是竖直红线，它指向了今天的任务。要打开这跟红线，需要单击菜单栏的<code>编辑</code>-<code>设置</code>，定位到<code>甘特图设定</code>，在<code>将今天显示为红色</code>点选为<code>是</code>，如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-20-55.png" alt=""><br>单击确定回到甘特图的界面，可以看到图中出现了一条红色竖线。这条竖线指向了今天应该做的事情。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-23-06.png" alt=""></p>
+<p>我认为甘特图有一个非常重要的元素，就是竖直红线，它指向了今天的任务。要打开这跟红线，需要单击菜单栏的<code>编辑</code>-<code>设置</code>，定位到<code>甘特图设定</code>，在<code>将今天显示为红色</code>点选为<code>是</code>，如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-20-55.png" alt=""><br>单击确定回到甘特图的界面，可以看到图中出现了一条红色竖线。这条竖线指向了今天应该做的事情。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-23-06.png" alt=""></p>
 <p>每天打开甘特图，这根红线都会指向当天。</p>
 <p>GanttProject可以把做好的甘特图导出为图片，CSV，HTML或者PDF文件。单击<code>项目</code>-<code>导出</code>，点选<code>Raster图像文件</code>，并单击<code>下一步</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-01-01-00-24-34.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-24-34.png" alt=""></p>
 <p>设置保存路径和甘特图的日期范围即可导出为PNG文件，以方便分享。</p>
 <p>GanttProject还有更多功能，你可以安装以后慢慢研究。</p>
 ]]></content>
@@ -504,7 +504,7 @@
     <link href="https://www.kingname.info/2017/12/17/auto-deploy-blog/"/>
     <id>https://www.kingname.info/2017/12/17/auto-deploy-blog/</id>
     <published>2017-12-17T11:48:10.000Z</published>
-    <updated>2017-12-17T13:18:31.142Z</updated>
+    <updated>2018-09-25T13:33:27.383Z</updated>
     
     <content type="html"><![CDATA[<p>这篇文章比较简单，适合初学<code>持续集成</code>的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。</p>
 <a id="more"></a>
@@ -521,23 +521,23 @@
 <p>本文实现的是博客的自动部署，没有任何测试，也没有Code Review，也没有编译，服务器也只有一台，复杂程度当然远远低于持续集成。不过管中窥豹，来看看这个简单地流程是如何走通的，对初学者也会有帮助。</p>
 <p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/" target="_blank" rel="external">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
 <h3 id="设置GitHub"><a href="#设置GitHub" class="headerlink" title="设置GitHub"></a>设置GitHub</h3><p>在GitHub中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-23-18.png" alt=""></p>
 <p>在设置页面，单击左侧的<code>Integrations &amp; services</code>，并选择<code>Add service</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-25-25.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-25-25.png" alt=""></p>
 <p>从下拉菜单中，选中<code>Jenkins (GitHub plugin)</code>。在新打开的界面，填写Jenkins的信息，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-27-06.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-27-06.png" alt=""></p>
 <p>其中<code>Jenkins hook url</code>填写的是我的服务器的Jenkins地址加上<code>/GitHub-webhook/</code>，所以完整的地址为<code>http://xx.xx.xx.xx:8080/GitHub-webhook/</code>。把这里的<code>xx</code>换成实际的IP地址或者域名即可。需要注意的是，网址末尾的斜杠一定不能省略。</p>
 <p>填写好信息以后保存，GitHub就配置好了。</p>
 <h3 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h3><p>Jenkins需要安装<code>GitHub Plugin</code>才能接收到GitHub发来的通知。进入Jenkins的<code>系统管理</code>-<code>管理插件</code>，在<code>可选插件</code>选项卡中，搜索<code>GitHub plugin</code>并安装，安装完成Jenkins会重启。重启以后可以在<code>已安装</code>选项卡下面发现<code>GitHub plugin</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-35-50.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-35-50.png" alt=""></p>
 <p>回到Jenkins首页，单击左上角<code>新建</code>按钮，新建一个项目，项目类型为<code>构建一个自由风格的软件项目</code>。任务的配置信息如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-37-57.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-37-57.png" alt=""></p>
 <p>其中的<code>项目名称</code>和<code>描述</code>可以随意填写。勾选<code>GitHub project</code>，并把博客对应的GitHub Repo的地址填入。往下拉，看到<code>源码管理</code>，点选<code>Git</code>，依然填写博客对应的Repo地址。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-39-09.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-39-09.png" alt=""></p>
 <p>继续往下拉，在<code>构建触发器</code>单击<code>增加构建步骤</code>，在弹出的下拉菜单中选择<code>Execute shell</code>。勾选<code>GitHub hook trigger for GITScm polling</code>。在<code>Execute shell</code>对应的输入框中输入命令，将当前目录下的所有文件和文件夹全部复制到<code>/home/bexercise/kingname.github.io/</code>文件夹下。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-43-09.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-43-09.png" alt=""></p>
 <p>其中，文件夹<code>/home/bexercise/kingname.GitHub.io/</code>里面的内容如下图所示。这是Hexo生成的HTML文件和资源文件。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-06-45.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-21-06-45.png" alt=""></p>
 <p>这里需要解释一下这一条命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -r ./* /home/bexercise/kingname.GitHub.io/</div></pre></td></tr></table></figure>
 <p>其中的<code>cp -r</code>表示复制文件和文件夹。<code>./</code>表示当前目录。<code>./*</code>表示当前目录下面的所有内容。因此整条命令的意思是把当前目录下的所有内容全部复制到<code>/home/bexercise/kingname.GitHub.io/</code>下，并且如果文件名相同，就会直接覆盖。需要注意的是，<code>kingname.GitHub.io</code>这仅仅是一个普通的文件夹而已，别看它的名字长得像个网址，但其实它只是一个名字比较怪的普通文件夹而已，没有什么特殊的意义。</p>
@@ -547,7 +547,7 @@
 <p>执行完成这一行命令以后，jenkins才可以把其他地方的文件复制到这个文件夹里面。</p>
 <h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>没有什么复杂的使用方法，在Hexo中，执行命令<code>hexo d</code>就可以把本地生成好的HTML文件提交到GitHub中。然后打开浏览器，打开博客，发现新的文章已经出现在首页了。</p>
 <p>在Jenkins项目的执行历史里面，也可以看到它被自动触发而产生的历史记录。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-11-50.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-21-11-50.png" alt=""></p>
 <h2 id="举一反三"><a href="#举一反三" class="headerlink" title="举一反三"></a>举一反三</h2><p>由于Jenkins可以运行Shell命令，进行单元测试本质上也是运行一条命令，那这不就可以实现自动进行单元测试了吗？那么如果把Shell命令改成运行一个Python脚本，那不就可以做任何事情了吗？如果Python脚本里面写了发送邮件的代码，那不就实现了你一提交代码，其他人就收到邮件了吗？</p>
 ]]></content>
     
@@ -571,7 +571,7 @@
     <link href="https://www.kingname.info/2017/12/10/use-fsm/"/>
     <id>https://www.kingname.info/2017/12/10/use-fsm/</id>
     <published>2017-12-10T04:12:55.000Z</published>
-    <updated>2017-12-10T08:02:50.682Z</updated>
+    <updated>2018-09-25T13:33:27.402Z</updated>
     
     <content type="html"><![CDATA[<h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。</p>
 <a id="more"></a>
@@ -580,29 +580,29 @@
 <p>完整的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter == <span class="string">' '</span>:</div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-03-28.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-03-28.png" alt=""></p>
 <h3 id="单词空格与逗号句号"><a href="#单词空格与逗号句号" class="headerlink" title="单词空格与逗号句号"></a>单词空格与逗号句号</h3><p>现在不仅仅只有单词和空格，还有逗号和句号。有这样一个句子：”I am kingname,you should remember me.”如果使用上一小节的程序，那么代码就会出现问题，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-04-07.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-04-07.png" alt=""></p>
 <p>其中，”kingname,you”应该是两个单词，但是在这里变成了一个单词。所以现在不仅遇到空格要进行切分，遇到逗号句号还需要进行切分。那么对代码做一些修改，变成如下代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">' '</span>, <span class="string">','</span>, <span class="string">'.'</span>]:</div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname,you should remember me.'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
 <p>现在运行起来看上去没有问题了，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-06-53.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-06-53.png" alt=""></p>
 <p>然而，有些人写英文的时候喜欢在标点符号右侧加一个空格，例如：”I am kingname, you should remember me.”这样小小的一修改，上面的代码又出问题了，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-09-39.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-09-39.png" alt=""></p>
 <p>分词出来的结果里面凭空多出来一个空字符串。为了解决这个问题，再加一层判断，只有发现<code>word</code>不为空字符串的时候才把它加入到<code>word_list</code>中，代码继续修改：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">' '</span>, <span class="string">','</span>, <span class="string">'.'</span>]:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname, you should remember me.'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
 <p>代码看起来又可以正常工作了。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-12-26.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-12-26.png" alt=""></p>
 <h3 id="单词空格与各种标点符号"><a href="#单词空格与各种标点符号" class="headerlink" title="单词空格与各种标点符号"></a>单词空格与各种标点符号</h3><p>标点符号可不仅仅只有逗号句号。现在又出现了冒号分号双引号感叹号问号等等杂七杂八的符号。英文句子变为：”I am kingname, you should say: “Kingname Oba” to me, will you?”</p>
 <p>使用上面的代码，发现运行起来又出问题了。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-21-15.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-21-15.png" alt=""></p>
 <p>为了能覆盖到所有的标点符号，现在修改一下逻辑。原来是“遇到空格/逗号/句号”就把<code>word</code>放到<code>word_list</code>中。现在要改为“如果当前字符不是字母，就把<code>word</code>放到<code>word_list</code>中”。于是代码进一步做修改：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'I am kingname, you should say: "Kingname Oba" to me, will you?'</span></div><div class="line">    result_word_list = split(sentence)</div><div class="line">    print(result_word_list)</div></pre></td></tr></table></figure>
 <p>代码修改以后又可以正常工作了，其运行效果如下图所示：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-24-52.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-24-52.png" alt=""></p>
 <h3 id="奇奇怪怪的单引号"><a href="#奇奇怪怪的单引号" class="headerlink" title="奇奇怪怪的单引号"></a>奇奇怪怪的单引号</h3><p>如果双引号包含的句子里面还需要用到引号，那么就需要在内部使用单引号。例如有这样一个句子：“I am kingname, you should say: “Kingname Oba, I always remember your motto: ‘kingname is genius’” to me, will you?”</p>
 <p>使用前面的代码，运行起来似乎没有问题，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-36-20.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-36-20.png" alt=""></p>
 <p>但是，单引号还有其他用途——有人喜欢把两个单词合并成一个单词，例如：</p>
 <ul>
 <li>“do not” == “don’t”</li>
@@ -612,22 +612,22 @@
 </ul>
 <p>在这种情况下，就应该把单引号连接的两部分看作是一个单词，不应该把它们切开。</p>
 <p>如果句子变成：<code>I&#39;m kingname, you should say: &quot;Kingname Oba, I always remember your motto: &#39;kingname&#39;s genius&#39;&quot; to me, won&#39;t you?</code>继续使用上面的代码，就发现返回的单词列表又不对了。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-13-42-16.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-42-16.png" alt=""></p>
 <p>要解决这个问题，就需要确定单引号具体是做普通的引号来使用，还是放在缩写里使用。</p>
 <p>作为普通单引号使用的时候，如果是前单引号，那么它的左边必定不是字母，如果作为后单引号，那么它的右边必定不是字母。而缩写里面的单引号，它左右两侧必定都是字母。并且需要注意，如果是句子里面第一个符号就是单引号，那么此时它左边没有字符；如果句子里面最后一个符号是单引号，那么它右边没有字符，此时如果使用下标来查找，就需要当心下标越界。</p>
 <p>对代码进一步修改：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    word_list = []</div><div class="line">    word = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> index, letter <span class="keyword">in</span> enumerate(target):</div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant <span class="keyword">and</span> letter != <span class="string">"'"</span>:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            word_list.append(word)</div><div class="line">            word = <span class="string">''</span></div><div class="line">        <span class="keyword">elif</span> letter == <span class="string">"'"</span>:</div><div class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt; index &lt; len(target) - <span class="number">1</span> \</div><div class="line">                    <span class="keyword">and</span> target[index - <span class="number">1</span>] <span class="keyword">in</span> constant \</div><div class="line">                    <span class="keyword">and</span> target[index + <span class="number">1</span>] <span class="keyword">in</span> constant:</div><div class="line">                word += letter</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            word += letter</div><div class="line">    <span class="keyword">if</span> word:</div><div class="line">        word_list.append(word)</div><div class="line">    <span class="keyword">return</span> word_list</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sentence = <span class="string">'''I'm kingname, you should say: "Kingname Oba, </span></div><div class="line">                  I always remember your motto: 'kingname's genius'" to me, won't you?'''</div><div class="line">    result_word_list = split(sentence)</div><div class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> result_word_list:</div><div class="line">        print(word)</div></pre></td></tr></table></figure>
 <p>现在代码又可以成功运行了，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-14-13-43.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-14-13-43.png" alt=""></p>
 <p>但是请细看代码，现在已经混乱到难以阅读难以理解了。如果再增加一个连字符又怎么改？如果单词内部出现了两个单引号怎么改？这种为了增加一个功能，要把很多不相干代码也进行修改的编码方式，相信可以击中很多初学者甚至是不少自称为软件工程师的人。</p>
 <h2 id="状态转义图"><a href="#状态转义图" class="headerlink" title="状态转义图"></a>状态转义图</h2><p>根据分词逻辑，遇到各种符号应该怎么处理，画一个分词的状态转移图出来。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/split_fms3.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/split_fms3.png" alt=""></p>
 <p>从这个图上可以看出来，其实程序只需要知道当前是什么状态，以及遇到什么字符需要转移到什么状态就可以了。没有必要知道自己是从哪个状态转移过来的，也没有必要知道和自己不相干的其他状态。</p>
 <p>举一个例子：<code>I&#39;m kingname, you should say: &quot;Kingname Oba, I always remember your motto: &#39;kingname&#39;s genius&#39;&quot; to me, won&#39;t you?</code>这个句子中，<code>should</code>这个单词就是处于“单词状态”。它不在单引号内部，它也不是一个缩写。当我们对句子每个字符进行遍历的时候，遍历到“should”的“s”时进入“单词状态”，在单词状态，只需要关心接下来过来的下一个字符是什么，如果是字母，那依然是单词状态，把字母直接拼接上来即可。如果是单引号，那么进入“单引号在单词中状态”。至于“单引号在单词中状态”有什么逻辑，单词状态的代码根本不需要知道。这就像是接力赛，我把棒交给下一个人，我的任务就做完了，下一个人是跑到终点还是爬到终点，都和我没有关系。</p>
 <p>这就是有限状态机FSM的原理。</p>
 <h2 id="使用状态机"><a href="#使用状态机" class="headerlink" title="使用状态机"></a>使用状态机</h2><p>根据这个原理，使用状态和转移关系来改写代码，就可以让代码的逻辑变得非常清晰。改进以后的代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Spliter</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></div><div class="line">        self.state = <span class="string">'初始状态'</span></div><div class="line">        self.word = <span class="string">''</span></div><div class="line">        self.word_list = []</div><div class="line">        self.state_dict = &#123;<span class="string">'初始状态'</span>: self.parse_init,</div><div class="line">                           <span class="string">'单词状态'</span>: self.parse_word,</div><div class="line">                           <span class="string">'单引号在单词中状态'</span>: self.parse_contraction&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_init</span><span class="params">(self, letter)</span>:</span></div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</div><div class="line">            self.state = <span class="string">'单词状态'</span></div><div class="line">            self.word += letter</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_word</span><span class="params">(self, letter)</span>:</span></div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</div><div class="line">            self.word += letter</div><div class="line">        <span class="keyword">elif</span> letter == <span class="string">"'"</span>:</div><div class="line">            self.state = <span class="string">'单引号在单词中状态'</span></div><div class="line">            self.word += <span class="string">"'"</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.word_list.append(self.word)</div><div class="line">            self.state = <span class="string">'初始状态'</span></div><div class="line">            self.word = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_contraction</span><span class="params">(self, letter)</span>:</span></div><div class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</div><div class="line">            self.word += letter</div><div class="line">            self.state = <span class="string">'单词状态'</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.word_list.append(self.word[:<span class="number">-1</span>])</div><div class="line">            self.word = <span class="string">''</span></div><div class="line">            self.state = <span class="string">'初始状态'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(self, target)</span>:</span></div><div class="line">        <span class="keyword">for</span> letter <span class="keyword">in</span> target:</div><div class="line">            self.state_dict[self.state](letter)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> self.word_list</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    spliter = Spliter()</div><div class="line">    sentence = <span class="string">'''I'm kingname, you should say: "Kingname Oba, </span></div><div class="line">                      I always remember your motto: 'kingname's genius'" to me, won't you?'''</div><div class="line">    print(spliter.split(sentence))</div></pre></td></tr></table></figure></p>
 <p>代码运行效果如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-10-15-50-27.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-15-50-27.png" alt=""></p>
 <p>需要注意的是，图中的代码只是使用了有限状态机的原理，而并非一个有限状态机。</p>
 ]]></content>
     
@@ -653,19 +653,19 @@
     <link href="https://www.kingname.info/2017/10/03/teamflowy/"/>
     <id>https://www.kingname.info/2017/10/03/teamflowy/</id>
     <published>2017-10-03T15:29:05.000Z</published>
-    <updated>2017-10-27T15:27:17.000Z</updated>
+    <updated>2018-09-25T13:33:27.387Z</updated>
     
     <content type="html"><![CDATA[<p>Teambition是一个跨平台的团队协作和项目管理工具，相当于国外的Trello。使用Teambition可以像使用白板与便签纸一样来管理项目进度，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-45-13.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-45-13.png" alt=""></p>
 <p>Teambition虽然便于管理项目，但是如果直接在Teambition上面创建一个项目对应的任务，却容易陷入面对茫茫白板，不知道如何拆分任务的尴尬境地。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-47-38.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-47-38.png" alt=""></p>
 <p>面对这个空荡荡的窗口，应该添加哪些任务进去？直接用脑子现想，恐怕容易出现顾此失彼或者干脆漏掉了任务的情况。</p>
 <p>当我要开始一个项目的时候，我一般不会直接打开Teambition就写任务，而是使用一个大纲工具——Workflowy来梳理思路，切分任务。等任务已经切分好了，在誊写到Teambition中，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-53-06.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-53-06.png" alt=""></p>
 <p>但这样就出现了一个问题：首先在Workflowy上面把需要做的任务写好。然后再打开Teambition，把这些任务又誊写到Teambition中。为了减少“誊写”这一步重复劳动，于是就有了TeamFlowy这个小工具。它的作用是自动誊写Workflowy中的特定条目到Teambition中。</p>
 <a id="more"></a>
 <h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>TeamFlowy是一个Python脚本，运行以后，它会登录Workflowy账号，读取上面所有的条目。名为[Teambition]的条目是任务开始的标记，这个条目下面的一级条目会作为任务被添加到Teambition中。如果任务下面还有二级条目，这些二级条目会作为子任务被添加到任务中。由于Teambition是按照项目-Stage-任务-子任务的形式组织一个工程（其中Stage对应了Teambition中工程下面的面板，例如：“待处理”，“进行中”，“完成”。）不会存在子任务的子任务，所以Workflowy中[Teambition]这个条目下面最多出现二级缩进。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-10-28-13.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-10-28-13.png" alt=""></p>
 <h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><h3 id="Workflowy"><a href="#Workflowy" class="headerlink" title="Workflowy"></a>Workflowy</h3><p>获取Workflowy上面的条目，需要进行三步操作：</p>
 <ol>
 <li>登录Workflowy</li>
@@ -673,12 +673,12 @@
 <li>提取需要添加到Teambition中的条目</li>
 </ol>
 <h4 id="登录Workflowy"><a href="#登录Workflowy" class="headerlink" title="登录Workflowy"></a>登录Workflowy</h4><p>打开Chrome监控登录Wokrflowy的过程，可以看到登录Workflowy需要访问的接口为：<code>https://workflowy.com/accounts/login/</code>。使用HTTP <code>POST</code>方式发送请求，提交的数据包括<code>username</code>，<code>password</code>和一个不知道用途的<code>next</code>。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-10-47-51.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-10-47-51.png" alt=""></p>
 <p>使用Python的第三方网络模块<code>requests</code>向这个模块发送<code>POST</code>请求，提交用户名和密码即可实现登录。其代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">login_url = <span class="string">'https://workflowy.com/accounts/login/'</span></div><div class="line">session = requests.Session()</div><div class="line">session.post(login_url,</div><div class="line">             data=&#123;<span class="string">'username'</span>: <span class="string">'12345@qq.com'</span>,</div><div class="line">                   <span class="string">'password'</span>: <span class="string">'8888888'</span>,</div><div class="line">                   <span class="string">'next'</span>: <span class="string">''</span>&#125;)</div></pre></td></tr></table></figure>
 <h4 id="获取所有条目"><a href="#获取所有条目" class="headerlink" title="获取所有条目"></a>获取所有条目</h4><p>使用<code>requests</code>的<code>session</code>登录Workflowy以后，Cookies会被自动保存到<code>session</code>这个对象里面。于是使用<code>session</code>继续访问Workfowy就可以以登录后的身份查看自己的各个条目。</p>
 <p>通过Chrome可以看到获取所有条目的接口为<code>https://workflowy.com/get_initialization_data?client_version=18</code>，接口返回的数据是一个包含所有条目的超大型JSON字符串，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-10-55-40.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-10-55-40.png" alt=""></p>
 <p>使用Python的json模块可以解析这个JSON字符串为字典，并获取所有条目，代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">outline_url = <span class="string">'https://workflowy.com/get_initialization_data?client_version=18'</span></div><div class="line">outlines_json = session.get(outline_url).text</div><div class="line">outlines_dict = json.loads(outlines_json)</div><div class="line">project_list = outlines_dict.get(<span class="string">'projectTreeData'</span>, &#123;&#125;)\</div><div class="line">    .get(<span class="string">'mainProjectTreeInfo'</span>, &#123;&#125;)\</div><div class="line">    .get(<span class="string">'rootProjectChildren'</span>, [])</div></pre></td></tr></table></figure>
 <h4 id="提取任务与子任务"><a href="#提取任务与子任务" class="headerlink" title="提取任务与子任务"></a>提取任务与子任务</h4><p>所有的条目层层嵌套在列表-字典结构中，其基本的形态如下：</p>
@@ -689,15 +689,15 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">task_dict = &#123;&#125;</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract_task</span><span class="params">(sections, task_dict, target_section=False)</span>:</span></div><div class="line">    <span class="keyword">for</span> section <span class="keyword">in</span> sections:</div><div class="line">        name = section[<span class="string">'nm'</span>]</div><div class="line">        <span class="keyword">if</span> target_section:</div><div class="line">            task_dict[name] = [x[<span class="string">'nm'</span>] <span class="keyword">for</span> x <span class="keyword">in</span> section.get(<span class="string">'ch'</span>, [])]</div><div class="line">            <span class="keyword">continue</span></div><div class="line"></div><div class="line">        <span class="keyword">if</span> name == <span class="string">'[Teambition]'</span>:</div><div class="line">            target_section = <span class="keyword">True</span></div><div class="line">        sub_sections = section.get(<span class="string">'ch'</span>, [])</div><div class="line">        extract_task(sub_sections, task_dict, target_section=target_section)</div></pre></td></tr></table></figure>
 <p>下图所示为一段需要添加到Teambition中的条目，运行这段函数以后，得到的结果为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">'登录Workflowy'</span>: [], <span class="string">'获取需要添加到Teambition的内容'</span>: [<span class="string">'获取任务'</span>, <span class="string">'获取子任务'</span>], <span class="string">'调试Teambition API'</span>: [], <span class="string">'添加任务到Teambition'</span>: []&#125;</div></pre></td></tr></table></figure>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-16-09-03.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-16-09-03.png" alt=""></p>
 <h2 id="Teambition"><a href="#Teambition" class="headerlink" title="Teambition"></a>Teambition</h2><p>将任务添加到Teambition，需要使用Teambition的Python SDK登录Teambition并调用API添加任务。Teambition的Python SDK在使用<code>OAuth2</code>获取<code>access_token</code>的时候有一个坑，需要特别注意。</p>
 <h3 id="登录Teambition"><a href="#登录Teambition" class="headerlink" title="登录Teambition"></a>登录Teambition</h3><h4 id="设置Teambition应用"><a href="#设置Teambition应用" class="headerlink" title="设置Teambition应用"></a>设置Teambition应用</h4><p>Teambition 是使用<code>OAuth2</code>来进行权限验证的，所以需要获取<code>access_token</code>。</p>
 <p>首先打开Teambition的<a href="https://developer.teambition.com/dashboard" target="_blank" rel="external">开发者中心</a>并单击<code>新建应用</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-16-14-38.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-16-14-38.png" alt=""></p>
 <p>应用名称可以随便写。创建好应用以后，可以看到应用的信息，需要记录<code>Client ID</code>和<code>Client Secret</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-16-18-20.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-16-18-20.png" alt=""></p>
 <p>点击左侧的<code>OAuth2</code>配置，填写回调URL，如下图所示。这里的这个URL其实使用任何一个可以访问的网站的域名都可以，这里以我的博客地址为例。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-16-20-49.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-16-20-49.png" alt=""></p>
 <h4 id="使用Python获取access-token"><a href="#使用Python获取access-token" class="headerlink" title="使用Python获取access_token"></a>使用Python获取access_token</h4><p>首先在Python中安装Teambition的SDK：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install teambition</div></pre></td></tr></table></figure>
 <p>接下来，在Python中获取授权URL：</p>
@@ -705,7 +705,7 @@
 <p>代码运行以后，会得到一段形如下面这段URL的授权URL：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://account.teambition.com/oauth2/authorize?client_id=7bfae080-a8dc-11e7-b543-77a936726657&amp;redirect_uri=https://kingname.info&amp;state=&amp;lang=zh</div></pre></td></tr></table></figure>
 <p>在电脑浏览器中<strong>人工</strong>访问这个URL，会出现下面这样的页面。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-16-31-25.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-16-31-25.png" alt=""></p>
 <p>单击<code>授权并登录</code>，可以看到浏览器上面的网址变为形如：<code>https://kingname.info/?code=Pn7ebs4sZh3NYOz2FvVJQ4uu</code>，此时，需要记录<code>code=</code>后面的这一串字符串<code>Pn7ebs4sZh3NYOz2FvVJQ4uu</code>。</p>
 <p>接下来就是Teambition的SDK的坑点了，根据Teambition官方文档的说法，要获取access_token，只需要如下两段代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">code = <span class="string">'Pn7ebs4sZh3NYOz2FvVJQ4uu'</span> <span class="comment">#前面浏览器中的字符串</span></div><div class="line">tb.oauth.fetch_access_token(code)</div><div class="line"><span class="comment"># 上面的代码完成授权，接下来直接使用tb.xxxx就可以操作任务了。</span></div></pre></td></tr></table></figure>
@@ -715,25 +715,25 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tb = Teambition(tb_client_id,</div><div class="line">                tb_client_secret,</div><div class="line">                access_token=tb_access_token)</div></pre></td></tr></table></figure>
 <p>初始化以后，使用tb这个变量，就可以对工程和任务进行各种操作了。</p>
 <h4 id="Teambition的简单使用"><a href="#Teambition的简单使用" class="headerlink" title="Teambition的简单使用"></a>Teambition的简单使用</h4><p>要在某个工程里面创建任务，就需要知道工程的ID。首先在Teambition中手动创建一个工程，在浏览器中打开工程，URL中可以看到工程的ID，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-16-45-51.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-16-45-51.png" alt=""></p>
 <p>有了工程ID以后，就可以使用下面的代码创建任务：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_task</span><span class="params">(task_name, sub_task_list)</span>:</span></div><div class="line">    tasklist = tb.tasklists.get(project_id=<span class="string">'59d396ee1013d919f3348675'</span>)[<span class="number">0</span>]</div><div class="line">    tasklist_id = tasklist[<span class="string">'_id'</span>]</div><div class="line">    todo_stage_id = tasklist[<span class="string">'stageIds'</span>][<span class="number">0</span>]</div><div class="line">    task_info = tb.tasks.create(task_name, tasklist_id=tasklist_id, stage_id=todo_stage_id)</div><div class="line">    <span class="keyword">if</span> sub_task_list:</div><div class="line">        task_id = task_info[<span class="string">'_id'</span>]</div><div class="line">        <span class="keyword">for</span> sub_task_name <span class="keyword">in</span> sub_task_list:</div><div class="line">            tb.subtasks.create(sub_task_name, task_id=task_id)</div><div class="line">    print(f<span class="string">'task: &#123;task_name&#125; with sub tasks: &#123;sub_task_list&#125; added.'</span>)</div></pre></td></tr></table></figure>
 <p>这段代码首先使用<code>tb.tasklists.get()</code>根据工程ID获得任务组的ID和<code>待处理</code>这个面板的ID，接下来调用<code>tb.tasks.create()</code>接口添加任务。从添加任务返回的信息里面拿到任务的ID，再根据任务ID，调用<code>tb.subtasks.create()</code>添加子任务ID。</p>
 <h2 id="效果测试"><a href="#效果测试" class="headerlink" title="效果测试"></a>效果测试</h2><p>上面的代码实现了TeamFlowy的基本逻辑。运行TeamFlowy脚本以后，[Teambition]这个条目下面的任务被成功的添加到了Teambition中，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-16-55-34.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-16-55-34.png" alt=""></p>
 <p>将代码组合起来并进行完善，让代码更容易使用，完整的代码可以查看<a href="https://github.com/kingname/TeamFlowy" target="_blank" rel="external">https://github.com/kingname/TeamFlowy</a>。完整的代码运行效果如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-04-17-01-11.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-04-17-01-11.png" alt=""></p>
 ]]></content>
     
     <summary type="html">
     
       &lt;p&gt;Teambition是一个跨平台的团队协作和项目管理工具，相当于国外的Trello。使用Teambition可以像使用白板与便签纸一样来管理项目进度，如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-45-13.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-45-13.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Teambition虽然便于管理项目，但是如果直接在Teambition上面创建一个项目对应的任务，却容易陷入面对茫茫白板，不知道如何拆分任务的尴尬境地。如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-47-38.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-47-38.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;面对这个空荡荡的窗口，应该添加哪些任务进去？直接用脑子现想，恐怕容易出现顾此失彼或者干脆漏掉了任务的情况。&lt;/p&gt;
 &lt;p&gt;当我要开始一个项目的时候，我一般不会直接打开Teambition就写任务，而是使用一个大纲工具——Workflowy来梳理思路，切分任务。等任务已经切分好了，在誊写到Teambition中，如下图所示。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-53-06.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-53-06.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;但这样就出现了一个问题：首先在Workflowy上面把需要做的任务写好。然后再打开Teambition，把这些任务又誊写到Teambition中。为了减少“誊写”这一步重复劳动，于是就有了TeamFlowy这个小工具。它的作用是自动誊写Workflowy中的特定条目到Teambition中。&lt;/p&gt;
     
     </summary>
@@ -754,7 +754,7 @@
     <link href="https://www.kingname.info/2017/09/22/tweet-201709/"/>
     <id>https://www.kingname.info/2017/09/22/tweet-201709/</id>
     <published>2017-09-22T14:34:01.000Z</published>
-    <updated>2017-09-22T14:54:39.000Z</updated>
+    <updated>2018-09-25T13:33:27.379Z</updated>
     
     <content type="html"><![CDATA[<h2 id="2017-09"><a href="#2017-09" class="headerlink" title="2017.09"></a>2017.09</h2><p>在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：<code>Command</code> + <code>Option</code> + <code>C</code></p>
 <hr>
@@ -782,7 +782,7 @@
 <p>由于更新MySQL会锁表，因此使用多个goroutine来更新MySQL，效果可能还不如直接在主线程中更新来的高。</p>
 <hr>
 <p>在Golang中，使用goroutine太多反而会导致性能下降。</p>
-<h2 id="2017-05"><a href="#2017-05" class="headerlink" title="2017.05"></a>2017.05</h2><p>在Python中，可以使用<code>&gt;</code>或者<code>&gt;=</code>来判断一个集合是不是另一个集合的子集。只有是子集才会返回<code>True</code><br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-05-04-09-58-18.png" alt=""></p>
+<h2 id="2017-05"><a href="#2017-05" class="headerlink" title="2017.05"></a>2017.05</h2><p>在Python中，可以使用<code>&gt;</code>或者<code>&gt;=</code>来判断一个集合是不是另一个集合的子集。只有是子集才会返回<code>True</code><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-05-04-09-58-18.png" alt=""></p>
 <h2 id="2017-04"><a href="#2017-04" class="headerlink" title="2017.04"></a>2017.04</h2><p>在MongoDB中，通过_id来更新数据：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bson.objectid <span class="keyword">import</span> ObjectId</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line">conn = pymongo.MongoClient().XX.YY</div><div class="line">conn.update(&#123;<span class="string">'_id'</span>: ObjectId(<span class="string">'adf84a8fafasf3213'</span>), &#123;<span class="string">'$set'</span>: &#123;<span class="string">'name'</span>: <span class="string">'aaa'</span>&#125;&#125;&#125;)</div></pre></td></tr></table></figure></p>
 <hr>
 <p>在Python 3中，计算两个日期相隔了多少秒：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"></div><div class="line">start = <span class="string">'2017-03-21 17:21:30'</span></div><div class="line">end = <span class="string">'2017-03-21 18:10:13'</span></div><div class="line"></div><div class="line">start_datetime = datetime.datetime.strptime(start, <span class="string">'%Y-%m-%d %H:%M:%S'</span>)</div><div class="line">end_datetime = datetime.datetime.strptime(end, <span class="string">'%Y-%m-%d %H:%M:%S'</span>)</div><div class="line"></div><div class="line">total_seconds = (end_datetime - start_datetime).total_seconds()</div></pre></td></tr></table></figure></p>
@@ -825,7 +825,7 @@
     <link href="https://www.kingname.info/2017/06/18/easy-retry/"/>
     <id>https://www.kingname.info/2017/06/18/easy-retry/</id>
     <published>2017-06-17T16:17:47.000Z</published>
-    <updated>2017-07-21T13:58:39.000Z</updated>
+    <updated>2018-09-25T13:33:27.398Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://kingname.info/2017/04/17/decorate-for-method/" target="_blank" rel="external">Python 装饰器装饰类中的方法</a>这篇文章，使用了装饰器来捕获代码异常。这种方式可以让代码变得更加简洁和Pythonic。</p>
 <p>在写代码的过程中，处理异常并重试是一个非常常见的需求。但是如何把捕获异常并重试写得简洁高效，这就是一个技术活了。</p>
@@ -884,7 +884,7 @@
     <link href="https://www.kingname.info/2017/06/11/type-hints-in-python3/"/>
     <id>https://www.kingname.info/2017/06/11/type-hints-in-python3/</id>
     <published>2017-06-11T07:25:03.000Z</published>
-    <updated>2017-06-11T08:58:41.000Z</updated>
+    <updated>2018-09-25T13:33:27.428Z</updated>
     
     <content type="html"><![CDATA[<p>Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。</p>
 <a id="more"></a>
@@ -898,15 +898,15 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url)</span>:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
 <p>模拟一段上传文件的函数，上传成功以后返回True。接收一个参数<code>url</code>。在正常情况下，这个<code>url</code>应该是一个字符串。于是，使用Type Hints，代码可以变为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url: str)</span> -&gt; bool:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
-<p>如果直接运行，其运行效果如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-23-11.png" alt=""></p>
-<p>现在假设传递一个不是字符串的变量给<code>upload</code>函数，此时PyCharm就会提示类型有问题，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-24-35.png" alt=""><br>但提示归提示，强行运行也是没有问题的。这就说明Type Hints主要是给IDE和人用的，解释器并不会关心类型正不正确。</p>
-<p>如果修改这个函数的返回值，让它不返回<code>True</code> 或者<code>False</code>，PyCharm 也会发出警告：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-27-49.png" alt=""></p>
+<p>如果直接运行，其运行效果如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-23-11.png" alt=""></p>
+<p>现在假设传递一个不是字符串的变量给<code>upload</code>函数，此时PyCharm就会提示类型有问题，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-24-35.png" alt=""><br>但提示归提示，强行运行也是没有问题的。这就说明Type Hints主要是给IDE和人用的，解释器并不会关心类型正不正确。</p>
+<p>如果修改这个函数的返回值，让它不返回<code>True</code> 或者<code>False</code>，PyCharm 也会发出警告：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-27-49.png" alt=""></p>
 <p>Type Hints的官方文档，可以参阅：<a href="https://docs.python.org/3/library/typing.html" target="_blank" rel="external">typing — Support for type hints</a></p>
-<h3 id="Variable-Annotations"><a href="#Variable-Annotations" class="headerlink" title="Variable Annotations"></a>Variable Annotations</h3><p>对于Variable Annotations，如下图所示，虽然目前PyCharm还不能很好地提示变量类型不对，但是人在读代码的时候，还是会起到一定的帮助。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-32-23.png" alt=""></p>
-<p>除了这种写法外，Variable Annotations还支持把类型写在注释中，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-35-15.png" alt=""></p>
-<p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-41-12.png" alt=""></p>
+<h3 id="Variable-Annotations"><a href="#Variable-Annotations" class="headerlink" title="Variable Annotations"></a>Variable Annotations</h3><p>对于Variable Annotations，如下图所示，虽然目前PyCharm还不能很好地提示变量类型不对，但是人在读代码的时候，还是会起到一定的帮助。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-32-23.png" alt=""></p>
+<p>除了这种写法外，Variable Annotations还支持把类型写在注释中，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-35-15.png" alt=""></p>
+<p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-41-12.png" alt=""></p>
 <p>关于Variable Annotations的更多用法，可以参阅：<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">Syntax for Variable Annotations</a><br>关于Mypy，可以参阅它的官方文档：<a href="http://mypy.readthedocs.io/en/stable/index.html" target="_blank" rel="external">Mypy documentation</a></p>
-<h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
+<h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
 <h2 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h2><p>这种方法来自与Java Bean的思想，它主要用来解决列表套字典，字典套字典，字典套列表，列表套列表这种深层的嵌套关系。关于这个方法，请参阅另一篇文章：<a href="http://kingname.info/2016/06/19/bean-in-python/" target="_blank" rel="external">可爱的豆子——使用Beans思想让Python代码更易维护</a></p>
 ]]></content>
     
@@ -928,7 +928,7 @@
     <link href="https://www.kingname.info/2017/04/17/decorate-for-method/"/>
     <id>https://www.kingname.info/2017/04/17/decorate-for-method/</id>
     <published>2017-04-17T12:44:31.000Z</published>
-    <updated>2017-04-17T13:25:32.000Z</updated>
+    <updated>2018-09-25T13:33:27.477Z</updated>
     
     <content type="html"><![CDATA[<p>目前在中文网上能搜索到的绝大部分关于装饰器的教程，都在讲如何装饰一个普通的函数。本文介绍如何使用Python的装饰器装饰一个类的方法，同时在装饰器函数中调用类里面的其他方法。本文以捕获一个方法的异常为例来进行说明。</p>
 <a id="more"></a>
@@ -943,8 +943,8 @@
 <p>这种写法，确实可以捕获到<code>origin_func()</code>的异常，但是如果在发生异常的时候，需要调用类里面的另一个方法来处理异常，这又应该怎么办？答案是给wrapper增加一个参数：self.</p>
 <p>代码变为如下形式：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">catch_exception</span><span class="params">(origin_func)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(self, *args, **kwargs)</span>:</span></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            u = origin_func(self, *args, **kwargs)</div><div class="line">            <span class="keyword">return</span> u</div><div class="line">        <span class="keyword">except</span> Exception:</div><div class="line">            self.revive() <span class="comment">#不用顾虑，直接调用原来的类的方法</span></div><div class="line">            <span class="keyword">return</span> <span class="string">'an Exception raised.'</span></div><div class="line">    <span class="keyword">return</span> wrapper</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">revive</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'revive from exception.'</span>)</div><div class="line">        <span class="comment"># do something to restore</span></div><div class="line"></div><div class="line"><span class="meta">    @catch_exception</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">read_value</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'here I will do something.'</span>)</div><div class="line">        <span class="comment"># do something.</span></div></pre></td></tr></table></figure></p>
 <p>只需要修改装饰器<strong>定义</strong>的部分，使用装饰器的地方完全不需要做修改。</p>
-<p>下图为正常运行时的运行结果：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-04-17-21-19-25.png" alt="正常运行"></p>
-<p>下图为发生异常以后捕获并处理异常：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-04-17-21-20-59.png" alt="发生异常"></p>
+<p>下图为正常运行时的运行结果：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-04-17-21-19-25.png" alt="正常运行"></p>
+<p>下图为发生异常以后捕获并处理异常：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-04-17-21-20-59.png" alt="发生异常"></p>
 <p>通过添加一个self参数，类外面的装饰器就可以直接使用类里面的各种方法，也可以直接使用类的属性。</p>
 ]]></content>
     
@@ -968,7 +968,7 @@
     <link href="https://www.kingname.info/2017/02/05/tweet/"/>
     <id>https://www.kingname.info/2017/02/05/tweet/</id>
     <published>2017-02-05T15:56:31.000Z</published>
-    <updated>2017-02-05T15:59:29.000Z</updated>
+    <updated>2018-09-25T13:33:27.441Z</updated>
     
     <content type="html"><![CDATA[<h2 id="2017-02"><a href="#2017-02" class="headerlink" title="2017.02"></a>2017.02</h2><p>To use the decorator, apply it as innermost decorator to a view function. When applying further decorators, <em>always</em> remember that the <code>route()</code> decorator is the outermost.</p>
 <a id="more"></a>
@@ -993,9 +993,9 @@
 </ul>
 <p>要判断一个角色有哪些权限，人眼可以直接看对应的位置上面是0还是1，是0就是没有权限，是1就是有权限。在程序里面可以通过和对应权限的四位二进制数取位与操作。例如，0111编辑是否有写权限？因为0111 &amp; 0010 = 0010 所以有写权限。只要角色的四位二进制数和权限的四位二进制数取位与，得到的结果还是权限的四位二进制数，那么就有这个权限。</p>
 <hr>
-<p>正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/count.gif" alt="手指使用二进制计数"></p>
+<p>正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/count.gif" alt="手指使用二进制计数"></p>
 <hr>
-<p>Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。<a href="https://workflowy.com/invite/4b7e29eb.lnx" target="_blank" rel="external">Workflowy</a>的出现可以解决这个问题。Workflowy只支持文本，界面极其简洁：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-28-16-59-48.png" alt=""><br>通过它来创建一个大纲，有助于理清思路。</p>
+<p>Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。<a href="https://workflowy.com/invite/4b7e29eb.lnx" target="_blank" rel="external">Workflowy</a>的出现可以解决这个问题。Workflowy只支持文本，界面极其简洁：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-28-16-59-48.png" alt=""><br>通过它来创建一个大纲，有助于理清思路。</p>
 <hr>
 <p>在HTML的<code>&lt;form&gt;&lt;/form&gt;</code>表单中，有一个属性叫做<code>action</code>,它的值是空或者是一个URL的相对路径或绝对路径。如果为空，表单将会被提交到现在这个页面的URL；如果不为空，表单将会被提交到action的值对应的页面来处理。</p>
 <p>理解这一点，那些喜欢在Flask中，把GET和POST写到一个Route，同时又要为GET带参数的人，需要特别注意。因为当你POST的时候，如果action不为空，参数可能会被丢失。</p>
@@ -1020,7 +1020,7 @@
 <hr>
 <p>使用<a href="https://zh.wikipedia.org/wiki/%E8%B0%83%E5%BA%A6%E5%9C%BA%E7%AE%97%E6%B3%95" target="_blank" rel="external">调度场算法</a>可以将中缀表达式转换为逆波兰式。调度场算法是通过栈来实现的。操作数直接输出，符号需要判断优先级来判断应该直接压栈还是直接输出或者应该先将栈顶元素输出再压栈。</p>
 <blockquote>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/170122.png" alt="调度场算法示意图"></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/170122.png" alt="调度场算法示意图"></p>
 </blockquote>
 ]]></content>
     
@@ -1044,7 +1044,7 @@
     <link href="https://www.kingname.info/2017/01/07/findmyphone/"/>
     <id>https://www.kingname.info/2017/01/07/findmyphone/</id>
     <published>2017-01-07T06:02:02.000Z</published>
-    <updated>2017-01-07T07:45:31.000Z</updated>
+    <updated>2018-09-25T13:33:27.410Z</updated>
     
     <content type="html"><![CDATA[<p>我们都有这样的生活体验</p>
 <blockquote>
@@ -1062,17 +1062,17 @@
 <li>让手机在30秒以后放音乐&gt;<a href="http://automatic.kingname.info:8888/kingname/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a></li>
 <li>停止寻找手机&gt;<a href="http://automatic.kingname.info:8888/kingname/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a></li>
 </ul>
-<h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3><p>为了让每个人都能使用这个服务，我开放了账号注册的功能。注册只需要提供用户名即可，不需要密码，不需要邮箱，不需要手机号。注册账号只需要访问<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a> 其中，账号只能使用大小写字母或者数字或者下划线。如果你的账号可以使用，你将会看到如下画面：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-14-40-02.png" alt=""><br>就是这么简单。你的账号已经注册成功了，接下来就可以使用服务了。</p>
-<p>当然，如果你的账号不巧被别人注册过了，你将会看到如下的提示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-14-41-25.png" alt=""><br>这个时候你需要换一个账号注册。</p>
-<h3 id="获得状态"><a href="#获得状态" class="headerlink" title="获得状态"></a>获得状态</h3><p>注册完成以后，访问<a href="http://automatic.kingname.info:8888/账号" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a>, 你可以看到当前的状态，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-15-27-38.png" alt=""><br>这句话表示，现在不需要让手机自己叫起来。这个网址是给手机上面的Automate使用的，一般情况下不需要手动输入。</p>
-<h3 id="呼叫手机"><a href="#呼叫手机" class="headerlink" title="呼叫手机"></a>呼叫手机</h3><p>突然，你发现你的手机不见了。这个时候，赶紧访问<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a>, 如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-14-50-03.png" alt=""><br>当你访问了这个页面以后，在30秒内，你的手机就会欢快的播放音乐了。各位需要把这个网址保存为书签，方便以后直接使用。</p>
+<h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3><p>为了让每个人都能使用这个服务，我开放了账号注册的功能。注册只需要提供用户名即可，不需要密码，不需要邮箱，不需要手机号。注册账号只需要访问<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a> 其中，账号只能使用大小写字母或者数字或者下划线。如果你的账号可以使用，你将会看到如下画面：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-40-02.png" alt=""><br>就是这么简单。你的账号已经注册成功了，接下来就可以使用服务了。</p>
+<p>当然，如果你的账号不巧被别人注册过了，你将会看到如下的提示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-41-25.png" alt=""><br>这个时候你需要换一个账号注册。</p>
+<h3 id="获得状态"><a href="#获得状态" class="headerlink" title="获得状态"></a>获得状态</h3><p>注册完成以后，访问<a href="http://automatic.kingname.info:8888/账号" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a>, 你可以看到当前的状态，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-27-38.png" alt=""><br>这句话表示，现在不需要让手机自己叫起来。这个网址是给手机上面的Automate使用的，一般情况下不需要手动输入。</p>
+<h3 id="呼叫手机"><a href="#呼叫手机" class="headerlink" title="呼叫手机"></a>呼叫手机</h3><p>突然，你发现你的手机不见了。这个时候，赶紧访问<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a>, 如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-50-03.png" alt=""><br>当你访问了这个页面以后，在30秒内，你的手机就会欢快的播放音乐了。各位需要把这个网址保存为书签，方便以后直接使用。</p>
 <h3 id="停止呼叫"><a href="#停止呼叫" class="headerlink" title="停止呼叫"></a>停止呼叫</h3><p>当你找到了手机，你就需要这个网址：<a href="http://automatic.kingname.info:8888/账号/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a> 这个网址一般情况下是给Automate使用的，大家不需要手动输入。</p>
-<h2 id="Automate"><a href="#Automate" class="headerlink" title="Automate"></a>Automate</h2><p>现在再来看看安卓上面的Automate应该如何配置流程。我已经将文件放在了：<a href="https://github.com/kingname/Automatic/blob/master/BackEnd/automate/Find%20my%20phone.flo" target="_blank" rel="external">Github</a>上面。点击Download按钮即可下载，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-15-04-56.png" alt=""></p>
-<p>下载完成以后，将这个文件放在手机中，打开手机上的Automate，点击右上角的三个竖着的点，选择<code>Import</code>，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-15-08-49.png" alt=""></p>
-<p>再点击<code>SD card</code>,如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-15-08-24.png" alt=""></p>
-<p>选中刚刚下载的文件，即可导入成功。导入完成以后，打开这个flow, 点击右上角铅笔的图标，可以打开整个流程图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-15-16-49.png" alt=""><br>你需要修改的，只有我画红框的三个方块。</p>
-<p>对于这两个HTTP Request，你只需要在<code>REQUEST URL</code>中，把网址里面的账号修改成你自己的账号。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-15-19-27.png" alt=""></p>
-<p>对于Sound Play这个方块，因为我手机上面的音乐不一定在你手机上也有同样的，所以一定要修改音乐：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-01-07-15-20-50.png" alt=""><br>点<code>SOUND URI</code>，选择你一个你喜欢的音乐。</p>
+<h2 id="Automate"><a href="#Automate" class="headerlink" title="Automate"></a>Automate</h2><p>现在再来看看安卓上面的Automate应该如何配置流程。我已经将文件放在了：<a href="https://github.com/kingname/Automatic/blob/master/BackEnd/automate/Find%20my%20phone.flo" target="_blank" rel="external">Github</a>上面。点击Download按钮即可下载，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-04-56.png" alt=""></p>
+<p>下载完成以后，将这个文件放在手机中，打开手机上的Automate，点击右上角的三个竖着的点，选择<code>Import</code>，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-49.png" alt=""></p>
+<p>再点击<code>SD card</code>,如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-24.png" alt=""></p>
+<p>选中刚刚下载的文件，即可导入成功。导入完成以后，打开这个flow, 点击右上角铅笔的图标，可以打开整个流程图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-16-49.png" alt=""><br>你需要修改的，只有我画红框的三个方块。</p>
+<p>对于这两个HTTP Request，你只需要在<code>REQUEST URL</code>中，把网址里面的账号修改成你自己的账号。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-19-27.png" alt=""></p>
+<p>对于Sound Play这个方块，因为我手机上面的音乐不一定在你手机上也有同样的，所以一定要修改音乐：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-20-50.png" alt=""><br>点<code>SOUND URI</code>，选择你一个你喜欢的音乐。</p>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>Flow设置完成，点击右上角✓保存，然后点击<code>Start</code>启动这个Flow。在电脑或者手机浏览器中访问：<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a> 坐等30秒，听一下你的手机相应你的呼唤吧。然后再试一试把手机调成静音，看看它是不是依然可以大声的叫出来~</p>
 <p>本文设计到的网页源代码，请访问：<a href="https://github.com/kingname/Automatic" target="_blank" rel="external">https://github.com/kingname/Automatic</a>获取。</p>
 ]]></content>
@@ -1104,7 +1104,7 @@
     <link href="https://www.kingname.info/2016/12/04/how-to-know-webpage-loaded/"/>
     <id>https://www.kingname.info/2016/12/04/how-to-know-webpage-loaded/</id>
     <published>2016-12-04T10:10:33.000Z</published>
-    <updated>2016-12-04T13:31:26.000Z</updated>
+    <updated>2018-09-25T13:33:27.400Z</updated>
     
     <content type="html"><![CDATA[<p>在对安卓手机设计自动化测试用例的时候，判断一个测试场景是否可以自动化的依据在于其是否需要人的参与。对于wifi能否自动打开关闭，短信能否自动收发这样的场景，不需要人参与就可以通过程序来判断，因此对Wifi与短信这样的测试，可以通过程序来实现自动化测试。但是另外还有一些测试场景，需要人的眼睛来看，这种场景要实现自动化就比较困难。<br><a id="more"></a></p>
 <h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>使用安卓的浏览器访问一个网站，如何判断网站已经加载成功？目标网站确实已经收到了请求，也返回了HTML数据，手机也收到了网站返回的数据，但是不知道什么原因，在某些时候，浏览器上面却什么都没有显示，而浏览器输出的Log却完全看不出异样。对于这样的场景，为了减少人力开销，如何让测试程序自动发现网页没有加载成功，并通知开发者？</p>
@@ -1112,16 +1112,16 @@
 <h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>由于这个需求只需要判断网页是否加载成功，因此并不需要非常高深的图像识别的理论。对一个网页来说，所谓的加载成功就是指它里面的内容能够正常地在浏览器中显示出来。因此，可以设计一个特别的网页，网页要足够简单，但是又要足够特别，从而方便图像识别。</p>
 <p>这篇文章将会使用一个纯绿色的网页来进行测试。网页加载完成以后，手机屏幕上绝大多数的区域是绿色的。这个时候，截取屏幕，并使用程序来识别这张截图。如果发现截图中有大面积的绿色区域，那就证明网页已经加载完成了。</p>
 <h2 id="Demo实现"><a href="#Demo实现" class="headerlink" title="Demo实现"></a>Demo实现</h2><h3 id="纯绿色的网页"><a href="#纯绿色的网页" class="headerlink" title="纯绿色的网页"></a>纯绿色的网页</h3><p>创建一个“greenpage.html”，它的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Green Page&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body bgcolor=&quot;green&quot;&gt;</div><div class="line"></div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
-<p>网站加载成功以后，页面是全绿色的，如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-18-49-20.png" alt=""></p>
+<p>网站加载成功以后，页面是全绿色的，如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-18-49-20.png" alt=""></p>
 <p>在局域网中搭建一个Web Server，并让局域网的设备可以链接。打开终端，进入到这个html文件所在的文件夹，并通过Python 3在局域网中搭建一个简单地WebServer：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd ~/Project/IdentifyWebpage</div><div class="line">python -m http.server</div></pre></td></tr></table></figure></p>
-<p>使用手机访问“电脑IP:8000/greenpage.html”，效果如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-19-01-42.png" alt=""></p>
+<p>使用手机访问“电脑IP:8000/greenpage.html”，效果如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-01-42.png" alt=""></p>
 <h3 id="识别绿色截图"><a href="#识别绿色截图" class="headerlink" title="识别绿色截图"></a>识别绿色截图</h3><p>这个Demo使用Pillow图像处理库来做图像颜色的识别，通过pip安装Pillow：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install pillow</div></pre></td></tr></table></figure></p>
 <p>安装完成以后，在Python程序中使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">from PIL import Image</div></pre></td></tr></table></figure></p>
 <p>导入它图像模块。</p>
 <p>程序使用Image模块载入截图，并从截图中读取某一点颜色RGB值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">img = Image.open(&apos;snapshot.png&apos;)</div><div class="line">color = img.getpixel((700, 800))</div><div class="line">print(color)</div></pre></td></tr></table></figure></p>
 <p>代码中的（700, 800）是截图中的某一点的座标。第一个参数为横座标，第二个参数为纵座标。截图左上角为(0, 0)，越往下，纵座标越大；越往右，横座标越大。</p>
 <p>为了谨慎起见，在截图中取9个点，分别获取他们的RGB值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">points = [(200, 300), (455, 678), (333, 1200),</div><div class="line">          (300, 500), (888, 678), (900, 800),</div><div class="line">          (400, 600), (245, 365), (799, 777)]</div><div class="line">img = Image.open(&apos;snapshot.png&apos;)</div><div class="line">for point in self.points:</div><div class="line">    color = img.getpixel(point)</div><div class="line">    print(color)</div></pre></td></tr></table></figure></p>
-<p>运行以后的结果如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-19-44-55.png" alt=""><br>从图中可以看到，9个点的RGB值全部是(0, 128, 0)，这个值正是绿色的RGB值。到这里，可以认为这个图片大部分的地方确实是绿色的。如果你觉得9个点还是不够全面，那你可以使用代码生成几百个点来计算。</p>
+<p>运行以后的结果如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-44-55.png" alt=""><br>从图中可以看到，9个点的RGB值全部是(0, 128, 0)，这个值正是绿色的RGB值。到这里，可以认为这个图片大部分的地方确实是绿色的。如果你觉得9个点还是不够全面，那你可以使用代码生成几百个点来计算。</p>
 <h3 id="获取屏幕截图"><a href="#获取屏幕截图" class="headerlink" title="获取屏幕截图"></a>获取屏幕截图</h3><p>adb（Android Debug Bridge）是安卓的调试工具，可以通过adb的命令来控制手机。要对手机截图，只需要使用下面两条命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb shell /system/bin/screencap -p /sdcard/screenshot.png</div><div class="line">adb pull /sdcard/screenshot.png ~/Project/IndenfyWebpage/screenshot.png</div></pre></td></tr></table></figure></p>
 <p>第一条命令生成截图，并将截图保存到手机内置存储中。虽然这里写的是“sdcard”，但是对于现在没有SD卡的手机，这条命令依然可以使用。</p>
 <p>第二条命令将手机内置存储中的截图文件取出来，并保存到电脑中。如果你的电脑为Windows系统，可以将第二条命令修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb pull /sdcard/screenshot.png D:/Project/IndenfyWebpage/screenshot.png</div></pre></td></tr></table></figure></p>
@@ -1153,7 +1153,7 @@
     <link href="https://www.kingname.info/2016/11/07/autoalarmclock/"/>
     <id>https://www.kingname.info/2016/11/07/autoalarmclock/</id>
     <published>2016-11-07T14:56:21.000Z</published>
-    <updated>2016-12-04T12:24:13.000Z</updated>
+    <updated>2018-09-25T13:33:27.407Z</updated>
     
     <content type="html"><![CDATA[<p>闹钟已经成了我们生活中必不可少的东西。如果全球每个国家的当地时间明天早上，所有的闹钟突然都不响了，不知道会发生什么样的混乱。</p>
 <p>然而我们要讨论另外一种情况，闹钟每天定时响起来，真的是最好的情况吗？你有过醒来以后等闹钟的经历吗？如果你有时候在闹钟响之前就起来了，那么你会不会希望闹钟能知道你已经起来了？如果你提前醒了，那么闹钟就不响，只有你一直睡着的时候，闹钟才会按时响起来。<br><a id="more"></a></p>
@@ -1178,16 +1178,16 @@
 <p>这个文件用到了Python的requests库，如果你没有的话，请使用pip安装。</p>
 <p>再创建一个EnableAlarmClock.bat文件，文件内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python EnableAlarmClock.py</div></pre></td></tr></table></figure></p>
 <p>打开Windows的 <strong>任务计划</strong> ，触发器选择“当前用户登录时”，操作选择“启动程序”，并填写EnableAlarmClock.bat的路径，如下图所示：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/task.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/task.png" alt=""></p>
 <p>这样，每次开机登录桌面的时候，程序自动就会访问设定闹钟的页面了。</p>
 <h3 id="手机端"><a href="#手机端" class="headerlink" title="手机端"></a>手机端</h3><p>Automate是安卓上面的一个强大的自动化工具，类似于IFTTT和iOS上面的Workflow。</p>
-<p>在Automate中创建一个Flow，如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161108-074321.png" alt=""><br>其中涉及到了”Time await”, “HTTP request”, “Expression true?”, “Alarm add”这几个组件。</p>
+<p>在Automate中创建一个Flow，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161108-074321.png" alt=""><br>其中涉及到了”Time await”, “HTTP request”, “Expression true?”, “Alarm add”这几个组件。</p>
 <ul>
-<li><p>“Time await”的设置如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224111.png" alt=""></p>
+<li><p>“Time await”的设置如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224111.png" alt=""></p>
 </li>
-<li><p>“HTTP request”的设置为下面两张图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224136.png" alt=""><br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224142.png" alt=""></p>
+<li><p>“HTTP request”的设置为下面两张图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224136.png" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224142.png" alt=""></p>
 </li>
-<li><p>“Alarm add”的设置为下图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/Screenshot_20161107-224155.png" alt=""><br>这里由于没有设置“REPEAT WEEKDAYS”这一项，所以闹钟都是一次性的，关了以后，第二天需要再根据实际情况来让Automate来决定是否需要创建。</p>
+<li><p>“Alarm add”的设置为下图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224155.png" alt=""><br>这里由于没有设置“REPEAT WEEKDAYS”这一项，所以闹钟都是一次性的，关了以后，第二天需要再根据实际情况来让Automate来决定是否需要创建。</p>
 </li>
 </ul>
 <p>设置并启动这个Flow以后，每天早上的闹钟就可以根据你是否在电脑前面工作而决定要不要闹响了。</p>
@@ -1216,7 +1216,7 @@
     <link href="https://www.kingname.info/2016/06/27/alias-vs-virtualenv/"/>
     <id>https://www.kingname.info/2016/06/27/alias-vs-virtualenv/</id>
     <published>2016-06-27T15:40:56.000Z</published>
-    <updated>2016-11-30T13:56:11.000Z</updated>
+    <updated>2018-09-25T13:33:27.417Z</updated>
     
     <content type="html"><![CDATA[<p>virtualenv 可以虚拟出一个独立的Python环境，在这个环境中安装的第三方库不会对系统中的Python产生影响。作为一个系统洁癖，我的系统中的Python环境只安装最主要的第三方库，我在开发Python项目的时候一般使用virtualenv生成的独立环境来安装项目需要的第三方库。但是如果同时使用了zsh的alias 和virtualenv，有可能就会导致virtualenv下面的python不能使用第三方库。</p>
 <h2 id="Python的运行方式"><a href="#Python的运行方式" class="headerlink" title="Python的运行方式"></a>Python的运行方式</h2><p>一般我们会使用以下两种方式之一来运行Python：</p>
@@ -1286,7 +1286,7 @@
     <link href="https://www.kingname.info/2016/06/19/bean-in-python/"/>
     <id>https://www.kingname.info/2016/06/19/bean-in-python/</id>
     <published>2016-06-19T13:43:33.000Z</published>
-    <updated>2016-11-30T13:56:15.000Z</updated>
+    <updated>2018-09-25T13:33:27.459Z</updated>
     
     <content type="html"><![CDATA[<p>我曾经是一个对Java非常反感的人，因为Java的语法非常啰嗦。而用惯了动态类型的Python再使用静态类型的Java就会觉得多出了很多的工作量。</p>
 <p>因为工作的关系，我开始使用Java来做项目。在这个过程中，我发现Java在某些方面确实和Python不一样。</p>
@@ -1349,7 +1349,7 @@
     <link href="https://www.kingname.info/2016/06/04/markdownPicPicker/"/>
     <id>https://www.kingname.info/2016/06/04/markdownPicPicker/</id>
     <published>2016-06-04T08:40:06.000Z</published>
-    <updated>2016-11-30T13:56:22.000Z</updated>
+    <updated>2018-09-25T13:33:27.390Z</updated>
     
     <content type="html"><![CDATA[<h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><p>MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&lt;图片地址&gt;))复制到剪贴板中。</p>
 <p>项目地址：<a href="https://github.com/kingname/MarkdownPicPicker" target="_blank" rel="external">https://github.com/kingname/MarkdownPicPicker</a></p>
@@ -1361,9 +1361,9 @@
 <li>全局监听键盘(默认不开启)</li>
 <li>独立配置文件</li>
 </ol>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置文件保存在<code>config.ini</code>文件中，其意义分别如下：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="section">[basic]</span></div><div class="line"><span class="attr">run_method</span> = bat # 设定程序的运行方式，bat为使用bat文件触发，global_listen为全局键盘监听方式</div><div class="line"><span class="attr">picture_folder</span> = pic #设定程序的运行方式，bat为使用bat文件触发，pyHook为全局键盘监听方式</div><div class="line"><span class="attr">picture_suffix</span> = png #截图的保存格式，可以选择bmp或者png</div><div class="line"><span class="comment"># now support qiniu only</span></div><div class="line"><span class="attr">picture_bed</span> = qiniu</div><div class="line"><span class="section"></span></div><div class="line">[global_listen]</div><div class="line"><span class="attr">short_key_one</span> = Lwin #快捷键第一个按键</div><div class="line"><span class="attr">short_key_two</span> = C #快捷键第二个按键</div><div class="line"><span class="section"></span></div><div class="line">[qiniu]</div><div class="line"><span class="comment">#七牛云的相关配置</span></div><div class="line"><span class="attr">access_key</span> = Q6sS422O05AwYD5aVqM3FqCcCpF36tqvyQ75Zvzw</div><div class="line"><span class="attr">secret_key</span> = <span class="number">6</span>QtAqqTxoSxZP-<span class="number">2</span>uoXROehxPLX2CCmoOaB2aLObM</div><div class="line"><span class="attr">container_name</span> = picturebed  #七牛云的图片储存位置</div><div class="line"><span class="attr">url</span> = http://<span class="number">7</span>sbpmp.com1.z0.glb.clouddn.com/&#123;&#125; #七牛云分配的默认域名</div></pre></td></tr></table></figure></p>
-<p>其中<code>access_key</code> 和 <code>secret_key</code> 可以在七牛云的控制面板中看到，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/20160605083025.png" alt=""><br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-22-43.png" alt=""> </p>
-<p><code>container_name</code> 为下图所示内容：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-20-24-40.png" alt=""> </p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置文件保存在<code>config.ini</code>文件中，其意义分别如下：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="section">[basic]</span></div><div class="line"><span class="attr">run_method</span> = bat # 设定程序的运行方式，bat为使用bat文件触发，global_listen为全局键盘监听方式</div><div class="line"><span class="attr">picture_folder</span> = pic #设定程序的运行方式，bat为使用bat文件触发，pyHook为全局键盘监听方式</div><div class="line"><span class="attr">picture_suffix</span> = png #截图的保存格式，可以选择bmp或者png</div><div class="line"><span class="comment"># now support qiniu only</span></div><div class="line"><span class="attr">picture_bed</span> = qiniu</div><div class="line"><span class="section"></span></div><div class="line">[global_listen]</div><div class="line"><span class="attr">short_key_one</span> = Lwin #快捷键第一个按键</div><div class="line"><span class="attr">short_key_two</span> = C #快捷键第二个按键</div><div class="line"><span class="section"></span></div><div class="line">[qiniu]</div><div class="line"><span class="comment">#七牛云的相关配置</span></div><div class="line"><span class="attr">access_key</span> = Q6sS422O05AwYD5aVqM3FqCcCpF36tqvyQ75Zvzw</div><div class="line"><span class="attr">secret_key</span> = <span class="number">6</span>QtAqqTxoSxZP-<span class="number">2</span>uoXROehxPLX2CCmoOaB2aLObM</div><div class="line"><span class="attr">container_name</span> = picturebed  #七牛云的图片储存位置</div><div class="line"><span class="attr">url</span> = https://kingname-<span class="number">1257411235</span>.cos.ap-chengdu.myqcloud.com/&#123;&#125; #七牛云分配的默认域名</div></pre></td></tr></table></figure></p>
+<p>其中<code>access_key</code> 和 <code>secret_key</code> 可以在七牛云的控制面板中看到，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20160605083025.png" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-20-22-43.png" alt=""> </p>
+<p><code>container_name</code> 为下图所示内容：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-20-24-40.png" alt=""> </p>
 <p><code>short_key_one</code> 和 <code>short_key_two</code> 为快捷键的两个按键，默认为左侧windows徽标键(<code>Lwin</code>) 和 字母 <code>C</code>。</p>
 <h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>将程序配置好以后运行，创建一个批处理文件markdownpicpicker.bat, 其内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;G:\github\MarkdownPicPicker\venv\Scripts\activate &amp; cd /d G:\github\MarkdownPicPicker &amp; python MarkdownPicPicker.py &amp; deactivate &amp; exit&quot;</div></pre></td></tr></table></figure></p>
 <p>路径请根据实际情况修改。</p>
@@ -1371,7 +1371,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;cd /d &lt;MarkdownPicPicker.py脚本所在文件夹路径&gt; &amp; python MarkdownPicPicker.py &amp; exit&quot;</div></pre></td></tr></table></figure>
 <p>不论哪种方式，均不要在任何相关的路径上出现中文，否则会导致不可预知的问题。</p>
 <p>然后右键选择批处理，发送到桌面快捷方式。接着右键快捷方式，属性，在“快捷键” 这一栏按下字母Q，它将自动填充为 <code>Ctrl + Alt + Q</code>, 确定。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-05-00-45-03.png" alt=""> </p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-05-00-45-03.png" alt=""> </p>
 <p>只需要首先使用QQ截图或者其他截图工具将图片保存到剪贴板中，然后按下设定好的快捷键即可。Markdown格式的图片链接就已经保存到剪贴板中了。在需要使用的地方直接粘贴。</p>
 <p>不过这样设定的快捷键，按下以后会有大概一秒钟的延迟。推荐大家使用AutoHotKey来触发这个bat文件。</p>
 <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><h3 id="Pillow-bug修正"><a href="#Pillow-bug修正" class="headerlink" title="Pillow bug修正"></a>Pillow bug修正</h3><p>本程序使用了Pillow库中的 <code>ImageGrab.grabclipboard()</code> 方法来获取剪贴板中的数据，但是由于这个方法有一个bug, 导致可能会爆以下错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Unsupported BMP bitfields layout</div></pre></td></tr></table></figure></p>
@@ -1380,7 +1380,7 @@
 <p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</div><div class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</div><div class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</div><div class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</div><div class="line">    &apos;&apos;&apos;新增内容开始&apos;&apos;&apos;</div><div class="line">    elif file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgb_mask&apos;] == (0xff0000, 0xff00, 0xff):</div><div class="line">        pass</div><div class="line">    &apos;&apos;&apos;新增内容结束&apos;&apos;&apos;</div><div class="line">    else:</div><div class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div><div class="line">else:</div><div class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div></pre></td></tr></table></figure></p>
 <p>就能解决本问题。</p>
 <h3 id="全局键盘监听"><a href="#全局键盘监听" class="headerlink" title="全局键盘监听"></a>全局键盘监听</h3><p>本程序还有一个功能是全局监听键盘，通过特殊的快捷键组合就可以直接触发读取图片上传图片的操作。但是由于这个功能使用到了pyHook这个库。但是这个库在设计上存在缺陷，如果当前窗体的标题包含Unicode字符时，会导致Python崩溃。因此这个功能默认不启动。</p>
-<h3 id="获取键盘按键"><a href="#获取键盘按键" class="headerlink" title="获取键盘按键"></a>获取键盘按键</h3><p>如果不清楚某个键盘按键对应的字符串是什么样子的，可以运行QueryKey.py这个文件，运行以后按下某个键，控制台上就会显示相应的信息。其中<code>Key</code>就是可以设置到<code>SHORT_KEY_ONE</code>和<code>SHORT_KEY_TWO</code>的内容。如图为按下键盘左Shift键以后显示的信息。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-06-04-23-14-30.png" alt=""> </p>
+<h3 id="获取键盘按键"><a href="#获取键盘按键" class="headerlink" title="获取键盘按键"></a>获取键盘按键</h3><p>如果不清楚某个键盘按键对应的字符串是什么样子的，可以运行QueryKey.py这个文件，运行以后按下某个键，控制台上就会显示相应的信息。其中<code>Key</code>就是可以设置到<code>SHORT_KEY_ONE</code>和<code>SHORT_KEY_TWO</code>的内容。如图为按下键盘左Shift键以后显示的信息。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-23-14-30.png" alt=""> </p>
 <h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ul>
 <li>支持更多的截图方式</li>
 <li>支持更多的图床</li>

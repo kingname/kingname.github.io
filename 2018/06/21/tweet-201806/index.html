@@ -106,8 +106,8 @@ deque是一个双向链表，所以操作头尾非常简单。
 在两头插入数据，deque的时间复杂度为O(1), list为O(n)
 deque是一个双向链表，所以操作头尾非常简单。
 随机往中间插入数据，deque与list的时">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
-<meta property="og:updated_time" content="2018-06-21T14:54:45.000Z">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-06-21-22-31-04.png">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.427Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="技巧收集-M1806">
 <meta name="twitter:description" content="2018.05grep持续监控Log：1tail -f file | grep --line-buffered my_pattern
@@ -118,7 +118,7 @@ deque是一个双向链表，所以操作头尾非常简单。
 在两头插入数据，deque的时间复杂度为O(1), list为O(n)
 deque是一个双向链表，所以操作头尾非常简单。
 随机往中间插入数据，deque与list的时">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-06-21-22-31-04.png">
 
 
 
@@ -393,12 +393,12 @@ deque是一个双向链表，所以操作头尾非常简单。
 <a id="more"></a>
 <h2 id="2018-04"><a href="#2018-04" class="headerlink" title="2018.04"></a>2018.04</h2><p>MongoDB的聚合查询中，<code>$substr</code>只能匹配ASCII的数据，对于中文要使用<code>$substrCP</code></p>
 <hr>
-<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)print(current_app.name)</div></pre></td></tr></table></figure></p>
+<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)</div><div class="line">print(current_app.name)</div></pre></td></tr></table></figure></p>
 <p>会报错：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RuntimeError: working outside of application context</div></pre></td></tr></table></figure></p>
-<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():    print(current_app.name)</div></pre></td></tr></table></figure></p>
+<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():</div><div class="line">    print(current_app.name)</div></pre></td></tr></table></figure></p>
 <hr>
 <p>扩展AWS的磁盘空间：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-06-21-22-31-04.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-06-21-22-31-04.png" alt=""></p>
 <p>点击<code>修改卷</code>增加磁盘配额，SSH进入服务器，输入以下代码：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">lsblk  <span class="comment">#这条命令用来确定当前可用的磁盘空间小于磁盘配额</span></div><div class="line">sudo growpart /dev/xvda 1</div><div class="line">sudo resize2fs /dev/xvda1</div></pre></td></tr></table></figure>
 <p>再次执行<code>df -h</code>可以看到已经使用了新的空间</p>

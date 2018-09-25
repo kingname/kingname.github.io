@@ -92,20 +92,20 @@
 <meta property="og:url" content="https://www.kingname.info/2017/12/17/auto-deploy-blog/index.html">
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-25-25.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-27-06.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-35-50.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-37-57.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-39-09.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-43-09.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-06-45.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-11-50.png">
-<meta property="og:updated_time" content="2017-12-17T13:18:31.142Z">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-23-18.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-25-25.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-27-06.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-35-50.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-37-57.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-39-09.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-43-09.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-21-06-45.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-21-11-50.png">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.383Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Jenkins自动部署博客">
 <meta name="twitter:description" content="这篇文章比较简单，适合初学持续集成的读者，本文可以帮助你对基于Jenkins的持续集成有一个比较全局的概念。">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-23-18.png">
 
 
 
@@ -383,23 +383,23 @@
 <p>本文实现的是博客的自动部署，没有任何测试，也没有Code Review，也没有编译，服务器也只有一台，复杂程度当然远远低于持续集成。不过管中窥豹，来看看这个简单地流程是如何走通的，对初学者也会有帮助。</p>
 <p>本文假设你已经在服务器上面搭建好了Jenkins环境。如果你还没有安装Jenkins或者不会安装，那么可以“参考”这篇文章：<a href="https://kingname.info/2016/05/29/raspberryCI-1/" target="_blank" rel="external">搭建持续集成环境(一)</a>。由于这篇文章是18个月以前写的，系统也是小众的Arch Linux，所以建议你还是在网上搜一下最新的Jenkins安装教程比较好。</p>
 <h3 id="设置GitHub"><a href="#设置GitHub" class="headerlink" title="设置GitHub"></a>设置GitHub</h3><p>在GitHub中进入博客所在的Repo，并点击<code>Settings</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-23-18.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-23-18.png" alt=""></p>
 <p>在设置页面，单击左侧的<code>Integrations &amp; services</code>，并选择<code>Add service</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-25-25.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-25-25.png" alt=""></p>
 <p>从下拉菜单中，选中<code>Jenkins (GitHub plugin)</code>。在新打开的界面，填写Jenkins的信息，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-27-06.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-27-06.png" alt=""></p>
 <p>其中<code>Jenkins hook url</code>填写的是我的服务器的Jenkins地址加上<code>/GitHub-webhook/</code>，所以完整的地址为<code>http://xx.xx.xx.xx:8080/GitHub-webhook/</code>。把这里的<code>xx</code>换成实际的IP地址或者域名即可。需要注意的是，网址末尾的斜杠一定不能省略。</p>
 <p>填写好信息以后保存，GitHub就配置好了。</p>
 <h3 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h3><p>Jenkins需要安装<code>GitHub Plugin</code>才能接收到GitHub发来的通知。进入Jenkins的<code>系统管理</code>-<code>管理插件</code>，在<code>可选插件</code>选项卡中，搜索<code>GitHub plugin</code>并安装，安装完成Jenkins会重启。重启以后可以在<code>已安装</code>选项卡下面发现<code>GitHub plugin</code>，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-35-50.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-35-50.png" alt=""></p>
 <p>回到Jenkins首页，单击左上角<code>新建</code>按钮，新建一个项目，项目类型为<code>构建一个自由风格的软件项目</code>。任务的配置信息如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-37-57.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-37-57.png" alt=""></p>
 <p>其中的<code>项目名称</code>和<code>描述</code>可以随意填写。勾选<code>GitHub project</code>，并把博客对应的GitHub Repo的地址填入。往下拉，看到<code>源码管理</code>，点选<code>Git</code>，依然填写博客对应的Repo地址。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-39-09.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-39-09.png" alt=""></p>
 <p>继续往下拉，在<code>构建触发器</code>单击<code>增加构建步骤</code>，在弹出的下拉菜单中选择<code>Execute shell</code>。勾选<code>GitHub hook trigger for GITScm polling</code>。在<code>Execute shell</code>对应的输入框中输入命令，将当前目录下的所有文件和文件夹全部复制到<code>/home/bexercise/kingname.github.io/</code>文件夹下。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-20-43-09.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-20-43-09.png" alt=""></p>
 <p>其中，文件夹<code>/home/bexercise/kingname.GitHub.io/</code>里面的内容如下图所示。这是Hexo生成的HTML文件和资源文件。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-06-45.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-21-06-45.png" alt=""></p>
 <p>这里需要解释一下这一条命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -r ./* /home/bexercise/kingname.GitHub.io/</div></pre></td></tr></table></figure>
 <p>其中的<code>cp -r</code>表示复制文件和文件夹。<code>./</code>表示当前目录。<code>./*</code>表示当前目录下面的所有内容。因此整条命令的意思是把当前目录下的所有内容全部复制到<code>/home/bexercise/kingname.GitHub.io/</code>下，并且如果文件名相同，就会直接覆盖。需要注意的是，<code>kingname.GitHub.io</code>这仅仅是一个普通的文件夹而已，别看它的名字长得像个网址，但其实它只是一个名字比较怪的普通文件夹而已，没有什么特殊的意义。</p>
@@ -409,7 +409,7 @@
 <p>执行完成这一行命令以后，jenkins才可以把其他地方的文件复制到这个文件夹里面。</p>
 <h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>没有什么复杂的使用方法，在Hexo中，执行命令<code>hexo d</code>就可以把本地生成好的HTML文件提交到GitHub中。然后打开浏览器，打开博客，发现新的文章已经出现在首页了。</p>
 <p>在Jenkins项目的执行历史里面，也可以看到它被自动触发而产生的历史记录。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-12-17-21-11-50.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-17-21-11-50.png" alt=""></p>
 <h2 id="举一反三"><a href="#举一反三" class="headerlink" title="举一反三"></a>举一反三</h2><p>由于Jenkins可以运行Shell命令，进行单元测试本质上也是运行一条命令，那这不就可以实现自动进行单元测试了吗？那么如果把Shell命令改成运行一个Python脚本，那不就可以做任何事情了吗？如果Python脚本里面写了发送邮件的代码，那不就实现了你一提交代码，其他人就收到邮件了吗？</p>
 
       

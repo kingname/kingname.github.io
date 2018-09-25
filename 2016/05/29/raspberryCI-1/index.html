@@ -96,18 +96,18 @@
 <meta property="og:description" content="开题说明软件开发的过程是一个从简单到复杂的过程。我们在开发的时候，会首先写出具有核心的功能的原型，满足基本的需求。但是这个原型使用非常的麻烦，有无数的配置，数据的格式也需要严格的规定，稍微一个不合法的输入输出就有可能导致程序的崩溃。
 接下来，在这个基本的原型上，我们逐渐进行完善，逐渐提高了程序的鲁棒性，用户体验逐渐的提高。新的需求出现了，于是又添加新的功能来满足新的需求。
 在这样一个逐渐搭建（迭代">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/openjdkerror.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/javaversion.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/aurinstall.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/jenkins.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/plugin.png">
-<meta property="og:updated_time" content="2016-11-30T13:56:40.000Z">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/openjdkerror.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/javaversion.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/aurinstall.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/jenkins.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/plugin.png">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.464Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搭建持续集成环境(一)">
 <meta name="twitter:description" content="开题说明软件开发的过程是一个从简单到复杂的过程。我们在开发的时候，会首先写出具有核心的功能的原型，满足基本的需求。但是这个原型使用非常的麻烦，有无数的配置，数据的格式也需要严格的规定，稍微一个不合法的输入输出就有可能导致程序的崩溃。
 接下来，在这个基本的原型上，我们逐渐进行完善，逐渐提高了程序的鲁棒性，用户体验逐渐的提高。新的需求出现了，于是又添加新的功能来满足新的需求。
 在这样一个逐渐搭建（迭代">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/openjdkerror.png">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/openjdkerror.png">
 
 
 
@@ -381,9 +381,9 @@
 <p>由于jenkins是Java写的，所以这个时候如果你的系统中没有Java的运行环境，他就会让你选择安装jre7-openjdk 或者是jre8-openjdk, 我选择的是安装jre8-openjdk. 这个时候我没有意识到，隐患已经埋下来了。</p>
 <h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>在ArchLinux中，什么东西都喜欢使用systemd来启动，所以执行以下命令来启动Jenkins：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
 <p>理论上这样就能使用了。但是当我在浏览器打开<code>http://192.168.2.107:8090</code>的时候却发现网页无法打开。于是检查它的log:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">journalctl -u jenkins</div></pre></td></tr></table></figure></p>
-<p>发现原来报错了。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/openjdkerror.png" alt=""></p>
+<p>发现原来报错了。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/openjdkerror.png" alt=""></p>
 <p>难道说Java环境有问题？于是我是用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
-<p>来检查Java环境，果然, 连查看Java 的版本都报错了，如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/javaversion.png" alt=""></p>
+<p>来检查Java环境，果然, 连查看Java 的版本都报错了，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/javaversion.png" alt=""></p>
 <h3 id="重装"><a href="#重装" class="headerlink" title="重装"></a>重装</h3><p>对于这种情况，看起来不能使用openJDK了，于是去安装Oracle的JDK。</p>
 <p>首先要卸载openJdk:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pacman -Rdd jre8-openjdk</div></pre></td></tr></table></figure>
@@ -396,13 +396,13 @@
 <p>由于Oracle的JDK不能直接使用pacman来安装，所以需要使用AUR。树莓派的CPU是ARM架构，所以使用使用<a href="https://aur.archlinux.org/packages/jdk-arm/" target="_blank" rel="external">arm版的JDK</a>。如果有朋友是在X86的电脑上面安装的话，可以使用<a href="https://aur.archlinux.org/packages/jdk" target="_blank" rel="external">x86版的JDK</a>。</p>
 <p>对于安装AUR的文件，首先从左侧<a href="https://aur.archlinux.org/cgit/aur.git/snapshot/jdk-arm.tar.gz" target="_blank" rel="external">Download snapshot</a>下载pkg文件，然后使用以下命令来安装：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tar -xvf jdk-arm.tar.gz</div><div class="line">cd jdk-arm</div><div class="line">makepkg -sri</div></pre></td></tr></table></figure>
-<p>然后就等待下载安装文件然后完成安装。如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/aurinstall.png" alt=""></p>
+<p>然后就等待下载安装文件然后完成安装。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/aurinstall.png" alt=""></p>
 <p>完成以后，我们再执行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -version</div></pre></td></tr></table></figure></p>
 <p>就可以正常看到Java的版本信息了。</p>
 <h3 id="再启动"><a href="#再启动" class="headerlink" title="再启动"></a>再启动</h3><p>再一次启动Jenkins:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start jenkins.service</div></pre></td></tr></table></figure></p>
-<p>也可以正常启动了。（输入命令以后等待1分钟左右，让服务完全启动起来。）如图：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/jenkins.png" alt=""></p>
+<p>也可以正常启动了。（输入命令以后等待1分钟左右，让服务完全启动起来。）如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/jenkins.png" alt=""></p>
 <p>根据它的提示读取密码，并填写到网页上，于是Jenkins就算是安装成功了。</p>
-<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>插件是Jenkins的精华，在第一次进入的时候，Jenkins就会让你选择插件。这里我选择<br><code>Select plugins to install</code>.<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/plugin.png" alt=""></p>
+<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>插件是Jenkins的精华，在第一次进入的时候，Jenkins就会让你选择插件。这里我选择<br><code>Select plugins to install</code>.<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/plugin.png" alt=""></p>
 <p>它默认已经勾选了一些插件，我增加了以下的插件：</p>
 <ul>
 <li>Source Code Management 下面的Github plugin</li>

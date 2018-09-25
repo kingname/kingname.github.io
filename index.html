@@ -371,10 +371,10 @@
 <p>现在使用一段HTML代码来测试一下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line"></div><div class="line">source_1 = <span class="string">'''</div><div class="line">&lt;div class="content"&gt;今天的主角是&lt;a href="xxx"&gt;kingname&lt;/a&gt;，我们掌声欢迎！&lt;/div&gt;</div><div class="line">'''</span></div><div class="line"></div><div class="line"></div><div class="line">text = remove_tag(source_1)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示，功能完全符合预期</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-22-54.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-22-54.png" alt=""></p>
 <p>再来测试一下代码中有换行符的情况：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_tag</span><span class="params">(html)</span>:</span></div><div class="line">    text = re.sub(<span class="string">'&lt;.*?&gt;'</span>, <span class="string">''</span>, html, re.S)</div><div class="line">    <span class="keyword">return</span> text</div><div class="line"></div><div class="line">source_2 = <span class="string">'''</div><div class="line">&lt;div class="content"&gt;</div><div class="line">    今天的主角是</div><div class="line">    &lt;a href="xxx"&gt;kingname&lt;/a&gt;</div><div class="line">    ，我们掌声欢迎！</div><div class="line">&lt;/div&gt;</div><div class="line">'''</span></div><div class="line">text = remove_tag(source_2)</div><div class="line">print(text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示，完全符合预期。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-08-27-22-25-29.png" alt=""></p>
+<p>运行效果如下图所示，完全符合预期。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-08-27-22-25-29.png" alt=""></p>
 <p>经过测试，在绝大多数情况下，能够从的HTML代码段中提取出正文。但也有例外。</p>
           <!--noindex-->
           <div class="post-more-link text-center">
@@ -822,10 +822,10 @@
       
         
           <p>Workflowy是一个极简风格的大纲写作工具，使用它提供的无限层级缩进和各种快捷键，可以非常方便的理清思路，写出一个好看而实用的大纲。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-17-58.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-17-58.png" alt=""></p>
 <p>印象笔记更是家喻户晓，无人不知的跨平台笔记应用。虽然有很多竞争产品在和印象笔记争抢市场，但是印象笔记强大的搜索功能还是牢牢抓住了不少用户。</p>
 <p>如果能够把用Workflowy写大纲的便利性，与印象笔记强大的搜索功能结合起来，那岂不是如虎添翼？如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2018-03-17-10-21-31.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-03-17-10-21-31.png" alt=""></p>
 <p>EverFlowy就是这样一个小工具。它可以自动把Workflowy上面的条目拉下来再同步到印象笔记中。如果Workflowy有更新，再运行一下这个小工具，它就会同步更新印象笔记上面的内容。Workflowy负责写，印象笔记负责存，各尽其能，各得其所。</p>
           <!--noindex-->
           <div class="post-more-link text-center">
@@ -1557,12 +1557,12 @@
       
         
           <p>Teambition是一个跨平台的团队协作和项目管理工具，相当于国外的Trello。使用Teambition可以像使用白板与便签纸一样来管理项目进度，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-45-13.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-45-13.png" alt=""></p>
 <p>Teambition虽然便于管理项目，但是如果直接在Teambition上面创建一个项目对应的任务，却容易陷入面对茫茫白板，不知道如何拆分任务的尴尬境地。如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-47-38.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-47-38.png" alt=""></p>
 <p>面对这个空荡荡的窗口，应该添加哪些任务进去？直接用脑子现想，恐怕容易出现顾此失彼或者干脆漏掉了任务的情况。</p>
 <p>当我要开始一个项目的时候，我一般不会直接打开Teambition就写任务，而是使用一个大纲工具——Workflowy来梳理思路，切分任务。等任务已经切分好了，在誊写到Teambition中，如下图所示。</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2017-10-03-23-53-06.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-10-03-23-53-06.png" alt=""></p>
 <p>但这样就出现了一个问题：首先在Workflowy上面把需要做的任务写好。然后再打开Teambition，把这些任务又誊写到Teambition中。为了减少“誊写”这一步重复劳动，于是就有了TeamFlowy这个小工具。它的作用是自动誊写Workflowy中的特定条目到Teambition中。</p>
           <!--noindex-->
           <div class="post-more-link text-center">

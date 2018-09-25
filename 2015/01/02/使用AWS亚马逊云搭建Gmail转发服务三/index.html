@@ -94,14 +94,14 @@
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="在上一篇文章使用AWS亚马逊云搭建Gmail转发服务（二）中，我们已经介绍了如何把邮件转发程序部署在服务器上。但是这样还不够。还需要实时监控程序的运行状态。于是，给程序增加日志记录功能是非常重要的。
 日志这里使用Python的logging库，实现日志记录功能。12345678import logginglogging.basicConfig(level=logging.DEBUG,">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/gmailmaillog.jpg">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/gmailmaillog2.jpg">
-<meta property="og:updated_time" content="2016-11-30T13:56:51.000Z">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog.jpg">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog2.jpg">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.411Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用AWS亚马逊云搭建Gmail转发服务（三）">
 <meta name="twitter:description" content="在上一篇文章使用AWS亚马逊云搭建Gmail转发服务（二）中，我们已经介绍了如何把邮件转发程序部署在服务器上。但是这样还不够。还需要实时监控程序的运行状态。于是，给程序增加日志记录功能是非常重要的。
 日志这里使用Python的logging库，实现日志记录功能。12345678import logginglogging.basicConfig(level=logging.DEBUG,">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/gmailmaillog.jpg">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog.jpg">
 
 
 
@@ -375,12 +375,12 @@
 <p>这个功能是把日志按行输出到网页上。<br>现在测试一下功能：<br>在终端窗口输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">screen</div><div class="line">python gmail_helper.py</div></pre></td></tr></table></figure></p>
 <p>然后Ctrl+A+D返回，再输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">screen</div><div class="line">python gmail_flask.py</div></pre></td></tr></table></figure></p>
 <p>然后访问服务器的5000端口查看效果。如图是我的服务器返回信息：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/gmailmaillog.jpg" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog.jpg" alt=""></p>
 <p>这里出现了Google的很多信息，这是由于Gmail的API库文件discovery.py里面也有用到日志功能。这个时候这里调用根logging，就会把discovery.py里面logging.info输出的信息写出来。这个时候怎么办呢？我对logging不是很熟悉，还请熟悉logging模块的朋友指点迷津。</p>
 <p>我使用了一个变通的办法：</p>
 <p>修改gmail_flask.py文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#-*-coding:utf-8-*-</div><div class="line">from flask import Flask</div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line">@app.route(&apos;/&apos;)</div><div class="line">def index():</div><div class="line">    f = open(&apos;mail_note.log&apos;,&apos;rb&apos;) #以读文件的方式打开mail_note.log文件</div><div class="line">    content = f.readlines()#按行读取日志</div><div class="line">    s = &apos;&apos;</div><div class="line">    for each in content:</div><div class="line">		if &apos;gmail_helper.py&apos; in each: #判定信息来自gmail_helper.py而不是discovery.py</div><div class="line">	        s += each</div><div class="line">	        s += &apos;&lt;/p&gt;&apos;#输出日志</div><div class="line">    f.close()</div><div class="line">    return s</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    app.run(host=&apos;0.0.0.0&apos;) #开发外网访问</div></pre></td></tr></table></figure></p>
 <p>效果如下图：</p>
-<p><img src="http://7sbpmp.com1.z0.glb.clouddn.com/gmailmaillog2.jpg" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog2.jpg" alt=""></p>
 <p>源代码已更新到Github，请戳-&gt;<a href="https://github.com/kingname/MCC/blob/master/ghelper_with_log" target="_blank" rel="external">https://github.com/kingname/MCC/blob/master/ghelper_with_log</a></p>
 <p>我的日志会通过博客进行开放，地址请戳：</p>
 <p><a href="http://flask.kingname.info:5000" target="_blank" rel="external">http://flask.kingname.info:5000</a></p>

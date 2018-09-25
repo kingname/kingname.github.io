@@ -92,14 +92,14 @@
 <meta property="og:url" content="https://www.kingname.info/2016/12/04/how-to-know-webpage-loaded/index.html">
 <meta property="og:site_name" content="Kingname">
 <meta property="og:description" content="在对安卓手机设计自动化测试用例的时候，判断一个测试场景是否可以自动化的依据在于其是否需要人的参与。对于wifi能否自动打开关闭，短信能否自动收发这样的场景，不需要人参与就可以通过程序来判断，因此对Wifi与短信这样的测试，可以通过程序来实现自动化测试。但是另外还有一些测试场景，需要人的眼睛来看，这种场景要实现自动化就比较困难。">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-18-49-20.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-19-01-42.png">
-<meta property="og:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-19-44-55.png">
-<meta property="og:updated_time" content="2016-12-04T13:31:26.000Z">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-18-49-20.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-01-42.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-44-55.png">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.400Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用图像识别来自动确认网页加载成功">
 <meta name="twitter:description" content="在对安卓手机设计自动化测试用例的时候，判断一个测试场景是否可以自动化的依据在于其是否需要人的参与。对于wifi能否自动打开关闭，短信能否自动收发这样的场景，不需要人参与就可以通过程序来判断，因此对Wifi与短信这样的测试，可以通过程序来实现自动化测试。但是另外还有一些测试场景，需要人的眼睛来看，这种场景要实现自动化就比较困难。">
-<meta name="twitter:image" content="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-18-49-20.png">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-18-49-20.png">
 
 
 
@@ -350,16 +350,16 @@
 <h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>由于这个需求只需要判断网页是否加载成功，因此并不需要非常高深的图像识别的理论。对一个网页来说，所谓的加载成功就是指它里面的内容能够正常地在浏览器中显示出来。因此，可以设计一个特别的网页，网页要足够简单，但是又要足够特别，从而方便图像识别。</p>
 <p>这篇文章将会使用一个纯绿色的网页来进行测试。网页加载完成以后，手机屏幕上绝大多数的区域是绿色的。这个时候，截取屏幕，并使用程序来识别这张截图。如果发现截图中有大面积的绿色区域，那就证明网页已经加载完成了。</p>
 <h2 id="Demo实现"><a href="#Demo实现" class="headerlink" title="Demo实现"></a>Demo实现</h2><h3 id="纯绿色的网页"><a href="#纯绿色的网页" class="headerlink" title="纯绿色的网页"></a>纯绿色的网页</h3><p>创建一个“greenpage.html”，它的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Green Page&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body bgcolor=&quot;green&quot;&gt;</div><div class="line"></div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
-<p>网站加载成功以后，页面是全绿色的，如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-18-49-20.png" alt=""></p>
+<p>网站加载成功以后，页面是全绿色的，如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-18-49-20.png" alt=""></p>
 <p>在局域网中搭建一个Web Server，并让局域网的设备可以链接。打开终端，进入到这个html文件所在的文件夹，并通过Python 3在局域网中搭建一个简单地WebServer：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd ~/Project/IdentifyWebpage</div><div class="line">python -m http.server</div></pre></td></tr></table></figure></p>
-<p>使用手机访问“电脑IP:8000/greenpage.html”，效果如下图所示。<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-19-01-42.png" alt=""></p>
+<p>使用手机访问“电脑IP:8000/greenpage.html”，效果如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-01-42.png" alt=""></p>
 <h3 id="识别绿色截图"><a href="#识别绿色截图" class="headerlink" title="识别绿色截图"></a>识别绿色截图</h3><p>这个Demo使用Pillow图像处理库来做图像颜色的识别，通过pip安装Pillow：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install pillow</div></pre></td></tr></table></figure></p>
 <p>安装完成以后，在Python程序中使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">from PIL import Image</div></pre></td></tr></table></figure></p>
 <p>导入它图像模块。</p>
 <p>程序使用Image模块载入截图，并从截图中读取某一点颜色RGB值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">img = Image.open(&apos;snapshot.png&apos;)</div><div class="line">color = img.getpixel((700, 800))</div><div class="line">print(color)</div></pre></td></tr></table></figure></p>
 <p>代码中的（700, 800）是截图中的某一点的座标。第一个参数为横座标，第二个参数为纵座标。截图左上角为(0, 0)，越往下，纵座标越大；越往右，横座标越大。</p>
 <p>为了谨慎起见，在截图中取9个点，分别获取他们的RGB值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">points = [(200, 300), (455, 678), (333, 1200),</div><div class="line">          (300, 500), (888, 678), (900, 800),</div><div class="line">          (400, 600), (245, 365), (799, 777)]</div><div class="line">img = Image.open(&apos;snapshot.png&apos;)</div><div class="line">for point in self.points:</div><div class="line">    color = img.getpixel(point)</div><div class="line">    print(color)</div></pre></td></tr></table></figure></p>
-<p>运行以后的结果如下图所示：<br><img src="http://7sbpmp.com1.z0.glb.clouddn.com/2016-12-04-19-44-55.png" alt=""><br>从图中可以看到，9个点的RGB值全部是(0, 128, 0)，这个值正是绿色的RGB值。到这里，可以认为这个图片大部分的地方确实是绿色的。如果你觉得9个点还是不够全面，那你可以使用代码生成几百个点来计算。</p>
+<p>运行以后的结果如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-44-55.png" alt=""><br>从图中可以看到，9个点的RGB值全部是(0, 128, 0)，这个值正是绿色的RGB值。到这里，可以认为这个图片大部分的地方确实是绿色的。如果你觉得9个点还是不够全面，那你可以使用代码生成几百个点来计算。</p>
 <h3 id="获取屏幕截图"><a href="#获取屏幕截图" class="headerlink" title="获取屏幕截图"></a>获取屏幕截图</h3><p>adb（Android Debug Bridge）是安卓的调试工具，可以通过adb的命令来控制手机。要对手机截图，只需要使用下面两条命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb shell /system/bin/screencap -p /sdcard/screenshot.png</div><div class="line">adb pull /sdcard/screenshot.png ~/Project/IndenfyWebpage/screenshot.png</div></pre></td></tr></table></figure></p>
 <p>第一条命令生成截图，并将截图保存到手机内置存储中。虽然这里写的是“sdcard”，但是对于现在没有SD卡的手机，这条命令依然可以使用。</p>
 <p>第二条命令将手机内置存储中的截图文件取出来，并保存到电脑中。如果你的电脑为Windows系统，可以将第二条命令修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb pull /sdcard/screenshot.png D:/Project/IndenfyWebpage/screenshot.png</div></pre></td></tr></table></figure></p>

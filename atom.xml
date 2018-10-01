@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-01T10:33:07.709Z</updated>
+  <updated>2018-10-01T10:34:57.527Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="https://www.kingname.info/2018/10/01/my-new-book/"/>
     <id>https://www.kingname.info/2018/10/01/my-new-book/</id>
     <published>2018-10-01T10:31:11.000Z</published>
-    <updated>2018-10-01T10:33:07.709Z</updated>
+    <updated>2018-10-01T10:34:57.527Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="如果你不知道做什么，那就学一门杂学吧"><a href="#如果你不知道做什么，那就学一门杂学吧" class="headerlink" title="如果你不知道做什么，那就学一门杂学吧"></a>如果你不知道做什么，那就学一门杂学吧</h1><h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>这篇文章没有代码，请放心阅读。</p>
+    <content type="html"><![CDATA[<h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>这篇文章没有代码，请放心阅读。</p>
 <p>多年以后，面对人工智能研究员那混乱不堪的代码，我会想起第一次和S君相见的那个遥远的下午。那时的B公司，还是一个仅有6个人的小团队，Mac和显示器在桌上依次排开，大家坐在一起，不需要称呼姓名，转过脸去，对方就知道你在和他说话。一切看起来都那么美好，我们所有人，都希望自己和这个公司能够一起成长。</p>
 <p>彼时S君刚从加拿大回来，老板把他介绍给我们，于是S君作为数据产品经理跟我有了项目上的接触。</p>
 <p>创业公司里面，每一个人都需要会很多的技艺，于是S君开始自学Python。</p>
@@ -36,6 +36,7 @@
 <p>后来，S君离开了B公司。</p>
 <p>三个月后，我也离开了。</p>
 <p>从此，我们再也没有见过。</p>
+<a id="more"></a>
 <h2 id="编程最重要的能力是变通"><a href="#编程最重要的能力是变通" class="headerlink" title="编程最重要的能力是变通"></a>编程最重要的能力是变通</h2><p>S君是一个老实孩子。</p>
 <p>在开发一个爬虫的过程中，网站接口返回给他的数据看起来是JSON格式，于是他就用Python自带的JSON库去解析。结果解析失败了。因为这些所谓的看起来像JSON的东西，竟然没有双引号。</p>
 <p>难道是JSON的超集？S君一通搜索，发现用YMAL库也许可以解析这种数据。于是安装YMAL库，一解析又报错。</p>
@@ -114,7 +115,20 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;如果你不知道做什么，那就学一门杂学吧&quot;&gt;&lt;a href=&quot;#如果你不知道做什么，那就学一门杂学吧&quot; class=&quot;headerlink&quot; title=&quot;如果你不知道做什么，那就学一门杂学吧&quot;&gt;&lt;/a&gt;如果你不知道做什么，那就学一门杂学吧&lt;/h1&gt;&lt;h2 id=&quot;序
+      &lt;h2 id=&quot;序言&quot;&gt;&lt;a href=&quot;#序言&quot; class=&quot;headerlink&quot; title=&quot;序言&quot;&gt;&lt;/a&gt;序言&lt;/h2&gt;&lt;p&gt;这篇文章没有代码，请放心阅读。&lt;/p&gt;
+&lt;p&gt;多年以后，面对人工智能研究员那混乱不堪的代码，我会想起第一次和S君相见的那个遥远的下午。那时的B公司，还是一个仅有6个人的小团队，Mac和显示器在桌上依次排开，大家坐在一起，不需要称呼姓名，转过脸去，对方就知道你在和他说话。一切看起来都那么美好，我们所有人，都希望自己和这个公司能够一起成长。&lt;/p&gt;
+&lt;p&gt;彼时S君刚从加拿大回来，老板把他介绍给我们，于是S君作为数据产品经理跟我有了项目上的接触。&lt;/p&gt;
+&lt;p&gt;创业公司里面，每一个人都需要会很多的技艺，于是S君开始自学Python。&lt;/p&gt;
+&lt;p&gt;有一天，S君问我：“你玩MineCraft吗？“&lt;/p&gt;
+&lt;p&gt;“玩，但我更喜欢在B站上看别人的世界。”我答道。&lt;/p&gt;
+&lt;p&gt;“我觉得我现在写程序，像是在玩我的世界。”S君笑着说道。&lt;/p&gt;
+&lt;p&gt;“是不是觉得你已经掌握了Python的基本语法，看着别人把Python用的溜溜转，而你自己却不知道用它来做什么？”&lt;/p&gt;
+&lt;p&gt;“是这样的，你懂我。”&lt;/p&gt;
+&lt;p&gt;“那你学一门杂学吧。”&lt;/p&gt;
+&lt;p&gt;于是S君被我诱拐过来跟我一起写爬虫。&lt;/p&gt;
+&lt;p&gt;后来，S君离开了B公司。&lt;/p&gt;
+&lt;p&gt;三个月后，我也离开了。&lt;/p&gt;
+&lt;p&gt;从此，我们再也没有见过。&lt;/p&gt;
     
     </summary>
     
@@ -124,6 +138,8 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="学习方法" scheme="https://www.kingname.info/tags/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"/>
     
   </entry>
   

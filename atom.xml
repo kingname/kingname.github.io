@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-09-25T13:33:27.443Z</updated>
+  <updated>2018-10-14T08:39:21.196Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,201 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用Docker Swarm部署分布式爬虫</title>
+    <link href="https://www.kingname.info/2018/10/13/use-docker-swarm/"/>
+    <id>https://www.kingname.info/2018/10/13/use-docker-swarm/</id>
+    <published>2018-10-13T13:23:51.000Z</published>
+    <updated>2018-10-14T08:39:21.196Z</updated>
+    
+    <content type="html"><![CDATA[<p>在爬虫开发过程中，你肯定遇到过需要把爬虫部署在多个服务器上面的情况。此时你是怎么操作的呢？一个服务器一个服务器SSH登录上去，使用git拉下代码，然后运行？代码修改了，于是又要一个服务器一个服务器登录上去依次更新？</p>
+<p>有时候爬虫只需要在一个服务器上面运行，有时候需要在200个服务器上面运行。你是怎么快速切换的呢？一个服务器一个服务器登录上去开关？或者聪明一点，在Redis里面设置一个可以修改的标记，只有标记对应的服务器上面的爬虫运行？</p>
+<p>A爬虫已经在所有服务器上面部署了，现在又做了一个B爬虫，你是不是又得依次登录每个服务器再一次部署？</p>
+<p>如果你确实是这么做的，那么你应该后悔没有早一点看到这篇文章。看完本文以后，你能够做到：</p>
+<ul>
+<li>2分钟内把一个新爬虫部署到50台服务器上：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker build -t localhost:8003/spider:0.01 .</div><div class="line">docker push localhost:8002/spider:0.01</div><div class="line">docker service create --name spider --replicas 50 --network host 45.77.138.242:8003/spider:0.01</div></pre></td></tr></table></figure>
+<ul>
+<li>30秒内把爬虫从50台服务器扩展到500台服务器：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service scale spider=500</div></pre></td></tr></table></figure>
+<ul>
+<li>30秒内批量关闭所有服务器上的爬虫：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service scale spider=0</div></pre></td></tr></table></figure>
+<ul>
+<li>1分钟内批量更新所有机器上的爬虫：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker build -t localhost:8003/spider:0.01 .</div><div class="line">docker push localhost:8003/spider:0.01</div><div class="line">docker service update --image 45.77.138.242:8003/spider:0.02 spider</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>这篇文章不会教你怎么使用Docker，所以请确定你有一些Docker基础再来看本文。</p>
+<h2 id="Docker-Swarm是什么"><a href="#Docker-Swarm是什么" class="headerlink" title="Docker Swarm是什么"></a>Docker Swarm是什么</h2><p>Docker Swarm是Docker自带的一个集群管理模块。他能够实现Docker集群的创建和管理。</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>本文将会使用3台Ubuntu 18.04的服务器来进行演示。这三台服务器安排如下：</p>
+<ul>
+<li>Master：45.77.138.242</li>
+<li>Slave-1：199.247.30.74</li>
+<li>Slave-2：95.179.143.21</li>
+</ul>
+<p>Docker Swarm是基于Docker的模块，所以首先要在3台服务器上安装Docker。安装完成Docker以后，所有的操作都在Docker中完成。</p>
+<h3 id="在Master上安装Docker"><a href="#在Master上安装Docker" class="headerlink" title="在Master上安装Docker"></a>在Master上安装Docker</h3><p>通过依次执行下面的命令，在Master服务器上安装Docker</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install -y apt-transport-https ca-certificates curl software-properties-common</div><div class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</div><div class="line">add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable&quot;</div><div class="line">apt-get update</div><div class="line">apt-get install -y docker-ce</div></pre></td></tr></table></figure>
+<h3 id="创建Manager节点"><a href="#创建Manager节点" class="headerlink" title="创建Manager节点"></a>创建Manager节点</h3><p>一个Docker Swarm集群需要至少一个Manager节点。现在初始化Master服务器，作为集群的Manager节点。运行下面一条命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker swarm init</div></pre></td></tr></table></figure>
+<p>运行完成以后，可以看到的返回结果下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_2.png" alt=""></p>
+<p>这个返回结果中，给出了一条命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker swarm join --token SWMTKN-1-0hqsajb64iynkg8ocp8uruktii5esuo4qiaxmqw2pddnkls9av-dfj7nf1x3vr5qcj4cqiusu4pv 45.77.138.242:2377</div></pre></td></tr></table></figure>
+<p>这条命令需要在每一个从节点（Slave）中执行。现在先把这个命令记录下来。</p>
+<p>初始化完成以后，得到一个只有1台服务器的Docker 集群。执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker node ls</div></pre></td></tr></table></figure>
+<p>可以看到当前这个集群的状态，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_3.png" alt=""></p>
+<h3 id="创建私有源（可选）"><a href="#创建私有源（可选）" class="headerlink" title="创建私有源（可选）"></a>创建私有源（可选）</h3><p>创建私有源并不是一个必需的操作。之所以需要私有源，是因为项目的Docker镜像可能会涉及到公司机密，不能上传到DockerHub这种公共平台。如果你的镜像可以公开上传DockerHub，或者你已经有一个可以用的私有镜像源，那么你可以直接使用它们，跳过本小节和下一小节。</p>
+<p>私有源本身也是一个Docker的镜像，先将拉取下来：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull registry:latest</div></pre></td></tr></table></figure>
+<p>如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_4.png" alt=""></p>
+<p>现在启动私有源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -d -p 8003:5000 --name registry -v /tmp/registry:/tmp/registry docker.io/registry:latest</div></pre></td></tr></table></figure>
+<p>如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_5.png" alt=""></p>
+<p>在启动命令中，设置了对外开放的端口为8003端口，所以私有源的地址为：45.77.138.242:8003</p>
+<blockquote>
+<p>提示:<br>这样搭建的私有源是HTTP方式，并且没有权限验证机制，所以如果对公网开放，你需要再使用防火墙做一下IP白名单，从而保证数据的安全。</p>
+</blockquote>
+<h3 id="允许docker使用可信任的http私有源（可选）"><a href="#允许docker使用可信任的http私有源（可选）" class="headerlink" title="允许docker使用可信任的http私有源（可选）"></a>允许docker使用可信任的http私有源（可选）</h3><p>如果你使用上面一个小节的命令搭建了自己的私有源，由于Docker默认是不允许使用HTTP方式的私有源的，因此你需要配置Docker，让Docker信任它。</p>
+<p>使用下面命令配置Docker：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo &apos;&#123; &quot;insecure-registries&quot;:[&quot;45.77.138.242:8003&quot;] &#125;&apos; &gt;&gt; /etc/docker/daemon.json</div></pre></td></tr></table></figure>
+<p>如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_6.png" alt=""></p>
+<p>然后使用下面这个命令重启docker。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
+<p>重启完成以后，Manager节点就配置好了。</p>
+<h2 id="创建子节点初始化脚本"><a href="#创建子节点初始化脚本" class="headerlink" title="创建子节点初始化脚本"></a>创建子节点初始化脚本</h2><p>对于Slave服务器来说，只需要做三件事情：</p>
+<ol>
+<li>安装Docker</li>
+<li>加入集群</li>
+<li>信任源</li>
+</ol>
+<p>从此以后，剩下的事情全部交给Docker Swarm自己管理，你再也不用SSH登录这个服务器了。</p>
+<p>为了简化操作，可以写一个shell脚本来批量运行。在Slave-1和Slave-2服务器下创建一个<code>init.sh</code>文件，其内容如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install -y apt-transport-https ca-certificates curl software-properties-common</div><div class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</div><div class="line">add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable&quot;</div><div class="line">apt-get update</div><div class="line">apt-get install -y docker-ce</div><div class="line">echo &apos;&#123; &quot;insecure-registries&quot;:[&quot;45.77.138.242:8003&quot;] &#125;&apos; &gt;&gt; /etc/docker/daemon.json</div><div class="line">systemctl restart docker </div><div class="line">docker swarm join --token SWMTKN-1-0hqsajb64iynkg8ocp8uruktii5esuo4qiaxmqw2pddnkls9av-dfj7nf1x3vr5qcj4cqiusu4pv 45.77.138.242:2377</div></pre></td></tr></table></figure>
+<p>把这个文件设置为可自行文件，并运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">chmod +x init.sh</div><div class="line">./init.sh</div></pre></td></tr></table></figure>
+<p>如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_6.png" alt=""></p>
+<p>等待脚本运行完成以后，你就可以从Slave-1和Slave-2的SSH上面登出了。以后也不需要再进来了。</p>
+<p>回到Master服务器，执行下面的命令，来确认现在集群已经有3个节点了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker node ls</div></pre></td></tr></table></figure>
+<p>看到现在集群中已经有3个节点了。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_9.png" alt=""></p>
+<p>到止为止，最复杂最麻烦的过程已经结束了。剩下的就是体验Docker Swarm带来的便利了。</p>
+<h2 id="创建测试程序"><a href="#创建测试程序" class="headerlink" title="创建测试程序"></a>创建测试程序</h2><h3 id="搭建测试Redis"><a href="#搭建测试Redis" class="headerlink" title="搭建测试Redis"></a>搭建测试Redis</h3><p>由于这里需要模拟一个分布式爬虫的运行效果，所以先使用Docker搭建一个临时的Redis服务：</p>
+<p>在Master服务器上执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -d --name redis -p 7891:6379 redis --requirepass &quot;KingnameISHandSome8877&quot;</div></pre></td></tr></table></figure>
+<p>这个Redis对外使用<code>7891</code>端口，密码为<code>KingnameISHandSome8877</code>，IP就是Master服务器的IP地址。</p>
+<h3 id="编写测试程序"><a href="#编写测试程序" class="headerlink" title="编写测试程序"></a>编写测试程序</h3><p>编写一个简单的Python程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line"></div><div class="line">client = redis.Redis(host=<span class="string">'45.77.138.242'</span>, port=<span class="string">'7891'</span>, password=<span class="string">'KingnameISHandSome8877'</span>)</div><div class="line"></div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    data = client.lpop(<span class="string">'example:swarm:spider'</span>)</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> data:</div><div class="line">        <span class="keyword">break</span></div><div class="line">    print(f<span class="string">'我现在获取的数据为：&#123;data.decode()&#125;'</span>)</div><div class="line">    time.sleep(<span class="number">10</span>)</div></pre></td></tr></table></figure>
+<p>这个Python每10秒钟从Redis中读取一个数，并打印出来。</p>
+<h3 id="编写Dockerfile"><a href="#编写Dockerfile" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h3><p>编写Dockerfile，基于Python3.6的镜像创建我们自己的镜像：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">from python:3.6</div><div class="line">label mantainer=&apos;contact@kingname.info&apos;</div><div class="line"></div><div class="line">user root</div><div class="line">ENV PYTHONUNBUFFERED=0</div><div class="line">ENV PYTHONIOENCODING=utf-8</div><div class="line"></div><div class="line">run python3 -m pip install redis</div><div class="line"></div><div class="line">copy spider.py spider.py</div><div class="line">cmd python3 spider.py</div></pre></td></tr></table></figure>
+<h3 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h3><p>编写完成Dockerfile以后，执行下面的命令，开始构建我们自己的镜像：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t localhost:8003/spider:0.01 .</div></pre></td></tr></table></figure>
+<p>这里需要特别注意，由于我们要把这个镜像上传到私有源供Slave服务器上面的从节点下载，所以镜像的命名方式需要满足<code>localhost:8003/自定义名字:版本号</code>这样的格式。其中的<code>自定义名字</code>和<code>版本号</code>可以根据实际情况进行修改。在本文的例子中，我由于要模拟一个爬虫的程序，所以给它取名为spider，由于是第1次构建，所以版本号用的是0.01。</p>
+<p>整个过程如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_10.png" alt=""></p>
+<h3 id="上传镜像到私有源"><a href="#上传镜像到私有源" class="headerlink" title="上传镜像到私有源"></a>上传镜像到私有源</h3><p>镜像构建完成以后，需要把它上传到私有源。此时需要执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker push localhost:8003/spider:0.01</div></pre></td></tr></table></figure>
+<p>如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_11.png" alt=""></p>
+<p>大家记住这个构建和上传的命令，以后每一次更新代码，都需要使用这两条命令。</p>
+<h2 id="创建服务"><a href="#创建服务" class="headerlink" title="创建服务"></a>创建服务</h2><p>Docker Swarm上面运行的是一个一个的服务，因此需要使用docker service命令创建服务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service create --name spider --network host 45.77.138.242:8003/spider:0.01</div></pre></td></tr></table></figure>
+<p>这个命令创建了一个名为<code>spider</code>的服务。默认运行1个容器。运行情况如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_12.png" alt=""></p>
+<p>当然也可以一创建就用很多容器来运行，此时只需要添加一个<code>--replicas</code>参数即可。例如一创建服务就使用50个容器运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service create --name spider --replicas 50 --network host 45.77.138.242:8003/spider:0.01</div></pre></td></tr></table></figure>
+<p>但是一般一开始的代码可能会有不少bug，所以建议先使用1个容器来运行，观察日志，发现没有问题以后再进行扩展。</p>
+<p>回到默认1个容器的情况下，这个容器可能在目前三台机器在的任何一台上面。通过执行下面的命令来观察这一个默认的容器运行情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service ps spider</div></pre></td></tr></table></figure>
+<p>如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_13.png" alt=""></p>
+<h2 id="查看节点Log："><a href="#查看节点Log：" class="headerlink" title="查看节点Log："></a>查看节点Log：</h2><p>根据上图执行结果，可以看到这个运行中的容器的ID为<code>rusps0ofwids</code>，那么执行下面的命令动态查看Log：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service logs -f 容器ID</div></pre></td></tr></table></figure>
+<p>此时就会持续跟踪这一个容器的Log。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_14.png" alt=""></p>
+<h2 id="横向扩展"><a href="#横向扩展" class="headerlink" title="横向扩展"></a>横向扩展</h2><p>现在，只有1台服务器运行了一个容器，我想使用3台服务器运行这个爬虫，那么我需要执行一条命令即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service scale spider=3</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_15.png" alt=""></p>
+<p>此时，再一次查看爬虫的运行情况，可以发现三台机器上面会各自运行一个容器。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_16.png" alt=""></p>
+<p>现在，我们登录slave-1机器上，看看是不是真的有一个任务在运行。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_17.png" alt=""></p>
+<p>可以看到确实有一个容器在上面运行着。这是Docker Swarm自动分配过来的。</p>
+<p>现在我们使用下面的命令强行把slave-1上面的Docker给关了，再来看看效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl stop docker</div></pre></td></tr></table></figure>
+<p>回到master服务器，再次查看爬虫的运行效果，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_18.png" alt=""></p>
+<p>可以看到，Docker Swarm探测到Slave-1掉线以后，他就会自动重新找个机器启动任务，保证始终有3个任务在运行。在这一次的例子中，Docker Swarm自动在master机器上启动了2个spider容器。</p>
+<p>如果机器性能比较好，甚至可以在3每台机器上面多运行几个容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service scale spider=10</div></pre></td></tr></table></figure>
+<p>此时，就会启动10个容器来运行这些爬虫。这10个爬虫之间互相隔离。</p>
+<p>如果想让所有爬虫全部停止怎么办？非常简单，一条命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service scale spider=0</div></pre></td></tr></table></figure>
+<p>这样所有爬虫就会全部停止。</p>
+<h2 id="同时查看多个容器的日志"><a href="#同时查看多个容器的日志" class="headerlink" title="同时查看多个容器的日志"></a>同时查看多个容器的日志</h2><p>如果想同时看所有容器怎么办呢？可以使用如下命令查看所有容器的最新的20行日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service ps robot | grep Running | awk &apos;&#123;print $1&#125;&apos; | xargs -i docker service logs --tail 20 &#123;&#125;</div></pre></td></tr></table></figure>
+<p>这样，日志就会按顺序显示出来了。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_19.png" alt=""></p>
+<h2 id="更新爬虫"><a href="#更新爬虫" class="headerlink" title="更新爬虫"></a>更新爬虫</h2><p>如果你的代码做了修改。那么你需要更新爬虫。</p>
+<p>先修改代码，重新构建，重新提交新的镜像到私有源中。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_20.png" alt=""></p>
+<p>接下来需要更新服务中的镜像。更新镜像有两种做法。一种是先把所有爬虫关闭，再更新。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker service scale spider=0</div><div class="line">docker service update --image 45.77.138.242:8003/spider:0.02 spider</div><div class="line">docker service scale spider=3</div></pre></td></tr></table></figure>
+<p>第二种是直接执行更新命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service update --image 45.77.138.242:8003/spider:0.02 spider</div></pre></td></tr></table></figure>
+<p>他们的区别在于，直接执行更新命令时，正在运行的容器会一个一个更新。</p>
+<p>运行效果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_21.png" alt=""></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>在同一个Swarm集群里面，可以运行多个不同的服务，各个服务之间互不影响。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在爬虫开发过程中，你肯定遇到过需要把爬虫部署在多个服务器上面的情况。此时你是怎么操作的呢？一个服务器一个服务器SSH登录上去，使用git拉下代码，然后运行？代码修改了，于是又要一个服务器一个服务器登录上去依次更新？&lt;/p&gt;
+&lt;p&gt;有时候爬虫只需要在一个服务器上面运行，有时候需要在200个服务器上面运行。你是怎么快速切换的呢？一个服务器一个服务器登录上去开关？或者聪明一点，在Redis里面设置一个可以修改的标记，只有标记对应的服务器上面的爬虫运行？&lt;/p&gt;
+&lt;p&gt;A爬虫已经在所有服务器上面部署了，现在又做了一个B爬虫，你是不是又得依次登录每个服务器再一次部署？&lt;/p&gt;
+&lt;p&gt;如果你确实是这么做的，那么你应该后悔没有早一点看到这篇文章。看完本文以后，你能够做到：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2分钟内把一个新爬虫部署到50台服务器上：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;docker build -t localhost:8003/spider:0.01 .&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker push localhost:8002/spider:0.01&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker service create --name spider --replicas 50 --network host 45.77.138.242:8003/spider:0.01&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;30秒内把爬虫从50台服务器扩展到500台服务器：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;docker service scale spider=500&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;30秒内批量关闭所有服务器上的爬虫：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;docker service scale spider=0&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;1分钟内批量更新所有机器上的爬虫：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;docker build -t localhost:8003/spider:0.01 .&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker push localhost:8003/spider:0.01&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker service update --image 45.77.138.242:8003/spider:0.02 spider&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="Docker" scheme="https://www.kingname.info/categories/Docker/"/>
+    
+    
+      <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
+    
+      <category term="Swarm" scheme="https://www.kingname.info/tags/Swarm/"/>
+    
+  </entry>
   
   <entry>
     <title>正则表达式re.sub替换不完整的问题现象及其根本原因</title>
@@ -188,11 +383,11 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
-    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
     
       <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
     
@@ -812,11 +1007,11 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
+      <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
+    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
-    
-      <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
     
   </entry>
   
@@ -1341,68 +1536,6 @@
       <category term="Java" scheme="https://www.kingname.info/tags/Java/"/>
     
       <category term="经验" scheme="https://www.kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MarkdownPicPicker - Markdown 图片上传助手</title>
-    <link href="https://www.kingname.info/2016/06/04/markdownPicPicker/"/>
-    <id>https://www.kingname.info/2016/06/04/markdownPicPicker/</id>
-    <published>2016-06-04T08:40:06.000Z</published>
-    <updated>2018-09-25T13:33:27.390Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><p>MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&lt;图片地址&gt;))复制到剪贴板中。</p>
-<p>项目地址：<a href="https://github.com/kingname/MarkdownPicPicker" target="_blank" rel="external">https://github.com/kingname/MarkdownPicPicker</a></p>
-<h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>第0.2版有以下功能：</p>
-<ol>
-<li>使用七牛云作为图床。</li>
-<li>将图片保存在本地</li>
-<li>图片上传成功后将Markdown格式的图片地址保存到剪贴板中</li>
-<li>全局监听键盘(默认不开启)</li>
-<li>独立配置文件</li>
-</ol>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置文件保存在<code>config.ini</code>文件中，其意义分别如下：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="section">[basic]</span></div><div class="line"><span class="attr">run_method</span> = bat # 设定程序的运行方式，bat为使用bat文件触发，global_listen为全局键盘监听方式</div><div class="line"><span class="attr">picture_folder</span> = pic #设定程序的运行方式，bat为使用bat文件触发，pyHook为全局键盘监听方式</div><div class="line"><span class="attr">picture_suffix</span> = png #截图的保存格式，可以选择bmp或者png</div><div class="line"><span class="comment"># now support qiniu only</span></div><div class="line"><span class="attr">picture_bed</span> = qiniu</div><div class="line"><span class="section"></span></div><div class="line">[global_listen]</div><div class="line"><span class="attr">short_key_one</span> = Lwin #快捷键第一个按键</div><div class="line"><span class="attr">short_key_two</span> = C #快捷键第二个按键</div><div class="line"><span class="section"></span></div><div class="line">[qiniu]</div><div class="line"><span class="comment">#七牛云的相关配置</span></div><div class="line"><span class="attr">access_key</span> = Q6sS422O05AwYD5aVqM3FqCcCpF36tqvyQ75Zvzw</div><div class="line"><span class="attr">secret_key</span> = <span class="number">6</span>QtAqqTxoSxZP-<span class="number">2</span>uoXROehxPLX2CCmoOaB2aLObM</div><div class="line"><span class="attr">container_name</span> = picturebed  #七牛云的图片储存位置</div><div class="line"><span class="attr">url</span> = https://kingname-<span class="number">1257411235</span>.cos.ap-chengdu.myqcloud.com/&#123;&#125; #七牛云分配的默认域名</div></pre></td></tr></table></figure></p>
-<p>其中<code>access_key</code> 和 <code>secret_key</code> 可以在七牛云的控制面板中看到，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20160605083025.png" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-20-22-43.png" alt=""> </p>
-<p><code>container_name</code> 为下图所示内容：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-20-24-40.png" alt=""> </p>
-<p><code>short_key_one</code> 和 <code>short_key_two</code> 为快捷键的两个按键，默认为左侧windows徽标键(<code>Lwin</code>) 和 字母 <code>C</code>。</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>将程序配置好以后运行，创建一个批处理文件markdownpicpicker.bat, 其内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;G:\github\MarkdownPicPicker\venv\Scripts\activate &amp; cd /d G:\github\MarkdownPicPicker &amp; python MarkdownPicPicker.py &amp; deactivate &amp; exit&quot;</div></pre></td></tr></table></figure></p>
-<p>路径请根据实际情况修改。</p>
-<p>由于我使用了virtualenv, 所以需要在批处理中进入virtualenv的环境才能正常运行程序。对于将requirements.txt里面包含的库直接安装在全局的情况，bat 可以简化：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@echo off</div><div class="line">cmd /k &quot;cd /d &lt;MarkdownPicPicker.py脚本所在文件夹路径&gt; &amp; python MarkdownPicPicker.py &amp; exit&quot;</div></pre></td></tr></table></figure>
-<p>不论哪种方式，均不要在任何相关的路径上出现中文，否则会导致不可预知的问题。</p>
-<p>然后右键选择批处理，发送到桌面快捷方式。接着右键快捷方式，属性，在“快捷键” 这一栏按下字母Q，它将自动填充为 <code>Ctrl + Alt + Q</code>, 确定。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-05-00-45-03.png" alt=""> </p>
-<p>只需要首先使用QQ截图或者其他截图工具将图片保存到剪贴板中，然后按下设定好的快捷键即可。Markdown格式的图片链接就已经保存到剪贴板中了。在需要使用的地方直接粘贴。</p>
-<p>不过这样设定的快捷键，按下以后会有大概一秒钟的延迟。推荐大家使用AutoHotKey来触发这个bat文件。</p>
-<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><h3 id="Pillow-bug修正"><a href="#Pillow-bug修正" class="headerlink" title="Pillow bug修正"></a>Pillow bug修正</h3><p>本程序使用了Pillow库中的 <code>ImageGrab.grabclipboard()</code> 方法来获取剪贴板中的数据，但是由于这个方法有一个bug, 导致可能会爆以下错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Unsupported BMP bitfields layout</div></pre></td></tr></table></figure></p>
-<p>这个问题从Pillow 2.8.0开始，一直到3.2.0都没有被官方解决。目前有一个间接的解决办法。<br>请打开Python安装目录下的\Lib\site-packages\PIL\BmpImagePlugin.py文件，将以下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</div><div class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</div><div class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</div><div class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</div><div class="line">    else:</div><div class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div><div class="line">else:</div><div class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div></pre></td></tr></table></figure>
-<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</div><div class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</div><div class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</div><div class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</div><div class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</div><div class="line">    &apos;&apos;&apos;新增内容开始&apos;&apos;&apos;</div><div class="line">    elif file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgb_mask&apos;] == (0xff0000, 0xff00, 0xff):</div><div class="line">        pass</div><div class="line">    &apos;&apos;&apos;新增内容结束&apos;&apos;&apos;</div><div class="line">    else:</div><div class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div><div class="line">else:</div><div class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</div></pre></td></tr></table></figure></p>
-<p>就能解决本问题。</p>
-<h3 id="全局键盘监听"><a href="#全局键盘监听" class="headerlink" title="全局键盘监听"></a>全局键盘监听</h3><p>本程序还有一个功能是全局监听键盘，通过特殊的快捷键组合就可以直接触发读取图片上传图片的操作。但是由于这个功能使用到了pyHook这个库。但是这个库在设计上存在缺陷，如果当前窗体的标题包含Unicode字符时，会导致Python崩溃。因此这个功能默认不启动。</p>
-<h3 id="获取键盘按键"><a href="#获取键盘按键" class="headerlink" title="获取键盘按键"></a>获取键盘按键</h3><p>如果不清楚某个键盘按键对应的字符串是什么样子的，可以运行QueryKey.py这个文件，运行以后按下某个键，控制台上就会显示相应的信息。其中<code>Key</code>就是可以设置到<code>SHORT_KEY_ONE</code>和<code>SHORT_KEY_TWO</code>的内容。如图为按下键盘左Shift键以后显示的信息。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-23-14-30.png" alt=""> </p>
-<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ul>
-<li>支持更多的截图方式</li>
-<li>支持更多的图床</li>
-<li>窗口隐藏</li>
-<li>解决pyHook的问题</li>
-<li>适配Linux 和 Mac OS</li>
-</ul>
-<p><strong>本文首发地址-&gt; <a href="http://kingname.info/2016/06/04/markdownPicPicker/" target="_blank" rel="external">http://kingname.info/2016/06/04/markdownPicPicker/</a> 转载请注明出处</strong></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;项目介绍&quot;&gt;&lt;a href=&quot;#项目介绍&quot; class=&quot;headerlink&quot; title=&quot;项目介绍&quot;&gt;&lt;/a&gt;项目介绍&lt;/h2&gt;&lt;p&gt;MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上
-    
-    </summary>
-    
-      <category term="Markdown" scheme="https://www.kingname.info/categories/Markdown/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="Markdown" scheme="https://www.kingname.info/tags/Markdown/"/>
     
   </entry>
   

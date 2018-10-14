@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-14T08:39:21.196Z</updated>
+  <updated>2018-10-14T08:53:36.429Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="https://www.kingname.info/2018/10/13/use-docker-swarm/"/>
     <id>https://www.kingname.info/2018/10/13/use-docker-swarm/</id>
     <published>2018-10-13T13:23:51.000Z</published>
-    <updated>2018-10-14T08:39:21.196Z</updated>
+    <updated>2018-10-14T08:53:36.429Z</updated>
     
-    <content type="html"><![CDATA[<p>在爬虫开发过程中，你肯定遇到过需要把爬虫部署在多个服务器上面的情况。此时你是怎么操作的呢？一个服务器一个服务器SSH登录上去，使用git拉下代码，然后运行？代码修改了，于是又要一个服务器一个服务器登录上去依次更新？</p>
+    <content type="html"><![CDATA[<p>在爬虫开发过程中，你肯定遇到过需要把爬虫部署在多个服务器上面的情况。此时你是怎么操作的呢？逐一SSH登录每个服务器，使用git拉下代码，然后运行？代码修改了，于是又要一个服务器一个服务器登录上去依次更新？</p>
 <p>有时候爬虫只需要在一个服务器上面运行，有时候需要在200个服务器上面运行。你是怎么快速切换的呢？一个服务器一个服务器登录上去开关？或者聪明一点，在Redis里面设置一个可以修改的标记，只有标记对应的服务器上面的爬虫运行？</p>
 <p>A爬虫已经在所有服务器上面部署了，现在又做了一个B爬虫，你是不是又得依次登录每个服务器再一次部署？</p>
 <p>如果你确实是这么做的，那么你应该后悔没有早一点看到这篇文章。看完本文以后，你能够做到：</p>
@@ -41,7 +41,7 @@
 <ul>
 <li>1分钟内批量更新所有机器上的爬虫：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker build -t localhost:8003/spider:0.01 .</div><div class="line">docker push localhost:8003/spider:0.01</div><div class="line">docker service update --image 45.77.138.242:8003/spider:0.02 spider</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker build -t localhost:8003/spider:0.02 .</div><div class="line">docker push localhost:8003/spider:0.02</div><div class="line">docker service update --image 45.77.138.242:8003/spider:0.02 spider</div></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>这篇文章不会教你怎么使用Docker，所以请确定你有一些Docker基础再来看本文。</p>
 <h2 id="Docker-Swarm是什么"><a href="#Docker-Swarm是什么" class="headerlink" title="Docker Swarm是什么"></a>Docker Swarm是什么</h2><p>Docker Swarm是Docker自带的一个集群管理模块。他能够实现Docker集群的创建和管理。</p>
@@ -54,7 +54,7 @@
 <p>Docker Swarm是基于Docker的模块，所以首先要在3台服务器上安装Docker。安装完成Docker以后，所有的操作都在Docker中完成。</p>
 <h3 id="在Master上安装Docker"><a href="#在Master上安装Docker" class="headerlink" title="在Master上安装Docker"></a>在Master上安装Docker</h3><p>通过依次执行下面的命令，在Master服务器上安装Docker</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install -y apt-transport-https ca-certificates curl software-properties-common</div><div class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</div><div class="line">add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable&quot;</div><div class="line">apt-get update</div><div class="line">apt-get install -y docker-ce</div></pre></td></tr></table></figure>
-<h3 id="创建Manager节点"><a href="#创建Manager节点" class="headerlink" title="创建Manager节点"></a>创建Manager节点</h3><p>一个Docker Swarm集群需要至少一个Manager节点。现在初始化Master服务器，作为集群的Manager节点。运行下面一条命令。</p>
+<h3 id="创建Manager节点"><a href="#创建Manager节点" class="headerlink" title="创建Manager节点"></a>创建Manager节点</h3><p>一个Docker Swarm集群需要Manager节点。现在初始化Master服务器，作为集群的Manager节点。运行下面一条命令。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker swarm init</div></pre></td></tr></table></figure>
 <p>运行完成以后，可以看到的返回结果下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_2.png" alt=""></p>
@@ -81,10 +81,10 @@
 <h3 id="允许docker使用可信任的http私有源（可选）"><a href="#允许docker使用可信任的http私有源（可选）" class="headerlink" title="允许docker使用可信任的http私有源（可选）"></a>允许docker使用可信任的http私有源（可选）</h3><p>如果你使用上面一个小节的命令搭建了自己的私有源，由于Docker默认是不允许使用HTTP方式的私有源的，因此你需要配置Docker，让Docker信任它。</p>
 <p>使用下面命令配置Docker：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo &apos;&#123; &quot;insecure-registries&quot;:[&quot;45.77.138.242:8003&quot;] &#125;&apos; &gt;&gt; /etc/docker/daemon.json</div></pre></td></tr></table></figure>
-<p>如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_6.png" alt=""></p>
 <p>然后使用下面这个命令重启docker。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
+<p>如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_6.png" alt=""></p>
 <p>重启完成以后，Manager节点就配置好了。</p>
 <h2 id="创建子节点初始化脚本"><a href="#创建子节点初始化脚本" class="headerlink" title="创建子节点初始化脚本"></a>创建子节点初始化脚本</h2><p>对于Slave服务器来说，只需要做三件事情：</p>
 <ol>
@@ -98,7 +98,7 @@
 <p>把这个文件设置为可自行文件，并运行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">chmod +x init.sh</div><div class="line">./init.sh</div></pre></td></tr></table></figure>
 <p>如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_6.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_7.png" alt=""></p>
 <p>等待脚本运行完成以后，你就可以从Slave-1和Slave-2的SSH上面登出了。以后也不需要再进来了。</p>
 <p>回到Master服务器，执行下面的命令，来确认现在集群已经有3个节点了：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker node ls</div></pre></td></tr></table></figure>
@@ -135,7 +135,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service ps spider</div></pre></td></tr></table></figure>
 <p>如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_13.png" alt=""></p>
-<h2 id="查看节点Log："><a href="#查看节点Log：" class="headerlink" title="查看节点Log："></a>查看节点Log：</h2><p>根据上图执行结果，可以看到这个运行中的容器的ID为<code>rusps0ofwids</code>，那么执行下面的命令动态查看Log：</p>
+<h2 id="查看节点Log"><a href="#查看节点Log" class="headerlink" title="查看节点Log"></a>查看节点Log</h2><p>根据上图执行结果，可以看到这个运行中的容器的ID为<code>rusps0ofwids</code>，那么执行下面的命令动态查看Log：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker service logs -f 容器ID</div></pre></td></tr></table></figure>
 <p>此时就会持续跟踪这一个容器的Log。如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_14.png" alt=""></p>
@@ -173,12 +173,13 @@
 <p>他们的区别在于，直接执行更新命令时，正在运行的容器会一个一个更新。</p>
 <p>运行效果如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_21.png" alt=""></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>在同一个Swarm集群里面，可以运行多个不同的服务，各个服务之间互不影响。</p>
+<h2 id="你可以用Docker-Swarm做更多事情"><a href="#你可以用Docker-Swarm做更多事情" class="headerlink" title="你可以用Docker Swarm做更多事情"></a>你可以用Docker Swarm做更多事情</h2><p>本文使用的是一个模拟爬虫的例子，但是显然，任何可以批量运行的程序都能够用Docker Swarm来运行，无论你用Redis还是Celery来通信，无论你是否需要通信，只要能批量运行，就能用Docker Swarm。</p>
+<p>在同一个Swarm集群里面，可以运行多个不同的服务，各个服务之间互不影响。真正做到了搭建一次Docker Swarm集群，然后就再也不用管了，以后的所有操作你都只需要在Manager节点所在的这个服务器上面运行。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;在爬虫开发过程中，你肯定遇到过需要把爬虫部署在多个服务器上面的情况。此时你是怎么操作的呢？一个服务器一个服务器SSH登录上去，使用git拉下代码，然后运行？代码修改了，于是又要一个服务器一个服务器登录上去依次更新？&lt;/p&gt;
+      &lt;p&gt;在爬虫开发过程中，你肯定遇到过需要把爬虫部署在多个服务器上面的情况。此时你是怎么操作的呢？逐一SSH登录每个服务器，使用git拉下代码，然后运行？代码修改了，于是又要一个服务器一个服务器登录上去依次更新？&lt;/p&gt;
 &lt;p&gt;有时候爬虫只需要在一个服务器上面运行，有时候需要在200个服务器上面运行。你是怎么快速切换的呢？一个服务器一个服务器登录上去开关？或者聪明一点，在Redis里面设置一个可以修改的标记，只有标记对应的服务器上面的爬虫运行？&lt;/p&gt;
 &lt;p&gt;A爬虫已经在所有服务器上面部署了，现在又做了一个B爬虫，你是不是又得依次登录每个服务器再一次部署？&lt;/p&gt;
 &lt;p&gt;如果你确实是这么做的，那么你应该后悔没有早一点看到这篇文章。看完本文以后，你能够做到：&lt;/p&gt;
@@ -197,7 +198,7 @@
 &lt;ul&gt;
 &lt;li&gt;1分钟内批量更新所有机器上的爬虫：&lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;docker build -t localhost:8003/spider:0.01 .&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker push localhost:8003/spider:0.01&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker service update --image 45.77.138.242:8003/spider:0.02 spider&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;docker build -t localhost:8003/spider:0.02 .&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker push localhost:8003/spider:0.02&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;docker service update --image 45.77.138.242:8003/spider:0.02 spider&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
     
     </summary>
     

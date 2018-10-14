@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-14T09:00:43.287Z</updated>
+  <updated>2018-10-14T09:05:09.791Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2018/10/13/use-docker-swarm/"/>
     <id>https://www.kingname.info/2018/10/13/use-docker-swarm/</id>
     <published>2018-10-13T13:23:51.000Z</published>
-    <updated>2018-10-14T09:00:43.287Z</updated>
+    <updated>2018-10-14T09:05:09.791Z</updated>
     
     <content type="html"><![CDATA[<p>在爬虫开发过程中，你肯定遇到过需要把爬虫部署在多个服务器上面的情况。此时你是怎么操作的呢？逐一SSH登录每个服务器，使用git拉下代码，然后运行？代码修改了，于是又要一个服务器一个服务器登录上去依次更新？</p>
 <p>有时候爬虫只需要在一个服务器上面运行，有时候需要在200个服务器上面运行。你是怎么快速切换的呢？一个服务器一个服务器登录上去开关？或者聪明一点，在Redis里面设置一个可以修改的标记，只有标记对应的服务器上面的爬虫运行？</p>
@@ -175,6 +175,14 @@
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/docker_swarm_21.png" alt=""></p>
 <h2 id="你可以用Docker-Swarm做更多事情"><a href="#你可以用Docker-Swarm做更多事情" class="headerlink" title="你可以用Docker Swarm做更多事情"></a>你可以用Docker Swarm做更多事情</h2><p>本文使用的是一个模拟爬虫的例子，但是显然，任何可以批量运行的程序都能够用Docker Swarm来运行，无论你用Redis还是Celery来通信，无论你是否需要通信，只要能批量运行，就能用Docker Swarm。</p>
 <p>在同一个Swarm集群里面，可以运行多个不同的服务，各个服务之间互不影响。真正做到了搭建一次Docker Swarm集群，然后就再也不用管了，以后的所有操作你都只需要在Manager节点所在的这个服务器上面运行。</p>
+<h2 id="广告时间"><a href="#广告时间" class="headerlink" title="广告时间"></a>广告时间</h2><p>本文是多种部署分布式爬虫方法中的一种，其他方法，可以参阅我的新书《Python爬虫开发 从入门到实战》。现已在京东、当当、亚马逊上架。</p>
+<ul>
+<li>京东：<a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></li>
+<li>当当：<a href="http://product.m.dangdang.com/25349717.html" target="_blank" rel="external">http://product.m.dangdang.com/25349717.html</a></li>
+<li>亚马逊：<a href="https://www.amazon.cn/dp/B07HGBRXFW" target="_blank" rel="external">https://www.amazon.cn/dp/B07HGBRXFW</a></li>
+</ul>
+<p>本书读者交流群也已经开通，扫码添加公众号，回复：读者交流 即可获得加群方式。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/wechatplatform.jpg" alt=""></p>
 ]]></content>
     
     <summary type="html">

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-15T14:50:46.618Z</updated>
+  <updated>2018-10-15T14:52:21.687Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2018/10/15/translate-help/"/>
     <id>https://www.kingname.info/2018/10/15/translate-help/</id>
     <published>2018-10-15T14:15:08.000Z</published>
-    <updated>2018-10-15T14:50:46.618Z</updated>
+    <updated>2018-10-15T14:52:21.687Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/photo-1512153472310-d72327c26cf0.jpeg" alt=""></p>
 <p>以CSDN为首，知乎其次，cnblog带路的一大批博客上充斥着大量低质量的编程入门教程，代码粗制滥造，毫无缩进，没有高亮，东抄西抄。初学者如果长期参照这种垃圾博客来解决问题，将会适得其反，走入歧途。</p>
@@ -64,6 +64,8 @@
 &lt;p&gt;以CSDN为首，知乎其次，cnbl
     
     </summary>
+    
+      <category term="学习" scheme="https://www.kingname.info/categories/%E5%AD%A6%E4%B9%A0/"/>
     
     
       <category term="翻译" scheme="https://www.kingname.info/tags/%E7%BF%BB%E8%AF%91/"/>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-17T12:48:51.709Z</updated>
+  <updated>2018-10-17T15:55:42.127Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2018/10/17/use-gantt-enhanced/"/>
     <id>https://www.kingname.info/2018/10/17/use-gantt-enhanced/</id>
     <published>2018-10-17T12:36:39.000Z</published>
-    <updated>2018-10-17T12:48:51.709Z</updated>
+    <updated>2018-10-17T15:55:42.127Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/photo-1523958399470-c15bf82fcea9.jpeg" alt=""></p>
 <p>写这篇文章，我不是要黑任何一个任务管理类的App或者方法论。相反，我是一个工具控，在试用各种任务管理类App上总是不遗余力。常见的Things 3，Todoist，Teambition，Trello，Any.do，Doit.im我都试用过。最后，我选择了<a href="https://todoist.com" target="_blank" rel="external">Todoist</a>，在Todoist上，我已经完成了1292个任务。如下图所示。</p>
@@ -31,7 +31,7 @@
 <p>而Teambition与Trello稍微进步一点，引入了看板的概念，于是能够显示任务在各个阶段的状态，如下图所示。这张图是少数派的Trello看板，用来让作者选题。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-10-26-51.png" alt=""></p>
 <p>在看板中，你可以知道哪些任务是计划中，哪些任务是准备做，哪些是正在做，哪些是已经完成。然而这样就够了吗？</p>
-<p>看板比单纯的To do list类应用进了一步，能够关注任务的状态了。但它们的局限也在于次，因为他们关注的，只是每一个任务。</p>
+<p>看板比单纯的To do list类应用进了一步，能够关注任务的状态了。但它们的局限也在于此，因为他们关注的，只是每一个任务。</p>
 <p>做一个比喻，修汽车需要拧螺丝，组装宜家的家具也需要拧螺丝。你如果只关注拧螺丝这个动作，那么修汽车和组装家具对你来说没有区别。组装宜家的家具，看一下说明书，一般人半个小时就搞定，但是你半个小时能学会修汽车吗？</p>
 <p>如果只使用任务管理类的工具，你就会陷入一个怪圈：你做了很多任务，但是你不知道你做这些任务是为了什么。任务管理类App适合用来记录和追踪各种琐碎的任务和相关性不强的任务。就像是少数派的每一篇文章，文章与文章之间不是一个系列的关系，他们各自独立，谁都可以领选题写文章，哪个选题先写哪个选题后写，关系不大。</p>
 <p>一旦要规划一个项目，对于规划项目的人和做项目的人，用任务管理类App都会让人觉得使不上劲。对于做任务的人，看到每一个独立的任务，对项目没有整体的概念；对于规划项目的人，不知道任务是不是已经切分得足够细，是否有遗漏。</p>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-17T12:37:43.402Z</updated>
+  <updated>2018-10-17T12:48:51.709Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,10 +20,12 @@
     <link href="https://www.kingname.info/2018/10/17/use-gantt-enhanced/"/>
     <id>https://www.kingname.info/2018/10/17/use-gantt-enhanced/</id>
     <published>2018-10-17T12:36:39.000Z</published>
-    <updated>2018-10-17T12:37:43.402Z</updated>
+    <updated>2018-10-17T12:48:51.709Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="跳出任务管理的泥沼，拥抱甘特图的怀抱"><a href="#跳出任务管理的泥沼，拥抱甘特图的怀抱" class="headerlink" title="跳出任务管理的泥沼，拥抱甘特图的怀抱"></a>跳出任务管理的泥沼，拥抱甘特图的怀抱</h1><p>写这篇文章，我不是要黑任何一个任务管理类的App或者方法论。相反，我是一个工具控，在试用各种任务管理类App上总是不遗余力。常见的Things 3，Todoist，Teambition，Trello，Any.do，Doit.im我都试用过。最后，我选择了<a href="https://todoist.com" target="_blank" rel="external">Todoist</a>，在Todoist上，我已经完成了1292个任务。如下图所示。</p>
+    <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/photo-1523958399470-c15bf82fcea9.jpeg" alt=""></p>
+<p>写这篇文章，我不是要黑任何一个任务管理类的App或者方法论。相反，我是一个工具控，在试用各种任务管理类App上总是不遗余力。常见的Things 3，Todoist，Teambition，Trello，Any.do，Doit.im我都试用过。最后，我选择了<a href="https://todoist.com" target="_blank" rel="external">Todoist</a>，在Todoist上，我已经完成了1292个任务。如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-09-24-22-26-08.png" alt="我的Todoist任务记录"></p>
+<a id="more"></a>
 <h2 id="任务管理类App有什么问题"><a href="#任务管理类App有什么问题" class="headerlink" title="任务管理类App有什么问题"></a>任务管理类App有什么问题</h2><p>Things3，Todoist为首的任务管理App，核心功能就是记录<strong>未完成</strong>的任务，勾掉<strong>已完成</strong>的任务。至于分类，标签，自然语言识别之类的功能算是锦上添花。</p>
 <p>他们有一个缺点，那就是你只知道一个任务没有做，或者已经做完了。但是你不知道在一群没有完成的任务中，哪些是正在做的。（当然，你可以创建一个分类，叫做“正在做”，然后把正在做的任务放进这个分类中。）</p>
 <p>而Teambition与Trello稍微进步一点，引入了看板的概念，于是能够显示任务在各个阶段的状态，如下图所示。这张图是少数派的Trello看板，用来让作者选题。</p>
@@ -127,7 +129,9 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;跳出任务管理的泥沼，拥抱甘特图的怀抱&quot;&gt;&lt;a href=&quot;#跳出任务管理的泥沼，拥抱甘特图的怀抱&quot; class=&quot;headerlink&quot; title=&quot;跳出任务管理的泥沼，拥抱甘特图的怀抱&quot;&gt;&lt;/a&gt;跳出任务管理的泥沼，拥抱甘特图的怀抱&lt;/h1&gt;&lt;p&gt;写这篇文章，
+      &lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/photo-1523958399470-c15bf82fcea9.jpeg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;写这篇文章，我不是要黑任何一个任务管理类的App或者方法论。相反，我是一个工具控，在试用各种任务管理类App上总是不遗余力。常见的Things 3，Todoist，Teambition，Trello，Any.do，Doit.im我都试用过。最后，我选择了&lt;a href=&quot;https://todoist.com&quot;&gt;Todoist&lt;/a&gt;，在Todoist上，我已经完成了1292个任务。如下图所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-09-24-22-26-08.png&quot; alt=&quot;我的Todoist任务记录&quot;&gt;&lt;/p&gt;
     
     </summary>
     

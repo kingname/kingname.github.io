@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-17T15:55:42.127Z</updated>
+  <updated>2018-10-21T01:47:16.966Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2018/10/17/use-gantt-enhanced/"/>
     <id>https://www.kingname.info/2018/10/17/use-gantt-enhanced/</id>
     <published>2018-10-17T12:36:39.000Z</published>
-    <updated>2018-10-17T15:55:42.127Z</updated>
+    <updated>2018-10-21T01:47:16.966Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/photo-1523958399470-c15bf82fcea9.jpeg" alt=""></p>
 <p>写这篇文章，我不是要黑任何一个任务管理类的App或者方法论。相反，我是一个工具控，在试用各种任务管理类App上总是不遗余力。常见的Things 3，Todoist，Teambition，Trello，Any.do，Doit.im我都试用过。最后，我选择了<a href="https://todoist.com" target="_blank" rel="external">Todoist</a>，在Todoist上，我已经完成了1292个任务。如下图所示。</p>
@@ -410,6 +410,135 @@
   </entry>
   
   <entry>
+    <title>如果你不知道做什么，那就学一门杂学吧</title>
+    <link href="https://www.kingname.info/2018/10/01/my-new-book/"/>
+    <id>https://www.kingname.info/2018/10/01/my-new-book/</id>
+    <published>2018-10-01T10:31:11.000Z</published>
+    <updated>2018-10-30T16:24:19.818Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>这篇文章没有代码，请放心阅读。</p>
+<p>多年以后，面对人工智能研究员那混乱不堪的代码，我会想起第一次和S君相见的那个遥远的下午。那时的B公司，还是一个仅有6个人的小团队，Mac和显示器在桌上依次排开，大家坐在一起，不需要称呼姓名，转过脸去，对方就知道你在和他说话。一切看起来都那么美好，我们所有人，都希望自己和这个公司能够一起成长。</p>
+<p>彼时S君刚从加拿大回来，老板把他介绍给我们，于是S君作为数据产品经理跟我有了项目上的接触。</p>
+<p>创业公司里面，每一个人都需要会很多的技艺，于是S君开始自学Python。</p>
+<p>有一天，S君问我：“你玩MineCraft吗？“</p>
+<p>“玩，但我更喜欢在B站上看别人的世界。”我答道。</p>
+<p>“我觉得我现在写程序，像是在玩我的世界。”S君笑着说道。</p>
+<p>“是不是觉得你已经掌握了Python的基本语法，看着别人把Python用的溜溜转，而你自己却不知道用它来做什么？”</p>
+<p>“是这样的，你懂我。”</p>
+<p>“那你学一门杂学吧。”</p>
+<p>于是S君被我诱拐过来跟我一起写爬虫。</p>
+<p>后来，S君离开了B公司。</p>
+<p>三个月后，我也离开了。</p>
+<p>从此，我们再也没有见过。</p>
+<a id="more"></a>
+<h2 id="编程最重要的能力是变通"><a href="#编程最重要的能力是变通" class="headerlink" title="编程最重要的能力是变通"></a>编程最重要的能力是变通</h2><p>S君是一个老实孩子。</p>
+<p>在开发一个爬虫的过程中，网站接口返回给他的数据看起来是JSON格式，于是他就用Python自带的JSON库去解析。结果解析失败了。因为这些所谓的看起来像JSON的东西，竟然没有双引号。</p>
+<p>难道是JSON的超集？S君一通搜索，发现用YMAL库也许可以解析这种数据。于是安装YMAL库，一解析又报错。</p>
+<p>难道这些数据直接就是Python的字典？于是S君用上了邪恶的eval。又报错，因为里面有null和小写的true。</p>
+<p>“你为什么不试一试直接用正则表达式呢？”我对S君说。</p>
+<p>“靠！”S君一拍桌子，旁边的老板吓得把搪瓷杯子里面的快乐水洒在了白衬衣上。</p>
+<p>然后S君用正则表达式花了10秒钟结束了战斗。</p>
+<h2 id="写爬虫与三峡大坝"><a href="#写爬虫与三峡大坝" class="headerlink" title="写爬虫与三峡大坝"></a>写爬虫与三峡大坝</h2><p>有一天，S君兴冲冲地跑来跟我说：“我体会到三峡大坝的伟大功能了！”</p>
+<p>“你是爬虫工程师还是水利工程师？”</p>
+<p>“你知道吗，不管上游的水势多么凶猛，从大坝出来以后总是安全而稳定。”S君并没有回答我的问题，而是自顾自地说道。</p>
+<p>“原来你开始用Kafka。不错，孺子可教。”</p>
+<p>S君吐了一下舌头：“还是师傅教导有方。”</p>
+<p>前不久，S君的爬虫刚刚达到了日产数据千万条的目标。然而他只高兴了一天。因为他发现，数据写到数据库以后，读起来很麻烦。</p>
+<p>S君有多个数据分析的系统需要从数据库里面读取爬虫爬好的数据，但是从每天千万量级的数据中寻找特定的数据是一个很慢的过程。如果程序遇到异常导致崩溃，又得从头开始读。</p>
+<p>S君问我：“现在我每一个数据分析的脚本都要从数据库里面读一次数据，做了太多重复的工作，单机单节点的数据库快要撑不住了。我是不是要去学习分库分表搭建集群啊？”</p>
+<p>我告诉S君：“这个后面你自然是需要去做的。但现在，你可以先试一试Kafka，我已经搭建好了一个Kafka的集群了，你这样使用……”。</p>
+<p>后来，S君让所有爬虫把爬到的数据到直接送进了Kafka，然后再从Kafka里面读数据出来，一个Group用来备份原始数据，一份Group用来生成中间表，一份Group用来监控报警，一份Group用来绘制DashBoard。无论爬虫塞给Kafka的数据有多少，有多快，从Kafka读数据的地方都能按照自己的节奏来消费和使用。</p>
+<h2 id="既然收集了数据就要让它发光发热"><a href="#既然收集了数据就要让它发光发热" class="headerlink" title="既然收集了数据就要让它发光发热"></a>既然收集了数据就要让它发光发热</h2><p>S君在加拿大留学时学的专业是金融数学和统计。所以他对数据分析也很有兴趣。在他爬虫收集的数据够用以后，我跟他讲了如何使用Pandas来分析数据。</p>
+<p>S君把他分析的酒店价格变化数据给分享给了我们。不愧是金融+数学+统计学背景的高级知识分子 + 超级强大的Pandas + 超级好用的Jupyter。这份数据不仅完美再现了过去一年的价格走势，还预测了未来的任何变化，多达四十六张图表似乎穷尽了所有的组合。</p>
+<h2 id="草木竹石皆可破敌"><a href="#草木竹石皆可破敌" class="headerlink" title="草木竹石皆可破敌"></a>草木竹石皆可破敌</h2><p>S君曾经遇到过一个特别简单的电商网站。页面几乎像素级抄袭淘宝，但是完全没有任何反爬虫的机制。以S君的水平，从审查元素，到开发完成，仅仅用了半个小时。爬虫安全平稳又顺利地运行了三个星期。</p>
+<p>然后，有一天早上，爬虫死掉了。</p>
+<p>S君用尽毕生所学，无法再从这个网站上爬到任何有价值的信息。这个网站似乎请来了一个机器行为对抗的大神级人物。人用浏览器一点问题都没有，但S君的任何隐藏爬虫的手段都被轻易识破。</p>
+<p>S君找到我：“师傅，这个网站我搞不定。”</p>
+<p>“你能搞定。动动脑子。”</p>
+<p>“我会的所有技术都用上了，完全看不出破解他反爬虫机制的方法。”S君已经失去了信心。</p>
+<p>“那就，不要用技术去对抗。用你的脑子。”</p>
+<p>S君抱着显示器用头一遍一遍的撞。</p>
+<p>我问S君：“你有没有思考一个问题，这个网站模仿了淘宝的皮，却又毫无反爬虫机制。你觉得他的老板是一个什么样的人？你听过那个段子吗？”</p>
+<p>S君突然一跃而起：“我给你一万元，你帮我做一个网站吧。你想要什么样的网站？很简单，就淘宝那样的。你是说这个段子吗？”</p>
+<p>“对。”</p>
+<p>S君突然之间荣光焕发：“有办法了！”</p>
+<p>只见S君重新在浏览器打开了这个网站，找到了客户服务热线。电话一拨通他就开始一通污言秽语骂起来：“……你们网站到底在搞什么？为什么今天一会能登录一会不能登录？找你们老板来！我来教他怎么做网站！……”</p>
+<p>半小时以后，网站反爬虫机制全部解除。</p>
+<p>此刻，S君面向西面双手合十，自言自语：“兄弟，对不起了，只有让你来背这个锅了。”</p>
+<h2 id="你小学上课传过纸条吗"><a href="#你小学上课传过纸条吗" class="headerlink" title="你小学上课传过纸条吗"></a>你小学上课传过纸条吗</h2><p>“我现在能体会那些半路拦截纸条的人是什么心态了。”这是S君第一次使用Charles时对我说的话。</p>
+<p>从此以后，我很少看到S君分析网页了。因为他学会了在爬虫开发的过程中，首先通过中间人攻击技术分析微信小程序和手机App。这种方式往往能够直接获得数据，拿到数据以后就能直接储存，再也不用写烦人的XPath或者长的跟表情符号一样的正则表达式了。</p>
+<p>有一天，我在玩一个网页版的黑客解密游戏，在网页上寻找某个地方隐藏起来的密码，然后输入每一关的回答框中，答对才能进入下一关。</p>
+<p>游戏有12关，而我卡在了第6关。只见S君拿着电脑走到我面前，指着第12关的通关页面跟我炫耀。</p>
+<p>“你是不是用MITMProxy替换了这个网站的Js文件？”</p>
+<p>“果然还是瞒不过师傅你啊。”</p>
+<p>“你拦截了别人的纸条，做了修改，然后又叠好继续传下去，你有考虑过发纸条的人和收纸条的人的感受吗？”</p>
+<p>“我小学时候不传纸条，都是妹子直接约我的。”</p>
+<h2 id="加密？不存在的"><a href="#加密？不存在的" class="headerlink" title="加密？不存在的"></a>加密？不存在的</h2><p>“前端没有秘密”。S君在成功逆向了一个网站的Js文件以后如是对我说。</p>
+<p>“那是因为这个网站的Js代码就赤裸裸地放在你面前，完全没有混淆。”我对S君说道。</p>
+<p>“不怕，我可以用Node.js来运行混淆过的代码。我已经搭建好Node.js服务了，只要把Js代码传进去，他就会把结果给我返回回来。”S君对此似乎一脸自行。</p>
+<p>“你什么时候学会的Node.js？”</p>
+<p>“这不是师傅你说过技多不压身吗？既然做爬虫需要动JavaScript，那我顺手就把Node.js给学了。”S君毫不畏惧的表情，似乎证明他已经猜透了我要问什么。</p>
+<p>“那如果目标没有网站，只有App呢？”</p>
+<p>“不怕，Android 逆向工程我也顺便研究了一点。Java我也看得懂。”</p>
+<p>“看来这些已经不需要我再教你了。”</p>
+<h2 id="我一根指头就能捏死你，但我不想伤害你"><a href="#我一根指头就能捏死你，但我不想伤害你" class="headerlink" title="我一根指头就能捏死你，但我不想伤害你"></a>我一根指头就能捏死你，但我不想伤害你</h2><p>S君有一天问我：“假设你现在在小学课堂上，前面的同学让你把纸条传给后面的女生，你会怎么做？”</p>
+<p>我说：“查看复制/修改删除/拦截丢弃”。</p>
+<p>S君嘿嘿一笑：“比如说，前后三次的纸条分别为‘听说你奶奶生病了，我们周末一起去看望她吧‘，’今晚我爸妈不在，去我家玩吗？’， ‘我刚拿到这个月压岁钱，老师一下课我们就去吃好吃的。’”</p>
+<p>我说：“女孩漂亮的话，我改一下第二张纸条，改成‘今晚我爸妈不在，我们一起去青南家玩吗？’”。</p>
+<p>S君露出了嫌弃的眼神：“师傅，你可是说过你最讨厌技术含量低的事情啊，你涂改了纸条，别人不会发现？你笔迹都不一样啊！”。</p>
+<p>我问S君：“那你有何高见？”</p>
+<p>S君抬头仰望这窗外的天空：“如果是我，那么我会临摹第一张纸条上面的<code>生病了</code> <code>去看望</code> <code>她</code> <code>我</code>，第二张纸条上面的<code>爸妈</code>，第三张纸条上面的<code>拿</code> <code>钱</code> <code>老师</code>这些字的笔迹。然后改换一下顺序就变成了：<code>爸妈，我老师生病了，我拿钱去看望她</code>。最后我把这张伪造的纸条拿去找写纸条的那个同学他爸妈要钱。”</p>
+<p>“我猜，你想用中间人攻击截取别人的Cookies，然后用这些Cookies偷偷登录网站，进行你的不可告人的目的。”</p>
+<p>S君笑道：“哈哈哈，我想想都害怕。但是每当我想到，我拥有一种可怕的力量，而我还能控制住这种力量。我就知道我和街上的普通人不一样了。”</p>
+<h2 id="你肯定薅了直播答题的羊毛吧"><a href="#你肯定薅了直播答题的羊毛吧" class="headerlink" title="你肯定薅了直播答题的羊毛吧"></a>你肯定薅了直播答题的羊毛吧</h2><p>去年年底的直播答题着实火了一把。那个时候，我和S君分开已经有一段时间了。我相信，在全民答题的每一个夜晚，S君的电脑上一定连着不少于六台安卓手机。这些手机运行着不同的答题平台，能够自动读取屏幕上的问题并自动选择答案。</p>
+<p>我把安卓自动化测试技术教给S君，本来是让他结合爬虫，实现群控从而抓取一些难以处理的数据，但我相信他肯定会用来答题。</p>
+<p>变通，这一点他学的越来越好了。</p>
+<p>只希望他不要成为羊毛党。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>后来，我再也没有见过S君这样有趣的人。所以我把我教给S君的东西，写成了一本书：《Python爬虫开发 从入门到实战》，现在已在京东，当当与亚马逊上架。希望你也能变成S君一样有趣而又厉害的人。</p>
+<ul>
+<li>京东：<a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></li>
+<li>当当：<a href="http://product.m.         dangdang.com/25349717.html" target="_blank" rel="external">http://product.m.dangdang.com/25349717.html</a></li>
+<li>亚马逊：<a href="https://www.amazon.cn/dp/       B07HGBRXFW" target="_blank" rel="external">https://www.amazon.cn/dp/B07HGBRXFW</a></li>
+</ul>
+<p>爬虫是一门杂学。因为在一个完整的开发过程中，需要涉及到的知识可以包括但不限于：Python，HTML，JavaScript，正则表达式，XPath，数据库，Redis，消息队列，Docker，ELK，Hadoop，数据分析，ETL，中间人攻击，自动化测试技术，可视化……</p>
+<p>这其中的任何一项，在一个大公司里面都可以让很多人来做。</p>
+<p>爬虫开发，就像这篇文章里面反复出现的一个词：变通——只要能够获得数据，任何技术都可以使用。所谓草木竹石皆可为剑。爬虫不应该是一个枯燥的一成不变的模式化的工作。而是一个充满了创意和挑战，能够让旁观者大呼“我X还能这样搞”的工作。</p>
+<p>爬虫开发，绝对不仅仅是Scrapy，PySpider，requests这些框架或者库的使用。所以在这本书里面，我也刻意减少了框架使用说明的部分，而把重点放在了各种突破反爬虫机制或者使用变通的方法绕过反爬虫机制的方法论和实践中。</p>
+<p>通过学习爬虫，你最后不一定选择爬虫工程师这个岗位，但是在学习爬虫的过程中，你将会接触到的各种工具，方法，服务组件，都会在你以后的生活和工作中帮到你，让你知道，在遇到一个问题的时候，解决方法在哪个地方。</p>
+<p>**</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;序言&quot;&gt;&lt;a href=&quot;#序言&quot; class=&quot;headerlink&quot; title=&quot;序言&quot;&gt;&lt;/a&gt;序言&lt;/h2&gt;&lt;p&gt;这篇文章没有代码，请放心阅读。&lt;/p&gt;
+&lt;p&gt;多年以后，面对人工智能研究员那混乱不堪的代码，我会想起第一次和S君相见的那个遥远的下午。那时的B公司，还是一个仅有6个人的小团队，Mac和显示器在桌上依次排开，大家坐在一起，不需要称呼姓名，转过脸去，对方就知道你在和他说话。一切看起来都那么美好，我们所有人，都希望自己和这个公司能够一起成长。&lt;/p&gt;
+&lt;p&gt;彼时S君刚从加拿大回来，老板把他介绍给我们，于是S君作为数据产品经理跟我有了项目上的接触。&lt;/p&gt;
+&lt;p&gt;创业公司里面，每一个人都需要会很多的技艺，于是S君开始自学Python。&lt;/p&gt;
+&lt;p&gt;有一天，S君问我：“你玩MineCraft吗？“&lt;/p&gt;
+&lt;p&gt;“玩，但我更喜欢在B站上看别人的世界。”我答道。&lt;/p&gt;
+&lt;p&gt;“我觉得我现在写程序，像是在玩我的世界。”S君笑着说道。&lt;/p&gt;
+&lt;p&gt;“是不是觉得你已经掌握了Python的基本语法，看着别人把Python用的溜溜转，而你自己却不知道用它来做什么？”&lt;/p&gt;
+&lt;p&gt;“是这样的，你懂我。”&lt;/p&gt;
+&lt;p&gt;“那你学一门杂学吧。”&lt;/p&gt;
+&lt;p&gt;于是S君被我诱拐过来跟我一起写爬虫。&lt;/p&gt;
+&lt;p&gt;后来，S君离开了B公司。&lt;/p&gt;
+&lt;p&gt;三个月后，我也离开了。&lt;/p&gt;
+&lt;p&gt;从此，我们再也没有见过。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="学习方法" scheme="https://www.kingname.info/tags/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>正则表达式re.sub替换不完整的问题现象及其根本原因</title>
     <link href="https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/"/>
     <id>https://www.kingname.info/2018/08/27/re-sandthepositionofparaminsub/</id>
@@ -582,11 +711,11 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
+    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
-    
-      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
     
       <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
     
@@ -1206,11 +1335,11 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
-    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
+    
+      <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
     
   </entry>
   
@@ -1539,69 +1668,6 @@
       <category term="Android" scheme="https://www.kingname.info/tags/Android/"/>
     
       <category term="自动化测试" scheme="https://www.kingname.info/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>如果我提前起床，闹钟你就别响</title>
-    <link href="https://www.kingname.info/2016/11/07/autoalarmclock/"/>
-    <id>https://www.kingname.info/2016/11/07/autoalarmclock/</id>
-    <published>2016-11-07T14:56:21.000Z</published>
-    <updated>2018-09-25T13:33:27.407Z</updated>
-    
-    <content type="html"><![CDATA[<p>闹钟已经成了我们生活中必不可少的东西。如果全球每个国家的当地时间明天早上，所有的闹钟突然都不响了，不知道会发生什么样的混乱。</p>
-<p>然而我们要讨论另外一种情况，闹钟每天定时响起来，真的是最好的情况吗？你有过醒来以后等闹钟的经历吗？如果你有时候在闹钟响之前就起来了，那么你会不会希望闹钟能知道你已经起来了？如果你提前醒了，那么闹钟就不响，只有你一直睡着的时候，闹钟才会按时响起来。<br><a id="more"></a></p>
-<p>这个项目基于 Andorid 上面的自动化 workflow 程序 Automate 和 Python 制作。总代码量非常小。</p>
-<p>做这个东西目的，是因为我现在早上有时候会在 7 点起床写东西，然后再去上班。但有时候可能会直接睡到 7 点 45 ，让闹钟把我闹醒。提前起床可能会忘记关闹钟，但是我不希望在我早上写作的时候被闹钟打扰。</p>
-<p>如果我早上提前起床使用电脑，那么 Automate 可以得到信息，并关闭闹钟。如果 Automate 发现我 7 点 45 都还没有碰电脑，就会把我闹醒。整个过程，我不需要和闹钟有任何的交互。</p>
-<p>这就是AutoAlarmClock这个项目存在的意义。</p>
-<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>AutoAlarmClock分为三个部分，安卓手机上的Automate，VPS上面的Web Server和Mac OS上面的一行命令。</p>
-<p>每天早上7点40，手机上的Automate会访问一个URL A：<a href="http://autoemo.kingname.info:745/alarm_clock" target="_blank" rel="external">http://autoemo.kingname.info:745/alarm_clock</a>，只要没有得到返回信息“No”，无论是网络问题，还是因为服务器返回的是其他信息，都会设定一个闹钟，在7点45分响起来。只有访问URL以后，服务器返回“No”，那么就不设闹钟。</p>
-<p>对于电脑来说，每天早上7点30分，如果电脑是开着的，说明我正在工作。这个时候电脑就会自动访问一个URL B：<a href="http://autoemo.kingname.info:745/set_alarm" target="_blank" rel="external">http://autoemo.kingname.info:745/set_alarm</a>.只有这个URL被访问过，之前给Automate访问的URL A才会返回“No”。</p>
-<h2 id="设计实现"><a href="#设计实现" class="headerlink" title="设计实现"></a>设计实现</h2><h3 id="Web-Server"><a href="#Web-Server" class="headerlink" title="Web Server"></a>Web Server</h3><p>Web Server是手机和电脑之间的桥梁。它是使用Python的Flask框架写成的。代码已经放在了Github上：<a href="https://github.com/kingname/Automatic.git" target="_blank" rel="external">AutoAlarmClock</a>. 包括空行总共只有32行代码。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</div><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line"><span class="meta">@app.route('/')</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'please visit my blog at http://kingname.info'</span></div><div class="line"></div><div class="line"><span class="meta">@app.route("/alarm_clock")</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">alarm_clock</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> os.path.exists(<span class="string">'alarmclock.txt'</span>):</div><div class="line">        <span class="keyword">with</span> open(<span class="string">'alarmclock.txt'</span>) <span class="keyword">as</span> f:</div><div class="line">            date_in_txt = f.read()</div><div class="line">            today = str(date.today())</div><div class="line">            <span class="keyword">if</span> date_in_txt == today:</div><div class="line">                <span class="keyword">return</span> <span class="string">'No'</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'Yes'</span></div><div class="line"></div><div class="line"><span class="meta">@app.route('/set_alarm')</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_alarm</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'alarmclock.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> f:</div><div class="line">        f.write(str(date.today()))</div><div class="line">    <span class="keyword">return</span> <span class="string">'OK'</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    app.run(host=<span class="string">'0.0.0.0'</span>, port=<span class="number">745</span>)</div></pre></td></tr></table></figure>
-<p>由于这个Web Server每天只访问两次，所以没有必要使用数据库或者做线程安全的设置。数据只需要使用一个文本文件作为中转即可。一旦<a href="http://autoemo.kingname.info:745/set_alarm" target="_blank" rel="external">http://autoemo.kingname.info:745/set_alarm</a>这个链接被访问，就会在当前目录创建一个alarmclock.txt文件，里面存放的是今天的日期。当<a href="http://autoemo.kingname.info:745/alarm_clock" target="_blank" rel="external">http://autoemo.kingname.info:745/alarm_clock</a>被访问的时候，它会去检查alarmclock.txt，如果这个文件不存在，或者里面的日期不是今天的日期，那么它就会返回“Yes”。只有当alarmclock.txt存在，并且里面的内容为今天的日期，它才会返回“No”。</p>
-<h3 id="电脑端"><a href="#电脑端" class="headerlink" title="电脑端"></a>电脑端</h3><p>电脑只需要访问<a href="http://autoemo.kingname.info:745/set_alarm" target="_blank" rel="external">http://autoemo.kingname.info:745/set_alarm</a>.由于Mac Book Pro只休眠，不关机，无法使用开机启动的方法来触发这个URL的访问。所以我使用了Crontab这个定时任务。因为在电脑休眠的时候，Crontab的定时任务是不会执行的，只有我在电脑上工作的时候，电脑开着才会访问这个URL，并让它生成记录今天日期的文本文件。</p>
-<p>通过下面的命令设定Crontab定时任务，编辑器我选择的是VIM：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">env EDITOR=vim crontab -e</div></pre></td></tr></table></figure>
-<p>定时任务设定为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">30 07 * * * curl -G http://autoemo.kingname.info:745/set_alarm</div></pre></td></tr></table></figure></p>
-<p>表示每天的7点30分使用curl访问后面的链接。</p>
-<p>Crontab在Linux下面也可以正常使用。</p>
-<p>如果你的电脑为Windows，因为Windows电脑一般在晚上睡觉时会关机，所以访问URL的工作可以设定开机启动来完成。</p>
-<p>首先创建一个EnableAlarmClock.py文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import requests</div><div class="line"></div><div class="line">requests.get(&apos;http://autoemo.kingname.info:745/set_alarm&apos;)</div></pre></td></tr></table></figure></p>
-<p>这个文件用到了Python的requests库，如果你没有的话，请使用pip安装。</p>
-<p>再创建一个EnableAlarmClock.bat文件，文件内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python EnableAlarmClock.py</div></pre></td></tr></table></figure></p>
-<p>打开Windows的 <strong>任务计划</strong> ，触发器选择“当前用户登录时”，操作选择“启动程序”，并填写EnableAlarmClock.bat的路径，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/task.png" alt=""></p>
-<p>这样，每次开机登录桌面的时候，程序自动就会访问设定闹钟的页面了。</p>
-<h3 id="手机端"><a href="#手机端" class="headerlink" title="手机端"></a>手机端</h3><p>Automate是安卓上面的一个强大的自动化工具，类似于IFTTT和iOS上面的Workflow。</p>
-<p>在Automate中创建一个Flow，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161108-074321.png" alt=""><br>其中涉及到了”Time await”, “HTTP request”, “Expression true?”, “Alarm add”这几个组件。</p>
-<ul>
-<li><p>“Time await”的设置如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224111.png" alt=""></p>
-</li>
-<li><p>“HTTP request”的设置为下面两张图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224136.png" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224142.png" alt=""></p>
-</li>
-<li><p>“Alarm add”的设置为下图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Screenshot_20161107-224155.png" alt=""><br>这里由于没有设置“REPEAT WEEKDAYS”这一项，所以闹钟都是一次性的，关了以后，第二天需要再根据实际情况来让Automate来决定是否需要创建。</p>
-</li>
-</ul>
-<p>设置并启动这个Flow以后，每天早上的闹钟就可以根据你是否在电脑前面工作而决定要不要闹响了。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;闹钟已经成了我们生活中必不可少的东西。如果全球每个国家的当地时间明天早上，所有的闹钟突然都不响了，不知道会发生什么样的混乱。&lt;/p&gt;
-&lt;p&gt;然而我们要讨论另外一种情况，闹钟每天定时响起来，真的是最好的情况吗？你有过醒来以后等闹钟的经历吗？如果你有时候在闹钟响之前就起来了，那么你会不会希望闹钟能知道你已经起来了？如果你提前醒了，那么闹钟就不响，只有你一直睡着的时候，闹钟才会按时响起来。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="Automate" scheme="https://www.kingname.info/tags/Automate/"/>
-    
-      <category term="Workflow" scheme="https://www.kingname.info/tags/Workflow/"/>
     
   </entry>
   

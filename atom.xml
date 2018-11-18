@@ -135,20 +135,6 @@
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://www.kingname.info/2018/11/04/do-it-now/"/>
-    <id>https://www.kingname.info/2018/11/04/do-it-now/</id>
-    <published>2018-11-04T13:12:30.000Z</published>
-    <updated>2018-11-04T13:14:35.381Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>跳出任务管理的泥沼，拥抱甘特图的怀抱（完整版）</title>
     <link href="https://www.kingname.info/2018/10/17/use-gantt-enhanced/"/>
     <id>https://www.kingname.info/2018/10/17/use-gantt-enhanced/</id>
@@ -1692,6 +1678,66 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>30秒找到藏在家里的手机</title>
+    <link href="https://www.kingname.info/2017/01/07/findmyphone/"/>
+    <id>https://www.kingname.info/2017/01/07/findmyphone/</id>
+    <published>2017-01-07T06:02:02.000Z</published>
+    <updated>2018-09-25T13:33:27.410Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们都有这样的生活体验</p>
+<blockquote>
+<p>我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？</p>
+</blockquote>
+<p>如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？</p>
+<p>看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。</p>
+<a id="more"></a>
+<p>根本原理还是让手机播放音乐，我们通过音乐来找到手机。但是在放音乐之前，需要让手机自动解除静音，并将音量调到最大声。</p>
+<p>和<a href="http://kingname.info/2016/11/07/autoalarmclock/" target="_blank" rel="external">《如果我提前起床，闹钟你就别响》</a>一样，这一次的任务依然是借助Python语言+ Flask框架 + 安卓上面的自动化程序：Automate来完成。不过，这一次我会把这个工具提供给大家一起使用。</p>
+<h2 id="四个网址"><a href="#四个网址" class="headerlink" title="四个网址"></a>四个网址</h2><p>本文将会涉及到四个网址：</p>
+<ul>
+<li>注册你的账号&gt;<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a></li>
+<li>获取当前状态&gt;<a href="http://automatic.kingname.info:8888/kingname" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a></li>
+<li>让手机在30秒以后放音乐&gt;<a href="http://automatic.kingname.info:8888/kingname/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a></li>
+<li>停止寻找手机&gt;<a href="http://automatic.kingname.info:8888/kingname/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a></li>
+</ul>
+<h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3><p>为了让每个人都能使用这个服务，我开放了账号注册的功能。注册只需要提供用户名即可，不需要密码，不需要邮箱，不需要手机号。注册账号只需要访问<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a> 其中，账号只能使用大小写字母或者数字或者下划线。如果你的账号可以使用，你将会看到如下画面：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-40-02.png" alt=""><br>就是这么简单。你的账号已经注册成功了，接下来就可以使用服务了。</p>
+<p>当然，如果你的账号不巧被别人注册过了，你将会看到如下的提示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-41-25.png" alt=""><br>这个时候你需要换一个账号注册。</p>
+<h3 id="获得状态"><a href="#获得状态" class="headerlink" title="获得状态"></a>获得状态</h3><p>注册完成以后，访问<a href="http://automatic.kingname.info:8888/账号" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a>, 你可以看到当前的状态，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-27-38.png" alt=""><br>这句话表示，现在不需要让手机自己叫起来。这个网址是给手机上面的Automate使用的，一般情况下不需要手动输入。</p>
+<h3 id="呼叫手机"><a href="#呼叫手机" class="headerlink" title="呼叫手机"></a>呼叫手机</h3><p>突然，你发现你的手机不见了。这个时候，赶紧访问<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a>, 如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-50-03.png" alt=""><br>当你访问了这个页面以后，在30秒内，你的手机就会欢快的播放音乐了。各位需要把这个网址保存为书签，方便以后直接使用。</p>
+<h3 id="停止呼叫"><a href="#停止呼叫" class="headerlink" title="停止呼叫"></a>停止呼叫</h3><p>当你找到了手机，你就需要这个网址：<a href="http://automatic.kingname.info:8888/账号/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a> 这个网址一般情况下是给Automate使用的，大家不需要手动输入。</p>
+<h2 id="Automate"><a href="#Automate" class="headerlink" title="Automate"></a>Automate</h2><p>现在再来看看安卓上面的Automate应该如何配置流程。我已经将文件放在了：<a href="https://github.com/kingname/Automatic/blob/master/BackEnd/automate/Find%20my%20phone.flo" target="_blank" rel="external">Github</a>上面。点击Download按钮即可下载，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-04-56.png" alt=""></p>
+<p>下载完成以后，将这个文件放在手机中，打开手机上的Automate，点击右上角的三个竖着的点，选择<code>Import</code>，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-49.png" alt=""></p>
+<p>再点击<code>SD card</code>,如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-24.png" alt=""></p>
+<p>选中刚刚下载的文件，即可导入成功。导入完成以后，打开这个flow, 点击右上角铅笔的图标，可以打开整个流程图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-16-49.png" alt=""><br>你需要修改的，只有我画红框的三个方块。</p>
+<p>对于这两个HTTP Request，你只需要在<code>REQUEST URL</code>中，把网址里面的账号修改成你自己的账号。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-19-27.png" alt=""></p>
+<p>对于Sound Play这个方块，因为我手机上面的音乐不一定在你手机上也有同样的，所以一定要修改音乐：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-20-50.png" alt=""><br>点<code>SOUND URI</code>，选择你一个你喜欢的音乐。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>Flow设置完成，点击右上角✓保存，然后点击<code>Start</code>启动这个Flow。在电脑或者手机浏览器中访问：<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a> 坐等30秒，听一下你的手机相应你的呼唤吧。然后再试一试把手机调成静音，看看它是不是依然可以大声的叫出来~</p>
+<p>本文设计到的网页源代码，请访问：<a href="https://github.com/kingname/Automatic" target="_blank" rel="external">https://github.com/kingname/Automatic</a>获取。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们都有这样的生活体验&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？&lt;/p&gt;
+&lt;p&gt;看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="Workflow" scheme="https://www.kingname.info/tags/Workflow/"/>
+    
+      <category term="Automatic" scheme="https://www.kingname.info/tags/Automatic/"/>
     
   </entry>
   

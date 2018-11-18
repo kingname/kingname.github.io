@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-11-18T15:14:46.760Z</updated>
+  <updated>2018-11-18T16:11:56.205Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -16,11 +16,99 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>彻底搞懂Scrapy的中间件（二）</title>
+    <link href="https://www.kingname.info/2018/11/18/know-middleware-of-scrapy-2/"/>
+    <id>https://www.kingname.info/2018/11/18/know-middleware-of-scrapy-2/</id>
+    <published>2018-11-18T15:41:24.000Z</published>
+    <updated>2018-11-18T16:11:56.205Z</updated>
+    
+    <content type="html"><![CDATA[<p>在上一篇文章中介绍了下载器中间件的一些简单应用，现在再来通过案例说说如何使用下载器中间件集成Selenium、重试和处理请求异常。</p>
+<a id="more"></a>
+<h2 id="在中间件中集成Selenium"><a href="#在中间件中集成Selenium" class="headerlink" title="在中间件中集成Selenium"></a>在中间件中集成Selenium</h2><p>对于一些很麻烦的异步加载页面，手动寻找它的后台API代价可能太大。这种情况下可以使用Selenium和ChromeDriver或者Selenium和PhantomJS来实现渲染网页。</p>
+<p>这是前面的章节已经讲到的内容。那么，如何把Scrapy与Selenium结合起来呢？这个时候又要用到中间件了。</p>
+<p>创建一个SeleniumMiddleware，其代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.http <span class="keyword">import</span> HtmlResponse</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SeleniumMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.driver = webdriver.Chrome(<span class="string">'./chromedriver'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        <span class="keyword">if</span> spider.name == <span class="string">'seleniumSpider'</span>:</div><div class="line">            self.driver.get(request.url)</div><div class="line">            time.sleep(<span class="number">2</span>)</div><div class="line">            body = self.driver.page_source</div><div class="line">        <span class="keyword">return</span> HtmlResponse(self.driver.current_url,</div><div class="line">                           body=body,</div><div class="line">                           encoding=<span class="string">'utf-8'</span>,</div><div class="line">                           request=request)</div></pre></td></tr></table></figure>
+<p>这个中间件的作用，就是对名为“seleniumSpider”的爬虫请求的网址，使用ChromeDriver先进行渲染，然后用返回的渲染后的HTML代码构造一个Response对象。如果是其他的爬虫，就什么都不做。在上面的代码中，等待页面渲染完成是通过time.sleep(2)来实现的，当然读者也可以使用前面章节讲到的等待某个元素出现的方法来实现。</p>
+<p>有了这个中间件以后，就可以像访问普通网页那样直接处理需要异步加载的页面，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-52-26.png" alt=""></p>
+<h2 id="在中间件里重试"><a href="#在中间件里重试" class="headerlink" title="在中间件里重试"></a>在中间件里重试</h2><p>在爬虫的运行过程中，可能会因为网络问题或者是网站反爬虫机制生效等原因，导致一些请求失败。在某些情况下，少量的数据丢失是无关紧要的，例如在几亿次请求里面失败了十几次，损失微乎其微，没有必要重试。但还有一些情况，每一条请求都至关重要，容不得有一次失败。此时就需要使用中间件来进行重试。</p>
+<p>有的网站的反爬虫机制被触发了，它会自动将请求重定向到一个<code>xxx/404.html</code>页面。那么如果发现了这种自动的重定向，就没有必要让这一次的请求返回的内容进入数据提取的逻辑，而应该直接丢掉或者重试。</p>
+<p>还有一种情况，某网站的请求参数里面有一项，Key为date，Value为发起请求的这一天的日期或者发起请求的这一天的前一天的日期。例如今天是“2017-08-10”，但是这个参数的值是今天早上10点之前，都必须使用“2017-08-09”，在10点之后才能使用“2017-08-10”，否则，网站就不会返回正确的结果，而是返回“参数错误”这4个字。然而，这个日期切换的时间点受到其他参数的影响，有可能第1个请求使用“2017-08-10”可以成功访问，而第2个请求却只有使用“2017-08-09”才能访问。遇到这种情况，与其花费大量的时间和精力去追踪时间切换点的变化规律，不如简单粗暴，直接先用今天去试，再用昨天的日期去试，反正最多两次，总有一个是正确的。</p>
+<p>以上的两种场景，使用重试中间件都能轻松搞定。</p>
+<p>打开练习页面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/exercise_middleware_retry.html。</div></pre></td></tr></table></figure>
+<p>这个页面实现了翻页逻辑，可以上一页、下一页地翻页，也可以直接跳到任意页数，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-53-12.png" alt=""></p>
+<p>现在需要获取1～9页的内容，那么使用前面章节学到的内容，通过Chrome浏览器的开发者工具很容易就能发现翻页实际上是一个POST请求，提交的参数为“date”，它的值是日期“2017-08-12”，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-53-37.png" alt=""></p>
+<p>使用Scrapy写一个爬虫来获取1～9页的内容，运行结果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-54-00.png" alt=""></p>
+<p>从上图可以看到，第5页没有正常获取到，返回的结果是参数错误。于是在网页上看一下，发现第5页的请求中body里面的date对应的日期是“2017-08-11”，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-54-22.png" alt=""></p>
+<p>如果测试的次数足够多，时间足够长，就会发现以下内容。</p>
+<ol>
+<li>同一个时间点，不同页数提交的参数中，date对应的日期可能是今天的也可能是昨天的。</li>
+<li>同一个页数，不同时间提交的参数中，date对应的日期可能是今天的也可能是昨天的。</li>
+</ol>
+<p>由于日期不是今天，就是昨天，所以针对这种情况，写一个重试中间件是最简单粗暴且有效的解决办法。中间件的代码如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-54-44.png" alt=""></p>
+<p>这个中间件只对名为“middlewareSpider”的爬虫有用。由于middlewareSpider爬虫默认使用的是“今天”的日期，所以如果被网站返回了“参数错误”，那么正确的日期就必然是昨天的了。所以在这个中间件里面，第119行，直接把原来请求的body换成了昨天的日期，这个请求的其他参数不变。让这个中间件生效以后，爬虫就能成功爬取第5页了，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-55-01.png" alt=""></p>
+<p>爬虫本身的代码，数据提取部分完全没有做任何修改，如果不看中间件代码，完全感觉不出爬虫在第5页重试过。</p>
+<p>除了检查网站返回的内容外，还可以检查返回内容对应的网址。将上面练习页后台网址的第1个参数“para”改为404，暂时禁用重试中间件，再跑一次爬虫。其运行结果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-55-25.png" alt=""></p>
+<p>此时，对于参数不正确的请求，网站会自动重定向到以下网址对应的页面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/404.html</div></pre></td></tr></table></figure>
+<p>由于Scrapy自带网址自动去重机制，因此虽然第3页、第6页和第7页都被自动转到了404页面，但是爬虫只会爬一次404页面，剩下两个404页面会被自动过滤。</p>
+<p>对于这种情况，在重试中间件里面判断返回的网址即可解决，如下图12-21所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-55-47.png" alt=""></p>
+<p>在代码的第115行，判断是否被自动跳转到了404页面，或者是否被返回了“参数错误”。如果都不是，说明这一次请求目前看起来正常，直接把response返回，交给后面的中间件来处理。如果被重定向到了404页面，或者被返回“参数错误”，那么进入重试的逻辑。如果返回了“参数错误”，那么进入第126行，直接替换原来请求的body即可重新发起请求。</p>
+<p>如果自动跳转到了404页面，那么这里有一点需要特别注意：此时的请求，request这个对象对应的是向404页面发起的GET请求，而不是原来的向练习页后台发起的请求。所以，重新构造新的请求时必须把URL、body、请求方式、Headers全部都换一遍才可以。</p>
+<p>由于request对应的是向404页面发起的请求，所以resquest.url对应的网址是404页面的网址。因此，如果想知道调整之前的URL，可以使用如下的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">request.meta[<span class="string">'redirect_urls'</span>]</div></pre></td></tr></table></figure>
+<p>这个值对应的是一个列表。请求自动跳转了几次，这个列表里面就有几个URL。这些URL是按照跳转的先后次序依次append进列表的。由于本例中只跳转了一次，所以直接读取下标为0的元素即可，也就是原始网址。</p>
+<p>重新激活这个重试中间件，不改变爬虫数据抓取部分的代码，直接运行以后可以正确得到1～9页的全部内容，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-56-15.png" alt=""></p>
+<h2 id="在中间件里处理异常"><a href="#在中间件里处理异常" class="headerlink" title="在中间件里处理异常"></a>在中间件里处理异常</h2><p>在默认情况下，一次请求失败了，Scrapy会立刻原地重试，再失败再重试，如此3次。如果3次都失败了，就放弃这个请求。这种重试逻辑存在一些缺陷。以代理IP为例，代理存在不稳定性，特别是免费的代理，差不多10个里面只有3个能用。而现在市面上有一些收费代理IP提供商，购买他们的服务以后，会直接提供一个固定的网址。把这个网址设为Scrapy的代理，就能实现每分钟自动以不同的IP访问网站。如果其中一个IP出现了故障，那么需要等一分钟以后才会更换新的IP。在这种场景下，Scrapy自带的重试逻辑就会导致3次重试都失败。</p>
+<p>这种场景下，如果能立刻更换代理就立刻更换；如果不能立刻更换代理，比较好的处理方法是延迟重试。而使用Scrapy_redis就能实现这一点。爬虫的请求来自于Redis，请求失败以后的URL又放回Redis的末尾。一旦一个请求原地重试3次还是失败，那么就把它放到Redis的末尾，这样Scrapy需要把Redis列表前面的请求都消费以后才会重试之前的失败请求。这就为更换IP带来了足够的时间。</p>
+<p>重新打开代理中间件，这一次故意设置一个有问题的代理，于是可以看到Scrapy控制台打印出了报错信息，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-56-34.png" alt=""></p>
+<p>从上图可以看到Scrapy自动重试的过程。由于代理有问题，最后会抛出方框框住的异常，表示TCP超时。在中间件里面如果捕获到了这个异常，就可以提前更换代理，或者进行重试。这里以更换代理为例。首先根据上图中方框框住的内容导入TCPTimeOutError这个异常：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> twisted.internet.error <span class="keyword">import</span> TCPTimedOutError</div></pre></td></tr></table></figure>
+<p>修改前面开发的重试中间件，添加一个process_exception()方法。这个方法接收3个参数，分别为request、exception和spider，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-56-58.png" alt=""></p>
+<p>process_exception()方法只对名为“exceptionSpider”的爬虫生效，如果请求遇到了TCPTimeOutError，那么就首先调用remove_broken_proxy()方法把失效的这个代理IP移除，然后返回这个请求对象request。返回以后，Scrapy会重新调度这个请求，就像它第一次调度一样。由于原来的ProxyMiddleware依然在工作，于是它就会再一次给这个请求更换代理IP。又由于刚才已经移除了失效的代理IP，所以ProxyMiddleware会从剩下的代理IP里面随机找一个来给这个请求换上。</p>
+<p>特别提醒：图片中的remove_broken_proxy()函数体里面写的是pass，但是在实际开发过程中，读者可根据实际情况实现这个方法，写出移除失效代理的具体逻辑。</p>
+<h2 id="下载器中间件功能总结"><a href="#下载器中间件功能总结" class="headerlink" title="下载器中间件功能总结"></a>下载器中间件功能总结</h2><p>能在中间件中实现的功能，都能通过直接把代码写到爬虫中实现。使用中间件的好处在于，它可以把数据爬取和其他操作分开。在爬虫的代码里面专心写数据爬取的代码；在中间件里面专心写突破反爬虫、登录、重试和渲染AJAX等操作。</p>
+<p>对团队来说，这种写法能实现多人同时开发，提高开发效率；对个人来说，写爬虫的时候不用考虑反爬虫、登录、验证码和异步加载等操作。另外，写中间件的时候不用考虑数据怎样提取。一段时间只做一件事，思路更清晰。</p>
+<blockquote>
+<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在上一篇文章中介绍了下载器中间件的一些简单应用，现在再来通过案例说说如何使用下载器中间件集成Selenium、重试和处理请求异常。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
+    
+  </entry>
+  
+  <entry>
     <title>彻底搞懂Scrapy的中间件（一）</title>
     <link href="https://www.kingname.info/2018/11/18/know-middleware-of-scrapy/"/>
     <id>https://www.kingname.info/2018/11/18/know-middleware-of-scrapy/</id>
     <published>2018-11-18T14:21:35.000Z</published>
-    <updated>2018-11-18T15:14:46.760Z</updated>
+    <updated>2018-11-18T15:18:55.444Z</updated>
     
     <content type="html"><![CDATA[<h2 id="中间件（Middleware）"><a href="#中间件（Middleware）" class="headerlink" title="中间件（Middleware）"></a>中间件（Middleware）</h2><p>中间件是Scrapy里面的一个核心概念。使用中间件可以在爬虫的请求发起之前或者请求返回之后对数据进行定制化修改，从而开发出适应不同情况的爬虫。</p>
 <p>“中间件”这个中文名字和前面章节讲到的“中间人”只有一字之差。它们做的事情确实也非常相似。中间件和中间人都能在中途劫持数据，做一些修改再把数据传递出去。不同点在于，中间件是开发者主动加进去的组件，而中间人是被动的，一般是恶意地加进去的环节。中间件主要用来辅助开发，而中间人却多被用来进行数据的窃取、伪造甚至攻击。</p>
@@ -67,15 +155,11 @@
 <p>完整地激活自定义中间件的settings.py的部分内容如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-06-31.png" alt=""></p>
 <p>配置好以后运行爬虫，爬虫会在每次请求前都随机设置一个代理。要测试代理中间件的运行效果，可以使用下面这个练习页面：</p>
-<blockquote>
-<p><a href="http://exercise.kingname.info/exercise_middleware_ip" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ip</a></p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/exercise_middleware_ip</div></pre></td></tr></table></figure>
 <p>这个页面会返回爬虫的IP地址，直接在网页上打开，如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-06-48.png" alt=""></p>
 <p>这个练习页支持翻页功能，在网址后面加上“/页数”即可翻页。例如第100页的网址为：</p>
-<blockquote>
-<p><a href="http://exercise.kingname.info/exercise_middleware_ip/100" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ip/100</a></p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/exercise_middleware_ip/100</div></pre></td></tr></table></figure>
 <p>使用了代理中间件为每次请求更换代理的运行结果，如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-07-06.png" alt=""></p>
 <p>代理中间件的可用代理列表不一定非要写在settings.py里面，也可以将它们写到数据库或者Redis中。一个可行的自动更换代理的爬虫系统，应该有如下的3个功能。</p>
@@ -89,17 +173,13 @@
 <p>比IP更好的是，UA不会存在失效的问题，所以只要收集几十个UA，就可以一直使用。常见的UA如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">USER_AGENT_LIST = [</div><div class="line"><span class="string">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.2.1; 2013022 MIUI/JHACNBL30.0)"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Linux; U; Android 4.4.2; zh-cn; HUAWEI MT7-TL00 Build/HuaweiMT7-TL00) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"</span>,</div><div class="line">  <span class="string">"AndroidDownloadManager"</span>,</div><div class="line">  <span class="string">"Apache-HttpClient/UNAVAILABLE (java 1.4)"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.3; SM-N7508V Build/JLS36C)"</span>,</div><div class="line">  <span class="string">"Android50-AndroidPhone-8000-76-0-Statistics-wifi"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.4.4; MI 3 MIUI/V7.2.1.0.KXCCNDA)"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.4.2; Lenovo A3800-d Build/LenovoA3800-d)"</span>,</div><div class="line">  <span class="string">"Lite 1.0 ( http://litesuits.com )"</span>,</div><div class="line">  <span class="string">"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727)"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; HTC T528t Build/JRO03H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30; 360browser(securitypay,securityinstalled); 360(android,uppayplugin); 360 Aphone Browser (2.0.4)"</span>,</div><div class="line">]</div></pre></td></tr></table></figure>
 <p>配置好UA以后，在settings.py下载器中间件里面激活它，并使用UA练习页来验证UA是否每一次都不一样。练习页的地址为：</p>
-<blockquote>
-<p><a href="http://exercise.kingname.info/exercise_middleware_ua。" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ua。</a> </p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/exercise_middleware_ua。</div></pre></td></tr></table></figure>
 <p>UA练习页和代理练习页一样，也是可以无限制翻页的。</p>
 <p>运行结果如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-07-41.png" alt=""></p>
 <h3 id="开发Cookies中间件"><a href="#开发Cookies中间件" class="headerlink" title="开发Cookies中间件"></a>开发Cookies中间件</h3><p>对于需要登录的网站，可以使用Cookies来保持登录状态。那么如果单独写一个小程序，用Selenium持续不断地用不同的账号登录网站，就可以得到很多不同的Cookies。由于Cookies本质上就是一段文本，所以可以把这段文本放在Redis里面。这样一来，当Scrapy爬虫请求网页时，可以从Redis中读取Cookies并给爬虫换上。这样爬虫就可以一直保持登录状态。</p>
 <p>以下面这个练习页面为例：</p>
-<blockquote>
-<p><a href="http://exercise.kingname.info/exercise_login_success" target="_blank" rel="external">http://exercise.kingname.info/exercise_login_success</a></p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/exercise_login_success</div></pre></td></tr></table></figure>
 <p>如果直接用Scrapy访问，得到的是登录界面的源代码，如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-08-14.png" alt=""></p>
 <p>现在，使用中间件，可以实现完全不改动这个loginSpider.py里面的代码，就打印出登录以后才显示的内容。</p>
@@ -1682,66 +1762,6 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>30秒找到藏在家里的手机</title>
-    <link href="https://www.kingname.info/2017/01/07/findmyphone/"/>
-    <id>https://www.kingname.info/2017/01/07/findmyphone/</id>
-    <published>2017-01-07T06:02:02.000Z</published>
-    <updated>2018-09-25T13:33:27.410Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们都有这样的生活体验</p>
-<blockquote>
-<p>我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？</p>
-</blockquote>
-<p>如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？</p>
-<p>看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。</p>
-<a id="more"></a>
-<p>根本原理还是让手机播放音乐，我们通过音乐来找到手机。但是在放音乐之前，需要让手机自动解除静音，并将音量调到最大声。</p>
-<p>和<a href="http://kingname.info/2016/11/07/autoalarmclock/" target="_blank" rel="external">《如果我提前起床，闹钟你就别响》</a>一样，这一次的任务依然是借助Python语言+ Flask框架 + 安卓上面的自动化程序：Automate来完成。不过，这一次我会把这个工具提供给大家一起使用。</p>
-<h2 id="四个网址"><a href="#四个网址" class="headerlink" title="四个网址"></a>四个网址</h2><p>本文将会涉及到四个网址：</p>
-<ul>
-<li>注册你的账号&gt;<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a></li>
-<li>获取当前状态&gt;<a href="http://automatic.kingname.info:8888/kingname" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a></li>
-<li>让手机在30秒以后放音乐&gt;<a href="http://automatic.kingname.info:8888/kingname/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a></li>
-<li>停止寻找手机&gt;<a href="http://automatic.kingname.info:8888/kingname/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a></li>
-</ul>
-<h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3><p>为了让每个人都能使用这个服务，我开放了账号注册的功能。注册只需要提供用户名即可，不需要密码，不需要邮箱，不需要手机号。注册账号只需要访问<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a> 其中，账号只能使用大小写字母或者数字或者下划线。如果你的账号可以使用，你将会看到如下画面：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-40-02.png" alt=""><br>就是这么简单。你的账号已经注册成功了，接下来就可以使用服务了。</p>
-<p>当然，如果你的账号不巧被别人注册过了，你将会看到如下的提示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-41-25.png" alt=""><br>这个时候你需要换一个账号注册。</p>
-<h3 id="获得状态"><a href="#获得状态" class="headerlink" title="获得状态"></a>获得状态</h3><p>注册完成以后，访问<a href="http://automatic.kingname.info:8888/账号" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a>, 你可以看到当前的状态，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-27-38.png" alt=""><br>这句话表示，现在不需要让手机自己叫起来。这个网址是给手机上面的Automate使用的，一般情况下不需要手动输入。</p>
-<h3 id="呼叫手机"><a href="#呼叫手机" class="headerlink" title="呼叫手机"></a>呼叫手机</h3><p>突然，你发现你的手机不见了。这个时候，赶紧访问<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a>, 如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-50-03.png" alt=""><br>当你访问了这个页面以后，在30秒内，你的手机就会欢快的播放音乐了。各位需要把这个网址保存为书签，方便以后直接使用。</p>
-<h3 id="停止呼叫"><a href="#停止呼叫" class="headerlink" title="停止呼叫"></a>停止呼叫</h3><p>当你找到了手机，你就需要这个网址：<a href="http://automatic.kingname.info:8888/账号/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a> 这个网址一般情况下是给Automate使用的，大家不需要手动输入。</p>
-<h2 id="Automate"><a href="#Automate" class="headerlink" title="Automate"></a>Automate</h2><p>现在再来看看安卓上面的Automate应该如何配置流程。我已经将文件放在了：<a href="https://github.com/kingname/Automatic/blob/master/BackEnd/automate/Find%20my%20phone.flo" target="_blank" rel="external">Github</a>上面。点击Download按钮即可下载，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-04-56.png" alt=""></p>
-<p>下载完成以后，将这个文件放在手机中，打开手机上的Automate，点击右上角的三个竖着的点，选择<code>Import</code>，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-49.png" alt=""></p>
-<p>再点击<code>SD card</code>,如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-24.png" alt=""></p>
-<p>选中刚刚下载的文件，即可导入成功。导入完成以后，打开这个flow, 点击右上角铅笔的图标，可以打开整个流程图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-16-49.png" alt=""><br>你需要修改的，只有我画红框的三个方块。</p>
-<p>对于这两个HTTP Request，你只需要在<code>REQUEST URL</code>中，把网址里面的账号修改成你自己的账号。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-19-27.png" alt=""></p>
-<p>对于Sound Play这个方块，因为我手机上面的音乐不一定在你手机上也有同样的，所以一定要修改音乐：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-20-50.png" alt=""><br>点<code>SOUND URI</code>，选择你一个你喜欢的音乐。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>Flow设置完成，点击右上角✓保存，然后点击<code>Start</code>启动这个Flow。在电脑或者手机浏览器中访问：<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a> 坐等30秒，听一下你的手机相应你的呼唤吧。然后再试一试把手机调成静音，看看它是不是依然可以大声的叫出来~</p>
-<p>本文设计到的网页源代码，请访问：<a href="https://github.com/kingname/Automatic" target="_blank" rel="external">https://github.com/kingname/Automatic</a>获取。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们都有这样的生活体验&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？&lt;/p&gt;
-&lt;p&gt;看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="Workflow" scheme="https://www.kingname.info/tags/Workflow/"/>
-    
-      <category term="Automatic" scheme="https://www.kingname.info/tags/Automatic/"/>
     
   </entry>
   

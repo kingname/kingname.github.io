@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-10-21T01:47:16.966Z</updated>
+  <updated>2018-11-18T14:56:45.785Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,139 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>彻底搞懂Scrapy的中间件（一）</title>
+    <link href="https://www.kingname.info/2018/11/18/know-middleware-of-scrapy/"/>
+    <id>https://www.kingname.info/2018/11/18/know-middleware-of-scrapy/</id>
+    <published>2018-11-18T14:21:35.000Z</published>
+    <updated>2018-11-18T14:56:45.785Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="中间件（Middleware）"><a href="#中间件（Middleware）" class="headerlink" title="中间件（Middleware）"></a>中间件（Middleware）</h2><p>中间件是Scrapy里面的一个核心概念。使用中间件可以在爬虫的请求发起之前或者请求返回之后对数据进行定制化修改，从而开发出适应不同情况的爬虫。</p>
+<p>“中间件”这个中文名字和前面章节讲到的“中间人”只有一字之差。它们做的事情确实也非常相似。中间件和中间人都能在中途劫持数据，做一些修改再把数据传递出去。不同点在于，中间件是开发者主动加进去的组件，而中间人是被动的，一般是恶意地加进去的环节。中间件主要用来辅助开发，而中间人却多被用来进行数据的窃取、伪造甚至攻击。</p>
+<p>在Scrapy中有两种中间件：下载器中间件（Downloader Middleware）和爬虫中间件（Spider Middleware）。</p>
+<p>这一篇主要讲解下载器中间件的第一部分。</p>
+<h2 id="下载器中间件"><a href="#下载器中间件" class="headerlink" title="下载器中间件"></a>下载器中间件</h2><p>Scrapy的官方文档中，对下载器中间件的解释如下。</p>
+<blockquote>
+<p>下载器中间件是介于Scrapy的request/response处理的钩子框架，是用于全局修改Scrapy request和response的一个轻量、底层的系统。</p>
+</blockquote>
+<p>这个介绍看起来非常绕口，但其实用容易理解的话表述就是：更换代理IP，更换Cookies，更换User-Agent，自动重试。</p>
+<p>如果完全没有中间件，爬虫的流程如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-34-13.png" alt=""></p>
+<p>使用了中间件以后，爬虫的流程如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-34-49.png" alt=""></p>
+<h4 id="开发代理中间件"><a href="#开发代理中间件" class="headerlink" title="开发代理中间件"></a>开发代理中间件</h4><p>在爬虫开发中，更换代理IP是非常常见的情况，有时候每一次访问都需要随机选择一个代理IP来进行。</p>
+<p>中间件本身是一个Python的类，只要爬虫每次访问网站之前都先“经过”这个类，它就能给请求换新的代理IP，这样就能实现动态改变代理。</p>
+<p>在创建一个Scrapy工程以后，工程文件夹下会有一个middlewares.py文件，打开以后其内容如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-35-28.png" alt=""></p>
+<p>Scrapy自动生成的这个文件名称为middlewares.py，名字后面的s表示复数，说明这个文件里面可以放很多个中间件。Scrapy自动创建的这个中间件是一个爬虫中间件，这种类型在第三篇文章会讲解。现在先来创建一个自动更换代理IP的中间件。</p>
+<p>在middlewares.py中添加下面一段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProxyMiddleware</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        proxy = random.choice(settings[<span class="string">'PROXIES'</span>])</div><div class="line">        request.meta[<span class="string">'proxy'</span>] = proxy</div></pre></td></tr></table></figure>
+<p>要修改请求的代理，就需要在请求的meta里面添加一个Key为proxy，Value为代理IP的项。</p>
+<p>由于用到了random和settings，所以需要在middlewares.py开头导入它们：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> random</div><div class="line"><span class="keyword">from</span> scrapy.conf <span class="keyword">import</span> settings</div></pre></td></tr></table></figure>
+<p>在下载器中间件里面有一个名为<code>process_request()</code>的方法，这个方法中的代码会在每次爬虫访问网页之前执行。</p>
+<p>打开settings.py，首先添加几个代理IP：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PROXIES = [<span class="string">'https://114.217.243.25:8118'</span>,</div><div class="line">          <span class="string">'https://125.37.175.233:8118'</span>,</div><div class="line">          <span class="string">'http://1.85.116.218:8118'</span>]</div></pre></td></tr></table></figure>
+<p>需要注意的是，代理IP是有类型的，需要先看清楚是HTTP型的代理IP还是HTTPS型的代理IP。如果用错了，就会导致无法访问。</p>
+<h3 id="激活中间件"><a href="#激活中间件" class="headerlink" title="激活中间件"></a>激活中间件</h3><p>中间件写好以后，需要去settings.py中启动。在settings.py中找到下面这一段被注释的语句：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Enable or disable downloader middlewares</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html</span></div><div class="line"><span class="comment">#DOWNLOADER_MIDDLEWARES = &#123;</span></div><div class="line"><span class="comment">#    'AdvanceSpider.middlewares.MyCustomDownloaderMiddleware': 543,</span></div><div class="line"><span class="comment">#&#125;</span></div></pre></td></tr></table></figure>
+<p>解除注释并修改，从而引用ProxyMiddleware。修改为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">  <span class="string">'AdvanceSpider.middlewares.ProxyMiddleware'</span>: <span class="number">543</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这其实就是一个字典，字典的Key就是用点分隔的中间件路径，后面的数字表示这种中间件的顺序。由于中间件是按顺序运行的，因此如果遇到后一个中间件依赖前一个中间件的情况，中间件的顺序就至关重要。</p>
+<p>如何确定后面的数字应该怎么写呢？最简单的办法就是从543开始，逐渐加一，这样一般不会出现什么大问题。如果想把中间件做得更专业一点，那就需要知道Scrapy自带中间件的顺序，如图下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-35-53.png" alt=""></p>
+<p>数字越小的中间件越先执行，例如Scrapy自带的第1个中间件<code>RobotsTxtMiddleware</code>，它的作用是首先查看settings.py中<code>ROBOTSTXT_OBEY</code>这一项的配置是<code>True</code>还是<code>False</code>。如果是<code>True</code>，表示要遵守Robots.txt协议，它就会检查将要访问的网址能不能被运行访问，如果不被允许访问，那么直接就取消这一次请求，接下来的和这次请求有关的各种操作全部都不需要继续了。</p>
+<p>开发者自定义的中间件，会被按顺序插入到Scrapy自带的中间件中。爬虫会按照从100～900的顺序依次运行所有的中间件。直到所有中间件全部运行完成，或者遇到某一个中间件而取消了这次请求。</p>
+<p>Scrapy其实自带了UA中间件（UserAgentMiddleware）、代理中间件（HttpProxyMiddleware）和重试中间件（RetryMiddleware）。所以，从“原则上”说，要自己开发这3个中间件，需要先禁用Scrapy里面自带的这3个中间件。要禁用Scrapy的中间件，需要在settings.py里面将这个中间件的顺序设为None：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">  <span class="string">'AdvanceSpider.middlewares.ProxyMiddleware'</span>: <span class="number">543</span>,</div><div class="line">  <span class="string">'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware'</span>: <span class="keyword">None</span>,</div><div class="line">  <span class="string">'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware'</span>: <span class="keyword">None</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为什么说“原则上”应该禁用呢？先查看Scrapy自带的代理中间件的源代码，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-36-22.png" alt=""></p>
+<p>从上图可以看出，如果Scrapy发现这个请求已经被设置了代理，那么这个中间件就会什么也不做，直接返回。因此虽然Scrapy自带的这个代理中间件顺序为750，比开发者自定义的代理中间件的顺序543大，但是它并不会覆盖开发者自己定义的代理信息，所以即使不禁用系统自带的这个代理中间件也没有关系。</p>
+<p>完整地激活自定义中间件的settings.py的部分内容如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-36-46.png" alt=""></p>
+<p>配置好以后运行爬虫，爬虫会在每次请求前都随机设置一个代理。要测试代理中间件的运行效果，可以使用下面这个练习页面：</p>
+<blockquote>
+<p><a href="http://exercise.kingname.info/exercise_middleware_ip" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ip</a></p>
+</blockquote>
+<p>这个页面会返回爬虫的IP地址，直接在网页上打开，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-37-07.png" alt=""></p>
+<p>这个练习页支持翻页功能，在网址后面加上“/页数”即可翻页。例如第100页的网址为：</p>
+<blockquote>
+<p><a href="http://exercise.kingname.info/exercise_middleware_ip/100" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ip/100</a></p>
+</blockquote>
+<p>使用了代理中间件为每次请求更换代理的运行结果，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-37-21.png" alt=""></p>
+<p>代理中间件的可用代理列表不一定非要写在settings.py里面，也可以将它们写到数据库或者Redis中。一个可行的自动更换代理的爬虫系统，应该有如下的3个功能。</p>
+<ol>
+<li>有一个小爬虫ProxySpider去各大代理网站爬取免费代理并验证，将可以使用的代理IP保存到数据库中。</li>
+<li>在ProxyMiddlerware的process_request中，每次从数据库里面随机选择一条代理IP地址使用。</li>
+<li>周期性验证数据库中的无效代理，及时将其删除。<br>由于免费代理极其容易失效，因此如果有一定开发预算的话，建议购买专业代理机构的代理服务，高速而稳定。</li>
+</ol>
+<h4 id="开发UA中间件"><a href="#开发UA中间件" class="headerlink" title="开发UA中间件"></a>开发UA中间件</h4><p>开发UA中间件和开发代理中间件几乎一样，它也是从settings.py配置好的UA列表中随机选择一项，加入到请求头中。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UAMiddleware</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        ua = random.choice(settings[<span class="string">'USER_AGENT_LIST'</span>])</div><div class="line">        request.headers[<span class="string">'User-Agent'</span>] = ua</div></pre></td></tr></table></figure>
+<p>比IP更好的是，UA不会存在失效的问题，所以只要收集几十个UA，就可以一直使用。常见的UA如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">USER_AGENT_LIST = [</div><div class="line"><span class="string">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.2.1; 2013022 MIUI/JHACNBL30.0)"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Linux; U; Android 4.4.2; zh-cn; HUAWEI MT7-TL00 Build/HuaweiMT7-TL00) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"</span>,</div><div class="line">  <span class="string">"AndroidDownloadManager"</span>,</div><div class="line">  <span class="string">"Apache-HttpClient/UNAVAILABLE (java 1.4)"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.3; SM-N7508V Build/JLS36C)"</span>,</div><div class="line">  <span class="string">"Android50-AndroidPhone-8000-76-0-Statistics-wifi"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.4.4; MI 3 MIUI/V7.2.1.0.KXCCNDA)"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.4.2; Lenovo A3800-d Build/LenovoA3800-d)"</span>,</div><div class="line">  <span class="string">"Lite 1.0 ( http://litesuits.com )"</span>,</div><div class="line">  <span class="string">"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727)"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; HTC T528t Build/JRO03H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30; 360browser(securitypay,securityinstalled); 360(android,uppayplugin); 360 Aphone Browser (2.0.4)"</span>,</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>配置好UA以后，在settings.py下载器中间件里面激活它，并使用UA练习页来验证UA是否每一次都不一样。练习页的地址为：</p>
+<blockquote>
+<p><a href="http://exercise.kingname.info/exercise_middleware_ua。" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ua。</a> </p>
+</blockquote>
+<p>UA练习页和代理练习页一样，也是可以无限制翻页的。</p>
+<p>运行结果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-37-49.png" alt=""></p>
+<h4 id="开发Cookies中间件"><a href="#开发Cookies中间件" class="headerlink" title="开发Cookies中间件"></a>开发Cookies中间件</h4><p>对于需要登录的网站，可以使用Cookies来保持登录状态。那么如果单独写一个小程序，用Selenium持续不断地用不同的账号登录网站，就可以得到很多不同的Cookies。由于Cookies本质上就是一段文本，所以可以把这段文本放在Redis里面。这样一来，当Scrapy爬虫请求网页时，可以从Redis中读取Cookies并给爬虫换上。这样爬虫就可以一直保持登录状态。</p>
+<p>以下面这个练习页面为例：</p>
+<blockquote>
+<p><a href="http://exercise.kingname.info/exercise_login_success" target="_blank" rel="external">http://exercise.kingname.info/exercise_login_success</a></p>
+</blockquote>
+<p>如果直接用Scrapy访问，得到的是登录界面的源代码，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-38-12.png" alt=""></p>
+<p>现在，使用中间件，可以实现完全不改动这个loginSpider.py里面的代码，就打印出登录以后才显示的内容。</p>
+<p>首先开发一个小程序，通过Selenium登录这个页面，并将网站返回的Headers保存到Redis中。这个小程序的代码如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-38-23.png" alt=""></p>
+<p>这段代码的作用是使用Selenium和ChromeDriver填写用户名和密码，实现登录练习页面，然后将登录以后的Cookies转换为JSON格式的字符串并保存到Redis中。</p>
+<p>接下来，再写一个中间件，用来从Redis中读取Cookies，并把这个Cookies给Scrapy使用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.client = redis.StrictRedis()</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        <span class="keyword">if</span> spider.name == <span class="string">'loginSpider'</span>:</div><div class="line">            cookies = json.loads(self.client.lpop(<span class="string">'cookies'</span>).decode())</div><div class="line">            request.cookies = cookies</div></pre></td></tr></table></figure>
+<p>设置了这个中间件以后，爬虫里面的代码不需要做任何修改就可以成功得到登录以后才能看到的HTML，如图12-12所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-22-38-41.png" alt=""></p>
+<p>如果有某网站的100个账号，那么单独写一个程序，持续不断地用Selenium和ChromeDriver或者Selenium 和PhantomJS登录，获取Cookies，并将Cookies存放到Redis中。爬虫每次访问都从Redis中读取一个新的Cookies来进行爬取，就大大降低了被网站发现或者封锁的可能性。</p>
+<p>这种方式不仅适用于登录，也适用于验证码的处理。</p>
+<p>这一篇就讲到这里，在下一篇，我们将会介绍如何在下载器中间件中集成Selenium，进行请求重试和处理异常。</p>
+<blockquote>
+<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;中间件（Middleware）&quot;&gt;&lt;a href=&quot;#中间件（Middleware）&quot; class=&quot;headerlink&quot; title=&quot;中间件（Middleware）&quot;&gt;&lt;/a&gt;中间件（Middleware）&lt;/h2&gt;&lt;p&gt;中间件是Scrapy里面的一个核心概
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="https://www.kingname.info/2018/11/04/do-it-now/"/>
+    <id>https://www.kingname.info/2018/11/04/do-it-now/</id>
+    <published>2018-11-04T13:12:30.000Z</published>
+    <updated>2018-11-04T13:14:35.381Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>跳出任务管理的泥沼，拥抱甘特图的怀抱（完整版）</title>
@@ -711,11 +844,11 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
-    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
     
       <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
     
@@ -1335,11 +1468,11 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
+      <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
+    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
-    
-      <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
     
   </entry>
   
@@ -1559,115 +1692,6 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>30秒找到藏在家里的手机</title>
-    <link href="https://www.kingname.info/2017/01/07/findmyphone/"/>
-    <id>https://www.kingname.info/2017/01/07/findmyphone/</id>
-    <published>2017-01-07T06:02:02.000Z</published>
-    <updated>2018-09-25T13:33:27.410Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们都有这样的生活体验</p>
-<blockquote>
-<p>我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？</p>
-</blockquote>
-<p>如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？</p>
-<p>看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。</p>
-<a id="more"></a>
-<p>根本原理还是让手机播放音乐，我们通过音乐来找到手机。但是在放音乐之前，需要让手机自动解除静音，并将音量调到最大声。</p>
-<p>和<a href="http://kingname.info/2016/11/07/autoalarmclock/" target="_blank" rel="external">《如果我提前起床，闹钟你就别响》</a>一样，这一次的任务依然是借助Python语言+ Flask框架 + 安卓上面的自动化程序：Automate来完成。不过，这一次我会把这个工具提供给大家一起使用。</p>
-<h2 id="四个网址"><a href="#四个网址" class="headerlink" title="四个网址"></a>四个网址</h2><p>本文将会涉及到四个网址：</p>
-<ul>
-<li>注册你的账号&gt;<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a></li>
-<li>获取当前状态&gt;<a href="http://automatic.kingname.info:8888/kingname" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a></li>
-<li>让手机在30秒以后放音乐&gt;<a href="http://automatic.kingname.info:8888/kingname/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a></li>
-<li>停止寻找手机&gt;<a href="http://automatic.kingname.info:8888/kingname/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a></li>
-</ul>
-<h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3><p>为了让每个人都能使用这个服务，我开放了账号注册的功能。注册只需要提供用户名即可，不需要密码，不需要邮箱，不需要手机号。注册账号只需要访问<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a> 其中，账号只能使用大小写字母或者数字或者下划线。如果你的账号可以使用，你将会看到如下画面：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-40-02.png" alt=""><br>就是这么简单。你的账号已经注册成功了，接下来就可以使用服务了。</p>
-<p>当然，如果你的账号不巧被别人注册过了，你将会看到如下的提示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-41-25.png" alt=""><br>这个时候你需要换一个账号注册。</p>
-<h3 id="获得状态"><a href="#获得状态" class="headerlink" title="获得状态"></a>获得状态</h3><p>注册完成以后，访问<a href="http://automatic.kingname.info:8888/账号" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a>, 你可以看到当前的状态，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-27-38.png" alt=""><br>这句话表示，现在不需要让手机自己叫起来。这个网址是给手机上面的Automate使用的，一般情况下不需要手动输入。</p>
-<h3 id="呼叫手机"><a href="#呼叫手机" class="headerlink" title="呼叫手机"></a>呼叫手机</h3><p>突然，你发现你的手机不见了。这个时候，赶紧访问<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a>, 如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-50-03.png" alt=""><br>当你访问了这个页面以后，在30秒内，你的手机就会欢快的播放音乐了。各位需要把这个网址保存为书签，方便以后直接使用。</p>
-<h3 id="停止呼叫"><a href="#停止呼叫" class="headerlink" title="停止呼叫"></a>停止呼叫</h3><p>当你找到了手机，你就需要这个网址：<a href="http://automatic.kingname.info:8888/账号/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a> 这个网址一般情况下是给Automate使用的，大家不需要手动输入。</p>
-<h2 id="Automate"><a href="#Automate" class="headerlink" title="Automate"></a>Automate</h2><p>现在再来看看安卓上面的Automate应该如何配置流程。我已经将文件放在了：<a href="https://github.com/kingname/Automatic/blob/master/BackEnd/automate/Find%20my%20phone.flo" target="_blank" rel="external">Github</a>上面。点击Download按钮即可下载，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-04-56.png" alt=""></p>
-<p>下载完成以后，将这个文件放在手机中，打开手机上的Automate，点击右上角的三个竖着的点，选择<code>Import</code>，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-49.png" alt=""></p>
-<p>再点击<code>SD card</code>,如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-24.png" alt=""></p>
-<p>选中刚刚下载的文件，即可导入成功。导入完成以后，打开这个flow, 点击右上角铅笔的图标，可以打开整个流程图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-16-49.png" alt=""><br>你需要修改的，只有我画红框的三个方块。</p>
-<p>对于这两个HTTP Request，你只需要在<code>REQUEST URL</code>中，把网址里面的账号修改成你自己的账号。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-19-27.png" alt=""></p>
-<p>对于Sound Play这个方块，因为我手机上面的音乐不一定在你手机上也有同样的，所以一定要修改音乐：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-20-50.png" alt=""><br>点<code>SOUND URI</code>，选择你一个你喜欢的音乐。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>Flow设置完成，点击右上角✓保存，然后点击<code>Start</code>启动这个Flow。在电脑或者手机浏览器中访问：<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a> 坐等30秒，听一下你的手机相应你的呼唤吧。然后再试一试把手机调成静音，看看它是不是依然可以大声的叫出来~</p>
-<p>本文设计到的网页源代码，请访问：<a href="https://github.com/kingname/Automatic" target="_blank" rel="external">https://github.com/kingname/Automatic</a>获取。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们都有这样的生活体验&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？&lt;/p&gt;
-&lt;p&gt;看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="Workflow" scheme="https://www.kingname.info/tags/Workflow/"/>
-    
-      <category term="Automatic" scheme="https://www.kingname.info/tags/Automatic/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>用图像识别来自动确认网页加载成功</title>
-    <link href="https://www.kingname.info/2016/12/04/how-to-know-webpage-loaded/"/>
-    <id>https://www.kingname.info/2016/12/04/how-to-know-webpage-loaded/</id>
-    <published>2016-12-04T10:10:33.000Z</published>
-    <updated>2018-09-25T13:33:27.400Z</updated>
-    
-    <content type="html"><![CDATA[<p>在对安卓手机设计自动化测试用例的时候，判断一个测试场景是否可以自动化的依据在于其是否需要人的参与。对于wifi能否自动打开关闭，短信能否自动收发这样的场景，不需要人参与就可以通过程序来判断，因此对Wifi与短信这样的测试，可以通过程序来实现自动化测试。但是另外还有一些测试场景，需要人的眼睛来看，这种场景要实现自动化就比较困难。<br><a id="more"></a></p>
-<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>使用安卓的浏览器访问一个网站，如何判断网站已经加载成功？目标网站确实已经收到了请求，也返回了HTML数据，手机也收到了网站返回的数据，但是不知道什么原因，在某些时候，浏览器上面却什么都没有显示，而浏览器输出的Log却完全看不出异样。对于这样的场景，为了减少人力开销，如何让测试程序自动发现网页没有加载成功，并通知开发者？</p>
-<p>这个需求可以使用计算机图像识别来实现自动化。</p>
-<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><p>由于这个需求只需要判断网页是否加载成功，因此并不需要非常高深的图像识别的理论。对一个网页来说，所谓的加载成功就是指它里面的内容能够正常地在浏览器中显示出来。因此，可以设计一个特别的网页，网页要足够简单，但是又要足够特别，从而方便图像识别。</p>
-<p>这篇文章将会使用一个纯绿色的网页来进行测试。网页加载完成以后，手机屏幕上绝大多数的区域是绿色的。这个时候，截取屏幕，并使用程序来识别这张截图。如果发现截图中有大面积的绿色区域，那就证明网页已经加载完成了。</p>
-<h2 id="Demo实现"><a href="#Demo实现" class="headerlink" title="Demo实现"></a>Demo实现</h2><h3 id="纯绿色的网页"><a href="#纯绿色的网页" class="headerlink" title="纯绿色的网页"></a>纯绿色的网页</h3><p>创建一个“greenpage.html”，它的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Green Page&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body bgcolor=&quot;green&quot;&gt;</div><div class="line"></div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
-<p>网站加载成功以后，页面是全绿色的，如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-18-49-20.png" alt=""></p>
-<p>在局域网中搭建一个Web Server，并让局域网的设备可以链接。打开终端，进入到这个html文件所在的文件夹，并通过Python 3在局域网中搭建一个简单地WebServer：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd ~/Project/IdentifyWebpage</div><div class="line">python -m http.server</div></pre></td></tr></table></figure></p>
-<p>使用手机访问“电脑IP:8000/greenpage.html”，效果如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-01-42.png" alt=""></p>
-<h3 id="识别绿色截图"><a href="#识别绿色截图" class="headerlink" title="识别绿色截图"></a>识别绿色截图</h3><p>这个Demo使用Pillow图像处理库来做图像颜色的识别，通过pip安装Pillow：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install pillow</div></pre></td></tr></table></figure></p>
-<p>安装完成以后，在Python程序中使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">from PIL import Image</div></pre></td></tr></table></figure></p>
-<p>导入它图像模块。</p>
-<p>程序使用Image模块载入截图，并从截图中读取某一点颜色RGB值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">img = Image.open(&apos;snapshot.png&apos;)</div><div class="line">color = img.getpixel((700, 800))</div><div class="line">print(color)</div></pre></td></tr></table></figure></p>
-<p>代码中的（700, 800）是截图中的某一点的座标。第一个参数为横座标，第二个参数为纵座标。截图左上角为(0, 0)，越往下，纵座标越大；越往右，横座标越大。</p>
-<p>为了谨慎起见，在截图中取9个点，分别获取他们的RGB值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">points = [(200, 300), (455, 678), (333, 1200),</div><div class="line">          (300, 500), (888, 678), (900, 800),</div><div class="line">          (400, 600), (245, 365), (799, 777)]</div><div class="line">img = Image.open(&apos;snapshot.png&apos;)</div><div class="line">for point in self.points:</div><div class="line">    color = img.getpixel(point)</div><div class="line">    print(color)</div></pre></td></tr></table></figure></p>
-<p>运行以后的结果如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-12-04-19-44-55.png" alt=""><br>从图中可以看到，9个点的RGB值全部是(0, 128, 0)，这个值正是绿色的RGB值。到这里，可以认为这个图片大部分的地方确实是绿色的。如果你觉得9个点还是不够全面，那你可以使用代码生成几百个点来计算。</p>
-<h3 id="获取屏幕截图"><a href="#获取屏幕截图" class="headerlink" title="获取屏幕截图"></a>获取屏幕截图</h3><p>adb（Android Debug Bridge）是安卓的调试工具，可以通过adb的命令来控制手机。要对手机截图，只需要使用下面两条命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb shell /system/bin/screencap -p /sdcard/screenshot.png</div><div class="line">adb pull /sdcard/screenshot.png ~/Project/IndenfyWebpage/screenshot.png</div></pre></td></tr></table></figure></p>
-<p>第一条命令生成截图，并将截图保存到手机内置存储中。虽然这里写的是“sdcard”，但是对于现在没有SD卡的手机，这条命令依然可以使用。</p>
-<p>第二条命令将手机内置存储中的截图文件取出来，并保存到电脑中。如果你的电脑为Windows系统，可以将第二条命令修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb pull /sdcard/screenshot.png D:/Project/IndenfyWebpage/screenshot.png</div></pre></td></tr></table></figure></p>
-<p>保存到D盘下面。注意这里使用的是从右上到左下的斜杠（/）。</p>
-<p>完整的程序请访问-&gt; <a href="https://github.com/kingname/Automatic" target="_blank" rel="external">https://github.com/kingname/Automatic</a></p>
-<h2 id="更多应用"><a href="#更多应用" class="headerlink" title="更多应用"></a>更多应用</h2><p>虽然这个Demo只是针对网页来进行测试。但是这个方法除了网页还可以验证很多其他的测试场景。例如验证视频能否正常播放，做一个特殊的视频，视频中是几个不同的纯色画面不停的切换。每一个画面停留一定的时间，程序定时获取截图并分析此时是否为纯色画面，且纯色画面是否在更换。</p>
-<p>理论上讲，任何需要在屏幕上显示信息的测试案例，都可以使用这个方法来实现自动化。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在对安卓手机设计自动化测试用例的时候，判断一个测试场景是否可以自动化的依据在于其是否需要人的参与。对于wifi能否自动打开关闭，短信能否自动收发这样的场景，不需要人参与就可以通过程序来判断，因此对Wifi与短信这样的测试，可以通过程序来实现自动化测试。但是另外还有一些测试场景，需要人的眼睛来看，这种场景要实现自动化就比较困难。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="PIL" scheme="https://www.kingname.info/tags/PIL/"/>
-    
-      <category term="Android" scheme="https://www.kingname.info/tags/Android/"/>
-    
-      <category term="自动化测试" scheme="https://www.kingname.info/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   

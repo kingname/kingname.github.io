@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-08-14.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-08-34.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-08-55.png">
-<meta property="og:updated_time" content="2018-11-18T15:09:46.856Z">
+<meta property="og:updated_time" content="2018-11-18T15:14:46.760Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="彻底搞懂Scrapy的中间件（一）">
 <meta name="twitter:description" content="中间件（Middleware）中间件是Scrapy里面的一个核心概念。使用中间件可以在爬虫的请求发起之前或者请求返回之后对数据进行定制化修改，从而开发出适应不同情况的爬虫。
@@ -388,7 +388,7 @@
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-04-14.png" alt=""></p>
 <p>使用了中间件以后，爬虫的流程如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-04-44.png" alt=""></p>
-<h4 id="开发代理中间件"><a href="#开发代理中间件" class="headerlink" title="开发代理中间件"></a>开发代理中间件</h4><p>在爬虫开发中，更换代理IP是非常常见的情况，有时候每一次访问都需要随机选择一个代理IP来进行。</p>
+<h3 id="开发代理中间件"><a href="#开发代理中间件" class="headerlink" title="开发代理中间件"></a>开发代理中间件</h3><p>在爬虫开发中，更换代理IP是非常常见的情况，有时候每一次访问都需要随机选择一个代理IP来进行。</p>
 <p>中间件本身是一个Python的类，只要爬虫每次访问网站之前都先“经过”这个类，它就能给请求换新的代理IP，这样就能实现动态改变代理。</p>
 <p>在创建一个Scrapy工程以后，工程文件夹下会有一个middlewares.py文件，打开以后其内容如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-05-13.png" alt=""></p>
@@ -402,7 +402,7 @@
 <p>打开settings.py，首先添加几个代理IP：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PROXIES = [<span class="string">'https://114.217.243.25:8118'</span>,</div><div class="line">          <span class="string">'https://125.37.175.233:8118'</span>,</div><div class="line">          <span class="string">'http://1.85.116.218:8118'</span>]</div></pre></td></tr></table></figure>
 <p>需要注意的是，代理IP是有类型的，需要先看清楚是HTTP型的代理IP还是HTTPS型的代理IP。如果用错了，就会导致无法访问。</p>
-<h4 id="激活中间件"><a href="#激活中间件" class="headerlink" title="激活中间件"></a>激活中间件</h4><p>中间件写好以后，需要去settings.py中启动。在settings.py中找到下面这一段被注释的语句：</p>
+<h3 id="激活中间件"><a href="#激活中间件" class="headerlink" title="激活中间件"></a>激活中间件</h3><p>中间件写好以后，需要去settings.py中启动。在settings.py中找到下面这一段被注释的语句：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Enable or disable downloader middlewares</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html</span></div><div class="line"><span class="comment">#DOWNLOADER_MIDDLEWARES = &#123;</span></div><div class="line"><span class="comment">#    'AdvanceSpider.middlewares.MyCustomDownloaderMiddleware': 543,</span></div><div class="line"><span class="comment">#&#125;</span></div></pre></td></tr></table></figure>
 <p>解除注释并修改，从而引用ProxyMiddleware。修改为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">  <span class="string">'AdvanceSpider.middlewares.ProxyMiddleware'</span>: <span class="number">543</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -436,7 +436,7 @@
 <li>在ProxyMiddlerware的process_request中，每次从数据库里面随机选择一条代理IP地址使用。</li>
 <li>周期性验证数据库中的无效代理，及时将其删除。<br>由于免费代理极其容易失效，因此如果有一定开发预算的话，建议购买专业代理机构的代理服务，高速而稳定。</li>
 </ol>
-<h4 id="开发UA中间件"><a href="#开发UA中间件" class="headerlink" title="开发UA中间件"></a>开发UA中间件</h4><p>开发UA中间件和开发代理中间件几乎一样，它也是从settings.py配置好的UA列表中随机选择一项，加入到请求头中。代码如下：</p>
+<h3 id="开发UA中间件"><a href="#开发UA中间件" class="headerlink" title="开发UA中间件"></a>开发UA中间件</h3><p>开发UA中间件和开发代理中间件几乎一样，它也是从settings.py配置好的UA列表中随机选择一项，加入到请求头中。代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UAMiddleware</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        ua = random.choice(settings[<span class="string">'USER_AGENT_LIST'</span>])</div><div class="line">        request.headers[<span class="string">'User-Agent'</span>] = ua</div></pre></td></tr></table></figure>
 <p>比IP更好的是，UA不会存在失效的问题，所以只要收集几十个UA，就可以一直使用。常见的UA如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">USER_AGENT_LIST = [</div><div class="line"><span class="string">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.2.1; 2013022 MIUI/JHACNBL30.0)"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Linux; U; Android 4.4.2; zh-cn; HUAWEI MT7-TL00 Build/HuaweiMT7-TL00) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"</span>,</div><div class="line">  <span class="string">"AndroidDownloadManager"</span>,</div><div class="line">  <span class="string">"Apache-HttpClient/UNAVAILABLE (java 1.4)"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.3; SM-N7508V Build/JLS36C)"</span>,</div><div class="line">  <span class="string">"Android50-AndroidPhone-8000-76-0-Statistics-wifi"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.4.4; MI 3 MIUI/V7.2.1.0.KXCCNDA)"</span>,</div><div class="line">  <span class="string">"Dalvik/1.6.0 (Linux; U; Android 4.4.2; Lenovo A3800-d Build/LenovoA3800-d)"</span>,</div><div class="line">  <span class="string">"Lite 1.0 ( http://litesuits.com )"</span>,</div><div class="line">  <span class="string">"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727)"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0"</span>,</div><div class="line">  <span class="string">"Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; HTC T528t Build/JRO03H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30; 360browser(securitypay,securityinstalled); 360(android,uppayplugin); 360 Aphone Browser (2.0.4)"</span>,</div><div class="line">]</div></pre></td></tr></table></figure>
@@ -447,7 +447,7 @@
 <p>UA练习页和代理练习页一样，也是可以无限制翻页的。</p>
 <p>运行结果如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-07-41.png" alt=""></p>
-<h4 id="开发Cookies中间件"><a href="#开发Cookies中间件" class="headerlink" title="开发Cookies中间件"></a>开发Cookies中间件</h4><p>对于需要登录的网站，可以使用Cookies来保持登录状态。那么如果单独写一个小程序，用Selenium持续不断地用不同的账号登录网站，就可以得到很多不同的Cookies。由于Cookies本质上就是一段文本，所以可以把这段文本放在Redis里面。这样一来，当Scrapy爬虫请求网页时，可以从Redis中读取Cookies并给爬虫换上。这样爬虫就可以一直保持登录状态。</p>
+<h3 id="开发Cookies中间件"><a href="#开发Cookies中间件" class="headerlink" title="开发Cookies中间件"></a>开发Cookies中间件</h3><p>对于需要登录的网站，可以使用Cookies来保持登录状态。那么如果单独写一个小程序，用Selenium持续不断地用不同的账号登录网站，就可以得到很多不同的Cookies。由于Cookies本质上就是一段文本，所以可以把这段文本放在Redis里面。这样一来，当Scrapy爬虫请求网页时，可以从Redis中读取Cookies并给爬虫换上。这样爬虫就可以一直保持登录状态。</p>
 <p>以下面这个练习页面为例：</p>
 <blockquote>
 <p><a href="http://exercise.kingname.info/exercise_login_success" target="_blank" rel="external">http://exercise.kingname.info/exercise_login_success</a></p>
@@ -677,7 +677,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#中间件（Middleware）"><span class="nav-number">1.</span> <span class="nav-text">中间件（Middleware）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载器中间件"><span class="nav-number">2.</span> <span class="nav-text">下载器中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#开发代理中间件"><span class="nav-number">2.0.1.</span> <span class="nav-text">开发代理中间件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#激活中间件"><span class="nav-number">2.0.2.</span> <span class="nav-text">激活中间件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开发UA中间件"><span class="nav-number">2.0.3.</span> <span class="nav-text">开发UA中间件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开发Cookies中间件"><span class="nav-number">2.0.4.</span> <span class="nav-text">开发Cookies中间件</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#中间件（Middleware）"><span class="nav-number">1.</span> <span class="nav-text">中间件（Middleware）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载器中间件"><span class="nav-number">2.</span> <span class="nav-text">下载器中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发代理中间件"><span class="nav-number">2.1.</span> <span class="nav-text">开发代理中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#激活中间件"><span class="nav-number">2.2.</span> <span class="nav-text">激活中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发UA中间件"><span class="nav-number">2.3.</span> <span class="nav-text">开发UA中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发Cookies中间件"><span class="nav-number">2.4.</span> <span class="nav-text">开发Cookies中间件</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-11-18T16:11:56.205Z</updated>
+  <updated>2018-11-20T15:11:49.163Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,71 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>彻底搞懂Scrapy的中间件</title>
+    <link href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/"/>
+    <id>https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/</id>
+    <published>2018-11-20T14:46:17.000Z</published>
+    <updated>2018-11-20T15:11:49.163Z</updated>
+    
+    <content type="html"><![CDATA[<p>在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。</p>
+<a id="more"></a>
+<h2 id="爬虫中间件"><a href="#爬虫中间件" class="headerlink" title="爬虫中间件"></a>爬虫中间件</h2><p>爬虫中间件的用法与下载器中间件非常相似，只是它们的作用对象不同。下载器中间件的作用对象是请求request和返回response；爬虫中间件的作用对象是爬虫，更具体地来说，就是写在spiders文件夹下面的各个文件。它们的关系，在Scrapy的数据流图上可以很好地区分开来，如下图所示。</p>
+<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png" alt=""></p>
+<p>其中，4、5表示下载器中间件，6、7表示爬虫中间件。爬虫中间件会在以下几种情况被调用。</p>
+<ol>
+<li>当运行到<code>yield scrapy.Request()</code>或者<code>yield item</code>的时候，爬虫中间件的<code>process_spider_output()</code>方法被调用。</li>
+<li>当爬虫本身的代码出现了<code>Exception</code>的时候，爬虫中间件的<code>process_spider_exception()</code>方法被调用。</li>
+<li>当爬虫里面的某一个回调函数<code>parse_xxx()</code>被调用之前，爬虫中间件的<code>process_spider_input()</code>方法被调用。</li>
+<li>当运行到<code>start_requests()</code>的时候，爬虫中间件的<code>process_start_requests()</code>方法被调用。</li>
+</ol>
+<h3 id="在中间件处理爬虫本身的异常"><a href="#在中间件处理爬虫本身的异常" class="headerlink" title="在中间件处理爬虫本身的异常"></a>在中间件处理爬虫本身的异常</h3><p>在爬虫中间件里面可以处理爬虫本身的异常。例如编写一个爬虫，爬取UA练习页面<a href="http://exercise.kingname.info/exercise_middleware_ua" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ua</a> ，故意在爬虫中制造一个异常，如图12-26所示。</p>
+<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-51-03.png" alt=""></p>
+<p>由于网站返回的只是一段普通的字符串，并不是JSON格式的字符串，因此使用JSON去解析，就一定会导致报错。这种报错和下载器中间件里面遇到的报错不一样。下载器中间件里面的报错一般是由于外部原因引起的，和代码层面无关。而现在的这种报错是由于代码本身的问题导致的，是代码写得不够周全引起的。</p>
+<p>为了解决这个问题，除了仔细检查代码、考虑各种情况外，还可以通过开发爬虫中间件来跳过或者处理这种报错。在middlewares.py中编写一个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExceptionCheckSpider</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_spider_exception</span><span class="params">(self, response, exception, spider)</span>:</span></div><div class="line">        print(f<span class="string">'返回的内容是：&#123;response.body.decode()&#125;\n报错原因：&#123;type(exception)&#125;'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div></pre></td></tr></table></figure>
+<p>这个类仅仅起到记录Log的作用。在使用JSON解析网站返回内容出错的时候，将网站返回的内容打印出来。</p>
+<p><code>process_spider_exception()</code>这个方法，它可以返回<code>None</code>，也可以运行<code>yield item</code>语句或者像爬虫的代码一样，使用<code>yield scrapy.Request()</code>发起新的请求。如果运行了<code>yield item</code>或者<code>yield scrapy.Request()</code>，程序就会绕过爬虫里面原有的代码。</p>
+<p>例如，对于有异常的请求，不需要进行重试，但是需要记录是哪一个请求出现了异常，此时就可以在爬虫中间件里面检测异常，然后生成一个只包含标记的item。还是以抓取<a href="http://exercise.kingname.info/exercise_middleware_retry.html这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_retry.html这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png" alt=""></p>
+<p>爬虫里面如果发现了参数错误，就使用raise这个关键字人工抛出一个自定义的异常。在实际爬虫开发中，读者也可以在某些地方故意不使用try … except捕获异常，而是让异常直接抛出。例如XPath匹配处理的结果，直接读里面的值，不用先判断列表是否为空。这样如果列表为空，就会被抛出一个IndexError，于是就能让爬虫的流程进入到爬虫中间件的<code>process_spider_exception()</code>中。</p>
+<p>在items.py里面创建了一个ErrorItem来记录哪一页出现了问题，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-45.png" alt=""></p>
+<p>接下来，在爬虫中间件中将出错的页面和当前时间存放到ErrorItem里面，并提交给pipeline，保存到MongoDB中，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-54-41.png" alt=""></p>
+<p>这样就实现了记录错误页数的功能，方便在后面对错误原因进行分析。由于这里会把item提交给pipeline，所以不要忘记在settings.py里面打开pipeline，并配置好MongoDB。储存错误页数到MongoDB的代码如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-55-43.png" alt=""></p>
+<h3 id="激活爬虫中间件"><a href="#激活爬虫中间件" class="headerlink" title="激活爬虫中间件"></a>激活爬虫中间件</h3><p>爬虫中间件的激活方式与下载器中间件非常相似，在settings.py中，在下载器中间件配置项的上面就是爬虫中间件的配置项，它默认也是被注释了的，解除注释，并把自定义的爬虫中间件添加进去即可，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-56-15.png" alt=""></p>
+<p>Scrapy也有几个自带的爬虫中间件，它们的名字和顺序如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-57-03.png" alt=""></p>
+<p>下载器中间件的数字越小越接近Scrapy引擎，数字越大越接近爬虫。如果不能确定自己的自定义中间件应该靠近哪个方向，那么就在500～700之间选择最为妥当。</p>
+<h3 id="爬虫中间件输入-输出"><a href="#爬虫中间件输入-输出" class="headerlink" title="爬虫中间件输入/输出"></a>爬虫中间件输入/输出</h3><p>在爬虫中间件里面还有两个不太常用的方法，分别为<code>process_spider_input(response, spider)</code>和<code>process_spider_output(response, result, spider)</code>。其中，<code>process_spider_input(response, spider)</code>在下载器中间件处理完成后，马上要进入某个回调函数parse_xxx()前调用。<code>process_spider_output(response, result, output)</code>是在爬虫运行<code>yield item</code>或者<code>yield scrapy.Request()</code>的时候调用。在这个方法处理完成以后，数据如果是item，就会被交给pipeline；如果是请求，就会被交给调度器，然后下载器中间件才会开始运行。所以在这个方法里面可以进一步对item或者请求做一些修改。这个方法的参数result就是爬虫爬出来的item或者<code>scrapy.Request()</code>。由于yield得到的是一个生成器，生成器是可以迭代的，所以result也是可以迭代的，可以使用for循环来把它展开。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> isinstance(item, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对即将被提交给pipeline的item进行各种操作</span></div><div class="line">            print(f<span class="string">'item将会被提交给pipeline'</span>)</div><div class="line">        <span class="keyword">yield</span> item</div></pre></td></tr></table></figure>
+<p>或者对请求进行监控和修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> request <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(request, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对请求进行各种修改</span></div><div class="line">            print(<span class="string">'现在还可以对请求对象进行修改。。。。'</span>)</div><div class="line">        request.meta[<span class="string">'request_start_time'</span>] = time.time()</div><div class="line">        <span class="keyword">yield</span> request</div></pre></td></tr></table></figure>
+<blockquote>
+<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
+    
+  </entry>
   
   <entry>
     <title>彻底搞懂Scrapy的中间件（二）</title>
@@ -1686,82 +1751,6 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="Decorate" scheme="https://www.kingname.info/tags/Decorate/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>技巧收集-M1701</title>
-    <link href="https://www.kingname.info/2017/02/05/tweet/"/>
-    <id>https://www.kingname.info/2017/02/05/tweet/</id>
-    <published>2017-02-05T15:56:31.000Z</published>
-    <updated>2018-09-25T13:33:27.441Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="2017-02"><a href="#2017-02" class="headerlink" title="2017.02"></a>2017.02</h2><p>To use the decorator, apply it as innermost decorator to a view function. When applying further decorators, <em>always</em> remember that the <code>route()</code> decorator is the outermost.</p>
-<a id="more"></a>
-<h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>HTML的<code>&lt;select&gt;&lt;/select&gt;</code>标签可以实现下拉选择框。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">class</span>=<span class="string">"form-control"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span> <span class="attr">selected</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span>&gt;</span>viewer<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span>&gt;</span>guest<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>运行效果如下：</p>
-<p><select class="form-control"><br>    <option value="admin" selected>admin</option><br>    <option value="admin">viewer</option><br>    <option value="admin">guest</option><br></select></p>
-<hr>
-<p>通过二进制的位操作，可以简化很多问题的分析。</p>
-<p>例如现在有四个角色，分别为：读者，作者，编辑和管理员。有四个不同的权限使用四位的二进制数表示：</p>
-<ul>
-<li>阅读权限：0001</li>
-<li>写入权限：0010</li>
-<li>修改权限：0100</li>
-<li>删除权限：1000</li>
-</ul>
-<p>每个角色的权限如下：</p>
-<ul>
-<li>读者只能读，所以权限是0001</li>
-<li>作者能读也能写，所以是0011</li>
-<li>编辑能读能写能修改，所以是0111</li>
-<li>管理员能读能写能修改能删除，所以是1111</li>
-</ul>
-<p>要判断一个角色有哪些权限，人眼可以直接看对应的位置上面是0还是1，是0就是没有权限，是1就是有权限。在程序里面可以通过和对应权限的四位二进制数取位与操作。例如，0111编辑是否有写权限？因为0111 &amp; 0010 = 0010 所以有写权限。只要角色的四位二进制数和权限的四位二进制数取位与，得到的结果还是权限的四位二进制数，那么就有这个权限。</p>
-<hr>
-<p>正常情况下人有十根手指，所以一共可以计数1023个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/count.gif" alt="手指使用二进制计数"></p>
-<hr>
-<p>Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。<a href="https://workflowy.com/invite/4b7e29eb.lnx" target="_blank" rel="external">Workflowy</a>的出现可以解决这个问题。Workflowy只支持文本，界面极其简洁：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-28-16-59-48.png" alt=""><br>通过它来创建一个大纲，有助于理清思路。</p>
-<hr>
-<p>在HTML的<code>&lt;form&gt;&lt;/form&gt;</code>表单中，有一个属性叫做<code>action</code>,它的值是空或者是一个URL的相对路径或绝对路径。如果为空，表单将会被提交到现在这个页面的URL；如果不为空，表单将会被提交到action的值对应的页面来处理。</p>
-<p>理解这一点，那些喜欢在Flask中，把GET和POST写到一个Route，同时又要为GET带参数的人，需要特别注意。因为当你POST的时候，如果action不为空，参数可能会被丢失。</p>
-<hr>
-<p>如果你想在局域网中共享一个文件，你可以通过Python 3快速完成：</p>
-<ol>
-<li>打开终端或者CMD</li>
-<li><code>cd</code> 进入你需要分享的文件所在的文件夹</li>
-<li>输入<code>python3 -m http.server</code>回车</li>
-<li>在另一台电脑上打开浏览器，输入上一台电脑的<code>ip地址:8000</code>例如：<code>192.168.2.13:8000</code></li>
-<li>下载文件</li>
-</ol>
-<hr>
-<p>在Python中，使用<code>yield</code>实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，<code>yield</code>还可以接收参数供生成器内部使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(top)</span>:</span></div><div class="line">       index = <span class="number">0</span></div><div class="line">       <span class="keyword">while</span> index &lt;= top:</div><div class="line">              value_from_out = <span class="keyword">yield</span> index ** <span class="number">2</span></div><div class="line">              print(<span class="string">'来自外面的值为：&#123;&#125;'</span>.format(value_from_out))</div><div class="line">              index += <span class="number">1</span></div><div class="line"></div><div class="line">power_2 = generator(<span class="number">10</span>)</div><div class="line">print(next(power_2))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">"next(power_2) 相当于power_2.send(None)"</span>))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">'代码在函数和这里来回跳。'</span>))</div></pre></td></tr></table></figure></p>
-<p>输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">来自外面的值为：None</div><div class="line">1</div><div class="line">来自外面的值为：next(power_2) 相当于power_2.send(None)</div><div class="line">4</div><div class="line">来自外面的值为：None</div><div class="line">9</div><div class="line">来自外面的值为：代码在函数和这里来回跳。</div><div class="line">16</div></pre></td></tr></table></figure></p>
-<p>以上的运行方式，和协程非常的相似。</p>
-<hr>
-<p><a href="https://zh.wikipedia.org/wiki/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95" target="_blank" rel="external">逆波兰式</a>通过栈来实现对表达式的运算。例如：</p>
-<blockquote>
-<p>中缀表达式: 5 + ((1 + 2) <em> 4) − 3<br>逆波兰式：5 1 2 + 4 </em> + 3 −</p>
-</blockquote>
-<hr>
-<p>使用<a href="https://zh.wikipedia.org/wiki/%E8%B0%83%E5%BA%A6%E5%9C%BA%E7%AE%97%E6%B3%95" target="_blank" rel="external">调度场算法</a>可以将中缀表达式转换为逆波兰式。调度场算法是通过栈来实现的。操作数直接输出，符号需要判断优先级来判断应该直接压栈还是直接输出或者应该先将栈顶元素输出再压栈。</p>
-<blockquote>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/170122.png" alt="调度场算法示意图"></p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;2017-02&quot;&gt;&lt;a href=&quot;#2017-02&quot; class=&quot;headerlink&quot; title=&quot;2017.02&quot;&gt;&lt;/a&gt;2017.02&lt;/h2&gt;&lt;p&gt;To use the decorator, apply it as innermost decorator to a view function. When applying further decorators, &lt;em&gt;always&lt;/em&gt; remember that the &lt;code&gt;route()&lt;/code&gt; decorator is the outermost.&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Craft" scheme="https://www.kingname.info/categories/Craft/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
     
   </entry>
   

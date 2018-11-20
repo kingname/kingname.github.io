@@ -1,0 +1,775 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,爬虫,Scrapy," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="彻底搞懂Scrapy的中间件">
+<meta property="og:url" content="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-51-03.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-45.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-54-41.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-55-43.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-56-15.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-57-03.png">
+<meta property="og:updated_time" content="2018-11-20T15:11:49.163Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="彻底搞懂Scrapy的中间件">
+<meta name="twitter:description" content="在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/"/>
+
+
+
+
+
+  <title> 彻底搞懂Scrapy的中间件 | Kingname </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Kingname</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">给时光以生命。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tweet">
+          <a href="/tweet" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-twitter"></i> <br />
+            
+            时间
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kingname">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Kingname">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Kingname" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                彻底搞懂Scrapy的中间件
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-20T22:46:17+08:00">
+                2018-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/11/20/know-middleware-of-scrapy-3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/11/20/know-middleware-of-scrapy-3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。</p>
+<a id="more"></a>
+<h2 id="爬虫中间件"><a href="#爬虫中间件" class="headerlink" title="爬虫中间件"></a>爬虫中间件</h2><p>爬虫中间件的用法与下载器中间件非常相似，只是它们的作用对象不同。下载器中间件的作用对象是请求request和返回response；爬虫中间件的作用对象是爬虫，更具体地来说，就是写在spiders文件夹下面的各个文件。它们的关系，在Scrapy的数据流图上可以很好地区分开来，如下图所示。</p>
+<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png" alt=""></p>
+<p>其中，4、5表示下载器中间件，6、7表示爬虫中间件。爬虫中间件会在以下几种情况被调用。</p>
+<ol>
+<li>当运行到<code>yield scrapy.Request()</code>或者<code>yield item</code>的时候，爬虫中间件的<code>process_spider_output()</code>方法被调用。</li>
+<li>当爬虫本身的代码出现了<code>Exception</code>的时候，爬虫中间件的<code>process_spider_exception()</code>方法被调用。</li>
+<li>当爬虫里面的某一个回调函数<code>parse_xxx()</code>被调用之前，爬虫中间件的<code>process_spider_input()</code>方法被调用。</li>
+<li>当运行到<code>start_requests()</code>的时候，爬虫中间件的<code>process_start_requests()</code>方法被调用。</li>
+</ol>
+<h3 id="在中间件处理爬虫本身的异常"><a href="#在中间件处理爬虫本身的异常" class="headerlink" title="在中间件处理爬虫本身的异常"></a>在中间件处理爬虫本身的异常</h3><p>在爬虫中间件里面可以处理爬虫本身的异常。例如编写一个爬虫，爬取UA练习页面<a href="http://exercise.kingname.info/exercise_middleware_ua" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ua</a> ，故意在爬虫中制造一个异常，如图12-26所示。</p>
+<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-51-03.png" alt=""></p>
+<p>由于网站返回的只是一段普通的字符串，并不是JSON格式的字符串，因此使用JSON去解析，就一定会导致报错。这种报错和下载器中间件里面遇到的报错不一样。下载器中间件里面的报错一般是由于外部原因引起的，和代码层面无关。而现在的这种报错是由于代码本身的问题导致的，是代码写得不够周全引起的。</p>
+<p>为了解决这个问题，除了仔细检查代码、考虑各种情况外，还可以通过开发爬虫中间件来跳过或者处理这种报错。在middlewares.py中编写一个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExceptionCheckSpider</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_spider_exception</span><span class="params">(self, response, exception, spider)</span>:</span></div><div class="line">        print(f<span class="string">'返回的内容是：&#123;response.body.decode()&#125;\n报错原因：&#123;type(exception)&#125;'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div></pre></td></tr></table></figure>
+<p>这个类仅仅起到记录Log的作用。在使用JSON解析网站返回内容出错的时候，将网站返回的内容打印出来。</p>
+<p><code>process_spider_exception()</code>这个方法，它可以返回<code>None</code>，也可以运行<code>yield item</code>语句或者像爬虫的代码一样，使用<code>yield scrapy.Request()</code>发起新的请求。如果运行了<code>yield item</code>或者<code>yield scrapy.Request()</code>，程序就会绕过爬虫里面原有的代码。</p>
+<p>例如，对于有异常的请求，不需要进行重试，但是需要记录是哪一个请求出现了异常，此时就可以在爬虫中间件里面检测异常，然后生成一个只包含标记的item。还是以抓取<a href="http://exercise.kingname.info/exercise_middleware_retry.html这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_retry.html这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png" alt=""></p>
+<p>爬虫里面如果发现了参数错误，就使用raise这个关键字人工抛出一个自定义的异常。在实际爬虫开发中，读者也可以在某些地方故意不使用try … except捕获异常，而是让异常直接抛出。例如XPath匹配处理的结果，直接读里面的值，不用先判断列表是否为空。这样如果列表为空，就会被抛出一个IndexError，于是就能让爬虫的流程进入到爬虫中间件的<code>process_spider_exception()</code>中。</p>
+<p>在items.py里面创建了一个ErrorItem来记录哪一页出现了问题，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-45.png" alt=""></p>
+<p>接下来，在爬虫中间件中将出错的页面和当前时间存放到ErrorItem里面，并提交给pipeline，保存到MongoDB中，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-54-41.png" alt=""></p>
+<p>这样就实现了记录错误页数的功能，方便在后面对错误原因进行分析。由于这里会把item提交给pipeline，所以不要忘记在settings.py里面打开pipeline，并配置好MongoDB。储存错误页数到MongoDB的代码如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-55-43.png" alt=""></p>
+<h3 id="激活爬虫中间件"><a href="#激活爬虫中间件" class="headerlink" title="激活爬虫中间件"></a>激活爬虫中间件</h3><p>爬虫中间件的激活方式与下载器中间件非常相似，在settings.py中，在下载器中间件配置项的上面就是爬虫中间件的配置项，它默认也是被注释了的，解除注释，并把自定义的爬虫中间件添加进去即可，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-56-15.png" alt=""></p>
+<p>Scrapy也有几个自带的爬虫中间件，它们的名字和顺序如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-57-03.png" alt=""></p>
+<p>下载器中间件的数字越小越接近Scrapy引擎，数字越大越接近爬虫。如果不能确定自己的自定义中间件应该靠近哪个方向，那么就在500～700之间选择最为妥当。</p>
+<h3 id="爬虫中间件输入-输出"><a href="#爬虫中间件输入-输出" class="headerlink" title="爬虫中间件输入/输出"></a>爬虫中间件输入/输出</h3><p>在爬虫中间件里面还有两个不太常用的方法，分别为<code>process_spider_input(response, spider)</code>和<code>process_spider_output(response, result, spider)</code>。其中，<code>process_spider_input(response, spider)</code>在下载器中间件处理完成后，马上要进入某个回调函数parse_xxx()前调用。<code>process_spider_output(response, result, output)</code>是在爬虫运行<code>yield item</code>或者<code>yield scrapy.Request()</code>的时候调用。在这个方法处理完成以后，数据如果是item，就会被交给pipeline；如果是请求，就会被交给调度器，然后下载器中间件才会开始运行。所以在这个方法里面可以进一步对item或者请求做一些修改。这个方法的参数result就是爬虫爬出来的item或者<code>scrapy.Request()</code>。由于yield得到的是一个生成器，生成器是可以迭代的，所以result也是可以迭代的，可以使用for循环来把它展开。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> isinstance(item, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对即将被提交给pipeline的item进行各种操作</span></div><div class="line">            print(f<span class="string">'item将会被提交给pipeline'</span>)</div><div class="line">        <span class="keyword">yield</span> item</div></pre></td></tr></table></figure>
+<p>或者对请求进行监控和修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> request <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(request, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对请求进行各种修改</span></div><div class="line">            print(<span class="string">'现在还可以对请求对象进行修改。。。。'</span>)</div><div class="line">        request.meta[<span class="string">'request_start_time'</span>] = time.time()</div><div class="line">        <span class="keyword">yield</span> request</div></pre></td></tr></table></figure>
+<blockquote>
+<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="Kingname wechat" style="width: 200px; max-width: 100%;"/>
+    <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+          
+            <a href="/tags/Scrapy/" rel="tag"># Scrapy</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/18/know-middleware-of-scrapy-2/" rel="next" title="彻底搞懂Scrapy的中间件（二）">
+                <i class="fa fa-chevron-left"></i> 彻底搞懂Scrapy的中间件（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Kingname" />
+          <p class="site-author-name" itemprop="name">Kingname</p>
+          <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">74</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kingname" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chuangzaoshi.com/" title="创造狮" target="_blank">创造狮</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://godbmw.com" title="董沅鑫的个人网站" target="_blank">董沅鑫的个人网站</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫中间件"><span class="nav-number">1.</span> <span class="nav-text">爬虫中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在中间件处理爬虫本身的异常"><span class="nav-number">1.1.</span> <span class="nav-text">在中间件处理爬虫本身的异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#激活爬虫中间件"><span class="nav-number">1.2.</span> <span class="nav-text">激活爬虫中间件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#爬虫中间件输入-输出"><span class="nav-number">1.3.</span> <span class="nav-text">爬虫中间件输入/输出</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

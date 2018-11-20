@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-11-20T15:11:49.163Z</updated>
+  <updated>2018-11-20T15:13:50.125Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>彻底搞懂Scrapy的中间件</title>
+    <title>彻底搞懂Scrapy的中间件（三）</title>
     <link href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/"/>
     <id>https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/</id>
     <published>2018-11-20T14:46:17.000Z</published>
-    <updated>2018-11-20T15:11:49.163Z</updated>
+    <updated>2018-11-20T15:13:50.125Z</updated>
     
     <content type="html"><![CDATA[<p>在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。</p>
 <a id="more"></a>

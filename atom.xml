@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-11-20T15:13:50.125Z</updated>
+  <updated>2018-11-20T15:15:31.071Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/"/>
     <id>https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/</id>
     <published>2018-11-20T14:46:17.000Z</published>
-    <updated>2018-11-20T15:13:50.125Z</updated>
+    <updated>2018-11-20T15:15:31.071Z</updated>
     
     <content type="html"><![CDATA[<p>在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。</p>
 <a id="more"></a>
@@ -40,7 +40,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExceptionCheckSpider</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_spider_exception</span><span class="params">(self, response, exception, spider)</span>:</span></div><div class="line">        print(f<span class="string">'返回的内容是：&#123;response.body.decode()&#125;\n报错原因：&#123;type(exception)&#125;'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div></pre></td></tr></table></figure>
 <p>这个类仅仅起到记录Log的作用。在使用JSON解析网站返回内容出错的时候，将网站返回的内容打印出来。</p>
 <p><code>process_spider_exception()</code>这个方法，它可以返回<code>None</code>，也可以运行<code>yield item</code>语句或者像爬虫的代码一样，使用<code>yield scrapy.Request()</code>发起新的请求。如果运行了<code>yield item</code>或者<code>yield scrapy.Request()</code>，程序就会绕过爬虫里面原有的代码。</p>
-<p>例如，对于有异常的请求，不需要进行重试，但是需要记录是哪一个请求出现了异常，此时就可以在爬虫中间件里面检测异常，然后生成一个只包含标记的item。还是以抓取<a href="http://exercise.kingname.info/exercise_middleware_retry.html这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_retry.html这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。</a></p>
+<p>例如，对于有异常的请求，不需要进行重试，但是需要记录是哪一个请求出现了异常，此时就可以在爬虫中间件里面检测异常，然后生成一个只包含标记的item。还是以抓取<a href="http://exercise.kingname.info/exercise_middleware_retry.html" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_retry.html</a>这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png" alt=""></p>
 <p>爬虫里面如果发现了参数错误，就使用raise这个关键字人工抛出一个自定义的异常。在实际爬虫开发中，读者也可以在某些地方故意不使用try … except捕获异常，而是让异常直接抛出。例如XPath匹配处理的结果，直接读里面的值，不用先判断列表是否为空。这样如果列表为空，就会被抛出一个IndexError，于是就能让爬虫的流程进入到爬虫中间件的<code>process_spider_exception()</code>中。</p>
 <p>在items.py里面创建了一个ErrorItem来记录哪一页出现了问题，如下图所示。</p>

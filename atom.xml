@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-12-23T10:20:29.746Z</updated>
+  <updated>2018-12-23T10:40:25.409Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2018/12/23/use-burndown-chart/"/>
     <id>https://www.kingname.info/2018/12/23/use-burndown-chart/</id>
     <published>2018-12-23T09:11:13.000Z</published>
-    <updated>2018-12-23T10:20:29.746Z</updated>
+    <updated>2018-12-23T10:40:25.409Z</updated>
     
     <content type="html"><![CDATA[<p>在<a href="https://www.kingname.info/2018/10/17/use-gantt-enhanced/">《跳出任务管理的泥沼，拥抱甘特图的怀抱》</a>一文中，我谈到了使用甘特图来规划任务。甘特图更多的关注每一个任务的进度上。那么如果我希望了解项目整体的进度，应该如何选择呢？此时就需要引入另一个简单又强大的工具：燃尽图（Burn down chart）。</p>
 <a id="more"></a>
@@ -56,7 +56,7 @@
 </tbody>
 </table>
 <p>这个任务预计需要25小时完成，考虑到可能需要处理各种突发事件留出机动时间，因此，我需要在7天内完成这个项目，项目时间定为：2018-12-01到2018-12-07。</p>
-<p>在非常理想的情况下，平均分配工作时间，到2018-12-07这一个公众日结束时刚刚好完成任务。此时的时间消耗，绘制为折线图如下图所示。</p>
+<p>在非常理想的情况下，平均分配工作时间，到2018-12-07这一个公作日结束时刚刚好完成任务。此时的时间消耗，绘制为折线图如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-25-21.png" alt=""></p>
 <p>纵坐标为任务剩余时间，横坐标为日期，</p>
 <p>然而，在实际情况中，可能有些任务能提前完成，有些任务时间又需要延迟，实际上的剩余时间和日期的折线图可能如下图橙色曲线所示。</p>

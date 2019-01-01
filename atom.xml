@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2018-12-23T10:40:25.409Z</updated>
+  <updated>2019-01-01T06:11:49.461Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2018 年终总结</title>
+    <link href="https://www.kingname.info/2018/12/29/summary-2018/"/>
+    <id>https://www.kingname.info/2018/12/29/summary-2018/</id>
+    <published>2018-12-29T12:58:03.000Z</published>
+    <updated>2019-01-01T06:11:49.461Z</updated>
+    
+    <content type="html"><![CDATA[<p>2018年，我的第一本书出版了。</p>
+<p><img src="http://file.ryjiaoyu.com/SmallCover/18087823f4f8ed9ea435" alt=""></p>
+<p>离开北京，来到到杭州，加入了网易游戏伏羲人工智能实验室。</p>
+<p>在这一年里面，一共看完了21本书：</p>
+<ul>
+<li>罗贯中——《三国演义》</li>
+<li>王小波——《黄金时代》</li>
+<li>当年明月——《明朝那些事儿1-7》</li>
+<li>瑞·达利欧《原则》</li>
+<li>毛姆《月亮与六便士》</li>
+<li>Robert C. Martin——《代码整洁之道》</li>
+<li>John Sonmez——《软技能——代码之外的生成之道》</li>
+<li>尤瓦尔·赫拉利——《今日简史》</li>
+<li>汪曾祺——《生活是很好玩的》</li>
+<li>孙武——《孙子兵法》</li>
+<li>？？？——《战国策》</li>
+<li>李鑫——《数据产品经理——从零经验到令人经验》</li>
+<li>Norman Lewis——《Word Power Made Easy》</li>
+<li>刘飞——《从点子到产品 : 产品经理的价值观与方法论》</li>
+<li>李诞——《笑场》</li>
+</ul>
+<p>在LeetCode刷了九十多题：<a href="https://github.com/kingname/LeetCode" target="_blank" rel="external">https://github.com/kingname/LeetCode</a></p>
+<p>写了13篇博客。</p>
+<p>2019年1月，我的第二本书即将出版。</p>
+<p>2019年新年目标：</p>
+<ul>
+<li>在2019-12-31之前，读完12本书，并为每一本书作出思维导图。</li>
+<li>在2019-12-31之前，微信公众号的关注量超过5000人。</li>
+<li>在2019-06-30之前，在Medium上发布3篇技术文章。</li>
+<li>在2019-10-31之前，练习英语听力和复述能力，做到150词内的句子，听一次就能复述成功。</li>
+<li>在2019-03-31之前，学会布鲁斯口琴吹气压音，8月31日之前脱稿演奏卡农。12月31日脱稿演奏未闻花名。</li>
+<li>在2019-07-31之前，使用golang完成一个记单词的网站。</li>
+<li>在2019-09-30之前，认识至少5个新朋友，并通过与他们聊天练习聊天技巧，努力成为一个会聊天的人。</li>
+<li>在2019-10-01之前，累计跑步108公里。</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;2018年，我的第一本书出版了。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://file.ryjiaoyu.com/SmallCover/18087823f4f8ed9ea435&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;离开北京，来到到杭州，加入了网易游戏伏羲人工智能实验室。&lt;/
+    
+    </summary>
+    
+      <category term="总结" scheme="https://www.kingname.info/categories/%E6%80%BB%E7%BB%93/"/>
+    
+    
+      <category term="总结" scheme="https://www.kingname.info/tags/%E6%80%BB%E7%BB%93/"/>
+    
+  </entry>
   
   <entry>
     <title>项目经理必备——使用燃尽图监控项目整体进度</title>
@@ -1774,50 +1833,6 @@
       <category term="Exception" scheme="https://www.kingname.info/tags/Exception/"/>
     
       <category term="Tenacity" scheme="https://www.kingname.info/tags/Tenacity/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>记住变量类型的三种方式</title>
-    <link href="https://www.kingname.info/2017/06/11/type-hints-in-python3/"/>
-    <id>https://www.kingname.info/2017/06/11/type-hints-in-python3/</id>
-    <published>2017-06-11T07:25:03.000Z</published>
-    <updated>2018-09-25T13:33:27.428Z</updated>
-    
-    <content type="html"><![CDATA[<p>Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。</p>
-<a id="more"></a>
-<p>假设有一个变量<code>is_request_finished</code>，从名字上来看，这个变量的值应该为<code>True</code>或者<code>False</code>，在写代码的时候，最初也确实是这样定义的。但是可能由于某些原因，在某一次赋值的时候，<code>is_request_finished = &#39;True&#39;</code>。此时，如果代码的单元测试不够完善，那么<code>if is_request_finished</code>在 <code>is_request_finished = True</code> 和 <code>is_request_finished = &#39;True&#39;</code>的时候都成立，问题被隐藏了。但是当<code>is_request_finished = &#39;False&#39;</code>的时候，由于<code>&#39;False&#39;</code>作为一个非空字符串，就会使得<code>if is_request_finished</code> 依然成立，从而使程序的行为发现异常。</p>
-<p>单个变量的类型异常也许还容易发现，但是如果变量是放在字典或者列表里面，那就比较麻烦了。假设需要保存一段个人信息，于是创建了下面这样一个列表套字典的数据结构：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">person_list = [&#123;</div><div class="line">        &apos;name&apos;: &apos;kingname&apos;,</div><div class="line">        &apos;age&apos;: 23,</div><div class="line">        &apos;sex&apos;: &apos;male&apos;</div><div class="line">        &apos;detail&apos;: &#123;</div><div class="line">                    &apos;address&apos;: &apos;xxx&apos;,</div><div class="line">                    &apos;work&apos;: &apos;engineer&apos;,</div><div class="line">                    &apos;salary&apos;: 100000</div><div class="line">            &#125;</div><div class="line">&#125;,</div><div class="line">&#123;</div><div class="line">        &apos;name&apos;: &apos;xiaoming&apos;,</div><div class="line">        &apos;age&apos;: 65,</div><div class="line">        &apos;sex&apos;: &apos;male&apos;</div><div class="line">        &apos;detail&apos;: &#123;</div><div class="line">                    &apos;address&apos;: &apos;yyy&apos;,</div><div class="line">                    &apos;work&apos;: &apos;pm&apos;,</div><div class="line">                    &apos;salary&apos;: 0.5</div><div class="line">            &#125;</div><div class="line">&#125;]</div></pre></td></tr></table></figure>
-<p>这种方式开发起来非常的快速而方便，但是其他人甚至是开发者自己在一段时间以后读代码，都会有一种想抽死自己的冲动。因为根本不知道这个变量里面保存的是什么东西。</p>
-<p>针对以上问题，常见的解决办法有三种。</p>
-<h2 id="Type-Hints-与-Variable-Annotations"><a href="#Type-Hints-与-Variable-Annotations" class="headerlink" title="Type Hints 与 Variable Annotations"></a>Type Hints 与 Variable Annotations</h2><p>在<a href="https://www.python.org/dev/peps/pep-0484/" target="_blank" rel="external">PEP 484</a>中，引入了Type Hints，在<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">PEP 526</a>中引入了Variable Annotations。它使得Python 3.6及以后的Python 代码拥有了“声明”变量类型的能力。这里的“声明”之所以会打引号，是因为这个声明是给IDE和人看的。这个声明对 Python 的解释器无效。</p>
-<h3 id="Type-Hints"><a href="#Type-Hints" class="headerlink" title="Type Hints"></a>Type Hints</h3><p>PyCharm现在已经可以比较好地支持Type Hints了。例如下面这一段代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url)</span>:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
-<p>模拟一段上传文件的函数，上传成功以后返回True。接收一个参数<code>url</code>。在正常情况下，这个<code>url</code>应该是一个字符串。于是，使用Type Hints，代码可以变为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(url: str)</span> -&gt; bool:</span></div><div class="line">    print(f<span class="string">'now upload a file to &#123;url&#125;'</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
-<p>如果直接运行，其运行效果如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-23-11.png" alt=""></p>
-<p>现在假设传递一个不是字符串的变量给<code>upload</code>函数，此时PyCharm就会提示类型有问题，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-24-35.png" alt=""><br>但提示归提示，强行运行也是没有问题的。这就说明Type Hints主要是给IDE和人用的，解释器并不会关心类型正不正确。</p>
-<p>如果修改这个函数的返回值，让它不返回<code>True</code> 或者<code>False</code>，PyCharm 也会发出警告：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-27-49.png" alt=""></p>
-<p>Type Hints的官方文档，可以参阅：<a href="https://docs.python.org/3/library/typing.html" target="_blank" rel="external">typing — Support for type hints</a></p>
-<h3 id="Variable-Annotations"><a href="#Variable-Annotations" class="headerlink" title="Variable Annotations"></a>Variable Annotations</h3><p>对于Variable Annotations，如下图所示，虽然目前PyCharm还不能很好地提示变量类型不对，但是人在读代码的时候，还是会起到一定的帮助。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-32-23.png" alt=""></p>
-<p>除了这种写法外，Variable Annotations还支持把类型写在注释中，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-35-15.png" alt=""></p>
-<p>虽然PyCharm不能起到很好的提示作用，但是可以使用一个第三方库<code>mypy</code>来对代码做静态检查，其运行效果如下图所示，可以发现赋值的类型与声明的类型不一致(expression has type “str”, variable has type “bool”, 表达式的类型为“str”，变量的类型是“bool”)。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-41-12.png" alt=""></p>
-<p>关于Variable Annotations的更多用法，可以参阅：<a href="https://www.python.org/dev/peps/pep-0526/" target="_blank" rel="external">Syntax for Variable Annotations</a><br>关于Mypy，可以参阅它的官方文档：<a href="http://mypy.readthedocs.io/en/stable/index.html" target="_blank" rel="external">Mypy documentation</a></p>
-<h2 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h2><p>在docstring来标注变量的类型，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-06-11-16-48-18.png" alt=""><br>这种写法可以用来提示一个函数，或者一个类它里面的各个变量的情况。但是详细程度需要看开发者有没有耐心把这个注释写清楚。</p>
-<h2 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h2><p>这种方法来自与Java Bean的思想，它主要用来解决列表套字典，字典套字典，字典套列表，列表套列表这种深层的嵌套关系。关于这个方法，请参阅另一篇文章：<a href="http://kingname.info/2016/06/19/bean-in-python/" target="_blank" rel="external">可爱的豆子——使用Beans思想让Python代码更易维护</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Python作为一门动态语言，其变量的类型可以自由变化。这个特性提高了代码的开发效率，却也增加了阅读代码和维护代码的难度。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

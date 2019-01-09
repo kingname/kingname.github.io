@@ -1,20 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
 
 
 
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
 
 
 
@@ -25,70 +30,73 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
 
 
   
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
 
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Python, 爬虫, 数据挖掘, 机器学习, 自动化测试框架" />
-
-
-
-
-  
-
-
-  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml" />
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
-
-
-
-
-
-
-<meta name="description" content="个人介绍单位：网易游戏 | 伏羲实验室 | 高级数据挖掘工程师Github：https://github.com/kingname学校：电子科技大学联系方式：contact@kingname.info微信公众号：
+  <meta name="description" content="个人介绍单位：网易游戏 | 伏羲实验室 | 高级数据挖掘工程师Github：https://github.com/kingname学校：电子科技大学联系方式：contact@kingname.info微信公众号：
 出版作品
 《Python爬虫开发 从入门到实战》- 2018年9月 - 人民邮电出版社
 京东：https://item.jd.com/12436581.html
@@ -114,28 +122,11 @@
 <meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/wechatplatform.jpg">
 
 
+  
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post"},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml"/>
+
 
 
 
@@ -143,119 +134,214 @@
 
 
 
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
 
-
-  <title>
+  <title>关于我 | Kingname</title>
   
 
-  
-    关于我 | Kingname
-  
-</title>
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-
-
-
-
-
-
-
-
-
 
   
   
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-meta ">
-  
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
 
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">Kingname</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
   </div>
-  <p class="site-subtitle">给时光以生命。</p>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
-</div>
+
 
 <nav class="site-nav">
-  
-
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Startseite</a>
+
+  </li>
         
-        <li class="menu-item menu-item-tweet">
-          <a href="/tweet" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-twitter"></i> <br />
-            
-            时间
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>Archiv</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tweet">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tweet" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>tweet</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about menu-item-active">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>Über</a>
+
+  </li>
 
       
+      
     </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
   
 
   
@@ -263,27 +349,51 @@
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
-  <header class="post-header">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
 
-	<h2 class="post-title" itemprop="name headline">关于我</h2>
+<h1 class="post-title" itemprop="name headline">关于我
+
+</h1>
+
+<div class="post-meta">
+  
+  
 
 
+
+</div>
 
 </header>
 
-    
-    
-      <h2 id="个人介绍"><a href="#个人介绍" class="headerlink" title="个人介绍"></a>个人介绍</h2><p>单位：网易游戏 | 伏羲实验室 | 高级数据挖掘工程师<br>Github：<a href="https://github.com/kingname" target="_blank" rel="external">https://github.com/kingname</a><br>学校：电子科技大学<br>联系方式：<a href="mailto:contact@kingname.info" target="_blank" rel="external">contact@kingname.info</a><br>微信公众号：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/wechatplatform.jpg" alt=""></p>
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <h2 id="个人介绍"><a href="#个人介绍" class="headerlink" title="个人介绍"></a>个人介绍</h2><p>单位：网易游戏 | 伏羲实验室 | 高级数据挖掘工程师<br>Github：<a href="https://github.com/kingname" target="_blank" rel="external">https://github.com/kingname</a><br>学校：电子科技大学<br>联系方式：<a href="mailto:contact@kingname.info" target="_blank" rel="external">contact@kingname.info</a><br>微信公众号：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/wechatplatform.jpg" alt=""></p>
 <h2 id="出版作品"><a href="#出版作品" class="headerlink" title="出版作品"></a>出版作品</h2><ul>
 <li>《Python爬虫开发 从入门到实战》- 2018年9月 - 人民邮电出版社<ul>
 <li>京东：<a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></li>
@@ -423,6 +533,18 @@
 <h2 id="关于本站"><a href="#关于本站" class="headerlink" title="关于本站"></a>关于本站</h2><p>若无特殊说明，主站所有文章均为原创文章，并遵循 CC BY-SA 4.0 协议发布。</p>
 <p>你可以自由地对博客中内容进行分享和创作演绎，但必须在文章末尾或参考文献处注明文章的出处（文章链接）。完整的协议可以参看<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="external">这里</a>。</p>
 
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+
+    
+    
     
   </div>
 
@@ -430,8 +552,14 @@
           </div>
           
 
+  
+    <div class="comments" id="comments">
+    </div>
 
-          
+  
+
+
+
         </div>
         
           
@@ -445,109 +573,345 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
     <div class="sidebar-inner">
 
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.png"
-               alt="Kingname" />
-          <p class="site-author-name" itemprop="name">Kingname</p>
-          <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
-        </div>
-        <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">52</span>
-              <span class="site-state-item-name">日志</span>
-            </a>
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
           </div>
 
           
-            <div class="site-state-item site-state-categories">
+            <nav class="site-state motion-element">
               
-                <span class="site-state-item-count">17</span>
-                <span class="site-state-item-name">分类</span>
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-name">Artikel</span>
+                  </a>
+                </div>
               
-            </div>
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">Kategorien</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
+                    <span class="site-state-item-name">Tags</span>
+                  </a>
+                </div>
+              
+            </nav>
           
 
           
-            <div class="site-state-item site-state-tags">
-              <a href="/tags">
-                <span class="site-state-item-count">77</span>
-                <span class="site-state-item-name">标签</span>
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
               </a>
             </div>
           
 
-        </nav>
-
-        
-          <div class="feed-link motion-element">
-            <a href="/atom.xml" rel="alternate">
-              <i class="fa fa-rss"></i>
-              RSS
-            </a>
-          </div>
-        
-
-        <div class="links-of-author motion-element">
           
-            
-              <span class="links-of-author-item">
-                <a href="https://github.com/kingname" target="_blank" title="Github">
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
                   
-                    <i class="fa fa-fw fa-globe"></i>
                   
-                  Github
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="mailto:contact@kingname.info" target="_blank" title="Mail">
+                    
                   
-                    <i class="fa fa-fw fa-globe"></i>
                   
-                  Mail
-                </a>
-              </span>
-            
-          
-        </div>
-
-        
-        
-
-        
-        
-          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
-            <div class="links-of-blogroll-title">
-              <i class="fa  fa-fw fa-globe"></i>
-              Friends
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
             </div>
-            <ul class="links-of-blogroll-list">
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://chuangzaoshi.com/" title="创造狮" target="_blank">创造狮</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="https://godbmw.com" title="董沅鑫的个人网站" target="_blank">董沅鑫的个人网站</a>
-                </li>
-              
-            </ul>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#个人介绍"><span class="nav-number">1.</span> <span class="nav-text">个人介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#出版作品"><span class="nav-number">2.</span> <span class="nav-text">出版作品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术背景"><span class="nav-number">3.</span> <span class="nav-text">技术背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作经历"><span class="nav-number">4.</span> <span class="nav-text">工作经历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网易游戏"><span class="nav-number">4.1.</span> <span class="nav-text">网易游戏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连尚网络"><span class="nav-number">4.2.</span> <span class="nav-text">连尚网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigOne-Lab"><span class="nav-number">4.3.</span> <span class="nav-text">BigOne Lab</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MediaTek-Inc"><span class="nav-number">4.4.</span> <span class="nav-text">MediaTek.Inc</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目经历"><span class="nav-number">5.</span> <span class="nav-text">项目经历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直播平台舆情监控系统"><span class="nav-number">5.1.</span> <span class="nav-text">直播平台舆情监控系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#舆情机器人"><span class="nav-number">5.2.</span> <span class="nav-text">舆情机器人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信息流爬虫"><span class="nav-number">5.3.</span> <span class="nav-text">信息流爬虫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scrapy可视化管理系统"><span class="nav-number">5.4.</span> <span class="nav-text">Scrapy可视化管理系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通用爬虫系统"><span class="nav-number">5.5.</span> <span class="nav-text">通用爬虫系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脱敏系统"><span class="nav-number">5.6.</span> <span class="nav-text">脱敏系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定向爬虫开发课程"><span class="nav-number">5.7.</span> <span class="nav-text">定向爬虫开发课程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于自然语言的自动化测试案例开发系统"><span class="nav-number">5.8.</span> <span class="nav-text">基于自然语言的自动化测试案例开发系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动化测试系统维护"><span class="nav-number">5.9.</span> <span class="nav-text">自动化测试系统维护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发匿名聊天网站——未知道"><span class="nav-number">5.10.</span> <span class="nav-text">开发匿名聊天网站——未知道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据挖掘"><span class="nav-number">5.11.</span> <span class="nav-text">数据挖掘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#卖肉漫画下载器"><span class="nav-number">5.12.</span> <span class="nav-text">卖肉漫画下载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选课辅助软件"><span class="nav-number">5.13.</span> <span class="nav-text">选课辅助软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python的游戏开发"><span class="nav-number">5.14.</span> <span class="nav-text">Python的游戏开发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主要证书"><span class="nav-number">6.</span> <span class="nav-text">主要证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的课程"><span class="nav-number">7.</span> <span class="nav-text">我的课程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式爬虫专项课程"><span class="nav-number">7.1.</span> <span class="nav-text">分布式爬虫专项课程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定向爬虫系列课程："><span class="nav-number">7.2.</span> <span class="nav-text">定向爬虫系列课程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#远控软件系列课程："><span class="nav-number">7.3.</span> <span class="nav-text">远控软件系列课程：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于本站"><span class="nav-number">8.</span> <span class="nav-text">关于本站</span></a></li></ol></div>
+            
+
           </div>
-        
-
-        
-
-
-      </section>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -561,43 +925,61 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy; 
-  <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Kingname</span>
+
+  
+
+  
 </div>
 
 
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
-</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.2.2</div>
 
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
 
 
         
+
+
+
+
+
+
+
 
         
       </div>
     </footer>
 
-    <div class="back-to-top">
-      <i class="fa fa-arrow-up"></i>
-    </div>
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
   </div>
 
   
 
-<script type="text/javascript">
+<script>
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
@@ -611,53 +993,39 @@
 
 
 
-  
 
 
 
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
-  
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+
+
+
 
 
 
   
-  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
 
   
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
 
   
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
-
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
 
   
 
 
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
 
 
 
@@ -665,35 +1033,85 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
 
 
   
 
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
   
 
   
 
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
 </body>
 </html>

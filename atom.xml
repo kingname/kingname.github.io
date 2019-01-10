@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-01-10T14:04:19.325Z</updated>
+  <updated>2019-01-10T14:16:01.668Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,12 +20,12 @@
     <link href="https://www.kingname.info/2019/01/10/chained-comparisons/"/>
     <id>https://www.kingname.info/2019/01/10/chained-comparisons/</id>
     <published>2019-01-10T14:00:04.000Z</published>
-    <updated>2019-01-10T14:04:19.325Z</updated>
+    <updated>2019-01-10T14:16:01.668Z</updated>
     
     <content type="html"><![CDATA[<p>在Python中，你可能会发现这样一个奇怪的现象：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">2</span> == <span class="number">2</span> &gt; <span class="number">1</span></div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>(<span class="number">2</span> == <span class="number">2</span>) &gt; <span class="number">1</span></div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">2</span> == (<span class="number">2</span> &gt; <span class="number">1</span>)</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
 <p>为什么会出现<code>2 == 2 &gt; 1</code>的结果为<code>True</code>？如果说这是运算符的优先级问题，那么后两个式子为什么又都是<code>False</code>？</p>
-<p>实际上这涉及到了Python的<code>链式对比(ChainedComparisons)</code>。在其他语言中，有一个变量<code>x</code>，如果要判断x是否大于1，小于5，可能需要这样写代码：</p>
+<p>实际上这涉及到了Python的<code>链式对比(Chained Comparisons)</code>。在其他语言中，有一个变量<code>x</code>，如果要判断x是否大于1，小于5，可能需要这样写代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">if (1 &lt; x and x &lt; 5)</div></pre></td></tr></table></figure>
 <p>但是在Python中，可以这样写代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="number">1</span> &lt; x &lt; <span class="number">5</span></div></pre></td></tr></table></figure>

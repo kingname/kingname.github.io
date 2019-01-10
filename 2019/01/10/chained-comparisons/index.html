@@ -108,7 +108,7 @@
 123456&amp;gt;&amp;gt;&amp;gt; 2 == 2 &amp;gt; 1True&amp;gt;&amp;gt;&amp;gt; (2 == 2) &amp;gt; 1False&amp;gt;&amp;gt;&amp;gt; 2 == (2 &amp;gt; 1)False
 为什么会出现2 == 2 &amp;gt; 1的结果为True？如果说这是运算符的优先级问题，那么后两个式子为什么又都是False？
 实际上这涉及到了">
-<meta property="og:updated_time" content="2019-01-10T14:04:19.325Z">
+<meta property="og:updated_time" content="2019-01-10T14:16:01.668Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为什么Python中“2 == 2 > 1”结果为True？">
 <meta name="twitter:description" content="在Python中，你可能会发现这样一个奇怪的现象：
@@ -396,7 +396,7 @@
                 
               
 
-              <time title="创建时间：2019-01-10 22:00:04 / 修改时间：22:04:19" itemprop="dateCreated datePublished" datetime="2019-01-10T22:00:04+08:00">2019-01-10</time>
+              <time title="创建时间：2019-01-10 22:00:04 / 修改时间：22:16:01" itemprop="dateCreated datePublished" datetime="2019-01-10T22:00:04+08:00">2019-01-10</time>
             
 
             
@@ -465,7 +465,7 @@
         <p>在Python中，你可能会发现这样一个奇怪的现象：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">2</span> == <span class="number">2</span> &gt; <span class="number">1</span></div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>(<span class="number">2</span> == <span class="number">2</span>) &gt; <span class="number">1</span></div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">2</span> == (<span class="number">2</span> &gt; <span class="number">1</span>)</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
 <p>为什么会出现<code>2 == 2 &gt; 1</code>的结果为<code>True</code>？如果说这是运算符的优先级问题，那么后两个式子为什么又都是<code>False</code>？</p>
-<p>实际上这涉及到了Python的<code>链式对比(ChainedComparisons)</code>。在其他语言中，有一个变量<code>x</code>，如果要判断x是否大于1，小于5，可能需要这样写代码：</p>
+<p>实际上这涉及到了Python的<code>链式对比(Chained Comparisons)</code>。在其他语言中，有一个变量<code>x</code>，如果要判断x是否大于1，小于5，可能需要这样写代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">if (1 &lt; x and x &lt; 5)</div></pre></td></tr></table></figure>
 <p>但是在Python中，可以这样写代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="number">1</span> &lt; x &lt; <span class="number">5</span></div></pre></td></tr></table></figure>

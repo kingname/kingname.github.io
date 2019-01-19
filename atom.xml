@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-01-19T10:07:02.640Z</updated>
+  <updated>2019-01-19T11:36:22.932Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2019/01/19/use-airtest/"/>
     <id>https://www.kingname.info/2019/01/19/use-airtest/</id>
     <published>2019-01-19T04:46:41.000Z</published>
-    <updated>2019-01-19T10:07:02.640Z</updated>
+    <updated>2019-01-19T11:36:22.932Z</updated>
     
     <content type="html"><![CDATA[<p>想开发网页爬虫，发现被反爬了？想对 App 抓包，发现数据被加密了？不要担心，使用 Airtest 开发 App 爬虫，只要人眼能看到，你就能抓到，最快只需要2分钟，兼容 Unity3D、Cocos2dx-*、Android 原生 App、iOS App、Windows Mobile……。</p>
 <a id="more"></a>
@@ -195,9 +195,13 @@
 <p>每个手机都会被列出来。在最左边的编号就是手机串号。使用这个串号可以指定多个手机：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from airtest.core.api import auto_setup</div><div class="line">from airtest.core.android import Android</div><div class="line">from poco.drivers.android.uiautomation import AndroidUiautomationPoco</div><div class="line">auto_setup(__file__)</div><div class="line"></div><div class="line">device_1 = Android(&apos;76efadf3a7ce4&apos;)</div><div class="line">device_2 = Android(&apos;adfasdfasf23&apos;)</div><div class="line">device_3 = Android(&apos;adifu39ernla&apos;)</div><div class="line"></div><div class="line">poco_1 = AndroidUiautomationPoco(device_1, use_airtest_input=True, screenshot_each_action=False)</div><div class="line">poco_2 = AndroidUiautomationPoco(device_2, use_airtest_input=True, screenshot_each_action=False)</div><div class="line">poco_3 = AndroidUiautomationPoco(device_3, use_airtest_input=True, screenshot_each_action=False)</div></pre></td></tr></table></figure>
 <p>通过这种方式，在一台电脑上使用USBHub，连上二三十台手机是完全没有问题的。</p>
+<h2 id="无线模式"><a href="#无线模式" class="headerlink" title="无线模式"></a>无线模式</h2><p>Airtest支持无线模式，不需要USB，只要电脑和手机连接同一个WIFI就能控制：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/wireless_control.gif" alt=""></p>
+<p>如果大家对如何开启无线模式有兴趣，请留言，我就会继续写。</p>
 <h2 id="搭建手机爬虫集群"><a href="#搭建手机爬虫集群" class="headerlink" title="搭建手机爬虫集群"></a>搭建手机爬虫集群</h2><p>一台电脑可以连接三十台手机，那么如果有很多电脑和很多手机，就可以实现手机爬虫集群，其运行效果如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-01-19-17-44-57.png" alt=""></p>
 <p>关于如何搭建爬虫集群，已经超出本文的范围了。如果大家有兴趣，可以阅读我的书：<a href="https://item.jd.com/12436581.html?dist=jd" target="_blank" rel="external">Python爬虫开发 从入门到实战</a>第十章对于如何搭建手机爬虫集群有详细的说明和注意事项。</p>
+<p>如果对我的书有兴趣，请关注我的微信公众号与我交流。</p>
 ]]></content>
     
     <summary type="html">

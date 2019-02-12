@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-02-12T11:25:32.397Z</updated>
+  <updated>2019-02-12T12:51:18.450Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>如何正确移除Selenium中window.navigator.webdriver的值</title>
+    <title>一行js代码识别Selenium+Webdriver及其应对方案</title>
     <link href="https://www.kingname.info/2019/02/12/hide-webdriver/"/>
     <id>https://www.kingname.info/2019/02/12/hide-webdriver/</id>
     <published>2019-02-12T07:11:14.000Z</published>
-    <updated>2019-02-12T11:25:32.397Z</updated>
+    <updated>2019-02-12T12:51:18.450Z</updated>
     
     <content type="html"><![CDATA[<p>有不少朋友在开发爬虫的过程中喜欢使用Selenium + Chromedriver，以为这样就能做到不被网站的反爬虫机制发现。</p>
 <p>先不说淘宝这种基于用户行为的反爬虫策略，仅仅是一个普通的小网站，使用一行Javascript代码，就能轻轻松松识别你是否使用了Selenium + Chromedriver模拟浏览器。</p>
@@ -57,6 +57,7 @@
 <p>此时启动的Chrome窗口，在右上角会弹出一个提示，不用管它，不要点击<code>停用</code>按钮。</p>
 <p>再次在开发者工具的Console选项卡中查询<code>window.navigator.webdriver</code>，可以发现这个值已经自动变成<code>undefined</code>了。并且无论你打开新的网页，开启新的窗口还是点击链接进入其他页面，都不会让它变成<code>true</code>。运行效果如下图所示。</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499583523223.jpg" alt=""></p>
+<p>截至2019年02月12日20:46分，本文所讲的方法可以用来登录知乎。如果使用 Selenium 直接登录知乎，会弹出验证码；先使用本文的方法再登录知乎，能够成功伪装成真实的浏览器，不会弹出验证码。</p>
 ]]></content>
     
     <summary type="html">

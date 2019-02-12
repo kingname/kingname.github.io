@@ -389,7 +389,7 @@
                 
               
 
-              <time title="创建时间：2019-02-12 15:11:14 / 修改时间：19:22:59" itemprop="dateCreated datePublished" datetime="2019-02-12T15:11:14+08:00">2019-02-12</time>
+              <time title="创建时间：2019-02-12 15:11:14 / 修改时间：19:25:32" itemprop="dateCreated datePublished" datetime="2019-02-12T15:11:14+08:00">2019-02-12</time>
             
 
             
@@ -456,43 +456,18 @@
 
       
         
-          
-            <p>有不少朋友在开发爬虫的过程中喜欢使用Selenium + Chromedriver，以为这样就能做到不被网站的反爬虫机制发现。</p>
+          <p>有不少朋友在开发爬虫的过程中喜欢使用Selenium + Chromedriver，以为这样就能做到不被网站的反爬虫机制发现。</p>
 <p>先不说淘宝这种基于用户行为的反爬虫策略，仅仅是一个普通的小网站，使用一行Javascript代码，就能轻轻松松识别你是否使用了Selenium + Chromedriver模拟浏览器。</p>
 <p>我们来看一个例子。</p>
-<p>使用下面这一段代码启动Chrome窗口：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> Chrome</div><div class="line"></div><div class="line">driver = Chrome()</div></pre></td></tr></table></figure>
-<p>现在，在这个窗口中打开开发者工具，并定位到Console选项卡，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499558287238.jpg" alt=""></p>
-<p>现在，在这个窗口输入如下的js代码并按下回车键：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.navigator.webdriver</div></pre></td></tr></table></figure>
-<p>可以看到，开发者工具返回了<code>true</code>。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499559010932.jpg" alt=""></p>
-<p>但是，如果你打开一个普通的Chrome窗口，执行相同的命令，可以发现这行代码的返回值为<code>undefined</code>，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499560533146.jpg" alt=""></p>
-<p>所以，如果网站通过js代码获取这个参数，返回值为<code>undefined</code>说明是正常的浏览器，返回<code>true</code>说明用的是Selenium模拟浏览器。一抓一个准。这里给出一个检测Selenium的js代码例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">webdriver = <span class="built_in">window</span>.navigator.webdriver;</div><div class="line"><span class="keyword">if</span>(webdriver)&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'你这个傻逼你以为使用Selenium模拟浏览器就可以了？'</span>)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'正常浏览器'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>网站只要在页面加载的时候运行这个js代码，就可以识别访问者是不是用的Selenium模拟浏览器。如果是，就禁止访问或者触发其他反爬虫的机制。</p>
-<p>那么对于这种情况，在爬虫开发的过程中如何防止这个参数告诉网站你在模拟浏览器呢？</p>
-<p>可能有一些会js的朋友觉得可以通过覆盖这个参数从而隐藏自己，但实际上这个值是不能被覆盖的：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499566165239.jpg" alt=""></p>
-<p>对js更精通的朋友，可能会使用下面这一段代码来实现：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperties(navigator, &#123;<span class="attr">webdriver</span>:&#123;<span class="attr">get</span>:<span class="function"><span class="params">()</span>=&gt;</span><span class="literal">undefined</span>&#125;&#125;);</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499575706517.jpg" alt=""></p>
-<p>确实修改成功了。这种写法就万无一失了吗？并不是这样的，如果此时你在模拟浏览器中通过点击链接、输入网址进入另一个页面，或者开启新的窗口，你会发现，<code>window.navigator.webdriver</code>又变成了<code>true</code>。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499577743175.jpg" alt=""></p>
-<p>那么是不是可以在每一个页面都打开以后，再次通过webdriver执行上面的js代码，从而实现在每个页面都把<code>window.navigator.webdriver</code>设置为<code>undefined</code>呢？也不行。</p>
-<p>因为当你执行：<code>driver.get(网址)</code>的时候，浏览器会打开网站，加载页面并运行网站自带的js代码。所以在你重设<code>window.navigator.webdriver</code>之前，实际上网站早就已经知道你是模拟浏览器了。</p>
-<p>接下来，又有朋友提出，可以通过编写Chrome插件来解决这个问题，让插件里面的js代码在网站自带的所有js代码之前执行。</p>
-<p>这样做当然可以，不过有更简单的办法，只需要设置Chromedriver的启动参数即可解决问题。</p>
-<p>在启动Chromedriver之前，为Chrome开启实验性功能参数<code>excludeSwitches</code>，它的值为<code>[&#39;enable-automation&#39;]</code>，完整代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> Chrome</div><div class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> ChromeOptions</div><div class="line"></div><div class="line">option = ChromeOptions()</div><div class="line">option.add_experimental_option(<span class="string">'excludeSwitches'</span>, [<span class="string">'enable-automation'</span>])</div><div class="line">driver = Chrome(options=option)</div></pre></td></tr></table></figure>
-<p>此时启动的Chrome窗口，在右上角会弹出一个提示，不用管它，不要点击<code>停用</code>按钮。</p>
-<p>再次在开发者工具的Console选项卡中查询<code>window.navigator.webdriver</code>，可以发现这个值已经自动变成<code>undefined</code>了。并且无论你打开新的网页，开启新的窗口还是点击链接进入其他页面，都不会让它变成<code>true</code>。运行效果如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/15499583523223.jpg" alt=""></p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/02/12/hide-webdriver/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>

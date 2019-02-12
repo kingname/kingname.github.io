@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-02-12T11:22:59.523Z</updated>
+  <updated>2019-02-12T11:25:32.397Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,11 +20,12 @@
     <link href="https://www.kingname.info/2019/02/12/hide-webdriver/"/>
     <id>https://www.kingname.info/2019/02/12/hide-webdriver/</id>
     <published>2019-02-12T07:11:14.000Z</published>
-    <updated>2019-02-12T11:22:59.523Z</updated>
+    <updated>2019-02-12T11:25:32.397Z</updated>
     
     <content type="html"><![CDATA[<p>有不少朋友在开发爬虫的过程中喜欢使用Selenium + Chromedriver，以为这样就能做到不被网站的反爬虫机制发现。</p>
 <p>先不说淘宝这种基于用户行为的反爬虫策略，仅仅是一个普通的小网站，使用一行Javascript代码，就能轻轻松松识别你是否使用了Selenium + Chromedriver模拟浏览器。</p>
 <p>我们来看一个例子。</p>
+<a id="more"></a>
 <p>使用下面这一段代码启动Chrome窗口：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> Chrome</div><div class="line"></div><div class="line">driver = Chrome()</div></pre></td></tr></table></figure>
 <p>现在，在这个窗口中打开开发者工具，并定位到Console选项卡，如下图所示。</p>
@@ -61,7 +62,8 @@
     <summary type="html">
     
       &lt;p&gt;有不少朋友在开发爬虫的过程中喜欢使用Selenium + Chromedriver，以为这样就能做到不被网站的反爬虫机制发现。&lt;/p&gt;
-&lt;p&gt;先不说淘宝这种基于用户行为的反爬虫策略，仅仅是一个普通的小网站，使用一行Javascript代码，就能轻轻松松识别你是否使用了Sel
+&lt;p&gt;先不说淘宝这种基于用户行为的反爬虫策略，仅仅是一个普通的小网站，使用一行Javascript代码，就能轻轻松松识别你是否使用了Selenium + Chromedriver模拟浏览器。&lt;/p&gt;
+&lt;p&gt;我们来看一个例子。&lt;/p&gt;
     
     </summary>
     

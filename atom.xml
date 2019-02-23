@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-02-12T12:51:18.450Z</updated>
+  <updated>2019-02-23T05:26:11.609Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,93 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>全栈妹子养成计划——数据库篇</title>
+    <link href="https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/"/>
+    <id>https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/</id>
+    <published>2019-02-23T05:25:32.000Z</published>
+    <updated>2019-02-23T05:26:11.609Z</updated>
+    
+    <content type="html"><![CDATA[<p>这篇文章没有代码，请放心阅读。</p>
+<p>程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。</p>
+<p>P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组或者策划组吧。什么？来数据组？让我来带？</p>
+<p>于是我和P酱<del>生活</del>工作在了一起。</p>
+<h2 id="P酱你会些什么？"><a href="#P酱你会些什么？" class="headerlink" title="P酱你会些什么？"></a>P酱你会些什么？</h2><p>“我叫P酱，在XX大学读研二，爱好是拍照和被拍，大家可以在B站找到我跳舞的视频，比如av170001。我的另外一个爱好是写代码……”</p>
+<p>当一个文科妹子说自己喜欢写代码的时候，整个办公室热闹了起来。</p>
+<p>“P酱，听说你喜欢写代码，那你写过什么东西吗？”新人介绍会议结束以后，我问P酱。</p>
+<p>“一般都是各种分析程序，我们的专业要做很多调查报告，他们都是用Excel来计算的。我喜欢用Python来把这些统计过程自动化。后来也写过自动写诗的程序、鬼畜视频生成器等等。”</p>
+<p>“真不敢相信你是文科生。这么说你的兴趣是数据分析方向咯？”</p>
+<p>“其实我对师父你做的爬虫很有兴趣。但是听说会经常和网站发生对抗？女孩子还是不要打打杀杀的好~”</p>
+<p>于是我让P酱负责对爬虫的原始数据进行清洗、整理并做简单的分析。</p>
+<h2 id="一种船新的数据储存方式"><a href="#一种船新的数据储存方式" class="headerlink" title="一种船新的数据储存方式"></a>一种船新的数据储存方式</h2><p>“P酱，爬虫抓到的原始数据是存放在MongoDB里面的，你的Python还不错吧，你试一试用Python来读写MongoDB看看。”</p>
+<p>“MongoDB是什么呀？”</p>
+<p>“是一个和MySQL不太一样的数据库。”</p>
+<p>“MySQL我知道，MongoDB和MySQL有什么不一样呢？”</p>
+<p>“我举个例子，当你要插入数据的时候，你需要做的，就是‘插入’。咳咳，你不要脸红，我是指你不需要写SQL语句、不需要建表、不需要提前定义字段。仅仅只需要一行代码就能够实现了。我这里给你写了一篇文档，讲到了MongoDB的增删改查，你试一试。数据库已经给你搭建好了，你直接连上去用吧”</p>
+<p>半天以后。</p>
+<p>“师父，我已经会使用MongoDB啦。”</p>
+<p>“你读爬虫的原始数据，主要涉及到的就是查询操作，为了巩固插入、修改和删除的操作，再给你一个小任务吧。试一试写一个人员管理系统吧。”</p>
+<h2 id="既然有关系，就整整齐齐放在一起看吧"><a href="#既然有关系，就整整齐齐放在一起看吧" class="headerlink" title="既然有关系，就整整齐齐放在一起看吧"></a>既然有关系，就整整齐齐放在一起看吧</h2><p>“P酱，你看起来很高兴的样子啊。”</p>
+<p>“因为我觉得MongoDB比起MySQL太简单了啊~”</p>
+<p>“你确定？那我看看你怎么对整行数据去重的？”</p>
+<p>“师父，我知道distinct关键字可以对一个字段去重。但是整行数据我是读出来用Python来去重的。”</p>
+<p>“这个时候你就要用到MongoDB的聚合查询了。文档已经给你写好了，拿去看吧。”</p>
+<p>“还有还有，这里你把店铺信息和菜单信息放在了两个集合里面，我怎么样才能把他们联表查询出来呢？”</p>
+<p>“联表查询是MySQL里面的操作，在MongoDB里面，没有<code>表</code>，只有<code>集合</code>，所以叫做<code>联集合查询</code>更恰当一些。这也是要用到聚合查询，也在这个文档里面了。”</p>
+<h2 id="再给你一个玩具吧。"><a href="#再给你一个玩具吧。" class="headerlink" title="再给你一个玩具吧。"></a>再给你一个玩具吧。</h2><p>“P酱，之前让你做的爬虫数据监控系统怎么样了？”</p>
+<p>“功能已经做好了，但是有一个地方查询起来特别慢。我已经加过索引了，但还是很慢。怀疑是同时联了四个集合的数据造成的。”</p>
+<p>“这边的数据实际上每小时才更新一次，你没有必要每次刷新页面都去查询MongoDB的。我觉得是时候让你用一下Redis做缓存了。”</p>
+<p>“Redis就是那个内存数据库吗？我知道我知道。”</p>
+<p>“给你写了一份文档，包含Redis里面的各种数据类型和使用方式。你试一试把Redis和MongoDB结合起来看看能不能提高速度。”</p>
+<h2 id="你怎么擅自加功能啊！"><a href="#你怎么擅自加功能啊！" class="headerlink" title="你怎么擅自加功能啊！"></a>你怎么擅自加功能啊！</h2><p>“P酱，你怎么在爬虫监控系统的网页上加了一个广播窗口？”</p>
+<p>“呀，被师父发现了。因为我想到同一个爬虫可能会被几个人监控，所以就用Redis的发布订阅功能做出来了这个广播的功能。一旦爬虫状态发送改变，所有人都能收到推送。”</p>
+<p>“既然你这么闲，那不如加上账号登录功能，把权限验证也做上去？不同的人只能看到自己负责的爬虫。顺便你可以试一试用Redis实现……”</p>
+<p>“实现布隆过滤器和Session管理是吗？”</p>
+<p>“你怎么知道我要说什么？”</p>
+<p>“因为我早上看到你在文档上面更新了布隆过滤器和Session管理相关的内容啊~”</p>
+<h2 id="红色的锁？"><a href="#红色的锁？" class="headerlink" title="红色的锁？"></a>红色的锁？</h2><p>“师父师父，你知道什么是RedLock吗？”</p>
+<p>“你学得这么快？都知道RedLock了？RedLock是Redis官方给出的分布式锁的算法。已经有很多编程语言实现它了。”</p>
+<p>“原来RedLock只是一个算法啊……”</p>
+<h2 id="为什么我学的这么快呢？"><a href="#为什么我学的这么快呢？" class="headerlink" title="为什么我学的这么快呢？"></a>为什么我学的这么快呢？</h2><p>“师父师父，我觉得很奇怪啊，为什么MongoDB和Redis我学得这么快呢？难道是因为他们本来就简单？还是因为我太聪明了？”</p>
+<p>“为什么你不说是因为你师父教的好呢？“</p>
+<p>“因为这事实时啊~不用我说出来~”</p>
+<p>“咳咳，实际上是因为两个原因。一是你一直通过项目驱动来学习，先有需求，然后再去学习实现这个需求所要涉及到的技能。所以你知道你学的东西能用来干什么，自然就能学得快……”</p>
+<p>“那第二个原因是什么呢？”</p>
+<p>“第二个原因，我先问你一个问题，你会搭建Redis集群吗？会搭建MongoDB集群吗？知道什么叫做哨兵吗？你知道如何优化MongoDB的启动参数吗？”</p>
+<p>“这…………好像都不知道额…………”</p>
+<p>“因为你的角色是数据工程师，不是数据库工程师，所以数据库搭建、底层优化这些内容我都给你跳过了。”</p>
+<p>“这些听起来都很重要啊，师父你会教我吗？”</p>
+<p>“你想经常值夜班吗？想半夜3点被人打电话叫起来修数据库吗？认清自己的定位啊，数据库工程师的技能当然很重要，但你是要成为数据工程师的人，技能树应该点在合适的方向。”</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>后来，虽然P酱成了别人的女朋友，但我还有左手和右手。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-22-22-33-30.png" alt=""></p>
+<p>于是我把我给P酱总结的文档编撰成了《左手MongoDB，右手Redis》这本书。本书现在已经在京东、当当、亚马逊、淘宝上架。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-19.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-45.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-23-29.png" alt=""></p>
+<p>这本书的定位是MongoDB和Redis的应用，所以有意弱化了数据库的搭建、维护和底层优化。所以本书可能不适合数据库工程师。</p>
+<p>希望本书能够给那些一直想掌握MongoDB、Redis，但是又不知道从何处下手的读者，提供一个学习的方向。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这篇文章没有代码，请放心阅读。&lt;/p&gt;
+&lt;p&gt;程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经
+    
+    </summary>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/categories/MongoDB/"/>
+    
+      <category term="Redis" scheme="https://www.kingname.info/categories/MongoDB/Redis/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
+    
+      <category term="Redis" scheme="https://www.kingname.info/tags/Redis/"/>
+    
+  </entry>
   
   <entry>
     <title>一行js代码识别Selenium+Webdriver及其应对方案</title>
@@ -1547,11 +1634,11 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
+    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
       <category term="Craft" scheme="https://www.kingname.info/tags/Craft/"/>
-    
-      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
     
       <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
     
@@ -1775,86 +1862,6 @@
       <category term="生产力" scheme="https://www.kingname.info/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B/"/>
     
       <category term="效率" scheme="https://www.kingname.info/tags/%E6%95%88%E7%8E%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>不用甘特图，你做什么项目管理</title>
-    <link href="https://www.kingname.info/2017/12/31/you-should-use-gantt/"/>
-    <id>https://www.kingname.info/2017/12/31/you-should-use-gantt/</id>
-    <published>2017-12-31T14:45:55.000Z</published>
-    <updated>2018-09-25T13:33:27.450Z</updated>
-    
-    <content type="html"><![CDATA[<p>我非常喜欢使用甘特图来做项目管理。不用甘特图的公司，我觉得很奇怪。<br><a id="more"></a></p>
-<h2 id="什么是甘特图"><a href="#什么是甘特图" class="headerlink" title="什么是甘特图"></a>什么是甘特图</h2><p>什么是甘特图呢？下面这张图就是甘特图。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-22-53-21.png" alt=""></p>
-<p>这张图是我12月离职做交接时候的甘特图。</p>
-<ul>
-<li>不同的颜色表示不同的人</li>
-<li>每一行表示一个任务</li>
-<li>红色竖线表示今天应该完成的任务</li>
-<li>任务与任务之间的黑色箭头表示任务之间的依赖关系，必需完成前面的才能完成后面的</li>
-<li>带中心黑线的任务表示已经完成的任务</li>
-</ul>
-<p>通过这一张甘特图，我能一眼看出以下信息：</p>
-<ol>
-<li>今天谁应该做什么任务</li>
-<li>这个任务从什么时候开始，到什么时候结束</li>
-<li>一个人在一段时间有哪些任务</li>
-<li>应该先做哪些任务再做哪些任务</li>
-<li>哪些任务可以同时做</li>
-<li>这个任务是否被其他任务依赖，如果是，那么这个任务就不能推迟，必需按时完成或者提前完成，否则会影响后面的任务</li>
-<li>每个任务已经完成多少还剩多少</li>
-<li>大任务下面有哪些子任务</li>
-<li>任务的里程碑是什么时候</li>
-</ol>
-<h2 id="为什么要用甘特图"><a href="#为什么要用甘特图" class="headerlink" title="为什么要用甘特图"></a>为什么要用甘特图</h2><p>因为为了绘制出甘特图，你必需强迫自己完成以下几件事情：</p>
-<ol>
-<li>确定每一个任务的开始时间和结束时间</li>
-<li>确定任务的依赖关系</li>
-<li>分离可以同时运行的任务</li>
-<li>确定不同人的任务间的时间关系</li>
-</ol>
-<p>当你根据以上的规则绘制好第一版甘特图以后，你会发现有些地方是可以继续调整的，但是这种调整，在你没有画图之前是不能发现的。于是你会在调整甘特图的过程中，让项目的规划越来越清晰。</p>
-<h2 id="怎么做甘特图"><a href="#怎么做甘特图" class="headerlink" title="怎么做甘特图"></a>怎么做甘特图</h2><p>你可以在纸上做甘特图，也可以用Excel来做。下面这张图是来自网络。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-23-20-03.png" alt=""></p>
-<p>这是使用Excel做出来的效果，但是做起来稍显麻烦。</p>
-<p>Omniplan和MS Project都是非常专业的甘特图制作软件，但是价格非常高。毕竟这是生产力软件，使用这个软件你是可以赚大钱的，自然软件本身就会比较贵。</p>
-<p>开源的甘特图软件也有不少，不过不是功能不全就是界面丑陋。这里介绍一个相对比较完整的甘特图制作软件：GanttProject</p>
-<p>GanttProject的官方网站为<a href="http://www.ganttproject.biz/" target="_blank" rel="external">http://www.ganttproject.biz/</a>，在这里你可以下载到macOS，Windows或者Linux版本的软件。</p>
-<p>GanttProject运行以后的界面如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-23-47-11.png" alt=""></p>
-<p>在左侧任务面板右键或者按下键盘<code>Command</code> + <code>T</code>就可以添加任务，Windows和Linux对应的快捷键为<code>Ctrl</code> + <code>T</code>。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-31-23-48-11.png" alt=""></p>
-<p>创建好了一个任务，它默认的开始时间和结束时间都是今天。在任务上面右键，选择<code>任务属性</code>，可以打开任务属性设置界面，在这里可以设置任务的开始时间和任务时长。但是你不能设置任务结束时间。因为任务结束时间会根据开始时间和任务时长自动计算。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-03-16.png" alt=""></p>
-<p>在这个界面，还可以设置任务的颜色，实现不同人不同颜色，或者不同项目不同颜色。也可以在这里更新任务进度。</p>
-<p>创建多个任务，如果后面的任务依赖前面的任务，那么在右侧被依赖的任务色条上单击鼠标左键，按住并拖动到依赖它的任务上。依赖它的任务的起始时间自动就会变为被依赖任务的结束时间，如下图所示。此时，后一个任务只能设置任务的时长，不能修改任务的起始时间。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-08-17.png" alt=""></p>
-<p>如果依赖关系设置错误，打开依赖任务的任务属性，定位到<code>前置任务</code>选项卡，在这里可以删除被依赖的任务或者修改被依赖任务。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-11-10.png" alt=""></p>
-<p>如果你需要移动任务的顺序，鼠标单击选中它，按下键盘上的<code>Alt</code> + <code>方向键上或下</code>即可移动任务。</p>
-<p>我认为甘特图有一个非常重要的元素，就是竖直红线，它指向了今天的任务。要打开这跟红线，需要单击菜单栏的<code>编辑</code>-<code>设置</code>，定位到<code>甘特图设定</code>，在<code>将今天显示为红色</code>点选为<code>是</code>，如下图所示。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-20-55.png" alt=""><br>单击确定回到甘特图的界面，可以看到图中出现了一条红色竖线。这条竖线指向了今天应该做的事情。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-23-06.png" alt=""></p>
-<p>每天打开甘特图，这根红线都会指向当天。</p>
-<p>GanttProject可以把做好的甘特图导出为图片，CSV，HTML或者PDF文件。单击<code>项目</code>-<code>导出</code>，点选<code>Raster图像文件</code>，并单击<code>下一步</code>，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-01-01-00-24-34.png" alt=""></p>
-<p>设置保存路径和甘特图的日期范围即可导出为PNG文件，以方便分享。</p>
-<p>GanttProject还有更多功能，你可以安装以后慢慢研究。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我非常喜欢使用甘特图来做项目管理。不用甘特图的公司，我觉得很奇怪。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="经验" scheme="https://www.kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
-    
-    
-      <category term="经验" scheme="https://www.kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
-    
-      <category term="甘特图" scheme="https://www.kingname.info/tags/%E7%94%98%E7%89%B9%E5%9B%BE/"/>
     
   </entry>
   

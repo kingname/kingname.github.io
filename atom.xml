@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-02-23T05:37:17.208Z</updated>
+  <updated>2019-02-23T05:46:25.393Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>数据工程师妹子养成计划——数据库篇</title>
+    <title>数据工程师妹子养成手记——数据库篇</title>
     <link href="https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/"/>
     <id>https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/</id>
     <published>2019-02-23T05:25:32.000Z</published>
-    <updated>2019-02-23T05:37:17.208Z</updated>
+    <updated>2019-02-23T05:46:25.393Z</updated>
     
     <content type="html"><![CDATA[<p>这篇文章没有代码，请放心阅读。</p>
 <p>程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。</p>

@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
+12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
+如果有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用反向索引极速提高搜索效率">
+<meta property="og:url" content="https://www.kingname.info/2019/03/02/inverted-index/index.html">
+<meta property="og:site_name" content="Kingname">
+<meta property="og:description" content="在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
+12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
+如果有">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-13-50-58.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png">
+<meta property="og:updated_time" content="2019-03-02T06:13:29.058Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用反向索引极速提高搜索效率">
+<meta name="twitter:description" content="在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
+12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
+如果有">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2019/03/02/inverted-index/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>使用反向索引极速提高搜索效率 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tweet">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tweet" rel="section"><i class="menu-item-icon fa fa-fw fa-twitter"></i> <br/>tweet</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/03/02/inverted-index/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用反向索引极速提高搜索效率
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-02 12:05:45 / 修改时间：14:13:29" itemprop="dateCreated datePublished" datetime="2019-03-02T12:05:45+08:00">2019-03-02</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/02/inverted-index/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/02/inverted-index/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</div><div class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</div><div class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</div><div class="line">...</div><div class="line">苹果这个词在a字符串里面</div></pre></td></tr></table></figure>
+<p>如果有多个句子和多个关键字，那么可以使用<code>for</code>循环来实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span></div><div class="line">             <span class="string">'我CNM你个大SB'</span></div><div class="line">            ]</div><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentences:</div><div class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> keywords:</div><div class="line">        <span class="keyword">if</span> keyword <span class="keyword">in</span> sentence:</div><div class="line">            print(f<span class="string">'句子: 【&#123;sentence&#125;】包含脏话：【&#123;keyword&#125;】'</span>)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png" alt=""></p>
+<p>现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于<code>in</code>关键字的时间复杂度为<code>O(n)</code>，如果有大量长句子，查询时间会更长。</p>
+<p>例如，我们要从下面的句子里面寻找<code>CNM</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sentences = [&apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;, </div><div class="line">             &apos;人生苦短我用Python&apos;, </div><div class="line">             &apos;你TM一天到晚只知道得瑟&apos;,</div><div class="line">             &apos;不不不，我不是说你，我是说在座的各位都是垃圾。&apos;,</div><div class="line">             &apos;我CNM你个大SB&apos;,</div><div class="line">             &apos;各位同学，Good Morning！&apos;,</div><div class="line">             &apos;网络这个单词，它的英文为Network&apos;,</div><div class="line">             &apos;我不想听到有人说CNM！&apos;</div><div class="line">            ]</div></pre></td></tr></table></figure>
+<p>如果使用常规方法，那么我们的做法是：</p>
+<ol>
+<li><code>CNM</code>在<code>你说我是买苹果电脑，还是买windows电脑呢？</code>中吗？不在！</li>
+<li><code>CNM</code>在<code>人生苦短我用Python</code>吗？不在！</li>
+<li>……</li>
+<li>……</li>
+<li><code>CNM</code>在<code>我CNM你个大SB</code>吗？<strong>在</strong>！</li>
+<li><code>CNM</code>在<code>各位同学，Good Morning！</code>吗？不在！</li>
+<li><code>CMN</code>在<code>网络这个单词，它的英文为Network</code>吗？不在！</li>
+<li><code>CNM</code>在<code>我不想听到有人说CNM！</code>吗？<strong>在</strong>！</li>
+</ol>
+<p>于是就知道了，<code>CNM</code>在sentences列表下标为4和7的这两个句子中。</p>
+<p>下面，我们换一个看起来更笨的办法：</p>
+<p>要找到<code>CNM</code>在哪几句里面，可以变成：寻找<code>C</code>、<code>N</code>、<code>M</code>这三个字母在哪几句里面。然后，再找到同时有这三个字母的句子:</p>
+<ol>
+<li><code>C</code>在4, 7句</li>
+<li><code>N</code>在4，6，7句</li>
+<li><code>M</code>在2, 4，5，7句</li>
+</ol>
+<p>所以，{4, 7} 与 {4, 6, 7} 与 {4, 5, 7}做交集，得到{4, 7}说明<code>CNM</code>这个词很有可能是在第4句和第7句。</p>
+<p>为什么说很可能呢？因为假如再添加一句话：<code>今天我们学习三个单词：Cat, Network, Morning</code>。这一句也会被认为包含<code>CNM</code>这个词，但实际上它只是同时包含了<code>C</code>、<code>N</code>、<code>M</code>三个字母而已。</p>
+<p>接下来，有人会问了：原来直接查询<code>CNM</code>的时候，只需要查询8次就可以了。现在你分别查询<code>C</code> <code>N</code> <code>M</code>要查询24次。你是修复了查询时间太短的bug吗？</p>
+<p>回答这个问题之前，我们再来看另一个问题。</p>
+<p>Python里面，当我要判断字母<code>C</code>是不是在句子<code>我不想听到有人说CNM！</code>里面时，Python是如何工作的？</p>
+<p>实际上，它的工作原理可以写成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sentence = <span class="string">'我不想听到有人说CNM！'</span></div><div class="line"><span class="keyword">for</span> char <span class="keyword">in</span> sentence:</div><div class="line">    <span class="keyword">if</span> char == <span class="string">'C'</span>:</div><div class="line">        print(<span class="string">'C在这个字符串中'</span>)</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure>
+<p>如果要判断<code>C</code>、<code>N</code>、<code>M</code>是不是都在这个字符串<code>我不想听到有人说CNM！</code>中，同一个字符串会被遍历3次。有没有办法减少这种看起来多余的遍历操作呢？</p>
+<p>如果我们把<code>我不想听到有人说CNM！</code>这个句子转成字典会怎么样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sentence = &apos;我不想听到有人说CNM！&apos;</div><div class="line">sentence_dict = &#123;char: 1 for char in sentence&#125;</div><div class="line">for letter in &apos;CNM&apos;:</div><div class="line">    if letter in sentence_dict:</div><div class="line">        print(f&apos;字母&#123;letter&#125;在句子中！&apos;)</div></pre></td></tr></table></figure>
+<p>这样一来，只需要在生成字典的时候遍历句子一次，减少了2次冗余遍历。并且，判断一个元素是否在字典里面，时间复杂度为<code>O(1)</code>，速度非常快。</p>
+<p><code>我不想听到有人说CNM！</code>生成的字典为<code>{&#39;我&#39;: 1, &#39;不&#39;: 1, &#39;想&#39;: 1, &#39;听&#39;: 1, &#39;到&#39;: 1, &#39;有&#39;: 1, &#39;人&#39;: 1, &#39;说&#39;: 1, &#39;C&#39;: 1, &#39;N&#39;: 1, &#39;M&#39;: 1, &#39;！&#39;: 1}</code>。那么如果要把列表里面的所有句子都这样处理，又怎么存放呢？此时，字典的Key就是每一个字符，而Value可以是每一句话在原来列表中的索引：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span>,</div><div class="line">             <span class="string">'我CNM你个大SB'</span>,</div><div class="line">             <span class="string">'各位同学，Good Morning！'</span>,</div><div class="line">             <span class="string">'网络这个单词，它的英文为Network'</span>,</div><div class="line">             <span class="string">'我不想听到有人说CNM！'</span>]</div><div class="line">index_dict = &#123;&#125;</div><div class="line"><span class="keyword">for</span> index, line <span class="keyword">in</span> enumerate(sentences):</div><div class="line">    print(index, line)</div><div class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> line:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> char.strip():</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        <span class="keyword">if</span> char <span class="keyword">in</span> index_dict:</div><div class="line">            index_dict[char].add(index)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            index_dict[char] = &#123;index&#125;</div></pre></td></tr></table></figure>
+<p>生成的字典为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">&#123;&apos;B&apos;: &#123;4&#125;,</div><div class="line"> &apos;C&apos;: &#123;4, 7&#125;,</div><div class="line"> &apos;G&apos;: &#123;5&#125;,</div><div class="line"> &apos;M&apos;: &#123;2, 4, 5, 7&#125;,</div><div class="line"> &apos;N&apos;: &#123;4, 6, 7&#125;,</div><div class="line"> &apos;P&apos;: &#123;1&#125;,</div><div class="line"> &apos;S&apos;: &#123;4&#125;,</div><div class="line"> &apos;T&apos;: &#123;2&#125;,</div><div class="line"> &apos;d&apos;: &#123;0, 5&#125;,</div><div class="line"> &apos;e&apos;: &#123;6&#125;,</div><div class="line"> &apos;g&apos;: &#123;5&#125;,</div><div class="line"> &apos;h&apos;: &#123;1&#125;,</div><div class="line"> &apos;i&apos;: &#123;0, 5&#125;,</div><div class="line"> &apos;k&apos;: &#123;6&#125;,</div><div class="line"> &apos;n&apos;: &#123;0, 1, 5&#125;,</div><div class="line"> &apos;o&apos;: &#123;0, 1, 5, 6&#125;,</div><div class="line"> &apos;r&apos;: &#123;5, 6&#125;,</div><div class="line"> &apos;s&apos;: &#123;0&#125;,</div><div class="line"> &apos;t&apos;: &#123;1, 6&#125;,</div><div class="line"> &apos;w&apos;: &#123;0, 6&#125;,</div><div class="line"> &apos;y&apos;: &#123;1&#125;,</div><div class="line"> &apos;。&apos;: &#123;3&#125;,</div><div class="line"> &apos;一&apos;: &#123;2&#125;,</div><div class="line"> &apos;不&apos;: &#123;3, 7&#125;,</div><div class="line"> &apos;个&apos;: &#123;4, 6&#125;,</div><div class="line"> &apos;为&apos;: &#123;6&#125;,</div><div class="line"> &apos;买&apos;: &#123;0&#125;,</div><div class="line"> &apos;人&apos;: &#123;1, 7&#125;,</div><div class="line"> &apos;位&apos;: &#123;3, 5&#125;,</div><div class="line"> &apos;你&apos;: &#123;0, 2, 3, 4&#125;,</div><div class="line"> &apos;到&apos;: &#123;2, 7&#125;,</div><div class="line"> &apos;单&apos;: &#123;6&#125;,</div><div class="line"> &apos;只&apos;: &#123;2&#125;,</div><div class="line"> &apos;各&apos;: &#123;3, 5&#125;,</div><div class="line"> &apos;同&apos;: &#123;5&#125;,</div><div class="line"> &apos;听&apos;: &#123;7&#125;,</div><div class="line"> &apos;呢&apos;: &#123;0&#125;,</div><div class="line"> &apos;在&apos;: &#123;3&#125;,</div><div class="line"> &apos;圾&apos;: &#123;3&#125;,</div><div class="line"> &apos;垃&apos;: &#123;3&#125;,</div><div class="line"> &apos;大&apos;: &#123;4&#125;,</div><div class="line"> &apos;天&apos;: &#123;2&#125;,</div><div class="line"> &apos;学&apos;: &#123;5&#125;,</div><div class="line"> &apos;它&apos;: &#123;6&#125;,</div><div class="line"> &apos;座&apos;: &#123;3&#125;,</div><div class="line"> &apos;得&apos;: &#123;2&#125;,</div><div class="line"> &apos;想&apos;: &#123;7&#125;,</div><div class="line"> &apos;我&apos;: &#123;0, 1, 3, 4, 7&#125;,</div><div class="line"> &apos;文&apos;: &#123;6&#125;,</div><div class="line"> &apos;是&apos;: &#123;0, 3&#125;,</div><div class="line"> &apos;晚&apos;: &#123;2&#125;,</div><div class="line"> &apos;有&apos;: &#123;7&#125;,</div><div class="line"> &apos;果&apos;: &#123;0&#125;,</div><div class="line"> &apos;瑟&apos;: &#123;2&#125;,</div><div class="line"> &apos;生&apos;: &#123;1&#125;,</div><div class="line"> &apos;用&apos;: &#123;1&#125;,</div><div class="line"> &apos;电&apos;: &#123;0&#125;,</div><div class="line"> &apos;的&apos;: &#123;3, 6&#125;,</div><div class="line"> &apos;知&apos;: &#123;2&#125;,</div><div class="line"> &apos;短&apos;: &#123;1&#125;,</div><div class="line"> &apos;络&apos;: &#123;6&#125;,</div><div class="line"> &apos;网&apos;: &#123;6&#125;,</div><div class="line"> &apos;脑&apos;: &#123;0&#125;,</div><div class="line"> &apos;苦&apos;: &#123;1&#125;,</div><div class="line"> &apos;英&apos;: &#123;6&#125;,</div><div class="line"> &apos;苹&apos;: &#123;0&#125;,</div><div class="line"> &apos;词&apos;: &#123;6&#125;,</div><div class="line"> &apos;说&apos;: &#123;0, 3, 7&#125;,</div><div class="line"> &apos;还&apos;: &#123;0&#125;,</div><div class="line"> &apos;这&apos;: &#123;6&#125;,</div><div class="line"> &apos;道&apos;: &#123;2&#125;,</div><div class="line"> &apos;都&apos;: &#123;3&#125;,</div><div class="line"> &apos;！&apos;: &#123;5, 7&#125;,</div><div class="line"> &apos;，&apos;: &#123;0, 3, 5, 6&#125;,</div><div class="line"> &apos;？&apos;: &#123;0&#125;&#125;</div></pre></td></tr></table></figure>
+<p>生成的字典这么长，看起来非常可怕。但是别慌，毕竟不是你人肉寻找。对Python来说，字典里面无论有多少个Key，它的查询时间都是一样的。</p>
+<p>现在，我们要寻找<code>C</code>、<code>N</code>、<code>M</code>，于是代码可以写为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">index_list = []</div><div class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> <span class="string">'CNM'</span>:</div><div class="line">    index_list.append(index_dict.get(letter, &#123;&#125;))</div><div class="line"></div><div class="line">common_index = set.intersection(*index_list)  <span class="comment"># 对包含各个字母的索引做交集，得到同时包含3个字母的句子</span></div><div class="line">print(f<span class="string">'这几个句子里面同时含有`C`、`N`、`M`：&#123;common_index&#125;'</span>)</div><div class="line"><span class="keyword">for</span> index <span class="keyword">in</span> common_index:</div><div class="line">    print(sentences[index])</div></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-13-50-58.png" alt=""></p>
+<p>所以，对于一组需要被查询的关键字，也可以这样搜索：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> word <span class="keyword">in</span> keywords:</div><div class="line">    index_list = []</div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> word:</div><div class="line">        index_list.append(index_dict.get(letter, &#123;&#125;))</div><div class="line"></div><div class="line">    common_index = set.intersection(*index_list)</div><div class="line">    print(f<span class="string">'&gt;&gt;这几个句子里面同时含有：&#123;word&#125;'</span>)</div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> common_index:</div><div class="line">        print(sentences[index])</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png" alt=""></p>
+<p>看完这篇文章以后，你已经学会了倒排索引（Inverted-index）。这是Google搜索的核心算法之一。</p>
+<p>可以看出，对于少量数据的搜索，倒排索引并不会比常规方法节约多少时间。但是当你有100000000条句子，1000个关键词的时候，用倒排索引实现搜索，所需要的时间只有常规方法的1/10甚至更少。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/23/do-not-waste-time-in-setup-env/" rel="next" title="数据工程师妹子养成手记——数据库篇">
+                <i class="fa fa-chevron-left"></i> 数据工程师妹子养成手记——数据库篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">81</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

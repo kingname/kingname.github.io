@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-03-02T06:13:29.058Z</updated>
+  <updated>2019-03-02T06:29:56.691Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,15 +20,16 @@
     <link href="https://www.kingname.info/2019/03/02/inverted-index/"/>
     <id>https://www.kingname.info/2019/03/02/inverted-index/</id>
     <published>2019-03-02T04:05:45.000Z</published>
-    <updated>2019-03-02T06:13:29.058Z</updated>
+    <updated>2019-03-02T06:29:56.691Z</updated>
     
-    <content type="html"><![CDATA[<p>在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
+    <content type="html"><![CDATA[<p>在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</div><div class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</div><div class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</div><div class="line">...</div><div class="line">苹果这个词在a字符串里面</div></pre></td></tr></table></figure>
 <p>如果有多个句子和多个关键字，那么可以使用<code>for</code>循环来实现：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span></div><div class="line">             <span class="string">'我CNM你个大SB'</span></div><div class="line">            ]</div><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentences:</div><div class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> keywords:</div><div class="line">        <span class="keyword">if</span> keyword <span class="keyword">in</span> sentence:</div><div class="line">            print(f<span class="string">'句子: 【&#123;sentence&#125;】包含脏话：【&#123;keyword&#125;】'</span>)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示：</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png" alt=""></p>
 <p>现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于<code>in</code>关键字的时间复杂度为<code>O(n)</code>，如果有大量长句子，查询时间会更长。</p>
+<a id="more"></a>
 <p>例如，我们要从下面的句子里面寻找<code>CNM</code>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sentences = [&apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;, </div><div class="line">             &apos;人生苦短我用Python&apos;, </div><div class="line">             &apos;你TM一天到晚只知道得瑟&apos;,</div><div class="line">             &apos;不不不，我不是说你，我是说在座的各位都是垃圾。&apos;,</div><div class="line">             &apos;我CNM你个大SB&apos;,</div><div class="line">             &apos;各位同学，Good Morning！&apos;,</div><div class="line">             &apos;网络这个单词，它的英文为Network&apos;,</div><div class="line">             &apos;我不想听到有人说CNM！&apos;</div><div class="line">            ]</div></pre></td></tr></table></figure>
 <p>如果使用常规方法，那么我们的做法是：</p>
@@ -76,12 +77,19 @@
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png" alt=""></p>
 <p>看完这篇文章以后，你已经学会了倒排索引（Inverted-index）。这是Google搜索的核心算法之一。</p>
 <p>可以看出，对于少量数据的搜索，倒排索引并不会比常规方法节约多少时间。但是当你有100000000条句子，1000个关键词的时候，用倒排索引实现搜索，所需要的时间只有常规方法的1/10甚至更少。</p>
+<p>最后回到前面遇到的一个问题，当句子里面同时含有字母<code>C</code>、<code>N</code>、<code>M</code>，虽然这三个字母并不是组合在一起的，也会被搜索出来。这就涉及到搜索引擎的另一个核心技术——<code>分词</code>了。对于英文而言，使用空格来切分单词就好了。但是对于中文来说，不同的汉字组合在一起构成的词语，字数是不一样的。甚至有些专有名词，可能七八个字，但是也要作为整体来搜索。</p>
+<p>分词的具体做法，又是另外一个故事了。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用&lt;code&gt;in&lt;/code&gt;关键字，例如：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;d
+      &lt;p&gt;在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用&lt;code&gt;in&lt;/code&gt;关键字，例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;苹果这个词在a字符串里面&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;如果有多个句子和多个关键字，那么可以使用&lt;code&gt;for&lt;/code&gt;循环来实现：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;sentences = [&lt;span class=&quot;string&quot;&gt;&#39;你说我是买苹果电脑，还是买windows电脑呢？&#39;&lt;/span&gt;, &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;人生苦短我用Python&#39;&lt;/span&gt;, &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;你TM一天到晚只知道得瑟&#39;&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;不不不，我不是说你，我是说在座的各位都是垃圾。&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;我CNM你个大SB&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            ]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;keywords = [&lt;span class=&quot;string&quot;&gt;&#39;垃圾&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;CNM&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;SB&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;TM&#39;&lt;/span&gt;]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; sentence &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; sentences:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; keyword &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; keywords:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; keyword &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; sentence:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            print(f&lt;span class=&quot;string&quot;&gt;&#39;句子: 【&amp;#123;sentence&amp;#125;】包含脏话：【&amp;#123;keyword&amp;#125;】&#39;&lt;/span&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;运行效果如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于&lt;code&gt;in&lt;/code&gt;关键字的时间复杂度为&lt;code&gt;O(n)&lt;/code&gt;，如果有大量长句子，查询时间会更长。&lt;/p&gt;
     
     </summary>
     

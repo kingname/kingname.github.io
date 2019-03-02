@@ -96,25 +96,25 @@
 
 
 
-  <meta name="description" content="在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
+  <meta name="description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
 12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
-如果有">
+如果有多个句子">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用反向索引极速提高搜索效率">
 <meta property="og:url" content="https://www.kingname.info/2019/03/02/inverted-index/index.html">
 <meta property="og:site_name" content="Kingname">
-<meta property="og:description" content="在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
+<meta property="og:description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
 12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
-如果有">
+如果有多个句子">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-13-50-58.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png">
-<meta property="og:updated_time" content="2019-03-02T06:13:29.058Z">
+<meta property="og:updated_time" content="2019-03-02T06:29:56.691Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用反向索引极速提高搜索效率">
-<meta name="twitter:description" content="在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
+<meta name="twitter:description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
 12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
-如果有">
+如果有多个句子">
 <meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png">
 
 
@@ -397,7 +397,7 @@
                 
               
 
-              <time title="创建时间：2019-03-02 12:05:45 / 修改时间：14:13:29" itemprop="dateCreated datePublished" datetime="2019-03-02T12:05:45+08:00">2019-03-02</time>
+              <time title="创建时间：2019-03-02 12:05:45 / 修改时间：14:29:56" itemprop="dateCreated datePublished" datetime="2019-03-02T12:05:45+08:00">2019-03-02</time>
             
 
             
@@ -463,13 +463,14 @@
       
 
       
-        <p>在Python中，如果我们要判断一个一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
+        <p>在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</div><div class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</div><div class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</div><div class="line">...</div><div class="line">苹果这个词在a字符串里面</div></pre></td></tr></table></figure>
 <p>如果有多个句子和多个关键字，那么可以使用<code>for</code>循环来实现：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span></div><div class="line">             <span class="string">'我CNM你个大SB'</span></div><div class="line">            ]</div><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentences:</div><div class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> keywords:</div><div class="line">        <span class="keyword">if</span> keyword <span class="keyword">in</span> sentence:</div><div class="line">            print(f<span class="string">'句子: 【&#123;sentence&#125;】包含脏话：【&#123;keyword&#125;】'</span>)</div></pre></td></tr></table></figure>
 <p>运行效果如下图所示：</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png" alt=""></p>
 <p>现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于<code>in</code>关键字的时间复杂度为<code>O(n)</code>，如果有大量长句子，查询时间会更长。</p>
+<a id="more"></a>
 <p>例如，我们要从下面的句子里面寻找<code>CNM</code>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sentences = [&apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;, </div><div class="line">             &apos;人生苦短我用Python&apos;, </div><div class="line">             &apos;你TM一天到晚只知道得瑟&apos;,</div><div class="line">             &apos;不不不，我不是说你，我是说在座的各位都是垃圾。&apos;,</div><div class="line">             &apos;我CNM你个大SB&apos;,</div><div class="line">             &apos;各位同学，Good Morning！&apos;,</div><div class="line">             &apos;网络这个单词，它的英文为Network&apos;,</div><div class="line">             &apos;我不想听到有人说CNM！&apos;</div><div class="line">            ]</div></pre></td></tr></table></figure>
 <p>如果使用常规方法，那么我们的做法是：</p>
@@ -517,6 +518,8 @@
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png" alt=""></p>
 <p>看完这篇文章以后，你已经学会了倒排索引（Inverted-index）。这是Google搜索的核心算法之一。</p>
 <p>可以看出，对于少量数据的搜索，倒排索引并不会比常规方法节约多少时间。但是当你有100000000条句子，1000个关键词的时候，用倒排索引实现搜索，所需要的时间只有常规方法的1/10甚至更少。</p>
+<p>最后回到前面遇到的一个问题，当句子里面同时含有字母<code>C</code>、<code>N</code>、<code>M</code>，虽然这三个字母并不是组合在一起的，也会被搜索出来。这就涉及到搜索引擎的另一个核心技术——<code>分词</code>了。对于英文而言，使用空格来切分单词就好了。但是对于中文来说，不同的汉字组合在一起构成的词语，字数是不一样的。甚至有些专有名词，可能七八个字，但是也要作为整体来搜索。</p>
+<p>分词的具体做法，又是另外一个故事了。</p>
 
       
     </div>

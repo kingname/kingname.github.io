@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-03-02T06:29:56.691Z</updated>
+  <updated>2019-03-02T06:30:52.173Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>使用反向索引极速提高搜索效率</title>
+    <title>使用倒排索引极速提高字符串搜索效率</title>
     <link href="https://www.kingname.info/2019/03/02/inverted-index/"/>
     <id>https://www.kingname.info/2019/03/02/inverted-index/</id>
     <published>2019-03-02T04:05:45.000Z</published>
-    <updated>2019-03-02T06:29:56.691Z</updated>
+    <updated>2019-03-02T06:30:52.173Z</updated>
     
     <content type="html"><![CDATA[<p>在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</div><div class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</div><div class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</div><div class="line">...</div><div class="line">苹果这个词在a字符串里面</div></pre></td></tr></table></figure>

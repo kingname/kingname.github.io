@@ -344,6 +344,222 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/05/26/read-data-file-in-package/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/26/read-data-file-in-package/" class="post-title-link" itemprop="url">Python读取包里面的数据文件的三种方法</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-26 22:44:08 / 修改时间：22:47:13" itemprop="dateCreated datePublished" datetime="2019-05-26T22:44:08+08:00">2019-05-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/26/read-data-file-in-package/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/05/26/read-data-file-in-package/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我们知道，写Python代码的时候，如果一个包（package）里面的一个模块要导入另一个模块，那么我们可以使用相对导入：</p>
+<p>假设当前代码结构如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-21-58-25.png" alt=""></p>
+<p>其中<code>test_1</code>是一个包，在util.py里面想导入同一个包里面的<code>read.py</code>中的<code>read</code>函数，那么代码可以写为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> .read <span class="keyword">import</span> read</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">util</span><span class="params">()</span>:</span></div><div class="line">    read()</div></pre></td></tr></table></figure>
+<p>其中的<code>.read</code>表示当前包目录下的<code>read.py</code>文件。此时<code>read.py</code>文件中的内容如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'阅读文件'</span>)</div></pre></td></tr></table></figure>
+<p>通过包外面的main.py运行代码，运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-01-32.png" alt=""></p>
+<p>现在，我们增加一个数据文件，<code>data.txt</code>，它的内容如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-02-14.png" alt=""></p>
+<p>并且想通过read.py去读取这个数据文件并打印出来。</p>
+<p>修改read.py，试图使用相对路径来打开这个文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'./data.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
+<p>运行代码发现报错：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-04-19.png" alt=""></p>
+<p>这个原因很简单，就是如果数据文件的地址写为：<code>./data.txt</code>，那么Python就会从当前工作区文件夹里面寻找<code>data.txt</code>。由于我们运行的是<code>main.py</code>，那么当前工作区就是<code>main.py</code>所在的文件夹，而不是<code>test_1</code>文件夹。所以就会出现找不到文件的情况。</p>
+<p>为了解决这个问题，我们有三种解决方式。</p>
+<ul>
+<li>使用绝对路径</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'/Users/kingname/Project/DataFileExample/test_1/data.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-08-26.png" alt=""></p>
+<ul>
+<li>先获取<code>read.py</code>文件的绝对路径，再拼接出数据文件的绝对路径：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    basepath = os.path.abspath(__file__)</div><div class="line">    folder = os.path.dirname(basepath)</div><div class="line">    data_path = os.path.join(folder, <span class="string">'data.txt'</span>)</div><div class="line">    <span class="keyword">with</span> open(data_path, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-11-20.png" alt=""></p>
+<ul>
+<li>使用pkgutil库</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pkgutil</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    data_bytes = pkgutil.get_data(__package__, <span class="string">'data.txt'</span>)</div><div class="line">    data_str = data_bytes.decode()</div><div class="line">    print(data_str)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-13-36.png" alt=""></p>
+<p><code>pkgutil</code>是Python自带的用于包管理相关操作的库，<code>pkgutil</code>能根据包名找到包里面的数据文件，然后读取为bytes型的数据。如果数据文件内容是字符串，那么直接<code>decode()</code>以后就是正文内容了。</p>
+<blockquote>
+<p>为什么pkgutil读取的数据文件是bytes型的内容而不直接是字符串类型?<br>这是因为并不是所有数据文件都是字符串，如果某些数据文件是二进制文件或者图片，那么以字符串方式打开就会导致报错。所以为了通用，pkgutil会以bytes型方式读入数据，这相当于open函数的“rb”读取方式。</p>
+</blockquote>
+<p>使用<code>pkgutil</code>还有一个好处，就是只要知道包名就可以找到对应包下面的数据文件，数据文件并不一定要在当前包里面。</p>
+<p>例如修改代码结构如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-18-12.png" alt=""></p>
+<p>另一个包<code>test_2</code>里面有一个数据文件<code>data2.txt</code>。此时如果要在<code>teat_1</code>包的<code>read.py</code>中读取<code>data2.txt</code>中的内容，那么只需要修改<code>pkgutil.get_data</code>的第一个参数为<code>test_2</code>和数据文件的名字即可，运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-20-35.png" alt=""></p>
+<p>而前两种方法都不如<code>pkgutil</code>简单。</p>
+<p>所以使用<code>pkgutil</code>可以大大简化读取包里面的数据文件的代码。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/05/20/iloveyun/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1993,192 +2209,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/02/23/do-not-waste-time-in-setup-env/" class="post-title-link" itemprop="url">数据工程师妹子养成手记——数据库篇</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-02-23 13:25:32 / 修改时间：13:46:25" itemprop="dateCreated datePublished" datetime="2019-02-23T13:25:32+08:00">2019-02-23</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MongoDB/" itemprop="url" rel="index"><span itemprop="name">MongoDB</span></a></span>
-
-                
-                
-                  ，
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MongoDB/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/02/23/do-not-waste-time-in-setup-env/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/23/do-not-waste-time-in-setup-env/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>这篇文章没有代码，请放心阅读。</p>
-<p>程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。</p>
-<p>P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组或者策划组吧。什么？来数据组？让我来带？</p>
-<p>于是我和P酱<del>生活</del>工作在了一起。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/02/23/do-not-waste-time-in-setup-env/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2226,7 +2256,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">67</span>
+                    <span class="site-state-item-count">68</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-05-26T14:47:13.027Z</updated>
+  <updated>2019-06-25T05:03:27.467Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,62 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>请不要再用re.compile了！</title>
+    <link href="https://www.kingname.info/2019/06/25/dont-use-re-compile/"/>
+    <id>https://www.kingname.info/2019/06/25/dont-use-re-compile/</id>
+    <published>2019-06-25T05:02:01.000Z</published>
+    <updated>2019-06-25T05:03:27.467Z</updated>
+    
+    <content type="html"><![CDATA[<p>如果大家在网上搜索<code>Python 正则表达式</code>，你将会看到大量的垃圾文章会这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line">text = <span class="string">'一段字符串'</span></div><div class="line">result = pattern.findall(text)</div></pre></td></tr></table></figure>
+<p>这些文章的作者，可能是被其他语言的坏习惯影响了，也可能是被其他垃圾文章误导了，不假思索拿来就用。</p>
+<p><strong>在Python里面，真的不需要使用re.compile!</strong></p>
+<p>为了证明这一点，我们来看Python的源代码。</p>
+<p>在PyCharm里面输入:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">re.search</div></pre></td></tr></table></figure>
+<p>然后Windows用户按住键盘上的Ctrl键，鼠标左键点击<code>search</code>，Mac用户按住键盘上的Command键，鼠标左键点击<code>search</code>，PyCharm会自动跳转到Python的re模块。在这里，你会看到我们常用的正则表达式方法，无论是<code>findall</code>还是<code>search</code>还是<code>sub</code>还是<code>match</code>，全部都是这样写的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_compile(pattern, flag).对应的方法(string)</div></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">findall</span><span class="params">(pattern, string, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"""Return a list of all non-overlapping matches in the string.</span></div><div class="line"></div><div class="line">    If one or more capturing groups are present in the pattern, return</div><div class="line">    a list of groups; this will be a list of tuples if the pattern</div><div class="line">    has more than one group.</div><div class="line"></div><div class="line">    Empty matches are included in the result."""</div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags).findall(string)</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-41-18.png" alt=""></p>
+<p>然后我们再来看<code>compile</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compile</span><span class="params">(pattern, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"Compile a regular expression pattern, returning a Pattern object."</span></div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags)</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-43-19.png" alt=""></p>
+<p>看出问题来了吗？</p>
+<p>我们常用的正则表达式方法，都已经自带了<code>compile</code>了！</p>
+<p>根本没有必要多此一举先<code>re.compile</code>再调用正则表达式方法。</p>
+<p>此时，可能会有人反驳：</p>
+<p>如果我有一百万条字符串，使用某一个正则表达式去匹配，那么我可以这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    pattern.search(text)</div></pre></td></tr></table></figure>
+<p>这个时候，<code>re.compile</code>只执行了1次，而如果你像下面这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    re.search(<span class="string">'正则表达式'</span>, text)</div></pre></td></tr></table></figure>
+<p>相当于你在底层对同一个正则表达式执行了100万次<code>re.compile</code>。</p>
+<p>Talk is cheap, show me the code.</p>
+<p>我们来看源代码，正则表达式<code>re.compile</code>调用的是<code>_compile</code>，我们就去看<code>_compile</code>的源代码，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-49-36.png" alt=""></p>
+<p>红框中的代码，说明了<code>_compile</code>自带缓存。它会自动储存最多512条由type(pattern), pattern, flags)组成的Key，只要是同一个正则表达式，同一个flag，那么调用两次_compile时，第二次会直接读取缓存。</p>
+<p>综上所述，请你不要再手动调用<code>re.compile</code>了，这是从其他语言（对的，我说的就是Java）带过来的陋习。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;如果大家在网上搜索&lt;code&gt;Python 正则表达式&lt;/code&gt;，你将会看到大量的垃圾文章会这样写代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="正则表达式" scheme="https://www.kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>Python读取包里面的数据文件的三种方法</title>
@@ -1502,94 +1558,6 @@
     <summary type="html">
     
       &lt;p&gt;在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-      <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>彻底搞懂Scrapy的中间件（二）</title>
-    <link href="https://www.kingname.info/2018/11/18/know-middleware-of-scrapy-2/"/>
-    <id>https://www.kingname.info/2018/11/18/know-middleware-of-scrapy-2/</id>
-    <published>2018-11-18T15:41:24.000Z</published>
-    <updated>2018-11-18T16:11:56.205Z</updated>
-    
-    <content type="html"><![CDATA[<p>在上一篇文章中介绍了下载器中间件的一些简单应用，现在再来通过案例说说如何使用下载器中间件集成Selenium、重试和处理请求异常。</p>
-<a id="more"></a>
-<h2 id="在中间件中集成Selenium"><a href="#在中间件中集成Selenium" class="headerlink" title="在中间件中集成Selenium"></a>在中间件中集成Selenium</h2><p>对于一些很麻烦的异步加载页面，手动寻找它的后台API代价可能太大。这种情况下可以使用Selenium和ChromeDriver或者Selenium和PhantomJS来实现渲染网页。</p>
-<p>这是前面的章节已经讲到的内容。那么，如何把Scrapy与Selenium结合起来呢？这个时候又要用到中间件了。</p>
-<p>创建一个SeleniumMiddleware，其代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.http <span class="keyword">import</span> HtmlResponse</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SeleniumMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.driver = webdriver.Chrome(<span class="string">'./chromedriver'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        <span class="keyword">if</span> spider.name == <span class="string">'seleniumSpider'</span>:</div><div class="line">            self.driver.get(request.url)</div><div class="line">            time.sleep(<span class="number">2</span>)</div><div class="line">            body = self.driver.page_source</div><div class="line">        <span class="keyword">return</span> HtmlResponse(self.driver.current_url,</div><div class="line">                           body=body,</div><div class="line">                           encoding=<span class="string">'utf-8'</span>,</div><div class="line">                           request=request)</div></pre></td></tr></table></figure>
-<p>这个中间件的作用，就是对名为“seleniumSpider”的爬虫请求的网址，使用ChromeDriver先进行渲染，然后用返回的渲染后的HTML代码构造一个Response对象。如果是其他的爬虫，就什么都不做。在上面的代码中，等待页面渲染完成是通过time.sleep(2)来实现的，当然读者也可以使用前面章节讲到的等待某个元素出现的方法来实现。</p>
-<p>有了这个中间件以后，就可以像访问普通网页那样直接处理需要异步加载的页面，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-52-26.png" alt=""></p>
-<h2 id="在中间件里重试"><a href="#在中间件里重试" class="headerlink" title="在中间件里重试"></a>在中间件里重试</h2><p>在爬虫的运行过程中，可能会因为网络问题或者是网站反爬虫机制生效等原因，导致一些请求失败。在某些情况下，少量的数据丢失是无关紧要的，例如在几亿次请求里面失败了十几次，损失微乎其微，没有必要重试。但还有一些情况，每一条请求都至关重要，容不得有一次失败。此时就需要使用中间件来进行重试。</p>
-<p>有的网站的反爬虫机制被触发了，它会自动将请求重定向到一个<code>xxx/404.html</code>页面。那么如果发现了这种自动的重定向，就没有必要让这一次的请求返回的内容进入数据提取的逻辑，而应该直接丢掉或者重试。</p>
-<p>还有一种情况，某网站的请求参数里面有一项，Key为date，Value为发起请求的这一天的日期或者发起请求的这一天的前一天的日期。例如今天是“2017-08-10”，但是这个参数的值是今天早上10点之前，都必须使用“2017-08-09”，在10点之后才能使用“2017-08-10”，否则，网站就不会返回正确的结果，而是返回“参数错误”这4个字。然而，这个日期切换的时间点受到其他参数的影响，有可能第1个请求使用“2017-08-10”可以成功访问，而第2个请求却只有使用“2017-08-09”才能访问。遇到这种情况，与其花费大量的时间和精力去追踪时间切换点的变化规律，不如简单粗暴，直接先用今天去试，再用昨天的日期去试，反正最多两次，总有一个是正确的。</p>
-<p>以上的两种场景，使用重试中间件都能轻松搞定。</p>
-<p>打开练习页面</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/exercise_middleware_retry.html。</div></pre></td></tr></table></figure>
-<p>这个页面实现了翻页逻辑，可以上一页、下一页地翻页，也可以直接跳到任意页数，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-53-12.png" alt=""></p>
-<p>现在需要获取1～9页的内容，那么使用前面章节学到的内容，通过Chrome浏览器的开发者工具很容易就能发现翻页实际上是一个POST请求，提交的参数为“date”，它的值是日期“2017-08-12”，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-53-37.png" alt=""></p>
-<p>使用Scrapy写一个爬虫来获取1～9页的内容，运行结果如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-54-00.png" alt=""></p>
-<p>从上图可以看到，第5页没有正常获取到，返回的结果是参数错误。于是在网页上看一下，发现第5页的请求中body里面的date对应的日期是“2017-08-11”，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-54-22.png" alt=""></p>
-<p>如果测试的次数足够多，时间足够长，就会发现以下内容。</p>
-<ol>
-<li>同一个时间点，不同页数提交的参数中，date对应的日期可能是今天的也可能是昨天的。</li>
-<li>同一个页数，不同时间提交的参数中，date对应的日期可能是今天的也可能是昨天的。</li>
-</ol>
-<p>由于日期不是今天，就是昨天，所以针对这种情况，写一个重试中间件是最简单粗暴且有效的解决办法。中间件的代码如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-54-44.png" alt=""></p>
-<p>这个中间件只对名为“middlewareSpider”的爬虫有用。由于middlewareSpider爬虫默认使用的是“今天”的日期，所以如果被网站返回了“参数错误”，那么正确的日期就必然是昨天的了。所以在这个中间件里面，第119行，直接把原来请求的body换成了昨天的日期，这个请求的其他参数不变。让这个中间件生效以后，爬虫就能成功爬取第5页了，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-55-01.png" alt=""></p>
-<p>爬虫本身的代码，数据提取部分完全没有做任何修改，如果不看中间件代码，完全感觉不出爬虫在第5页重试过。</p>
-<p>除了检查网站返回的内容外，还可以检查返回内容对应的网址。将上面练习页后台网址的第1个参数“para”改为404，暂时禁用重试中间件，再跑一次爬虫。其运行结果如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-55-25.png" alt=""></p>
-<p>此时，对于参数不正确的请求，网站会自动重定向到以下网址对应的页面：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://exercise.kingname.info/404.html</div></pre></td></tr></table></figure>
-<p>由于Scrapy自带网址自动去重机制，因此虽然第3页、第6页和第7页都被自动转到了404页面，但是爬虫只会爬一次404页面，剩下两个404页面会被自动过滤。</p>
-<p>对于这种情况，在重试中间件里面判断返回的网址即可解决，如下图12-21所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-55-47.png" alt=""></p>
-<p>在代码的第115行，判断是否被自动跳转到了404页面，或者是否被返回了“参数错误”。如果都不是，说明这一次请求目前看起来正常，直接把response返回，交给后面的中间件来处理。如果被重定向到了404页面，或者被返回“参数错误”，那么进入重试的逻辑。如果返回了“参数错误”，那么进入第126行，直接替换原来请求的body即可重新发起请求。</p>
-<p>如果自动跳转到了404页面，那么这里有一点需要特别注意：此时的请求，request这个对象对应的是向404页面发起的GET请求，而不是原来的向练习页后台发起的请求。所以，重新构造新的请求时必须把URL、body、请求方式、Headers全部都换一遍才可以。</p>
-<p>由于request对应的是向404页面发起的请求，所以resquest.url对应的网址是404页面的网址。因此，如果想知道调整之前的URL，可以使用如下的代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">request.meta[<span class="string">'redirect_urls'</span>]</div></pre></td></tr></table></figure>
-<p>这个值对应的是一个列表。请求自动跳转了几次，这个列表里面就有几个URL。这些URL是按照跳转的先后次序依次append进列表的。由于本例中只跳转了一次，所以直接读取下标为0的元素即可，也就是原始网址。</p>
-<p>重新激活这个重试中间件，不改变爬虫数据抓取部分的代码，直接运行以后可以正确得到1～9页的全部内容，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-56-15.png" alt=""></p>
-<h2 id="在中间件里处理异常"><a href="#在中间件里处理异常" class="headerlink" title="在中间件里处理异常"></a>在中间件里处理异常</h2><p>在默认情况下，一次请求失败了，Scrapy会立刻原地重试，再失败再重试，如此3次。如果3次都失败了，就放弃这个请求。这种重试逻辑存在一些缺陷。以代理IP为例，代理存在不稳定性，特别是免费的代理，差不多10个里面只有3个能用。而现在市面上有一些收费代理IP提供商，购买他们的服务以后，会直接提供一个固定的网址。把这个网址设为Scrapy的代理，就能实现每分钟自动以不同的IP访问网站。如果其中一个IP出现了故障，那么需要等一分钟以后才会更换新的IP。在这种场景下，Scrapy自带的重试逻辑就会导致3次重试都失败。</p>
-<p>这种场景下，如果能立刻更换代理就立刻更换；如果不能立刻更换代理，比较好的处理方法是延迟重试。而使用Scrapy_redis就能实现这一点。爬虫的请求来自于Redis，请求失败以后的URL又放回Redis的末尾。一旦一个请求原地重试3次还是失败，那么就把它放到Redis的末尾，这样Scrapy需要把Redis列表前面的请求都消费以后才会重试之前的失败请求。这就为更换IP带来了足够的时间。</p>
-<p>重新打开代理中间件，这一次故意设置一个有问题的代理，于是可以看到Scrapy控制台打印出了报错信息，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-56-34.png" alt=""></p>
-<p>从上图可以看到Scrapy自动重试的过程。由于代理有问题，最后会抛出方框框住的异常，表示TCP超时。在中间件里面如果捕获到了这个异常，就可以提前更换代理，或者进行重试。这里以更换代理为例。首先根据上图中方框框住的内容导入TCPTimeOutError这个异常：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> twisted.internet.error <span class="keyword">import</span> TCPTimedOutError</div></pre></td></tr></table></figure>
-<p>修改前面开发的重试中间件，添加一个process_exception()方法。这个方法接收3个参数，分别为request、exception和spider，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-18-23-56-58.png" alt=""></p>
-<p>process_exception()方法只对名为“exceptionSpider”的爬虫生效，如果请求遇到了TCPTimeOutError，那么就首先调用remove_broken_proxy()方法把失效的这个代理IP移除，然后返回这个请求对象request。返回以后，Scrapy会重新调度这个请求，就像它第一次调度一样。由于原来的ProxyMiddleware依然在工作，于是它就会再一次给这个请求更换代理IP。又由于刚才已经移除了失效的代理IP，所以ProxyMiddleware会从剩下的代理IP里面随机找一个来给这个请求换上。</p>
-<p>特别提醒：图片中的remove_broken_proxy()函数体里面写的是pass，但是在实际开发过程中，读者可根据实际情况实现这个方法，写出移除失效代理的具体逻辑。</p>
-<h2 id="下载器中间件功能总结"><a href="#下载器中间件功能总结" class="headerlink" title="下载器中间件功能总结"></a>下载器中间件功能总结</h2><p>能在中间件中实现的功能，都能通过直接把代码写到爬虫中实现。使用中间件的好处在于，它可以把数据爬取和其他操作分开。在爬虫的代码里面专心写数据爬取的代码；在中间件里面专心写突破反爬虫、登录、重试和渲染AJAX等操作。</p>
-<p>对团队来说，这种写法能实现多人同时开发，提高开发效率；对个人来说，写爬虫的时候不用考虑反爬虫、登录、验证码和异步加载等操作。另外，写中间件的时候不用考虑数据怎样提取。一段时间只做一件事，思路更清晰。</p>
-<blockquote>
-<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在上一篇文章中介绍了下载器中间件的一些简单应用，现在再来通过案例说说如何使用下载器中间件集成Selenium、重试和处理请求异常。&lt;/p&gt;
     
     </summary>
     

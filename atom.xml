@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-06-25T05:03:27.467Z</updated>
+  <updated>2019-07-07T14:51:00.151Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>跟着Kenneth Reitz大神学习读取类属性的三种方法</title>
+    <link href="https://www.kingname.info/2019/07/07/three-in-one/"/>
+    <id>https://www.kingname.info/2019/07/07/three-in-one/</id>
+    <published>2019-07-07T14:48:41.000Z</published>
+    <updated>2019-07-07T14:51:00.151Z</updated>
+    
+    <content type="html"><![CDATA[<p>在看Kenneth Reitz大神的<a href="https://github.com/kennethreitz/records" target="_blank" rel="external">Records项目</a>时，注意到在Readme中，读取数据有三种写法：</p>
+<blockquote>
+<p>Values can be accessed many ways: row.user_email, row[‘user_email’], or row[3]</p>
+</blockquote>
+<p>假设一个数据表如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>username</th>
+<th>active</th>
+<th>name</th>
+<th>user_email</th>
+<th>timezone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model-t</td>
+<td>True</td>
+<td>Henry Ford</td>
+<td>model-t@gmail.com</td>
+<td>2016-02-06 22:28:23.894202</td>
+</tr>
+</tbody>
+</table>
+<p>那么，当你想读取user_email这一列的时候，除了可以使用<code>row.user_email</code>和<code>row[&#39;user_email&#39;]</code>以外，由于<code>user_email</code>在第3列（username是第0列），所以还可以使用<code>row[3]</code>来读取。</p>
+<p>今天我们就来研究一下，他是如何实现这个功能的。</p>
+<p>假设我们现在有一个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.age = age</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div></pre></td></tr></table></figure>
+<p>基于这个类初始化一个对象kingname:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">kingname = People(<span class="string">'kingname'</span>, <span class="number">26</span>)</div><div class="line">print(kingname.age)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-02-56.png" alt=""></p>
+<p>可以看到，我们已经实现了类似于records项目中的<code>row.user_email</code>的写法。</p>
+<p>但是当我们想像字典一样取读取的时候，就会报错，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-04-11.png" alt=""></p>
+<p>此时，为了让一个对象可以像字典一样被读取，我们需要实现它的<code>__getitem__</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.info = &#123;<span class="string">'name'</span>: name,</div><div class="line">                     <span class="string">'age'</span>: age&#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div></pre></td></tr></table></figure>
+<p>此时就可以像字典一样去读取了，运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-10-00.png" alt=""></p>
+<p>但新的问题又来了，不能直接读取使用<code>kinganme.age</code>读取数据了，这样写会导致报错，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-10-57.png" alt=""></p>
+<p>为了解决这个问题，我们再来实现这个类的<code>__getattr__</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.info = &#123;<span class="string">'name'</span>: name,</div><div class="line">                     <span class="string">'age'</span>: age&#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-13-11.png" alt=""></p>
+<p>那么如何实现records里面的<code>row[3]</code>这种写法呢？这就需要先解释一下，records这个库是用来做什么的，以及它的数据是如何存放的。</p>
+<p>K大写的records这个库，是用于来更加方便地读写SQL数据库，避免繁琐地写各种SQL语句。</p>
+<p>这个库的源代码只有一个文件：<a href="https://github.com/kennethreitz/records/blob/master/records.py" target="_blank" rel="external">源代码</a></p>
+<p>我们今天要研究的这个写法，在<code>Record</code>这个类里面。这个类用来保存MySQL中的一行数据。<code>Record</code>这个类包含两个属性，分别为<code>_keys</code>和<code>_values</code>，其中<code>_keys</code>用于记录所有的字段名，<code>_values</code>用于记录一行的所有值。字段名和值是按顺序一一对应的。</p>
+<p>例如<code>_keys</code>里面下标为3表示字段名<code>user_email</code>，那么<code>_values</code>里面下标为3的数据就是<code>user_email</code>的值。</p>
+<p>正式由于这样一个一一对应的关系，所以<code>row[3]</code>才能实现<code>row[&#39;user_email&#39;]</code>、<code>row.user_email</code>相同的效果。</p>
+<p>回到我们的People类，为了实现相同的目的，我们再次修改代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self._keys = [<span class="string">'name'</span>, <span class="string">'age'</span>]</div><div class="line">        self._values = [name, age]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">if</span> isinstance(key, int):</div><div class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt;= key &lt; len(self._keys):</div><div class="line">                <span class="keyword">return</span> self._values[key]</div><div class="line">            <span class="keyword">return</span> <span class="string">'索引超出边界'</span></div><div class="line"></div><div class="line">        index = self._keys.index(key)</div><div class="line">        <span class="keyword">if</span> index == <span class="number">-1</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Key不存在'</span></div><div class="line">        <span class="keyword">return</span> self._values[index]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__getitem__(key)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-25-28.png" alt=""></p>
+<p>需要说明的是，无论是使用<code>kingname[&#39;key&#39;]</code>还是<code>kingname[1]</code>，他们都会进入到<code>__getitem__</code>方法中去。</p>
+<p>我这里给出的例子相较于<code>records</code>项目的代码做了简化，不过关键的部分都已经囊括了进来。</p>
+<p>最后，推荐有兴趣的同学通读records这个项目的源代码，你将会从K大的代码中学到非常多的东西。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在看Kenneth Reitz大神的&lt;a href=&quot;https://github.com/kennethreitz/records&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Records项目&lt;/a&gt;时，注意到在Readme中，读取数据有三种写法：&lt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
   
   <entry>
     <title>请不要再用re.compile了！</title>
@@ -1504,71 +1585,6 @@
       <category term="燃尽图" scheme="https://www.kingname.info/tags/%E7%87%83%E5%B0%BD%E5%9B%BE/"/>
     
       <category term="Scrum" scheme="https://www.kingname.info/tags/Scrum/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>彻底搞懂Scrapy的中间件（三）</title>
-    <link href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/"/>
-    <id>https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/</id>
-    <published>2018-11-20T14:46:17.000Z</published>
-    <updated>2018-11-20T15:15:31.071Z</updated>
-    
-    <content type="html"><![CDATA[<p>在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。</p>
-<a id="more"></a>
-<h2 id="爬虫中间件"><a href="#爬虫中间件" class="headerlink" title="爬虫中间件"></a>爬虫中间件</h2><p>爬虫中间件的用法与下载器中间件非常相似，只是它们的作用对象不同。下载器中间件的作用对象是请求request和返回response；爬虫中间件的作用对象是爬虫，更具体地来说，就是写在spiders文件夹下面的各个文件。它们的关系，在Scrapy的数据流图上可以很好地区分开来，如下图所示。</p>
-<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png" alt=""></p>
-<p>其中，4、5表示下载器中间件，6、7表示爬虫中间件。爬虫中间件会在以下几种情况被调用。</p>
-<ol>
-<li>当运行到<code>yield scrapy.Request()</code>或者<code>yield item</code>的时候，爬虫中间件的<code>process_spider_output()</code>方法被调用。</li>
-<li>当爬虫本身的代码出现了<code>Exception</code>的时候，爬虫中间件的<code>process_spider_exception()</code>方法被调用。</li>
-<li>当爬虫里面的某一个回调函数<code>parse_xxx()</code>被调用之前，爬虫中间件的<code>process_spider_input()</code>方法被调用。</li>
-<li>当运行到<code>start_requests()</code>的时候，爬虫中间件的<code>process_start_requests()</code>方法被调用。</li>
-</ol>
-<h3 id="在中间件处理爬虫本身的异常"><a href="#在中间件处理爬虫本身的异常" class="headerlink" title="在中间件处理爬虫本身的异常"></a>在中间件处理爬虫本身的异常</h3><p>在爬虫中间件里面可以处理爬虫本身的异常。例如编写一个爬虫，爬取UA练习页面<a href="http://exercise.kingname.info/exercise_middleware_ua" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ua</a> ，故意在爬虫中制造一个异常，如图12-26所示。</p>
-<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-51-03.png" alt=""></p>
-<p>由于网站返回的只是一段普通的字符串，并不是JSON格式的字符串，因此使用JSON去解析，就一定会导致报错。这种报错和下载器中间件里面遇到的报错不一样。下载器中间件里面的报错一般是由于外部原因引起的，和代码层面无关。而现在的这种报错是由于代码本身的问题导致的，是代码写得不够周全引起的。</p>
-<p>为了解决这个问题，除了仔细检查代码、考虑各种情况外，还可以通过开发爬虫中间件来跳过或者处理这种报错。在middlewares.py中编写一个类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExceptionCheckSpider</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_spider_exception</span><span class="params">(self, response, exception, spider)</span>:</span></div><div class="line">        print(f<span class="string">'返回的内容是：&#123;response.body.decode()&#125;\n报错原因：&#123;type(exception)&#125;'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div></pre></td></tr></table></figure>
-<p>这个类仅仅起到记录Log的作用。在使用JSON解析网站返回内容出错的时候，将网站返回的内容打印出来。</p>
-<p><code>process_spider_exception()</code>这个方法，它可以返回<code>None</code>，也可以运行<code>yield item</code>语句或者像爬虫的代码一样，使用<code>yield scrapy.Request()</code>发起新的请求。如果运行了<code>yield item</code>或者<code>yield scrapy.Request()</code>，程序就会绕过爬虫里面原有的代码。</p>
-<p>例如，对于有异常的请求，不需要进行重试，但是需要记录是哪一个请求出现了异常，此时就可以在爬虫中间件里面检测异常，然后生成一个只包含标记的item。还是以抓取<a href="http://exercise.kingname.info/exercise_middleware_retry.html" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_retry.html</a>这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png" alt=""></p>
-<p>爬虫里面如果发现了参数错误，就使用raise这个关键字人工抛出一个自定义的异常。在实际爬虫开发中，读者也可以在某些地方故意不使用try … except捕获异常，而是让异常直接抛出。例如XPath匹配处理的结果，直接读里面的值，不用先判断列表是否为空。这样如果列表为空，就会被抛出一个IndexError，于是就能让爬虫的流程进入到爬虫中间件的<code>process_spider_exception()</code>中。</p>
-<p>在items.py里面创建了一个ErrorItem来记录哪一页出现了问题，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-45.png" alt=""></p>
-<p>接下来，在爬虫中间件中将出错的页面和当前时间存放到ErrorItem里面，并提交给pipeline，保存到MongoDB中，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-54-41.png" alt=""></p>
-<p>这样就实现了记录错误页数的功能，方便在后面对错误原因进行分析。由于这里会把item提交给pipeline，所以不要忘记在settings.py里面打开pipeline，并配置好MongoDB。储存错误页数到MongoDB的代码如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-55-43.png" alt=""></p>
-<h3 id="激活爬虫中间件"><a href="#激活爬虫中间件" class="headerlink" title="激活爬虫中间件"></a>激活爬虫中间件</h3><p>爬虫中间件的激活方式与下载器中间件非常相似，在settings.py中，在下载器中间件配置项的上面就是爬虫中间件的配置项，它默认也是被注释了的，解除注释，并把自定义的爬虫中间件添加进去即可，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-56-15.png" alt=""></p>
-<p>Scrapy也有几个自带的爬虫中间件，它们的名字和顺序如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-57-03.png" alt=""></p>
-<p>下载器中间件的数字越小越接近Scrapy引擎，数字越大越接近爬虫。如果不能确定自己的自定义中间件应该靠近哪个方向，那么就在500～700之间选择最为妥当。</p>
-<h3 id="爬虫中间件输入-输出"><a href="#爬虫中间件输入-输出" class="headerlink" title="爬虫中间件输入/输出"></a>爬虫中间件输入/输出</h3><p>在爬虫中间件里面还有两个不太常用的方法，分别为<code>process_spider_input(response, spider)</code>和<code>process_spider_output(response, result, spider)</code>。其中，<code>process_spider_input(response, spider)</code>在下载器中间件处理完成后，马上要进入某个回调函数parse_xxx()前调用。<code>process_spider_output(response, result, output)</code>是在爬虫运行<code>yield item</code>或者<code>yield scrapy.Request()</code>的时候调用。在这个方法处理完成以后，数据如果是item，就会被交给pipeline；如果是请求，就会被交给调度器，然后下载器中间件才会开始运行。所以在这个方法里面可以进一步对item或者请求做一些修改。这个方法的参数result就是爬虫爬出来的item或者<code>scrapy.Request()</code>。由于yield得到的是一个生成器，生成器是可以迭代的，所以result也是可以迭代的，可以使用for循环来把它展开。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> isinstance(item, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对即将被提交给pipeline的item进行各种操作</span></div><div class="line">            print(f<span class="string">'item将会被提交给pipeline'</span>)</div><div class="line">        <span class="keyword">yield</span> item</div></pre></td></tr></table></figure>
-<p>或者对请求进行监控和修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> request <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(request, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对请求进行各种修改</span></div><div class="line">            print(<span class="string">'现在还可以对请求对象进行修改。。。。'</span>)</div><div class="line">        request.meta[<span class="string">'request_start_time'</span>] = time.time()</div><div class="line">        <span class="keyword">yield</span> request</div></pre></td></tr></table></figure>
-<blockquote>
-<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-      <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
     
   </entry>
   

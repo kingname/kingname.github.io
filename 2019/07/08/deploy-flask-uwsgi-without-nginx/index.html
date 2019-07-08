@@ -108,7 +108,7 @@
 怪现状而且这些文章，全部都像是约定俗成一样，一定会首先用命令行启动uwsgi，测试uwsgi与Flask运行是否正常，然后写uwsgi的配置文件。然后使用Unix 套接字沟通uwsgi与Nginx。所以uwsgi的配置">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-31-12.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-43-07.png">
-<meta property="og:updated_time" content="2019-07-08T13:30:16.627Z">
+<meta property="og:updated_time" content="2019-07-08T13:38:52.071Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用uwsgi部署Flask，不使用Unix套接字连接Nginx">
 <meta name="twitter:description" content="如果你在Google或者百度或者某些技术社区上面搜索uwsgi + Flask，你会发现大量的文章，是教你如何使用uwsgi + flask + Nginx搭建网站。如下图所示：
@@ -396,7 +396,7 @@
                 
               
 
-              <time title="创建时间：2019-07-08 21:27:50 / 修改时间：21:30:16" itemprop="dateCreated datePublished" datetime="2019-07-08T21:27:50+08:00">2019-07-08</time>
+              <time title="创建时间：2019-07-08 21:27:50 / 修改时间：21:38:52" itemprop="dateCreated datePublished" datetime="2019-07-08T21:27:50+08:00">2019-07-08</time>
             
 
             
@@ -483,7 +483,7 @@
 <p>但实际上，uwsgi本身就是一个服务器，A服务器上的Nginx与B服务器上的uwsgi之间是可以通过http进行通信的。</p>
 <p>要让uwsgi使用http进行通信，我们可以修改uwsgi的配置文件xxx.ini：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="section">[uwsgi]</span></div><div class="line"><span class="attr">module</span> = wsgi:app</div><div class="line"><span class="attr">master</span> = <span class="literal">true</span></div><div class="line"><span class="attr">process</span> = <span class="number">5</span></div><div class="line"><span class="attr">threads</span> = <span class="number">100</span></div><div class="line"><span class="attr">gevent</span> = <span class="number">100</span></div><div class="line"><span class="attr">async</span> = <span class="number">100</span></div><div class="line"><span class="attr">http-socket</span> = <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5001</span></div><div class="line"><span class="attr">virtualenv</span> = /Users/kingname/.local/share/virtualenvs/ActiveScoreApi-Ax_h-Y5w</div></pre></td></tr></table></figure>
-<p>其他参数的意义不是本文的重点，我们要关系的是<code>http-socket = 0.0.0.0:5001</code>。它的作用把网站部署在本机的5001端口，并允许外网通过http访问。</p>
+<p>其他参数的意义不是本文的重点，我们要关心的是<code>http-socket = 0.0.0.0:5001</code>。它的作用把网站部署在本机的5001端口，并允许外网通过http访问。</p>
 <p>写了这个配置文件以后，通过以下命令来启动uwsgi：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">uwsgi --ini xxx.ini</div></pre></td></tr></table></figure>
 <p>然后你使用<code>IP:5001</code>就可以访问你的网站了。此时，如果你有Nginx，那么只需要在Nginx上设置反向代理，把80端口的请求代理到5001端口即可。</p>

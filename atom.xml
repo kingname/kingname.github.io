@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-07-07T14:51:00.151Z</updated>
+  <updated>2019-07-08T13:30:16.627Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,72 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用uwsgi部署Flask，不使用Unix套接字连接Nginx</title>
+    <link href="https://www.kingname.info/2019/07/08/deploy-flask-uwsgi-without-nginx/"/>
+    <id>https://www.kingname.info/2019/07/08/deploy-flask-uwsgi-without-nginx/</id>
+    <published>2019-07-08T13:27:50.000Z</published>
+    <updated>2019-07-08T13:30:16.627Z</updated>
+    
+    <content type="html"><![CDATA[<p>如果你在Google或者百度或者某些技术社区上面搜索<code>uwsgi + Flask</code>，你会发现大量的文章，是教你如何使用<code>uwsgi + flask + Nginx</code>搭建网站。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-31-12.png" alt=""></p>
+<h2 id="怪现状"><a href="#怪现状" class="headerlink" title="怪现状"></a>怪现状</h2><p>而且这些文章，全部都像是约定俗成一样，一定会首先用命令行启动uwsgi，测试uwsgi与Flask运行是否正常，然后写uwsgi的配置文件。然后使用<code>Unix 套接字</code>沟通uwsgi与Nginx。所以uwsgi的配置文件里面一定会写成类似于下面这样：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">socket</span> = /xxx/yyy/zzz.sock</div></pre></td></tr></table></figure>
+<p>Nginx的配置一定有类似于下面这一段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">        include uwsgi_params;</div><div class="line">        uwsgi_pass unix:///xxx/yyy/zzz.sock;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>他们为什么要这样写？因为他们看的别的博客上就是这样写的！他们知其然，但是不知其所以然。</p>
+<a id="more"></a>
+<h3 id="有什么问题？"><a href="#有什么问题？" class="headerlink" title="有什么问题？"></a>有什么问题？</h3><p>这种写法本身没有问题，甚至Flask的官方文档里面也是这样写的，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-43-07.png" alt=""></p>
+<p>但是他们这样写，有一个基本前提——就是Flask程序、uwsgi、Nginx三个东西运行在同一个服务器上。如果用Docker，那么这三个东西甚至需要运行到一个容器里面。</p>
+<p>如果是一个小网站，服务器资源足够，那么这样写没有问题，Unix套接字安全性高，速度也快。</p>
+<p>那么如果你同一个服务器上有三个Docker容器，每一个容器都有一个不同的网站，是不是每个容器里面都需要安装一个Nginx？</p>
+<p>对于大一些的网站，Nginx需要做负载均衡，如果把Nginx和网站放在同一台服务器上，无论是Nginx拖垮了服务器，还是网站拖垮了服务器，都会导致很严重的问题。</p>
+<p>能不能实现，一个服务器上直接安装Nginx，然后服务器上的三个网站分别在三个Docker容器里面，每个容器里面只有Flask和uwsgi，没有Nginx？</p>
+<p>如果你的网站大一些，你在A服务器安装Nginx，在B、C、D、E、F服务器上不安装Nginx，只安装uwsgi + Flask，又怎么做？</p>
+<p>所以进入我们今天的主题，<code>安装uwsgi + Flask(或者Django)，但是不安装Nginx（Deploy Flask with uwsgi but without Nginx）</code></p>
+<h2 id="不使用Unix套接字的uwsgi"><a href="#不使用Unix套接字的uwsgi" class="headerlink" title="不使用Unix套接字的uwsgi"></a>不使用Unix套接字的uwsgi</h2><p>Unix套接字，本质上是一个文件（Unix/Linux哲学：一切皆文件），Nginx和uwsgi通过这个文件来进行通信。所以需要Nginx与uwsgi放在同一个机器上。</p>
+<p>但实际上，uwsgi本身就是一个服务器，A服务器上的Nginx与B服务器上的uwsgi之间是可以通过http进行通信的。</p>
+<p>要让uwsgi使用http进行通信，我们可以修改uwsgi的配置文件xxx.ini：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="section">[uwsgi]</span></div><div class="line"><span class="attr">module</span> = wsgi:app</div><div class="line"><span class="attr">master</span> = <span class="literal">true</span></div><div class="line"><span class="attr">process</span> = <span class="number">5</span></div><div class="line"><span class="attr">threads</span> = <span class="number">100</span></div><div class="line"><span class="attr">gevent</span> = <span class="number">100</span></div><div class="line"><span class="attr">async</span> = <span class="number">100</span></div><div class="line"><span class="attr">http-socket</span> = <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5001</span></div><div class="line"><span class="attr">virtualenv</span> = /Users/kingname/.local/share/virtualenvs/ActiveScoreApi-Ax_h-Y5w</div></pre></td></tr></table></figure>
+<p>其他参数的意义不是本文的重点，我们要关系的是<code>http-socket = 0.0.0.0:5001</code>。它的作用把网站部署在本机的5001端口，并允许外网通过http访问。</p>
+<p>写了这个配置文件以后，通过以下命令来启动uwsgi：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">uwsgi --ini xxx.ini</div></pre></td></tr></table></figure>
+<p>然后你使用<code>IP:5001</code>就可以访问你的网站了。此时，如果你有Nginx，那么只需要在Nginx上设置反向代理，把80端口的请求代理到5001端口即可。</p>
+<p>同理，把uwsgi和网站放在Docker镜像里面，容器开放5001端口。宿主机或者其他机器上的Nginx直接通过IP:端口 就可以访问容器里面的uwsgi，不再需要设置Unix套接字了。</p>
+<p>另外，如果你阅读过uwsgi的官方文档，你还会发现，除了<code>http-socket = 0.0.0.0:5001</code>外，你也可以把它改成<code>http = 0.0.0.0:5001</code>。那么这两种写法是否一样呢？</p>
+<p>在官方文档里面特别区分了它们的使用场景：</p>
+<blockquote>
+<p>The http and http-socket options are entirely different beasts. The first one spawns an additional process forwarding requests to a series of workers (think about it as a form of shield, at the same level of apache or nginx), while the second one sets workers to natively speak the http protocol. TL/DR: if you plan to expose uWSGI directly to the public, use –http, if you want to proxy it behind a webserver speaking http with backends, use –http-socket.</p>
+</blockquote>
+<p>简言之，如果你直接把uwsgi作为服务器，uwsgi启动以后，直接就把IP:端口拿给别人访问，那么你就可以使用<code>http</code>；如果你的uwsgi前面还挡了一个Nginx，那么你就使用<code>http-socket</code>。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;如果你在Google或者百度或者某些技术社区上面搜索&lt;code&gt;uwsgi + Flask&lt;/code&gt;，你会发现大量的文章，是教你如何使用&lt;code&gt;uwsgi + flask + Nginx&lt;/code&gt;搭建网站。如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-31-12.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;怪现状&quot;&gt;&lt;a href=&quot;#怪现状&quot; class=&quot;headerlink&quot; title=&quot;怪现状&quot;&gt;&lt;/a&gt;怪现状&lt;/h2&gt;&lt;p&gt;而且这些文章，全部都像是约定俗成一样，一定会首先用命令行启动uwsgi，测试uwsgi与Flask运行是否正常，然后写uwsgi的配置文件。然后使用&lt;code&gt;Unix 套接字&lt;/code&gt;沟通uwsgi与Nginx。所以uwsgi的配置文件里面一定会写成类似于下面这样：&lt;/p&gt;
+&lt;figure class=&quot;highlight ini&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;socket&lt;/span&gt; = /xxx/yyy/zzz.sock&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;Nginx的配置一定有类似于下面这一段：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;location / &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        include uwsgi_params;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        uwsgi_pass unix:///xxx/yyy/zzz.sock;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;他们为什么要这样写？因为他们看的别的博客上就是这样写的！他们知其然，但是不知其所以然。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="Flask" scheme="https://www.kingname.info/tags/Flask/"/>
+    
+      <category term="uwsgi" scheme="https://www.kingname.info/tags/uwsgi/"/>
+    
+      <category term="Nginx" scheme="https://www.kingname.info/tags/Nginx/"/>
+    
+  </entry>
   
   <entry>
     <title>跟着Kenneth Reitz大神学习读取类属性的三种方法</title>
@@ -1478,113 +1544,6 @@
     
     
       <category term="总结" scheme="https://www.kingname.info/tags/%E6%80%BB%E7%BB%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>项目经理必备——使用燃尽图监控项目整体进度</title>
-    <link href="https://www.kingname.info/2018/12/23/use-burndown-chart/"/>
-    <id>https://www.kingname.info/2018/12/23/use-burndown-chart/</id>
-    <published>2018-12-23T09:11:13.000Z</published>
-    <updated>2018-12-23T10:40:25.409Z</updated>
-    
-    <content type="html"><![CDATA[<p>在<a href="https://www.kingname.info/2018/10/17/use-gantt-enhanced/">《跳出任务管理的泥沼，拥抱甘特图的怀抱》</a>一文中，我谈到了使用甘特图来规划任务。甘特图更多的关注每一个任务的进度上。那么如果我希望了解项目整体的进度，应该如何选择呢？此时就需要引入另一个简单又强大的工具：燃尽图（Burn down chart）。</p>
-<a id="more"></a>
-<h2 id="什么是燃尽图"><a href="#什么是燃尽图" class="headerlink" title="什么是燃尽图"></a>什么是燃尽图</h2><p>假设项目X有5个任务，我们在预估这些任务的时候，时间安排如下：</p>
-<table>
-<thead>
-<tr>
-<th>项目名称</th>
-<th>预计用时（小时）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>任务1</td>
-<td>5</td>
-</tr>
-<tr>
-<td>任务2</td>
-<td>6</td>
-</tr>
-<tr>
-<td>任务3</td>
-<td>7</td>
-</tr>
-<tr>
-<td>任务4</td>
-<td>4</td>
-</tr>
-<tr>
-<td>任务5</td>
-<td>3</td>
-</tr>
-</tbody>
-</table>
-<p>这个任务预计需要25小时完成，考虑到可能需要处理各种突发事件留出机动时间，因此，我需要在7天内完成这个项目，项目时间定为：2018-12-01到2018-12-07。</p>
-<p>在非常理想的情况下，平均分配工作时间，到2018-12-07这一个公作日结束时刚刚好完成任务。此时的时间消耗，绘制为折线图如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-25-21.png" alt=""></p>
-<p>纵坐标为任务剩余时间，横坐标为日期，</p>
-<p>然而，在实际情况中，可能有些任务能提前完成，有些任务时间又需要延迟，实际上的剩余时间和日期的折线图可能如下图橙色曲线所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-28-33.png" alt=""></p>
-<p>这就是<code>燃尽图</code>。非常简单又非常直观。</p>
-<p>从这一幅燃尽图中，我们可以看到：在2018-12-01到2018-12-05时，我们的开发进度是领先于计划的，看起来任务应该能够提前完成，橙色曲线斜率负得越多，越陡，表示实际开发进度领先得越多。然而从2018-12-03开始，开发速度下降，到2018-12-06时进度和预期时间重合。到2018-12-07，开发进度落后于预期，任务无法如期完成。</p>
-<p>我们再来看几个例子：</p>
-<ul>
-<li>按时完成任务：</li>
-</ul>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-34-27.png" alt="按时完成任务"></p>
-<ul>
-<li>提前完成任务</li>
-</ul>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-37-05.png" alt="提前完成任务"></p>
-<ul>
-<li>没有完成任务</li>
-</ul>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-38-53.png" alt="没有完成任务"></p>
-<ul>
-<li>前期落后进度，后期加速赶上</li>
-</ul>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-40-23.png" alt="前期落后进度，后期加速赶上"></p>
-<h2 id="如何绘制燃尽图"><a href="#如何绘制燃尽图" class="headerlink" title="如何绘制燃尽图"></a>如何绘制燃尽图</h2><p>燃尽图是敏捷开发中的一个概念，不少敏捷开发的相关的项目管理系统中都能够生成燃尽图。由于燃尽图非常简单，使用Excel自带的画图功能，稍稍费一些功夫也能够正常生成。</p>
-<p>本着使用Python提高日常办公效率的考虑，我使用macOS自带的numbers表格工具 + Python来生成燃尽图。当然你也可以使用Excel来完成。其中表格用于记录任务的剩余时间，Python用于格式化任务时间并生成燃尽图。</p>
-<h3 id="表格的填写规范"><a href="#表格的填写规范" class="headerlink" title="表格的填写规范"></a>表格的填写规范</h3><p>其中表格如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-47-16.png" alt=""></p>
-<p>其中，表格的第一行是任务名称，第一列是日期。表格中间填写的数字，表示任务的剩余时间。表格的填写规则如下：</p>
-<ul>
-<li>某一格留空，表示这一天没有做这个任务。</li>
-<li>某一格为0，表示任务完成。</li>
-<li>某一格为大于0的数字，表示任务剩余的时间。</li>
-<li>不需要提前填写没有发生的日期。例如任务安排为2018-12-01到2018-12-07，今天是2018-12-06，那么不需要提前填写2018-12-07这一行。</li>
-<li>请按照日期正序排序，不要打乱日期。</li>
-</ul>
-<h3 id="分析程序的使用说明"><a href="#分析程序的使用说明" class="headerlink" title="分析程序的使用说明"></a>分析程序的使用说明</h3><p>填写好表格以后，把它保存为excel的xlsx文件。假设路径为：<code>/Users/kingname/Desktop/test.xlsx</code>（或者Windows系统保存在：<code>D:\work\test.xlsx</code>）。</p>
-<p>使用Anaconda中的Jupyter打开分析程序的ipynb文件，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-58-02.png" alt=""></p>
-<p>只需要修改这三行数据中，单引号里面的内容，其余内容不需要修改。</p>
-<p>修改完成以后，点击工具栏的<code>Kernel-Restart &amp; Run All</code>，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-17-59-36.png" alt=""></p>
-<p>静静等待2秒钟，燃尽图将会出现在页面的最下方。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-12-23-18-03-04.png" alt=""></p>
-<h2 id="获取Excel模板和源代码"><a href="#获取Excel模板和源代码" class="headerlink" title="获取Excel模板和源代码"></a>获取Excel模板和源代码</h2><p>Excel与ipynb文件地址：<a href="https://github.com/kingname/Automatic/tree/master/burndown_chart" target="_blank" rel="external">https://github.com/kingname/Automatic/tree/master/burndown_chart</a></p>
-<p>使用Jupyter打开ipynb文件可以看到分析程序。</p>
-<h2 id="附言"><a href="#附言" class="headerlink" title="附言"></a>附言</h2><p>如果你不知道Jupyter是什么，或者你没有任何编程基础，但是想尝试一些燃尽图，那么你可以添加我的公众号联系我，我会告诉你如何使用Jupyter。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在&lt;a href=&quot;https://www.kingname.info/2018/10/17/use-gantt-enhanced/&quot;&gt;《跳出任务管理的泥沼，拥抱甘特图的怀抱》&lt;/a&gt;一文中，我谈到了使用甘特图来规划任务。甘特图更多的关注每一个任务的进度上。那么如果我希望了解项目整体的进度，应该如何选择呢？此时就需要引入另一个简单又强大的工具：燃尽图（Burn down chart）。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="项目管理" scheme="https://www.kingname.info/categories/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="燃尽图" scheme="https://www.kingname.info/tags/%E7%87%83%E5%B0%BD%E5%9B%BE/"/>
-    
-      <category term="Scrum" scheme="https://www.kingname.info/tags/Scrum/"/>
     
   </entry>
   

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-07-13T05:32:27.004Z</updated>
+  <updated>2019-07-13T05:33:59.953Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://www.kingname.info/2019/07/13/python-dict/"/>
     <id>https://www.kingname.info/2019/07/13/python-dict/</id>
     <published>2019-07-13T05:30:47.000Z</published>
-    <updated>2019-07-13T05:32:27.004Z</updated>
+    <updated>2019-07-13T05:33:59.953Z</updated>
     
     <content type="html"><![CDATA[<p>在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。</p>
 <p>但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印Keys列表的时候，你就会发现B在A的后面。</p>
@@ -28,6 +28,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> 字典</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> 字典.values()</div><div class="line"></div><div class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> 字典.items()</div></pre></td></tr></table></figure>
 <p>从Python 3.6开始，字典占用内存空间的大小，视字典里面键值对的个数，只有原来的30%~95%。</p>
 <p>Python 3.6到底对字典做了什么优化呢？为了说明这个问题，我们需要先来说一说，在Python 3.5（含）之前，字典的底层原理。</p>
+<a id="more"></a>
 <p>当我们初始化一个空字典的时候，CPython的底层会初始化一个二维数组，这个数组有8行，3列，如下面的示意图所示：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">my_dict = &#123;&#125;</div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
 <p>现在，我们往字典里面添加一个数据：</p>
@@ -81,10 +82,18 @@
     <summary type="html">
     
       &lt;p&gt;在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。&lt;/p&gt;
-&lt;p&gt;但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印K
+&lt;p&gt;但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印Keys列表的时候，你就会发现B在A的后面。&lt;/p&gt;
+&lt;p&gt;不仅如此，从Python 3.6开始，下面的三种遍历操作，效率要高于Python 3.5之前：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; key &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; 字典&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; value &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; 字典.values()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; key, value &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; 字典.items()&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;从Python 3.6开始，字典占用内存空间的大小，视字典里面键值对的个数，只有原来的30%~95%。&lt;/p&gt;
+&lt;p&gt;Python 3.6到底对字典做了什么优化呢？为了说明这个问题，我们需要先来说一说，在Python 3.5（含）之前，字典的底层原理。&lt;/p&gt;
     
     </summary>
     
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

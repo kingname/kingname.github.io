@@ -344,6 +344,211 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/13/python-dict/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/13/python-dict/" class="post-title-link" itemprop="url">为什么Python 3.6以后字典有序并且效率更高？</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-13 13:30:47 / 修改时间：13:32:27" itemprop="dateCreated datePublished" datetime="2019-07-13T13:30:47+08:00">2019-07-13</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/13/python-dict/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/13/python-dict/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。</p>
+<p>但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印Keys列表的时候，你就会发现B在A的后面。</p>
+<p>不仅如此，从Python 3.6开始，下面的三种遍历操作，效率要高于Python 3.5之前：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> 字典</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> 字典.values()</div><div class="line"></div><div class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> 字典.items()</div></pre></td></tr></table></figure>
+<p>从Python 3.6开始，字典占用内存空间的大小，视字典里面键值对的个数，只有原来的30%~95%。</p>
+<p>Python 3.6到底对字典做了什么优化呢？为了说明这个问题，我们需要先来说一说，在Python 3.5（含）之前，字典的底层原理。</p>
+<p>当我们初始化一个空字典的时候，CPython的底层会初始化一个二维数组，这个数组有8行，3列，如下面的示意图所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">my_dict = &#123;&#125;</div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>现在，我们往字典里面添加一个数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'name'</span>] = <span class="string">'kingname'</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[1278649844881305901, 指向name的指针, 指向kingname的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>这里解释一下，为什么添加了一个键值对以后，内存变成了这个样子：</p>
+<p>首先我们调用Python 的<code>hash</code>函数，计算<code>name</code>这个字符串在<strong>当前运行时</strong>的hash值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>)</div><div class="line"><span class="number">1278649844881305901</span></div></pre></td></tr></table></figure>
+<p>特别注意，我这里强调了『当前运行时』，这是因为，Python自带的这个<code>hash</code>函数，和我们传统上认为的Hash函数是不一样的。Python自带的这个<code>hash</code>函数计算出来的值，只能保证在每一个运行时的时候不变，但是当你关闭Python再重新打开，那么它的值就可能会改变，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-12-21-49-44.png" alt=""></p>
+<p>假设在某一个运行时里面，<code>hash(&#39;name&#39;)</code>的值为<code>1278649844881305901</code>。现在我们要把这个数对8取余数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1278649844881305901</span> % <span class="number">8</span></div><div class="line"><span class="number">5</span></div></pre></td></tr></table></figure>
+<p>余数为5，那么就把它放在刚刚初始化的二维数组中，下标为5的这一行。由于<code>name</code>和<code>kingname</code>是两个字符串，所以底层C语言会使用两个字符串变量存放这两个值，然后得到他们对应的指针。于是，我们这个二维数组下标为5的这一行，第一个值为<code>name</code>的hash值，第二个值为<code>name</code>这个字符串所在的内存的地址（指针就是内存地址），第三个值为<code>kingname</code>这个字符串所在的内存的地址。</p>
+<p>现在，我们再来插入两个键值对：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'age'</span>] = <span class="number">26</span></div><div class="line">my_dict[<span class="string">'salary'</span>] = <span class="number">999999</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[-4234469173262486640, 指向salary的指针, 指向999999的指针],</div><div class="line">[1545085610920597121, 执行age的指针, 指向26的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[1278649844881305901, 指向name的指针, 指向kingname的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>那么字典怎么读取数据呢？首先假设我们要读取<code>age</code>对应的值。</p>
+<p>此时，Python先计算在当前运行时下面，<code>age</code>对应的Hash值是多少：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'age'</span>)</div><div class="line"><span class="number">1545085610920597121</span></div></pre></td></tr></table></figure>
+<p>现在这个hash值对8取余数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1545085610920597121</span> % <span class="number">8</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
+<p>余数为1，那么二维数组里面，下标为1的这一行就是需要的键值对。直接返回这一行第三个指针对应的内存中的值，就是<code>age</code>对应的值<code>26</code>。</p>
+<p>当你要循环遍历字典的Key的时候，Python底层会遍历这个二维数组，如果当前行有数据，那么就返回Key指针对应的内存里面的值。如果当前行没有数据，那么就跳过。所以总是会遍历整个二位数组的每一行。</p>
+<p>每一行有三列，每一列占用8byte的内存空间，所以每一行会占用24byte的内存空间。</p>
+<p>由于Hash值取余数以后，余数可大可小，所以字典的Key并不是按照插入的顺序存放的。</p>
+<blockquote>
+<p>注意，这里我省略了与本文没有太大关系的两个点：</p>
+<ol>
+<li>开放寻址，当两个不同的Key，经过Hash以后，再对8取余数，可能余数会相同。此时Python为了不覆盖之前已有的值，就会使用<code>开放寻址</code>技术重新寻找一个新的位置存放这个新的键值对。</li>
+<li>当字典的键值对数量超过当前数组长度的2/3时，数组会进行扩容，8行变成16行，16行变成32行。长度变了以后，原来的余数位置也会发生变化，此时就需要移动原来位置的数据，导致插入效率变低。</li>
+</ol>
+</blockquote>
+<p>在Python 3.6以后，字典的底层数据结构发生了变化，现在当你初始化一个空的字典以后，它在底层是这样的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">my_dict = &#123;&#125;</div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [None, None, None, None, None, None, None, None]</div><div class="line"></div><div class="line">entries = []</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>当你初始化一个字典以后，Python单独生成了一个长度为8的一维数组。然后又生成了一个空的二维数组。</p>
+<p>现在，我们往字典里面添加一个键值对：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'name'</span>] = <span class="string">'kingname'</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [None, 0, None, None, None, None, None, None]</div><div class="line"></div><div class="line">entries = [[-5954193068542476671, 指向name的指针, 执行kingname的指针]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>为什么内存会变成这个样子呢？我们来一步一步地看：</p>
+<p>在当前运行时，<code>name</code>这个字符串的hash值为<code>-5954193068542476671</code>，这个值对8取余数是1：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>)</div><div class="line"><span class="number">-5954193068542476671</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>) % <span class="number">8</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
+<p>所以，我们把<code>indices</code>这个一维数组里面，下标为1的位置修改为0。</p>
+<p>这里的0是什么意思呢？0是二位数组<code>entries</code>的索引。现在<code>entries</code>里面只有一行，就是我们刚刚添加的这个键值对的三个数据：<code>name</code>的hash值、指向<code>name</code>的指针和指向<code>kinganme</code>的指针。所以<code>indices</code>里面填写的数字0，就是刚刚我们插入的这个键值对的数据在二位数组里面的行索引。</p>
+<p>好，现在我们再来插入两条数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'address'</span>] = <span class="string">'xxx'</span></div><div class="line">my_dict[<span class="string">'salary'</span>] = <span class="number">999999</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [1, 0, None, None, None, None, 2, None]</div><div class="line"></div><div class="line">entries = [[-5954193068542476671, 指向name的指针, 执行kingname的指针],</div><div class="line">          [9043074951938101872, 指向address的指针，指向xxx的指针],</div><div class="line">          [7324055671294268046, 指向salary的指针, 指向999999的指针]</div><div class="line">         ]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>现在如果我要读取数据怎么办呢？假如我要读取<code>salary</code>的值，那么首先计算<code>salary</code>的hash值，以及这个值对8的余数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'salary'</span>)</div><div class="line"><span class="number">7324055671294268046</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'salary'</span>) % <span class="number">8</span></div><div class="line"><span class="number">6</span></div></pre></td></tr></table></figure>
+<p>那么我就去读<code>indices</code>下标为6的这个值。这个值为2.</p>
+<p>然后再去读entries里面，下标为2的这一行的数据，也就是salary对应的数据了。</p>
+<p>新的这种方式，当我要插入新的数据的时候，始终只是往<code>entries</code>的后面添加数据，这样就能保证插入的顺序。当我们要遍历字典的Keys和Values的时候，直接遍历<code>entries</code>即可，里面每一行都是有用的数据，不存在跳过的情况，减少了遍历的个数。</p>
+<p>老的方式，当二维数组有8行的时候，即使有效数据只有3行，但它占用的内存空间还是 8 <em> 24 = 192 byte。但使用新的方式，如果只有三行有效数据，那么<code>entries</code>也就只有3行，占用的空间为3 </em> 24 =72 byte，而<code>indices</code>由于只是一个一维的数组，只占用8 byte，所以一共占用 80 byte。内存占用只有原来的41%。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/08/deploy-flask-uwsgi-without-nginx/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2084,182 +2289,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/03/19/back-slash/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/03/19/back-slash/" class="post-title-link" itemprop="url">你一定在Python中遇到过的反斜杠数量问题</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-03-19 21:18:10 / 修改时间：21:20:34" itemprop="dateCreated datePublished" datetime="2019-03-19T21:18:10+08:00">2019-03-19</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/19/back-slash/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/19/back-slash/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>大家在开发Python的过程中，一定会遇到很多反斜杠的问题，很多人被反斜杠的数量搞得头大。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/03/19/back-slash/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2307,7 +2336,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">71</span>
+                    <span class="site-state-item-count">72</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

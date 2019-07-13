@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-07-08T13:38:52.071Z</updated>
+  <updated>2019-07-13T05:32:27.004Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,79 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>为什么Python 3.6以后字典有序并且效率更高？</title>
+    <link href="https://www.kingname.info/2019/07/13/python-dict/"/>
+    <id>https://www.kingname.info/2019/07/13/python-dict/</id>
+    <published>2019-07-13T05:30:47.000Z</published>
+    <updated>2019-07-13T05:32:27.004Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。</p>
+<p>但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印Keys列表的时候，你就会发现B在A的后面。</p>
+<p>不仅如此，从Python 3.6开始，下面的三种遍历操作，效率要高于Python 3.5之前：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> 字典</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> 字典.values()</div><div class="line"></div><div class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> 字典.items()</div></pre></td></tr></table></figure>
+<p>从Python 3.6开始，字典占用内存空间的大小，视字典里面键值对的个数，只有原来的30%~95%。</p>
+<p>Python 3.6到底对字典做了什么优化呢？为了说明这个问题，我们需要先来说一说，在Python 3.5（含）之前，字典的底层原理。</p>
+<p>当我们初始化一个空字典的时候，CPython的底层会初始化一个二维数组，这个数组有8行，3列，如下面的示意图所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">my_dict = &#123;&#125;</div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>现在，我们往字典里面添加一个数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'name'</span>] = <span class="string">'kingname'</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[1278649844881305901, 指向name的指针, 指向kingname的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>这里解释一下，为什么添加了一个键值对以后，内存变成了这个样子：</p>
+<p>首先我们调用Python 的<code>hash</code>函数，计算<code>name</code>这个字符串在<strong>当前运行时</strong>的hash值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>)</div><div class="line"><span class="number">1278649844881305901</span></div></pre></td></tr></table></figure>
+<p>特别注意，我这里强调了『当前运行时』，这是因为，Python自带的这个<code>hash</code>函数，和我们传统上认为的Hash函数是不一样的。Python自带的这个<code>hash</code>函数计算出来的值，只能保证在每一个运行时的时候不变，但是当你关闭Python再重新打开，那么它的值就可能会改变，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-12-21-49-44.png" alt=""></p>
+<p>假设在某一个运行时里面，<code>hash(&#39;name&#39;)</code>的值为<code>1278649844881305901</code>。现在我们要把这个数对8取余数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1278649844881305901</span> % <span class="number">8</span></div><div class="line"><span class="number">5</span></div></pre></td></tr></table></figure>
+<p>余数为5，那么就把它放在刚刚初始化的二维数组中，下标为5的这一行。由于<code>name</code>和<code>kingname</code>是两个字符串，所以底层C语言会使用两个字符串变量存放这两个值，然后得到他们对应的指针。于是，我们这个二维数组下标为5的这一行，第一个值为<code>name</code>的hash值，第二个值为<code>name</code>这个字符串所在的内存的地址（指针就是内存地址），第三个值为<code>kingname</code>这个字符串所在的内存的地址。</p>
+<p>现在，我们再来插入两个键值对：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'age'</span>] = <span class="number">26</span></div><div class="line">my_dict[<span class="string">'salary'</span>] = <span class="number">999999</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[-4234469173262486640, 指向salary的指针, 指向999999的指针],</div><div class="line">[1545085610920597121, 执行age的指针, 指向26的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[1278649844881305901, 指向name的指针, 指向kingname的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>那么字典怎么读取数据呢？首先假设我们要读取<code>age</code>对应的值。</p>
+<p>此时，Python先计算在当前运行时下面，<code>age</code>对应的Hash值是多少：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'age'</span>)</div><div class="line"><span class="number">1545085610920597121</span></div></pre></td></tr></table></figure>
+<p>现在这个hash值对8取余数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1545085610920597121</span> % <span class="number">8</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
+<p>余数为1，那么二维数组里面，下标为1的这一行就是需要的键值对。直接返回这一行第三个指针对应的内存中的值，就是<code>age</code>对应的值<code>26</code>。</p>
+<p>当你要循环遍历字典的Key的时候，Python底层会遍历这个二维数组，如果当前行有数据，那么就返回Key指针对应的内存里面的值。如果当前行没有数据，那么就跳过。所以总是会遍历整个二位数组的每一行。</p>
+<p>每一行有三列，每一列占用8byte的内存空间，所以每一行会占用24byte的内存空间。</p>
+<p>由于Hash值取余数以后，余数可大可小，所以字典的Key并不是按照插入的顺序存放的。</p>
+<blockquote>
+<p>注意，这里我省略了与本文没有太大关系的两个点：</p>
+<ol>
+<li>开放寻址，当两个不同的Key，经过Hash以后，再对8取余数，可能余数会相同。此时Python为了不覆盖之前已有的值，就会使用<code>开放寻址</code>技术重新寻找一个新的位置存放这个新的键值对。</li>
+<li>当字典的键值对数量超过当前数组长度的2/3时，数组会进行扩容，8行变成16行，16行变成32行。长度变了以后，原来的余数位置也会发生变化，此时就需要移动原来位置的数据，导致插入效率变低。</li>
+</ol>
+</blockquote>
+<p>在Python 3.6以后，字典的底层数据结构发生了变化，现在当你初始化一个空的字典以后，它在底层是这样的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">my_dict = &#123;&#125;</div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [None, None, None, None, None, None, None, None]</div><div class="line"></div><div class="line">entries = []</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>当你初始化一个字典以后，Python单独生成了一个长度为8的一维数组。然后又生成了一个空的二维数组。</p>
+<p>现在，我们往字典里面添加一个键值对：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'name'</span>] = <span class="string">'kingname'</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [None, 0, None, None, None, None, None, None]</div><div class="line"></div><div class="line">entries = [[-5954193068542476671, 指向name的指针, 执行kingname的指针]]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>为什么内存会变成这个样子呢？我们来一步一步地看：</p>
+<p>在当前运行时，<code>name</code>这个字符串的hash值为<code>-5954193068542476671</code>，这个值对8取余数是1：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>)</div><div class="line"><span class="number">-5954193068542476671</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>) % <span class="number">8</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
+<p>所以，我们把<code>indices</code>这个一维数组里面，下标为1的位置修改为0。</p>
+<p>这里的0是什么意思呢？0是二位数组<code>entries</code>的索引。现在<code>entries</code>里面只有一行，就是我们刚刚添加的这个键值对的三个数据：<code>name</code>的hash值、指向<code>name</code>的指针和指向<code>kinganme</code>的指针。所以<code>indices</code>里面填写的数字0，就是刚刚我们插入的这个键值对的数据在二位数组里面的行索引。</p>
+<p>好，现在我们再来插入两条数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'address'</span>] = <span class="string">'xxx'</span></div><div class="line">my_dict[<span class="string">'salary'</span>] = <span class="number">999999</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [1, 0, None, None, None, None, 2, None]</div><div class="line"></div><div class="line">entries = [[-5954193068542476671, 指向name的指针, 执行kingname的指针],</div><div class="line">          [9043074951938101872, 指向address的指针，指向xxx的指针],</div><div class="line">          [7324055671294268046, 指向salary的指针, 指向999999的指针]</div><div class="line">         ]</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>现在如果我要读取数据怎么办呢？假如我要读取<code>salary</code>的值，那么首先计算<code>salary</code>的hash值，以及这个值对8的余数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'salary'</span>)</div><div class="line"><span class="number">7324055671294268046</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'salary'</span>) % <span class="number">8</span></div><div class="line"><span class="number">6</span></div></pre></td></tr></table></figure>
+<p>那么我就去读<code>indices</code>下标为6的这个值。这个值为2.</p>
+<p>然后再去读entries里面，下标为2的这一行的数据，也就是salary对应的数据了。</p>
+<p>新的这种方式，当我要插入新的数据的时候，始终只是往<code>entries</code>的后面添加数据，这样就能保证插入的顺序。当我们要遍历字典的Keys和Values的时候，直接遍历<code>entries</code>即可，里面每一行都是有用的数据，不存在跳过的情况，减少了遍历的个数。</p>
+<p>老的方式，当二维数组有8行的时候，即使有效数据只有3行，但它占用的内存空间还是 8 <em> 24 = 192 byte。但使用新的方式，如果只有三行有效数据，那么<code>entries</code>也就只有3行，占用的空间为3 </em> 24 =72 byte，而<code>indices</code>由于只是一个一维的数组，只占用8 byte，所以一共占用 80 byte。内存占用只有原来的41%。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。&lt;/p&gt;
+&lt;p&gt;但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印K
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>使用uwsgi部署Flask，不使用Unix套接字连接Nginx</title>
@@ -1485,65 +1558,6 @@
     
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2018 年终总结</title>
-    <link href="https://www.kingname.info/2018/12/29/summary-2018/"/>
-    <id>https://www.kingname.info/2018/12/29/summary-2018/</id>
-    <published>2018-12-29T12:58:03.000Z</published>
-    <updated>2019-01-01T06:11:49.461Z</updated>
-    
-    <content type="html"><![CDATA[<p>2018年，我的第一本书出版了。</p>
-<p><img src="http://file.ryjiaoyu.com/SmallCover/18087823f4f8ed9ea435" alt=""></p>
-<p>离开北京，来到到杭州，加入了网易游戏伏羲人工智能实验室。</p>
-<p>在这一年里面，一共看完了21本书：</p>
-<ul>
-<li>罗贯中——《三国演义》</li>
-<li>王小波——《黄金时代》</li>
-<li>当年明月——《明朝那些事儿1-7》</li>
-<li>瑞·达利欧《原则》</li>
-<li>毛姆《月亮与六便士》</li>
-<li>Robert C. Martin——《代码整洁之道》</li>
-<li>John Sonmez——《软技能——代码之外的生成之道》</li>
-<li>尤瓦尔·赫拉利——《今日简史》</li>
-<li>汪曾祺——《生活是很好玩的》</li>
-<li>孙武——《孙子兵法》</li>
-<li>？？？——《战国策》</li>
-<li>李鑫——《数据产品经理——从零经验到令人经验》</li>
-<li>Norman Lewis——《Word Power Made Easy》</li>
-<li>刘飞——《从点子到产品 : 产品经理的价值观与方法论》</li>
-<li>李诞——《笑场》</li>
-</ul>
-<p>在LeetCode刷了九十多题：<a href="https://github.com/kingname/LeetCode" target="_blank" rel="external">https://github.com/kingname/LeetCode</a></p>
-<p>写了13篇博客。</p>
-<p>2019年1月，我的第二本书即将出版。</p>
-<p>2019年新年目标：</p>
-<ul>
-<li>在2019-12-31之前，读完12本书，并为每一本书作出思维导图。</li>
-<li>在2019-12-31之前，微信公众号的关注量超过5000人。</li>
-<li>在2019-06-30之前，在Medium上发布3篇技术文章。</li>
-<li>在2019-10-31之前，练习英语听力和复述能力，做到150词内的句子，听一次就能复述成功。</li>
-<li>在2019-03-31之前，学会布鲁斯口琴吹气压音，8月31日之前脱稿演奏卡农。12月31日脱稿演奏未闻花名。</li>
-<li>在2019-07-31之前，使用golang完成一个记单词的网站。</li>
-<li>在2019-09-30之前，认识至少5个新朋友，并通过与他们聊天练习聊天技巧，努力成为一个会聊天的人。</li>
-<li>在2019-10-01之前，累计跑步108公里。</li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;2018年，我的第一本书出版了。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;http://file.ryjiaoyu.com/SmallCover/18087823f4f8ed9ea435&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;离开北京，来到到杭州，加入了网易游戏伏羲人工智能实验室。&lt;/
-    
-    </summary>
-    
-      <category term="总结" scheme="https://www.kingname.info/categories/%E6%80%BB%E7%BB%93/"/>
-    
-    
-      <category term="总结" scheme="https://www.kingname.info/tags/%E6%80%BB%E7%BB%93/"/>
     
   </entry>
   

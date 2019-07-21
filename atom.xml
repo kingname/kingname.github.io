@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-07-13T05:33:59.953Z</updated>
+  <updated>2019-07-21T11:02:24.875Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,49 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：如何使用JavaScript移除少数派的付费内容</title>
+    <link href="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/"/>
+    <id>https://www.kingname.info/2019/07/21/delete-pay-content-by-js/</id>
+    <published>2019-07-21T11:01:34.000Z</published>
+    <updated>2019-07-21T11:02:24.875Z</updated>
+    
+    <content type="html"><![CDATA[<p>少数派（<a href="https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。" target="_blank" rel="external">https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-32-55.png" alt=""></p>
+<p>这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。</p>
+<p>作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。</p>
+<p>从网页上删除这些付费内容的原理非常简单，在网页上右键，点击“检查”，打开Chrome的开发者工具，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-36-21.png" alt=""></p>
+<p>点击箭头所指向的图标，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-37-28.png" alt=""></p>
+<p>然后在网页上任意选中一个付费内容，此时开发者工具里面将会自动变成下图所示的样子：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-38-53.png" alt=""></p>
+<p>其中方框框住的这个<code>img</code>标签对应了<code>付费内容</code>这个小图标，因此我们可以使用这个标签来进行定位。</p>
+<p>现在视线在HTML代码区域往上走，可以看到<code>dl</code>标签</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-40-31.png" alt=""></p>
+<p>每一个文章块就对应一个<code>dl</code>标签。如果我们在上面右键删除这个标签，就会发现对应的付费条目不见了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-41-45.png" alt=""></p>
+<p>但这种做法每次只能删除一条付费内容，有没有办法把所有付费内容全部删除呢？答案就是使用JavaScript：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line"></div><div class="line"><span class="keyword">while</span>(pay_tag_list.length &gt; <span class="number">0</span>)&#123;</div><div class="line">	pay_tag = pay_tag_list[<span class="number">0</span>]</div><div class="line">    dl_tag = pay_tag.parentNode.parentNode.parentNode</div><div class="line">	div_tag = dl_tag.parentNode</div><div class="line">	div_tag.removeChild(dl_tag)</div><div class="line">    pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>复制上面这一段代码到开发者工具的Console标签页并粘贴，敲下回车键，付费内容就消失了，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-18-02-31.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;少数派（&lt;a href=&quot;https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https:/
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="https://www.kingname.info/categories/JavaScript/"/>
+    
+    
+      <category term="JavaScript" scheme="https://www.kingname.info/tags/JavaScript/"/>
+    
+      <category term="少数派" scheme="https://www.kingname.info/tags/%E5%B0%91%E6%95%B0%E6%B4%BE/"/>
+    
+  </entry>
   
   <entry>
     <title>为什么Python 3.6以后字典有序并且效率更高？</title>
@@ -1534,39 +1577,6 @@
       <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
     
       <category term="Airtest" scheme="https://www.kingname.info/tags/Airtest/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>为什么Python中“2 == 2 &gt; 1”结果为True？</title>
-    <link href="https://www.kingname.info/2019/01/10/chained-comparisons/"/>
-    <id>https://www.kingname.info/2019/01/10/chained-comparisons/</id>
-    <published>2019-01-10T14:00:04.000Z</published>
-    <updated>2019-01-10T14:16:01.668Z</updated>
-    
-    <content type="html"><![CDATA[<p>在Python中，你可能会发现这样一个奇怪的现象：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">2</span> == <span class="number">2</span> &gt; <span class="number">1</span></div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>(<span class="number">2</span> == <span class="number">2</span>) &gt; <span class="number">1</span></div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">2</span> == (<span class="number">2</span> &gt; <span class="number">1</span>)</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p>为什么会出现<code>2 == 2 &gt; 1</code>的结果为<code>True</code>？如果说这是运算符的优先级问题，那么后两个式子为什么又都是<code>False</code>？</p>
-<p>实际上这涉及到了Python的<code>链式对比(Chained Comparisons)</code>。在其他语言中，有一个变量<code>x</code>，如果要判断x是否大于1，小于5，可能需要这样写代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">if (1 &lt; x and x &lt; 5)</div></pre></td></tr></table></figure>
-<p>但是在Python中，可以这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="number">1</span> &lt; x &lt; <span class="number">5</span></div></pre></td></tr></table></figure>
-<p>Python能够正确处理这个链式对比的逻辑。</p>
-<p>回到最开始的问题上，<code>==</code>等于符号和<code>&lt;</code>小于符号，本质没有什么区别。所以实际上<code>2==2&gt;1</code>也是一个链式对比的式子，它相当于<code>2==2 and 2&gt;1</code>。此时，这个式子就等价于<code>True and True</code>。所以返回的结果为True。</p>
-<p>关于链式对比，可以看官方文档：<a href="https://docs.python.org/3/reference/expressions.html#comparisons" target="_blank" rel="external">https://docs.python.org/3/reference/expressions.html#comparisons</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在Python中，你可能会发现这样一个奇怪的现象：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;li
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-08-01T14:08:06.969Z</updated>
+  <updated>2019-08-15T13:33:36.840Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>4种方法解决MongoDB游标超时的问题</title>
+    <link href="https://www.kingname.info/2019/08/15/solve-cursor-timeout/"/>
+    <id>https://www.kingname.info/2019/08/15/solve-cursor-timeout/</id>
+    <published>2019-08-15T13:32:31.000Z</published>
+    <updated>2019-08-15T13:33:36.840Z</updated>
+    
+    <content type="html"><![CDATA[<p>当我们使用Python从MongoDB里面读取数据时，可能会这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line">handler = pymongo.MongoClient().db.col</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> handler.find():</div><div class="line">    parse_data(row)</div></pre></td></tr></table></figure>
+<p>短短4行代码，读取MongoDB里面的每一行数据，然后传入<code>parse_data</code>做处理。处理完成以后再读取下一行。逻辑清晰而简单，能有什么问题？只要parse_data(row)不报错，这一段代码就完美无缺。</p>
+<p>但事实并非这样。</p>
+<a id="more"></a>
+<p>你的代码可能会在<code>for row in handler.find()</code>这一行报错。它的原因，说来话长。</p>
+<p>要解释这个问题，我们首先就需要知道，<code>handler.find()</code>返回的并不是数据库里面的数据，而是一个<code>游标（cursor）对象</code>。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-14-21-46-36.png" alt=""></p>
+<p>只有当你使用for循环开始迭代它的时候，游标才会真正去数据库里面读取数据。</p>
+<p>但是，如果每一次循环都连接数据库，那么网络连接会浪费大量时间。</p>
+<p>所以pymongo会一次性获取100行，<code>for row in handler.find()</code>循环第一次的时候，它会连上MongoDB，读取一百条数据，缓存到内存中。于是第2-100次循环，数据都是直接从内存里面获取，不会再连接数据库。</p>
+<p>当循环进行到底101次的时候，再一次连接数据库，再读取第101-200行内容……</p>
+<p>这个逻辑非常有效地降低了网络I/O耗时。</p>
+<p>但是，MongoDB默认游标的超时时间是10分钟。10分钟之内，必需再次连接MongoDB读取内容刷新游标时间，否则，就会导致游标超时报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pymongo.errors.CursorNotFound: cursor id 211526444773 not found</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-14-21-47-33.png" alt=""></p>
+<p>所以，回到最开始的代码中来，如果<code>parse_data</code>每次执行的时间超过6秒钟，那么它执行100次的时间就会超过10分钟。此时，当程序想读取第101行数据的时候，程序就会报错。</p>
+<p>为了解决这个问题，我们有4种办法：</p>
+<ol>
+<li>修改MongoDB的配置，延长游标超时时间，并重启MongoDB。由于生产环境的MongoDB不能随便重启，所以这个方案虽然有用，但是排除。</li>
+<li>一次性把数据全部读取下来，再做处理：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">all_data = [row <span class="keyword">for</span> row <span class="keyword">in</span> handler.find()]</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> all_data:</div><div class="line">    parse(row)</div></pre></td></tr></table></figure>
+<p>这种方案的弊端也很明显，如果数据量非常大，你不一定能全部放到内存里面。即使能够全部放到内存中，但是列表推导式遍历了所有数据，紧接着for循环又遍历一次，浪费时间。</p>
+<ol>
+<li>让游标每次返回的数据小于100条，这样消费完这一批数据的时间就会小于10分钟：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># 每次连接数据库，只返回50行数据</span></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> handler.find().batch_size(<span class="number">50</span>): </div><div class="line">    parse_data(row)</div></pre></td></tr></table></figure>
+<p>但这种方案会增加数据库的连接次数，从而增加I/O耗时。</p>
+<ol>
+<li>让游标永不超时。通过设定参数<code>no_cursor_timeout=True</code>，让游标永不超时：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">cursor = handler.find(no_cursor_timeout=<span class="keyword">True</span>)</div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> cursor:</div><div class="line">    parse_data(row)</div><div class="line">cursor.close()  <span class="comment"># 一定要手动关闭游标</span></div></pre></td></tr></table></figure>
+<p>然而这个操作非常危险，因为如果你的Python程序因为某种原因意外停止了，这个游标就再也无法关闭了！除非重启MongoDB，否则这些游标会一直留在MongoDB上，占用资源。</p>
+<p>当然可能有人会说，使用<code>try...except</code>把读取数据的地方包住，只要抛出了异常，在处理异常的时候关闭游标即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">cursor = handler.find(no_cursor_timeout=<span class="keyword">True</span>)</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> cursor:</div><div class="line">        parse_data(row)</div><div class="line"><span class="keyword">except</span> Exception:</div><div class="line">    parse_exception()</div><div class="line"><span class="keyword">finally</span>:</div><div class="line">    cursor.close()  <span class="comment"># 一定要手动关闭游标</span></div></pre></td></tr></table></figure>
+<p>其中<code>finally</code>里面的代码，无论有没有异常，都会执行。</p>
+<p>但这样写会让代码非常难看。为了解决这个问题，我们可以使用游标的上下文管理器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> handler.find(no_cursor_timeout=<span class="keyword">True</span>) <span class="keyword">as</span> cursor:</div><div class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> cursor:</div><div class="line">        parse_data(row)</div></pre></td></tr></table></figure>
+<p>只要程序退出了with的缩进，游标自动就会关闭。如果程序中途报错，游标也会关闭。</p>
+<p>它的原理可以用下面两段代码来解释：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.x = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">echo</span><span class="params">(self)</span>:</span></div><div class="line">        print(self.x)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'进入上下文'</span>)</div><div class="line">        <span class="keyword">return</span> self</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, *args)</span>:</span></div><div class="line">        print(<span class="string">'退出上下文'</span>)</div><div class="line">        </div><div class="line"><span class="keyword">with</span> Test() <span class="keyword">as</span> t:</div><div class="line">    t.echo()</div><div class="line">print(<span class="string">'退出缩进'</span>)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-14-21-58-00.png" alt=""></p>
+<p>接下来在<code>with</code>的缩进里面人为制造异常：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.x = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">echo</span><span class="params">(self)</span>:</span></div><div class="line">        print(self.x)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__enter__</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'进入上下文'</span>)</div><div class="line">        <span class="keyword">return</span> self</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__exit__</span><span class="params">(self, *args)</span>:</span></div><div class="line">        print(<span class="string">'退出上下文'</span>)</div><div class="line">        </div><div class="line"><span class="keyword">with</span> Test() <span class="keyword">as</span> t:</div><div class="line">    t.echo()</div><div class="line">    <span class="number">1</span> + <span class="string">'a'</span>  <span class="comment"># 这里一定会报错</span></div><div class="line">print(<span class="string">'退出缩进'</span>)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-14-21-48-58.png" alt=""></p>
+<p>无论在<code>with</code>的缩进里面发生了什么，<code>Test</code>这个类中的<code>__exit__</code>里面的代码始终都会运行。</p>
+<p>我们来看看pymongo的游标对象里面，<code>__exit__</code>是怎么写的，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-14-21-49-46.png" alt=""></p>
+<p>可以看到，这里正是关闭游标的操作。</p>
+<p>因此，如果我们使用上下文管理器，就可以放心大胆地使用<code>no_cursor_timeout=True</code>参数了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;当我们使用Python从MongoDB里面读取数据时，可能会这样写代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; pymongo&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;handler = pymongo.MongoClient().db.col&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; row &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; handler.find():&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    parse_data(row)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;短短4行代码，读取MongoDB里面的每一行数据，然后传入&lt;code&gt;parse_data&lt;/code&gt;做处理。处理完成以后再读取下一行。逻辑清晰而简单，能有什么问题？只要parse_data(row)不报错，这一段代码就完美无缺。&lt;/p&gt;
+&lt;p&gt;但事实并非这样。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
+    
+  </entry>
   
   <entry>
     <title>从Python源代码里面证明你的猜想</title>
@@ -1384,63 +1465,6 @@
     
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在Airtest中如何使用无线模式控制手机</title>
-    <link href="https://www.kingname.info/2019/01/28/wireless-mode-of-poco/"/>
-    <id>https://www.kingname.info/2019/01/28/wireless-mode-of-poco/</id>
-    <published>2019-01-28T13:48:20.000Z</published>
-    <updated>2019-01-28T14:08:30.839Z</updated>
-    
-    <content type="html"><![CDATA[<p>在<a href="https://www.kingname.info/2019/01/19/use-airtest/">使用Airtest超快速开发App爬虫</a>文章的最后，我们留了一个尾巴：如何启动Airtest的无线模式，不用USB线就能控制手机？</p>
-<p>本文将会讲到具体的做法。做法分为两种：第一种是在Airtest的IDE中控制手机。第二种是在Python代码里面控制远程手机。</p>
-<a id="more"></a>
-<h2 id="启动开启手机上的adb端口"><a href="#启动开启手机上的adb端口" class="headerlink" title="启动开启手机上的adb端口"></a>启动开启手机上的adb端口</h2><p>无论使用哪种方式，要远程控制手机，就需要首先把手机上的adb端口打开。这一步必需先用USB线把手机连上电脑。</p>
-<p>在终端里面执行命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb tcpip 48887</div></pre></td></tr></table></figure>
-<p>其中的端口号48887你可以自行设定为其他的端口号，但不能和已有的端口冲突。</p>
-<p>命令执行完成以后，你就可以拔下USB线了。接下来就是远程控制手机。</p>
-<h2 id="在AirtestIDE中无线遥控手机"><a href="#在AirtestIDE中无线遥控手机" class="headerlink" title="在AirtestIDE中无线遥控手机"></a>在AirtestIDE中无线遥控手机</h2><p>打开Airtest，点击下图红框框住的 remote connection:</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-01-28-21-56-01.png" alt=""></p>
-<p>在弹出来的输入框中，输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb connect 手机IP:端口</div></pre></td></tr></table></figure>
-<p>其中手机的IP你可以在无线路由器中找到，也可以在手机的系统设置中找到。端口就是上一条命令设定的端口。</p>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb connect 192.168.0.102:48887</div></pre></td></tr></table></figure>
-<p>如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-01-28-21-57-21.png" alt=""></p>
-<p>点击<code>connect</code>，此时手机就会在上方的 Device列表中出现。双击它就可以无线连接手机并看到手机屏幕了。</p>
-<h2 id="在Python中控制手机"><a href="#在Python中控制手机" class="headerlink" title="在Python中控制手机"></a>在Python中控制手机</h2><p>首先说明，Airtest的官方文档有问题，如果你跟着文档来写代码，一定会失败。</p>
-<p>官方文档中，在<a href="https://airtest.readthedocs.io/zh_CN/latest/README_MORE.html#connect-android-device" target="_blank" rel="external">https://airtest.readthedocs.io/zh_CN/latest/README_MORE.html#connect-android-device</a>有一段介绍如何连接远程安卓手机的例子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">本地设备</div><div class="line"><span class="comment"># connect a remote device using custom params</span></div><div class="line">connect_device(<span class="string">"android://adbhost:adbport/1234566?cap_method=javacap&amp;touch_method=adb"</span>)</div></pre></td></tr></table></figure>
-<p>这个代码看起来，你可能会把Python代码写为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> airtest.core.api <span class="keyword">import</span> *</div><div class="line">device_1 = connect_device(<span class="string">'android://192.168.0.100:48887/手机串号?cap_method=javacap&amp;touch_method=adb'</span>)</div></pre></td></tr></table></figure>
-<p>如果你这样写，<strong>你一定无法连上手机</strong>。</p>
-<p>正确的代码为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">from airtest.core.api import *</div><div class="line"></div><div class="line">device_1 = connect_device(&apos;android:///192.168.0.100:48887?cap_method=javacap&amp;touch_method=adb&apos;)</div></pre></td></tr></table></figure>
-<p>只有按我这里的写法才能正确控制手机。如下面的gif所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/correct_method_of_connect.gif" alt=""></p>
-<p>动图中涉及到的完整代码为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> airtest.core.api <span class="keyword">import</span> *</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> poco.drivers.android.uiautomation <span class="keyword">import</span> AndroidUiautomationPoco</div><div class="line"></div><div class="line">device_1 = connect_device(<span class="string">'android:///192.168.0.100:48887?cap_method=javacap&amp;touch_method=adb'</span>)</div><div class="line"></div><div class="line">poco = AndroidUiautomationPoco(device_1, use_airtest_input=<span class="keyword">True</span>, screenshot_each_action=<span class="keyword">False</span>)</div><div class="line"></div><div class="line"></div><div class="line">poco(text=<span class="string">"知乎"</span>).click()</div><div class="line">poco(name=<span class="string">"com.zhihu.android:id/input"</span>).click()</div><div class="line">poco(name=<span class="string">"com.zhihu.android:id/input"</span>).set_text(<span class="string">'古剑奇谭三'</span>)</div><div class="line"></div><div class="line">time.sleep(<span class="number">2</span>)</div><div class="line"></div><div class="line"></div><div class="line">poco(name=<span class="string">'com.zhihu.android:id/magi_title'</span>, textMatches=<span class="string">'^古剑奇谭三.*$'</span>).click()</div><div class="line">poco.swipe([<span class="number">0.5</span>, <span class="number">0.8</span>], [<span class="number">0.5</span>, <span class="number">0.2</span>])</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在&lt;a href=&quot;https://www.kingname.info/2019/01/19/use-airtest/&quot;&gt;使用Airtest超快速开发App爬虫&lt;/a&gt;文章的最后，我们留了一个尾巴：如何启动Airtest的无线模式，不用USB线就能控制手机？&lt;/p&gt;
-&lt;p&gt;本文将会讲到具体的做法。做法分为两种：第一种是在Airtest的IDE中控制手机。第二种是在Python代码里面控制远程手机。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-      <category term="Airtest" scheme="https://www.kingname.info/tags/Airtest/"/>
     
   </entry>
   

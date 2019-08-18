@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-08-15T13:33:36.840Z</updated>
+  <updated>2019-08-18T01:31:54.699Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,110 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>回《驳 &lt;Python正则表达式，请不要再用re.compile了！！！&gt;》</title>
+    <link href="https://www.kingname.info/2019/08/18/dont-use-re-compile-again/"/>
+    <id>https://www.kingname.info/2019/08/18/dont-use-re-compile-again/</id>
+    <published>2019-08-17T16:10:03.000Z</published>
+    <updated>2019-08-18T01:31:54.699Z</updated>
+    
+    <content type="html"><![CDATA[<p>知乎用户<a href="https://www.zhihu.com/people/li-zhe-ao/posts" target="_blank" rel="external">@Manjusaka
+</a>在阅读了我的文章<a href="https://zhuanlan.zhihu.com/p/70680488" target="_blank" rel="external">《Python正则表达式，请不要再用re.compile了！！！》</a>以后，写了一篇驳文<a href="https://zhuanlan.zhihu.com/p/78265675" target="_blank" rel="external">《驳 <python正则表达式，请不要再用re.compile了！！！>》</python正则表达式，请不要再用re.compile了！！！></a></p>
+<p>今天，我在这里回应一下这篇驳文。首先标题里面，我用的是<code>回</code>，意为回复，而不是继续驳斥@Manjusaka的文章。因为没有什么好驳斥的，他的观点没有什么问题。</p>
+<p>首先说明，我自己在公司的代码里面，也会使用<code>re.compile</code>。但是，我现在仍然坚持我的观点，让看这篇文章的人，不要用<code>re.compile</code>。</p>
+<a id="more"></a>
+<h2 id="你真的在意这点性能？"><a href="#你真的在意这点性能？" class="headerlink" title="你真的在意这点性能？"></a>你真的在意这点性能？</h2><p>在公司里面，我使用<code>re.compile</code>的场景是这样的：</p>
+<p>每两小时从10亿条字符串中，筛选出所有不符合特定正则表达式的字符串。</p>
+<p>这个程序可以简化为如下结构：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">regex_list = [<span class="string">'恭喜玩家：(.*?)获得'</span>, <span class="string">'欢迎(.*?)回家'</span>, <span class="string">'组队三缺一'</span>]</div><div class="line">sentence_list = [<span class="string">'字符串1'</span>, <span class="string">'字符串2'</span>, ..., <span class="string">'字符串10亿'</span>]</div><div class="line">useful_sentence = []</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentence_list:</div><div class="line">    <span class="keyword">for</span> regex <span class="keyword">in</span> regex_list:</div><div class="line">        <span class="keyword">if</span> re.search(regex, sentence):</div><div class="line">            <span class="keyword">break</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        useful_sentence.append(sentence)</div></pre></td></tr></table></figure>
+<p>在这个场景下面，对于10亿个字符串，3个正则表达式，需要循环30亿次。虽然读取正则表达式缓存的时间很短，假设只有1毫秒，那么也会浪费833小时。为了实现2小时内处理10亿条数据，我做了很多优化，其中之一就是提前<code>re.compile</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">regex_list = [<span class="string">'恭喜玩家：(.*?)获得'</span>, <span class="string">'欢迎(.*?)回家'</span>, <span class="string">'组队三缺一'</span>]</div><div class="line">sentence_list = [<span class="string">'字符串1'</span>, <span class="string">'字符串2'</span>, ..., <span class="string">'字符串10亿'</span>]</div><div class="line">compiled_regex_list = [re.compile(x) <span class="keyword">for</span> x <span class="keyword">in</span> regex_list]</div><div class="line">useful_sentence = []</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentence_list:</div><div class="line">    <span class="keyword">for</span> regex <span class="keyword">in</span> compiled_regex_list:</div><div class="line">        <span class="keyword">if</span> regex.search(sentence):</div><div class="line">            <span class="keyword">break</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        useful_sentence.append(sentence)</div></pre></td></tr></table></figure>
+<p>在这样的场景下，这样的数据量级下面，你是用<code>re.compile</code>，当然可以。</p>
+<p>然而，你日常接触到的工作，都是这个量级吗？知乎上流行一句话：</p>
+<blockquote>
+<p>抛开剂量谈毒性，都是耍流氓。</p>
+</blockquote>
+<p>同样的，在数据处理上也适用：</p>
+<blockquote>
+<p>抛开量级谈性能差异，都是耍流氓</p>
+</blockquote>
+<p>处理几百条数据，还需要担心读取缓存字典的这点小小的性能开销？</p>
+<p>我在另一篇文章<a href="https://zhuanlan.zhihu.com/p/73426505" target="_blank" rel="external">为什么Python 3.6以后字典有序并且效率更高？</a>中提到，从Python 3.6开始，字典不会再提前申请更多空间了，同时也变得有序了，作为代价就是从字典读取值的过程多了一步。多出来的这一步实际上也会有性能开销，因为它需要先查询<code>indices</code>，然后再查询<code>entries</code>。为什么Python愿意放弃性能而要让字典有序？因为新的实现方式，在整体迭代、空间利用率上面都更高。</p>
+<h2 id="维护自文档性"><a href="#维护自文档性" class="headerlink" title="维护自文档性"></a>维护自文档性</h2><p>回到正则表达式的例子来，Python区别于其他语言的一个非常重要的点是什么？是它的自文档性。</p>
+<p>网上有这样一个段子：</p>
+<blockquote>
+<p>问：如何把伪代码改写为Python代码？<br>答：把.txt改成.py即可。</p>
+</blockquote>
+<p>Python的自文档性非常好，即便完全不懂编程的人，看到Python的代码，也能猜的出代码想实现什么功能。</p>
+<p>请大家对比下面两种写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re.findall(<span class="string">'密码: (.*?)$'</span>, sentence)</div></pre></td></tr></table></figure>
+<p>和</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">regex = re.compile(<span class="string">'密码: (.*?)$'</span>)</div><div class="line">regex.findall(sentence)</div></pre></td></tr></table></figure>
+<p>如果让一个完全不会编程的人来看，他看到第一段代码，会猜测：“findall是查找全部，这段代码可能是要从sentence找什么东西”。</p>
+<p>而如果让他看第二段代码，他肯定会先问一句：“compile？编译？什么是编译？编写翻译吗？”</p>
+<p>而对于刚刚学编程的人来说，如果他看的Python正则表达式入门的文档里面用了<code>re.compile</code>，他也会很疑惑，为什么要<code>compile</code>？编译成了什么东西？为什么不能直接查询？于是新人可能会过早去研究底层的东西。</p>
+<p>但如果他看的文章直接是<code>re.findall</code>，那么语义非常明确：<code>正则表达式.查询所有</code>，一目了然，轻轻松松就能理解并学会。</p>
+<h2 id="以官方文档的实例入门"><a href="#以官方文档的实例入门" class="headerlink" title="以官方文档的实例入门"></a>以官方文档的实例入门</h2><p>当我们学习一门新的语言的时候，第一应该参考的就是它的官方文档。在正则表达式官方文档<a href="https://docs.python.org/3/library/re.html#finding-all-adverbs" target="_blank" rel="external">https://docs.python.org/3/library/re.html#finding-all-adverbs</a>的例子中，无论是<code>search</code>还是<code>findall</code>都是使用<code>re.xxx</code>的形式。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-17-22-57-21.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-17-22-57-43.png" alt=""></p>
+<p>所以网上那些首先使用<code>pattern = re.compile</code>，再<code>pattern.xxx</code>的人，要不就是直接从其他语言把先<code>compile</code>再查询的思维定势带到了Python中，要不就是做正则表达式调优做太久了，思维僵化了，一抬手就是<code>re.compile</code>。</p>
+<h2 id="面向接口编程还是面向人类编程？"><a href="#面向接口编程还是面向人类编程？" class="headerlink" title="面向接口编程还是面向人类编程？"></a>面向接口编程还是面向人类编程？</h2><p>在我文章的评论里面，有人说，应该面向接口编程，而不是面向实现编程。</p>
+<p>对这些人，我想跟你们讲：你们对面向接口编程，理解得太狭隘了！</p>
+<p>我们来看看，在Python著名的http库<code>requests</code>出来之前，使用<code>urllib2</code>发起一个请求是怎么写的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> urllib2</div><div class="line">gh_url = <span class="string">'https://api.github.com'</span></div><div class="line">req = urllib2.Request(gh_url)</div><div class="line">password_manager = urllib2.HTTPPasswordMgrWithDefaultRealm()</div><div class="line">password_manager.add_password(<span class="keyword">None</span>, gh_url, <span class="string">'user'</span>, <span class="string">'pass'</span>)</div><div class="line">auth_manager = urllib2.HTTPBasicAuthHandler(password_manager)</div><div class="line">opener = urllib2.build_opener(auth_manager)</div><div class="line">urllib2.install_opener(opener)</div><div class="line">handler = urllib2.urlopen(req)</div></pre></td></tr></table></figure>
+<p>有了<code>requests</code>以后，实现同样的功能，我们是这样写的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line">r = requests.get(<span class="string">'https://api.github.com'</span>, auth=(<span class="string">'user'</span>, <span class="string">'pass'</span>))</div></pre></td></tr></table></figure>
+<p>大家自己品位一下，<code>req = urllib2.Request(gh_url)</code>如果类比为<code>pattern = re.compile(&#39;xxxx&#39;)</code>，<code>handler = urllib2.urlopen(req)</code>类比为<code>pattern.findall(sentence)</code> 那么，<code>requests.get(xxx)</code>就是<code>re.findall</code>。</p>
+<p>为什么我们现在愿意使用<code>requests</code>而不愿意使用<code>urllib2</code>？</p>
+<p>因为<code>requests</code>是<strong>for human</strong>，而<code>urllib</code>是<code>for interface</code>.</p>
+<h2 id="不是问题的问题"><a href="#不是问题的问题" class="headerlink" title="不是问题的问题"></a>不是问题的问题</h2><p>在评论里面，竟然有人质疑我使用<code>re.findall</code>，正则表达式不好维护？</p>
+<p>@Manjusaka竟然举出了下面这样的例子：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-17-23-24-58.png" alt=""></p>
+<p>为什么使用<code>re.findall</code>，就一定要把正则表达式复制粘贴很多遍？</p>
+<p>我单独定义一个文件不行吗：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># regex_str.py</span></div><div class="line"></div><div class="line">NAME_REGEX = <span class="string">'name:(.*?),'</span></div><div class="line">AGE_REGEX = <span class="string">'age:(\d+)'</span></div><div class="line">ADDRESS_REGEX = <span class="string">'address:(.*?),'</span></div></pre></td></tr></table></figure>
+<p>然后我要使用正则表达式的地方直接导入进来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> regex_str</div><div class="line"></div><div class="line">name = re.findall(regex_str.NAME_REGEX, sentence)</div><div class="line">age = re.findall(regex_str.AGE_REGEX, sentence)</div></pre></td></tr></table></figure>
+<p>请问哪里不好维护了？根本不会出现@Manjusaka说的那种情况。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我的观点如下：</p>
+<ol>
+<li>re.compile很重要，也有用。但是大多数时候你不需要使用它。</li>
+<li>对于初学者，请直接使用<code>re.findall</code> <code>re.search</code>，不要使用<code>re.compile</code>。</li>
+<li>对于有经验的工程师，在开发项目的时候，请首先使用<code>re.findall</code> <code>re.search</code>等等上层函数，直到你需要考虑优化正则表达式查询性能的时候，再考虑先<code>re.compile</code>。因为很多时候，你的代码性能，还不至于需要靠几行<code>re.compile</code>来提高。</li>
+<li>有人问正则表达式默认缓存512条，这个数字没有写在文档里面，如果哪天改了怎么办？我的回答是：看看你写过的代码，涉及到的正则表达式有几次超过了100条？</li>
+<li>正则表达式基于DFA，在它的原理上，compile这一步确实是必需的。但这并不意味着，在写代码的时候，我们一定要自己手动写compile. 毕竟封装、抽象才是高级语言的一大特征，直接。在其他编程语言里面，没有把compile和查询封装成一个整体接口，但是在Python里面这样做了。那么我们就应该用这个更上层的接口。而不是手动compile再查询。</li>
+<li>为什么Java程序员常常加班，而Python程序员常常提前完成任务？正是因为这种Language Specific的特性提高了生产效率，屏蔽了前期不需要太早关心的实现细节。如果抱着写代码要语言无关，要通用而故意放弃了一些语言特性，那为什么不直接写1010？那才是真正的语言无关，所有语言都是建立于二进制的1010上的。</li>
+</ol>
+<h2 id="多说一句"><a href="#多说一句" class="headerlink" title="多说一句"></a>多说一句</h2><p>以下内容与本次讨论的re.compile无关。</p>
+<p>@Manjusaka给出了一个compile需要3秒钟的大型正则表达式，并以此作为例子说明re.compile的合理性。</p>
+<p>首先这种情况下，确实需要提前re.compile。</p>
+<p>但我所想表达的是，在这种情况下，就不应该使用正则表达式。既然要做Redis的语法校验，那么就应该使用有限状态机。这种使用很多的f表达式拼出来的正则表达式，才是真正的难以维护，难以阅读。</p>
+<p>否则为什么里面需要用一个csv文件来存放命令呢？为什么不直接写在正则表达式里面呢？使用CSV文件每行一个命令尚且可以理解，但是<code>SLOT</code>/<code>SLOTS</code>/<code>NODE</code>/<code>NEWKWY</code>这些正则表达式，可就说不过去了。或条件连接的每一段都要加上这些东西，如果直接写进去，这个正则表达式你们自己都看不下去了，所以才会需要使用拼接的方式生成。</p>
+<p>我在读这段代码的时候，首先看到正则表达式里面的<code>t[xxx]</code>，会先去找<code>t</code>是什么东西，发现t是一个字典，字典是在<code>commands_csv_loader.py</code>中生成的，然后去到这个文件里面，发现它读的是一个存放Redis命令的CSV文件。然后去项目根目录读取这个csv文件的内容，知道了它的结构，于是推测出t的结构。然后再回到正则表达式里面，继续看这个超大的正则表达式。整个过程会非常费时间和脑子。</p>
+<p>但是，我又不能直接打印REDIS_COMMANDS这个变量，因为它多且乱，不同命令长短不一，拼出来以后再打印出来根本没法看。</p>
+<p>这个正则表达式只有两位维护者知道什么意思，如果别人想贡献新的Redis命令，那么理解这个超大正则表达式都需要花很久的时间。</p>
+<p>如果换成有限状态机，并且t使用Python的data class来表示，而不是使用字典，那么就会简洁很多。有限状态机的一个特点是，只需要关注当前状态、转移条件和目标状态，可能一开始写起来有点麻烦，但是以后维护和新增，都是直接定位目标，直接修改，不用担心会影响不想干的其他地方。</p>
+<p>算上维护时间，正则表达式真是一个非常糟糕的方式。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;知乎用户&lt;a href=&quot;https://www.zhihu.com/people/li-zhe-ao/posts&quot;&gt;@Manjusaka
+&lt;/a&gt;在阅读了我的文章&lt;a href=&quot;https://zhuanlan.zhihu.com/p/70680488&quot;&gt;《Python正则表达式，请不要再用re.compile了！！！》&lt;/a&gt;以后，写了一篇驳文&lt;a href=&quot;https://zhuanlan.zhihu.com/p/78265675&quot;&gt;《驳 &lt;Python正则表达式，请不要再用re.compile了！！！&gt;》&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;今天，我在这里回应一下这篇驳文。首先标题里面，我用的是&lt;code&gt;回&lt;/code&gt;，意为回复，而不是继续驳斥@Manjusaka的文章。因为没有什么好驳斥的，他的观点没有什么问题。&lt;/p&gt;
+&lt;p&gt;首先说明，我自己在公司的代码里面，也会使用&lt;code&gt;re.compile&lt;/code&gt;。但是，我现在仍然坚持我的观点，让看这篇文章的人，不要用&lt;code&gt;re.compile&lt;/code&gt;。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="正则表达式" scheme="https://www.kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>4种方法解决MongoDB游标超时的问题</title>
@@ -1421,50 +1525,6 @@
       <category term="Selenium" scheme="https://www.kingname.info/tags/Selenium/"/>
     
       <category term="Chromedriver" scheme="https://www.kingname.info/tags/Chromedriver/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在Python中，a += b并不总是等价于a = a + b</title>
-    <link href="https://www.kingname.info/2019/01/29/iadd/"/>
-    <id>https://www.kingname.info/2019/01/29/iadd/</id>
-    <published>2019-01-29T13:19:55.000Z</published>
-    <updated>2019-01-29T13:24:43.546Z</updated>
-    
-    <content type="html"><![CDATA[<p>大家经常在一些博客中看到这样的说法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a += 1</div></pre></td></tr></table></figure>
-<p>等价于</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a = a + 1</div></pre></td></tr></table></figure>
-<p>这种说法实际上并不准确。</p>
-<p>我们来看一个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = [1, 2, 3]</div><div class="line">&gt;&gt;&gt; a += (4,)</div><div class="line">&gt;&gt;&gt; a</div><div class="line">[1, 2, 3, 4]</div><div class="line"></div><div class="line">&gt;&gt;&gt; a = [1, 2, 3]</div><div class="line">&gt;&gt;&gt; a = a + (4,)</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</div><div class="line">TypeError: can only concatenate list (not &quot;tuple&quot;) to list</div></pre></td></tr></table></figure>
-<p>这里报错了，说明<code>a += b</code>和<code>a = a + b</code>并不是完全等价的。</p>
-<a id="more"></a>
-<p>实际上，这是由于<code>+=</code>会首先调用左边这个对象的<code>__iadd__</code>方法，如果没有<code>__iadd__</code>方法，就会调用<code>__add__</code>方法。但是如果直接使用<code>+</code>号，就会直接调用<code>__add__</code>方法。而对于字符串、数字、浮点数这种不可变对象，他们没有<code>__iadd__</code>方法，所以对他们来说，<code>a += b</code> 与 <code>a = a + b</code>是等价的。</p>
-<p>但是列表是一个可变的容器，它内部是有<code>__iadd__</code>这个方法。对于列表来说，它的<code>__iadd__</code>方法的原型如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def __iadd__(self, values):</div><div class="line">    self.extend(values)</div><div class="line">    return self</div></pre></td></tr></table></figure>
-<p>这一段代码你可以在这里看到：<a href="https://github.com/python/cpython/blob/1b5f9c9653f348b0aa8b7ca39f8a9361150f7dfc/Lib/_collections_abc.py" target="_blank" rel="external">https://github.com/python/cpython/blob/1b5f9c9653f348b0aa8b7ca39f8a9361150f7dfc/Lib/_collections_abc.py</a></p>
-<p>所以说，当你使用<code>+=</code>连接列表和元组的时候，本质上是列表使用<code>extend</code>把元组的内容添加进去。这样是不会报错的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>a.extend((<span class="number">4</span>,))</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>a</div><div class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;大家经常在一些博客中看到这样的说法：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;a += 1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;等价于&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;a = a + 1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;这种说法实际上并不准确。&lt;/p&gt;
-&lt;p&gt;我们来看一个例子：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a = [1, 2, 3]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a += (4,)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;[1, 2, 3, 4]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a = [1, 2, 3]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a = a + (4,)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;Traceback (most recent call last):&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;  File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;TypeError: can only concatenate list (not &amp;quot;tuple&amp;quot;) to list&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;这里报错了，说明&lt;code&gt;a += b&lt;/code&gt;和&lt;code&gt;a = a + b&lt;/code&gt;并不是完全等价的。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

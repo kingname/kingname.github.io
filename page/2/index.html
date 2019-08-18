@@ -344,6 +344,199 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/04/11/use-or-smarter/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/04/11/use-or-smarter/" class="post-title-link" itemprop="url">奇技淫巧：使用Python的or关键字实现多重选择</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-11 23:24:59 / 修改时间：23:25:48" itemprop="dateCreated datePublished" datetime="2019-04-11T23:24:59+08:00">2019-04-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/11/use-or-smarter/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/04/11/use-or-smarter/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Python开发过程中，我们难免会遇到多重条件判断的情况的情况，此时除了用很多的<code>if...elif...else</code>以外，还可以巧用<code>or</code>关键字实现。</p>
+<p>例如，我们要获取天气信息，现在有三个api接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">api_1()</div><div class="line">api_2()</div><div class="line">api_3()</div></pre></td></tr></table></figure>
+<p>其中<code>api_1()</code>的数据又详细又好，但是接口不稳定，可能随时会掉线。</p>
+<p><code>api_2()</code>返回的结果比<code>api_1()</code>稍微差一点，但是稳定性还不错。</p>
+<p><code>api_3()</code>接口返回的是兜底数据，就是在前两个接口都故障的情况下才会使用。</p>
+<p>如果前两个接口正常工作时返回字典，故障时他们都会返回<code>None</code>。</p>
+<p>现在我们要获取天气信息，你可能会这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">weather = api_1()</div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> weather:</div><div class="line">    weather = api_2()</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> weather:</div><div class="line">        weather = api_3()</div></pre></td></tr></table></figure>
+<p>代码这样写，功能自然是没有问题，但是非常难看。</p>
+<p>实际上，代码可以写为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weather = api_1() <span class="keyword">or</span> api_2() <span class="keyword">or</span> api_3()</div></pre></td></tr></table></figure>
+<p>只需要1行代码就能实现自动选择。如果<code>api_1()</code>返回的是一个非空字典，那么由于<code>短路效应</code>，后面的两个函数都不会运行。当<code>api_1</code>返回None时，<code>api_2()</code>才会运行。并且如果<code>api_2()</code>返回非空字典，那么<code>api_3()</code>依然不会运行。</p>
+<p>我们现在在Jupyter里面测试一下，首先看看如果<code>api_1()</code>直接返回非空字典的情况，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-06-44.png" alt=""></p>
+<p>可以看到，在<code>api_2()</code>和<code>api_3()</code>里面的两行<code>print</code>语句都没有执行。</p>
+<p>接下来我们看看<code>api_1()</code>故障时候的情况。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-07-44.png" alt=""></p>
+<p>此时先运行<code>api_1()</code>返回None，再运行<code>api_2()</code>返回非空字典。符合预期。</p>
+<p>当前两个函数都返回None的时候，第三个函数才会运行，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-09-07.png" alt=""></p>
+<p>除了做多重条件判断外，还可以用来自己和自己取或操作，实现重试。</p>
+<p>例如<code>api_1()</code>可能成功也可能失败，所以需要尝试运行3次，那么代码可以这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weather = api_1() <span class="keyword">or</span> api_1() <span class="keyword">or</span> api_1()</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/04/05/vote-is-not-always-true/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1976,189 +2169,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/01/29/iadd/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/01/29/iadd/" class="post-title-link" itemprop="url">在Python中，a += b并不总是等价于a = a + b</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-01-29 21:19:55 / 修改时间：21:24:43" itemprop="dateCreated datePublished" datetime="2019-01-29T21:19:55+08:00">2019-01-29</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/29/iadd/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/29/iadd/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>大家经常在一些博客中看到这样的说法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a += 1</div></pre></td></tr></table></figure>
-<p>等价于</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a = a + 1</div></pre></td></tr></table></figure>
-<p>这种说法实际上并不准确。</p>
-<p>我们来看一个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = [1, 2, 3]</div><div class="line">&gt;&gt;&gt; a += (4,)</div><div class="line">&gt;&gt;&gt; a</div><div class="line">[1, 2, 3, 4]</div><div class="line"></div><div class="line">&gt;&gt;&gt; a = [1, 2, 3]</div><div class="line">&gt;&gt;&gt; a = a + (4,)</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</div><div class="line">TypeError: can only concatenate list (not &quot;tuple&quot;) to list</div></pre></td></tr></table></figure>
-<p>这里报错了，说明<code>a += b</code>和<code>a = a + b</code>并不是完全等价的。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/01/29/iadd/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2206,7 +2216,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">75</span>
+                    <span class="site-state-item-count">76</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

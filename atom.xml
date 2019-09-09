@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Kingname</title>
+  <title>谢乾坤 | Kingname</title>
   <subtitle>给时光以生命。</subtitle>
   <link href="/atom.xml" rel="self"/>
   
@@ -9,7 +9,7 @@
   <id>https://www.kingname.info/</id>
   
   <author>
-    <name>Kingname</name>
+    <name>谢乾坤 | Kingname</name>
     
   </author>
   

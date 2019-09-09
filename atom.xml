@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-08-18T01:37:56.500Z</updated>
+  <updated>2019-09-09T07:22:21.461Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,86 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>新闻类网页正文通用抽取器（一）——项目介绍</title>
+    <link href="https://www.kingname.info/2019/09/09/generalnewsextractor/"/>
+    <id>https://www.kingname.info/2019/09/09/generalnewsextractor/</id>
+    <published>2019-09-09T07:20:29.000Z</published>
+    <updated>2019-09-09T07:22:21.461Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="项目起源"><a href="#项目起源" class="headerlink" title="项目起源"></a>项目起源</h2><p>开发这个项目，源自于我在知网发现了一篇关于自动化抽取新闻类网站正文的算法论文——<a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFDLAST2019&amp;filename=GWDZ201908029&amp;v=MDY4MTRxVHJXTTFGckNVUkxPZmJ1Wm5GQ2poVXJyQklqclBkTEc0SDlqTXA0OUhiWVI4ZVgxTHV4WVM3RGgxVDM=" target="_blank" rel="external">《基于文本及符号密度的网页正文提取方法》</a>）</p>
+<p>这篇论文中描述的算法看起来简洁清晰，并且符合逻辑。但由于论文中只讲了算法原理，并没有具体的语言实现，所以我使用 Python 根据论文实现了这个抽取器。并分别使用今日头条、网易新闻、游民星空、观察者网、凤凰网、腾讯新闻、ReadHub、新浪新闻做了测试，发现提取效果非常出色，几乎能够达到100%的准确率。</p>
+<a id="more"></a>
+<h2 id="项目现状"><a href="#项目现状" class="headerlink" title="项目现状"></a>项目现状</h2><p>在论文中描述的正文提取基础上，我增加了标题、发布时间和文章作者的自动化探测与提取功能。</p>
+<p>最后的输出效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-08-22-02-04.png" alt=""></p>
+<p>目前这个项目是一个非常非常早期的 Demo，发布出来是希望能够尽快得到大家的使用反馈，从而能够更好地有针对性地进行开发。</p>
+<p>本项目取名为<code>抽取器</code>，而不是<code>爬虫</code>，是为了规避不必要的风险，因此，本项目的输入是 HTML，输出是一个字典。请自行使用恰当的方法获取目标网站的 HTML。</p>
+<p><strong>本项目现在不会，将来也不会提供主动请求网站 HTML 的功能。</strong></p>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h3><p>本项目使用 <code>Pipenv</code>管理 Python 的第三方库。如果你不知道 <code>Pipenv</code> 是什么，请<a href="https://github.com/pypa/pipenv" target="_blank" rel="external">点我跳转</a>。</p>
+<p>安装完成<code>Pipenv</code>以后，按照如下步骤运行代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/kingname/GeneralNewsExtractor.git</div><div class="line"><span class="built_in">cd</span> GeneralNewsExtractor</div><div class="line">pipenv install</div><div class="line">pipenv shell</div><div class="line">python3 GeneralNewsCrawler.py</div></pre></td></tr></table></figure>
+<h3 id="特别说明"><a href="#特别说明" class="headerlink" title="特别说明"></a>特别说明</h3><p>项目代码中的<code>GeneralNewsCrawler.py</code>提供了本项目的基本使用示例。</p>
+<ul>
+<li>本项目的测试代码在<code>test</code>文件夹中</li>
+<li>本项目的输入 HTML 为经过 JavaScript 渲染以后的 HTML，而不是普通的网页源代码。所以无论是后端渲染、Ajax 异步加载都适用于本项目。</li>
+<li>如果你要手动测试新的目标网站或者目标新闻，那么你可以在 Chrome 浏览器中打开对应页面，然后开启<code>开发者工具</code>，如下图所示：</li>
+</ul>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-08-22-20-33.png" alt=""></p>
+<p>在<code>Elements</code>标签页定位到<code>&lt;html&gt;</code>标签，并右键，选择<code>Copy</code>-<code>Copy OuterHTML</code>，如下图所示</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-08-22-21-49.png" alt=""></p>
+<ul>
+<li><p>当然，你可以使用 Puppeteer/Pyppeteer、Selenium 或者其他任何方式获取目标页面的<code>JavaScript渲染后的</code>源代码。</p>
+</li>
+<li><p>获取到源代码以后，通过如下代码提取信息：</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> GeneralNewsCrawler <span class="keyword">import</span> GeneralNewsExtractor</div><div class="line"></div><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">html = <span class="string">'你的目标网页正文'</span></div><div class="line">result = extractor.extract(html)</div><div class="line">print(result)</div></pre></td></tr></table></figure>
+<p>对大多数新闻页面而言，以上的写法就能够解决问题了。</p>
+<p>但某些新闻网页下面会有评论，评论里面可能存在长篇大论，它们会看起来比真正的新闻正文更像是正文，因此<code>extractor.extract()</code>方法还有一个默认参数<code>noise_mode_list</code>，用于在网页预处理时提前把评论区域整个移除。</p>
+<p><code>noise_mode_list</code>的值是一个列表，列表里面的每一个元素都是 XPath，对应了你需要提前移除的，可能会导致干扰的目标标签。</p>
+<p>例如，<code>观察者网</code>下面的评论区域对应的Xpath 为<code>//div[@class=&quot;comment-list&quot;]</code>。所以在提取观察者网时，为了防止评论干扰，就可以加上这个参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">result = extractor.extract(html, noise_node_list=[<span class="string">'//div[@class="comment-list"]'</span>])</div></pre></td></tr></table></figure>
+<p><code>test</code>文件夹中的网页的提取结果，请查看<code>result.txt</code>。</p>
+<h2 id="项目文档"><a href="#项目文档" class="headerlink" title="项目文档"></a>项目文档</h2><p><a href="https://github.com/kingname/GeneralNewsExtractor/wiki/GeneralNewsExtractor-Q&amp;A" target="_blank" rel="external">GNE 常见问题 Q&amp;A</a></p>
+<h2 id="已知问题"><a href="#已知问题" class="headerlink" title="已知问题"></a>已知问题</h2><ol>
+<li>目前本项目只适用于新闻页的信息提取。如果目标网站不是新闻页，或者是今日头条中的相册型文章，那么抽取结果可能不符合预期。</li>
+<li>可能会有一些新闻页面出现抽取结果中的作者为空字符串的情况，这可能是由于文章本身没有作者，或者使用了已有正则表达式没有覆盖到的情况。</li>
+</ol>
+<h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><ul>
+<li>使用一个配置文件来存放常量数据，而不是直接 Hard Code 写在代码中。</li>
+<li>允许自定义时间、作者的提取Pattern</li>
+<li>新闻文章列表页提取</li>
+<li>对于多页的新闻，允许传入一个 HTML 列表，GNE 解析以后，自动拼接为完整的新闻正文</li>
+<li>优化内容提取速度</li>
+<li>测试更多新闻网站</li>
+<li>……</li>
+</ul>
+<h2 id="交流沟通"><a href="#交流沟通" class="headerlink" title="交流沟通"></a>交流沟通</h2><p>如果您觉得GNE对您的日常开发或公司有帮助，请加作者微信 mxqiuchen（或扫描下方二维码） 并注明”GNE”，作者会将你拉入群。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_3729_2.JPG" alt=""></p>
+<p>验证消息：<code>GNE</code></p>
+<h2 id="论文修订"><a href="#论文修订" class="headerlink" title="论文修订"></a>论文修订</h2><p>在使用 Python 实现这个抽取器的过程中，我发现论文里面的公式和方法存在一些纰漏，会导致部分节点报错。我将会单独写几篇文章来介绍这里的修改。请关注我的微信公众号：未闻Code：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/wechatplatform.jpg" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;项目起源&quot;&gt;&lt;a href=&quot;#项目起源&quot; class=&quot;headerlink&quot; title=&quot;项目起源&quot;&gt;&lt;/a&gt;项目起源&lt;/h2&gt;&lt;p&gt;开发这个项目，源自于我在知网发现了一篇关于自动化抽取新闻类网站正文的算法论文——&lt;a href=&quot;https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;amp;dbname=CJFDLAST2019&amp;amp;filename=GWDZ201908029&amp;amp;v=MDY4MTRxVHJXTTFGckNVUkxPZmJ1Wm5GQ2poVXJyQklqclBkTEc0SDlqTXA0OUhiWVI4ZVgxTHV4WVM3RGgxVDM=&quot;&gt;《基于文本及符号密度的网页正文提取方法》&lt;/a&gt;）&lt;/p&gt;
+&lt;p&gt;这篇论文中描述的算法看起来简洁清晰，并且符合逻辑。但由于论文中只讲了算法原理，并没有具体的语言实现，所以我使用 Python 根据论文实现了这个抽取器。并分别使用今日头条、网易新闻、游民星空、观察者网、凤凰网、腾讯新闻、ReadHub、新浪新闻做了测试，发现提取效果非常出色，几乎能够达到100%的准确率。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="通用爬虫" scheme="https://www.kingname.info/tags/%E9%80%9A%E7%94%A8%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="新闻爬虫" scheme="https://www.kingname.info/tags/%E6%96%B0%E9%97%BB%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
   
   <entry>
     <title>在Pyppeteer中正确隐藏window.navigator.webdriver</title>
@@ -1431,96 +1511,6 @@
     
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>数据工程师妹子养成手记——数据库篇</title>
-    <link href="https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/"/>
-    <id>https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/</id>
-    <published>2019-02-23T05:25:32.000Z</published>
-    <updated>2019-02-23T05:46:25.393Z</updated>
-    
-    <content type="html"><![CDATA[<p>这篇文章没有代码，请放心阅读。</p>
-<p>程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。</p>
-<p>P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组或者策划组吧。什么？来数据组？让我来带？</p>
-<p>于是我和P酱<del>生活</del>工作在了一起。</p>
-<a id="more"></a>
-<h2 id="P酱你会些什么？"><a href="#P酱你会些什么？" class="headerlink" title="P酱你会些什么？"></a>P酱你会些什么？</h2><p>“我叫P酱，在XX大学读研二，爱好是拍照和被拍，大家可以在B站找到我跳舞的视频，比如av170001。我的另外一个爱好是写代码……”</p>
-<p>当一个文科妹子说自己喜欢写代码的时候，整个办公室热闹了起来。</p>
-<p>“P酱，听说你喜欢写代码，那你写过什么东西吗？”新人介绍会议结束以后，我问P酱。</p>
-<p>“一般都是各种分析程序，我们的专业要做很多调查报告，他们都是用Excel来计算的。我喜欢用Python来把这些统计过程自动化。后来也写过自动写诗的程序、鬼畜视频生成器等等。”</p>
-<p>“真不敢相信你是文科生。这么说你的兴趣是数据分析方向咯？”</p>
-<p>“其实我对师父你做的爬虫很有兴趣。但是听说会经常和网站发生对抗？女孩子还是不要打打杀杀的好~”</p>
-<p>于是我让P酱负责对爬虫的原始数据进行清洗、整理并做简单的分析。</p>
-<h2 id="一种船新的数据储存方式"><a href="#一种船新的数据储存方式" class="headerlink" title="一种船新的数据储存方式"></a>一种船新的数据储存方式</h2><p>“P酱，爬虫抓到的原始数据是存放在MongoDB里面的，你的Python还不错吧，你试一试用Python来读写MongoDB看看。”</p>
-<p>“MongoDB是什么呀？”</p>
-<p>“是一个和MySQL不太一样的数据库。”</p>
-<p>“MySQL我知道，MongoDB和MySQL有什么不一样呢？”</p>
-<p>“我举个例子，当你要插入数据的时候，你需要做的，就是‘插入’。咳咳，你不要脸红，我是指你不需要写SQL语句、不需要建表、不需要提前定义字段。仅仅只需要一行代码就能够实现了。我这里给你写了一篇文档，讲到了MongoDB的增删改查，你试一试。数据库已经给你搭建好了，你直接连上去用吧”</p>
-<p>半天以后。</p>
-<p>“师父，我已经会使用MongoDB啦。”</p>
-<p>“你读爬虫的原始数据，主要涉及到的就是查询操作，为了巩固插入、修改和删除的操作，再给你一个小任务吧。试一试写一个人员管理系统吧。”</p>
-<h2 id="既然有关系，就整整齐齐放在一起看吧"><a href="#既然有关系，就整整齐齐放在一起看吧" class="headerlink" title="既然有关系，就整整齐齐放在一起看吧"></a>既然有关系，就整整齐齐放在一起看吧</h2><p>“P酱，你看起来很高兴的样子啊。”</p>
-<p>“因为我觉得MongoDB比起MySQL太简单了啊~”</p>
-<p>“你确定？那我看看你怎么对整行数据去重的？”</p>
-<p>“师父，我知道distinct关键字可以对一个字段去重。但是整行数据我是读出来用Python来去重的。”</p>
-<p>“这个时候你就要用到MongoDB的聚合查询了。文档已经给你写好了，拿去看吧。”</p>
-<p>“还有还有，这里你把店铺信息和菜单信息放在了两个集合里面，我怎么样才能把他们联表查询出来呢？”</p>
-<p>“联表查询是MySQL里面的操作，在MongoDB里面，没有<code>表</code>，只有<code>集合</code>，所以叫做<code>联集合查询</code>更恰当一些。这也是要用到聚合查询，也在这个文档里面了。”</p>
-<h2 id="再给你一个玩具吧。"><a href="#再给你一个玩具吧。" class="headerlink" title="再给你一个玩具吧。"></a>再给你一个玩具吧。</h2><p>“P酱，之前让你做的爬虫数据监控系统怎么样了？”</p>
-<p>“功能已经做好了，但是有一个地方查询起来特别慢。我已经加过索引了，但还是很慢。怀疑是同时联了四个集合的数据造成的。”</p>
-<p>“这边的数据实际上每小时才更新一次，你没有必要每次刷新页面都去查询MongoDB的。我觉得是时候让你用一下Redis做缓存了。”</p>
-<p>“Redis就是那个内存数据库吗？我知道我知道。”</p>
-<p>“给你写了一份文档，包含Redis里面的各种数据类型和使用方式。你试一试把Redis和MongoDB结合起来看看能不能提高速度。”</p>
-<h2 id="你怎么擅自加功能啊！"><a href="#你怎么擅自加功能啊！" class="headerlink" title="你怎么擅自加功能啊！"></a>你怎么擅自加功能啊！</h2><p>“P酱，你怎么在爬虫监控系统的网页上加了一个广播窗口？”</p>
-<p>“呀，被师父发现了。因为我想到同一个爬虫可能会被几个人监控，所以就用Redis的发布订阅功能做出来了这个广播的功能。一旦爬虫状态发生改变，所有人都能收到推送。”</p>
-<p>“既然你这么闲，那不如加上账号登录功能，把权限验证也做上去？不同的人只能看到自己负责的爬虫。顺便你可以试一试用Redis实现……”</p>
-<p>“实现布隆过滤器和Session管理是吗？”</p>
-<p>“你怎么知道我要说什么？”</p>
-<p>“因为我早上看到你在文档上面更新了布隆过滤器和Session管理相关的内容啊~”</p>
-<h2 id="红色的锁？"><a href="#红色的锁？" class="headerlink" title="红色的锁？"></a>红色的锁？</h2><p>“师父师父，你知道什么是RedLock吗？”</p>
-<p>“你学得这么快？都知道RedLock了？RedLock是Redis官方给出的分布式锁的算法。已经有很多编程语言实现它了。”</p>
-<p>“原来RedLock只是一个算法啊……”</p>
-<h2 id="为什么我学的这么快呢？"><a href="#为什么我学的这么快呢？" class="headerlink" title="为什么我学的这么快呢？"></a>为什么我学的这么快呢？</h2><p>“师父师父，我觉得很奇怪啊，为什么MongoDB和Redis我学得这么快呢？难道是因为他们本来就简单？还是因为我太聪明了？”</p>
-<p>“为什么你不说是因为你师父教的好呢？“</p>
-<p>“因为这是事实啊~不用我说出来~”</p>
-<p>“咳咳，实际上是因为两个原因。一是你一直通过项目驱动来学习，先有需求，然后再去学习实现这个需求所要涉及到的技能。所以你知道你学的东西能用来干什么，自然就能学得快……”</p>
-<p>“那第二个原因是什么呢？”</p>
-<p>“第二个原因，我先问你一个问题，你会搭建Redis集群吗？会搭建MongoDB集群吗？知道什么叫做哨兵吗？你知道如何优化MongoDB的启动参数吗？”</p>
-<p>“这…………好像都不知道额…………”</p>
-<p>“因为你的角色是数据工程师，不是数据库工程师，所以数据库搭建、底层优化这些内容我都给你跳过了。”</p>
-<p>“这些听起来都很重要啊，师父你会教我吗？”</p>
-<p>“你想经常值夜班吗？想半夜3点被人打电话叫起来修数据库吗？认清自己的定位啊，数据库工程师的技能当然很重要，但你是要成为数据工程师的人，技能树应该点在合适的方向。”</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>后来，P酱成了别人的女朋友。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-22-22-33-30.png" alt=""></p>
-<p>幸好我还有左手和右手，于是我把我给P酱总结的文档编撰成了《左手MongoDB，右手Redis——从入门到商业实战》这本书。本书现在已经在京东、亚马逊、淘宝上架。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-19.png" alt=""></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-45.png" alt=""></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-23-29.png" alt=""></p>
-<p>这本书的定位是MongoDB和Redis的应用，所以有意弱化了数据库的搭建、维护和底层优化。所以本书可能不适合数据库工程师。</p>
-<p>希望本书能够给那些一直想掌握MongoDB、Redis，但是又不知道从何处下手的读者，提供一个学习的方向。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这篇文章没有代码，请放心阅读。&lt;/p&gt;
-&lt;p&gt;程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。&lt;/p&gt;
-&lt;p&gt;P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组或者策划组吧。什么？来数据组？让我来带？&lt;/p&gt;
-&lt;p&gt;于是我和P酱&lt;del&gt;生活&lt;/del&gt;工作在了一起。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="MongoDB" scheme="https://www.kingname.info/categories/MongoDB/"/>
-    
-      <category term="Redis" scheme="https://www.kingname.info/categories/MongoDB/Redis/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
-    
-      <category term="Redis" scheme="https://www.kingname.info/tags/Redis/"/>
     
   </entry>
   

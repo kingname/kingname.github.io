@@ -344,6 +344,206 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/06/25/dont-use-re-compile/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/25/dont-use-re-compile/" class="post-title-link" itemprop="url">请不要再用re.compile了！</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-25 13:02:01 / 修改时间：13:03:27" itemprop="dateCreated datePublished" datetime="2019-06-25T13:02:01+08:00">2019-06-25</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/06/25/dont-use-re-compile/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/06/25/dont-use-re-compile/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>如果大家在网上搜索<code>Python 正则表达式</code>，你将会看到大量的垃圾文章会这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line">text = <span class="string">'一段字符串'</span></div><div class="line">result = pattern.findall(text)</div></pre></td></tr></table></figure>
+<p>这些文章的作者，可能是被其他语言的坏习惯影响了，也可能是被其他垃圾文章误导了，不假思索拿来就用。</p>
+<p><strong>在Python里面，真的不需要使用re.compile!</strong></p>
+<p>为了证明这一点，我们来看Python的源代码。</p>
+<p>在PyCharm里面输入:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">re.search</div></pre></td></tr></table></figure>
+<p>然后Windows用户按住键盘上的Ctrl键，鼠标左键点击<code>search</code>，Mac用户按住键盘上的Command键，鼠标左键点击<code>search</code>，PyCharm会自动跳转到Python的re模块。在这里，你会看到我们常用的正则表达式方法，无论是<code>findall</code>还是<code>search</code>还是<code>sub</code>还是<code>match</code>，全部都是这样写的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_compile(pattern, flag).对应的方法(string)</div></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">findall</span><span class="params">(pattern, string, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"""Return a list of all non-overlapping matches in the string.</span></div><div class="line"></div><div class="line">    If one or more capturing groups are present in the pattern, return</div><div class="line">    a list of groups; this will be a list of tuples if the pattern</div><div class="line">    has more than one group.</div><div class="line"></div><div class="line">    Empty matches are included in the result."""</div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags).findall(string)</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-41-18.png" alt=""></p>
+<p>然后我们再来看<code>compile</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compile</span><span class="params">(pattern, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"Compile a regular expression pattern, returning a Pattern object."</span></div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags)</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-43-19.png" alt=""></p>
+<p>看出问题来了吗？</p>
+<p>我们常用的正则表达式方法，都已经自带了<code>compile</code>了！</p>
+<p>根本没有必要多此一举先<code>re.compile</code>再调用正则表达式方法。</p>
+<p>此时，可能会有人反驳：</p>
+<p>如果我有一百万条字符串，使用某一个正则表达式去匹配，那么我可以这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    pattern.search(text)</div></pre></td></tr></table></figure>
+<p>这个时候，<code>re.compile</code>只执行了1次，而如果你像下面这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    re.search(<span class="string">'正则表达式'</span>, text)</div></pre></td></tr></table></figure>
+<p>相当于你在底层对同一个正则表达式执行了100万次<code>re.compile</code>。</p>
+<p>Talk is cheap, show me the code.</p>
+<p>我们来看源代码，正则表达式<code>re.compile</code>调用的是<code>_compile</code>，我们就去看<code>_compile</code>的源代码，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-49-36.png" alt=""></p>
+<p>红框中的代码，说明了<code>_compile</code>自带缓存。它会自动储存最多512条由type(pattern), pattern, flags)组成的Key，只要是同一个正则表达式，同一个flag，那么调用两次_compile时，第二次会直接读取缓存。</p>
+<p>综上所述，请你不要再手动调用<code>re.compile</code>了，这是从其他语言（对的，我说的就是Java）带过来的陋习。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/05/26/read-data-file-in-package/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2027,188 +2227,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/03/02/inverted-index/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/03/02/inverted-index/" class="post-title-link" itemprop="url">使用倒排索引极速提高字符串搜索效率</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-03-02 12:05:45 / 修改时间：14:30:52" itemprop="dateCreated datePublished" datetime="2019-03-02T12:05:45+08:00">2019-03-02</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/02/inverted-index/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/02/inverted-index/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</div><div class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</div><div class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</div><div class="line">...</div><div class="line">苹果这个词在a字符串里面</div></pre></td></tr></table></figure>
-<p>如果有多个句子和多个关键字，那么可以使用<code>for</code>循环来实现：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span></div><div class="line">             <span class="string">'我CNM你个大SB'</span></div><div class="line">            ]</div><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentences:</div><div class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> keywords:</div><div class="line">        <span class="keyword">if</span> keyword <span class="keyword">in</span> sentence:</div><div class="line">            print(f<span class="string">'句子: 【&#123;sentence&#125;】包含脏话：【&#123;keyword&#125;】'</span>)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png" alt=""></p>
-<p>现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于<code>in</code>关键字的时间复杂度为<code>O(n)</code>，如果有大量长句子，查询时间会更长。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/03/02/inverted-index/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2256,7 +2274,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">78</span>
+                    <span class="site-state-item-count">79</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2315,7 +2333,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">23</span>
+                      
+                    
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2510,7 +2530,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">91</span>
+                      
+                    
+                    <span class="site-state-item-count">92</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-09-09T07:22:21.461Z</updated>
+  <updated>2019-09-22T10:31:55.279Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -16,11 +16,65 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>GNE 预处理技术——如何移除特定标签但是保留文字到父标签</title>
+    <link href="https://www.kingname.info/2019/09/22/remove-tag-without-text/"/>
+    <id>https://www.kingname.info/2019/09/22/remove-tag-without-text/</id>
+    <published>2019-09-22T10:28:02.000Z</published>
+    <updated>2019-09-22T10:31:55.279Z</updated>
+    
+    <content type="html"><![CDATA[<p>在开发新闻网页正文通用抽取器<a href="https://github.com/kingname/GeneralNewsExtractor" target="_blank" rel="external">GNE</a>的过程中，需要对目标网页的源代码进行一些预处理，从而提高正文抓取的准确性。其中之一就是把 <code>&lt;p&gt;</code>标签内部的 <code>&lt;span&gt;</code>标签中的文本，合并到<code>&lt;p&gt;</code>标签中，再删除 <code>&lt;span&gt;</code> 标签。</p>
+<a id="more"></a>
+<p>例如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>演示合并节点<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>你好,<span class="tag">&lt;<span class="name">span</span>&gt;</span>世界;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>你好，<span class="tag">&lt;<span class="name">span</span>&gt;</span>产品经理<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>需要转换为：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>演示合并节点<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>你好,世界;你好，产品经理<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在原来做定向爬虫的时候，这本不是什么问题，因为使用 XPath 可以直接提取所有内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> lxml.html <span class="keyword">import</span> fromstring</div><div class="line">selector = fromstring(html)</div><div class="line">text = <span class="string">''</span>.join(selector.xpath(<span class="string">'//p//text()'</span>))</div><div class="line">print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-22-17-03-43.png" alt=""></p>
+<p>但在通用新闻抽取器里面不能这样写。因为并不是所有的<code>&lt;p&gt;</code>标签中的内容都是新闻正文。GNE 有一套算法来计算并寻找全部包含真正有效内容的<code>&lt;p&gt;</code>标签。这就要求在预处理阶段，需要把 <code>&lt;p&gt;</code>标签里面的<code>&lt;span&gt;</code>标签合并到<code>&lt;p&gt;</code>标签里面。</p>
+<p>可能有人的第一反应是：先把 <code>&lt;p&gt;</code> 标签里面的内容提取出来，然后再把 <code>&lt;span&gt;</code> 标签里面的内容提取出来，并添加到 <code>&lt;p&gt;</code> 标签中。这不就解决问题了吗？</p>
+<p>但实际上并没有这么简单。以上面的 HTML 代码为了，如果按照这种简单的解法，那么分别提取以后会得到如下内容：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-22-17-11-59.png" alt=""></p>
+<p>现在问题来了，你怎么知道 <code>&lt;span&gt;</code> 标签中提取出来的这两个字符串<code>世界</code>, <code>产品经理</code>，分别应该插入到 <code>&lt;p&gt;</code> 标签结果列表中的哪个位置？所以这种方案并不可取。</p>
+<p>那么又有人问，能不能使用 XPath 的<code>string</code>关键字把 <code>&lt;p&gt;</code> 标签下面的所有文本直接提取出来，再作处理呢？这样不就可以忽略标签差异了吗？在上面的 html 代码中，这种方案是可行的：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-22-17-16-53.png" alt=""></p>
+<p>但是，这种方案不能应用到 GNE 中。这是由于这种做法，会无差别移除所有的标签。但是<code>&lt;p&gt;</code> 标签下面的<code>&lt;a&gt;</code>标签是有用的，它在用于过滤导航栏或者推荐新闻这种类型的干扰内容中会起到很大的作用。所以<code>&lt;a&gt;</code>标签必需保留。</p>
+<p>那么，本文标题提到的问题：<code>如何移除指定标签，但是保留它的文本，合并到父标签中？</code>应该如何解决呢？</p>
+<p>实际上，这个问题在 lxml 中有现成的办法解决，他就是<code>etree.strip_tags</code></p>
+<p>使用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> lxml.html <span class="keyword">import</span> etree</div><div class="line"></div><div class="line">etree.strip_tags(element, <span class="string">'标签1'</span>, <span class="string">'标签2'</span>, <span class="string">'标签3'</span>)</div></pre></td></tr></table></figure>
+<p>在本文的例子中，解决方案如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> lxml.html <span class="keyword">import</span> fromstring, etree</div><div class="line"></div><div class="line"></div><div class="line">selector = fromstring(html)</div><div class="line">p_tag_list = selector.xpath(<span class="string">'//p'</span>)</div><div class="line"><span class="keyword">for</span> p_tag <span class="keyword">in</span> p_tag_list:</div><div class="line">    etree.strip_tags(p_tag, <span class="string">'span'</span>)</div><div class="line"></div><div class="line">text = <span class="string">''</span>.join(selector.xpath(<span class="string">'//p/text()'</span>))</div><div class="line">print(text)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-22-17-26-23.png" alt=""></p>
+<p>需要注意的是，<code>etree.strip_tags()</code>会直接修改原始Dom 树，不需要返回修改结果。</p>
+<p>GNE 的其他关键技术，将会在接下来的文章中逐一放出，你也可以访问GNE 的 Github 主页：<a href="https://github.com/kingname/GeneralNewsExtractor" target="_blank" rel="external">https://github.com/kingname/GeneralNewsExtractor</a>，提前阅读项目源代码。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在开发新闻网页正文通用抽取器&lt;a href=&quot;https://github.com/kingname/GeneralNewsExtractor&quot;&gt;GNE&lt;/a&gt;的过程中，需要对目标网页的源代码进行一些预处理，从而提高正文抓取的准确性。其中之一就是把 &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;标签内部的 &lt;code&gt;&amp;lt;span&amp;gt;&lt;/code&gt;标签中的文本，合并到&lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;标签中，再删除 &lt;code&gt;&amp;lt;span&amp;gt;&lt;/code&gt; 标签。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="GNE" scheme="https://www.kingname.info/categories/GNE/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="GNE" scheme="https://www.kingname.info/tags/GNE/"/>
+    
+  </entry>
+  
+  <entry>
     <title>新闻类网页正文通用抽取器（一）——项目介绍</title>
     <link href="https://www.kingname.info/2019/09/09/generalnewsextractor/"/>
     <id>https://www.kingname.info/2019/09/09/generalnewsextractor/</id>
     <published>2019-09-09T07:20:29.000Z</published>
-    <updated>2019-09-09T07:22:21.461Z</updated>
+    <updated>2019-09-22T10:32:13.132Z</updated>
     
     <content type="html"><![CDATA[<h2 id="项目起源"><a href="#项目起源" class="headerlink" title="项目起源"></a>项目起源</h2><p>开发这个项目，源自于我在知网发现了一篇关于自动化抽取新闻类网站正文的算法论文——<a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFDLAST2019&amp;filename=GWDZ201908029&amp;v=MDY4MTRxVHJXTTFGckNVUkxPZmJ1Wm5GQ2poVXJyQklqclBkTEc0SDlqTXA0OUhiWVI4ZVgxTHV4WVM3RGgxVDM=" target="_blank" rel="external">《基于文本及符号密度的网页正文提取方法》</a>）</p>
 <p>这篇论文中描述的算法看起来简洁清晰，并且符合逻辑。但由于论文中只讲了算法原理，并没有具体的语言实现，所以我使用 Python 根据论文实现了这个抽取器。并分别使用今日头条、网易新闻、游民星空、观察者网、凤凰网、腾讯新闻、ReadHub、新浪新闻做了测试，发现提取效果非常出色，几乎能够达到100%的准确率。</p>
@@ -84,7 +138,7 @@
     
     </summary>
     
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+      <category term="GNE" scheme="https://www.kingname.info/categories/GNE/"/>
     
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
@@ -92,6 +146,8 @@
       <category term="通用爬虫" scheme="https://www.kingname.info/tags/%E9%80%9A%E7%94%A8%E7%88%AC%E8%99%AB/"/>
     
       <category term="新闻爬虫" scheme="https://www.kingname.info/tags/%E6%96%B0%E9%97%BB%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="GNE" scheme="https://www.kingname.info/tags/GNE/"/>
     
   </entry>
   
@@ -1426,91 +1482,6 @@
     
     
       <category term="经验" scheme="https://www.kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用倒排索引极速提高字符串搜索效率</title>
-    <link href="https://www.kingname.info/2019/03/02/inverted-index/"/>
-    <id>https://www.kingname.info/2019/03/02/inverted-index/</id>
-    <published>2019-03-02T04:05:45.000Z</published>
-    <updated>2019-03-02T06:30:52.173Z</updated>
-    
-    <content type="html"><![CDATA[<p>在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</div><div class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</div><div class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</div><div class="line">...</div><div class="line">苹果这个词在a字符串里面</div></pre></td></tr></table></figure>
-<p>如果有多个句子和多个关键字，那么可以使用<code>for</code>循环来实现：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span></div><div class="line">             <span class="string">'我CNM你个大SB'</span></div><div class="line">            ]</div><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentences:</div><div class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> keywords:</div><div class="line">        <span class="keyword">if</span> keyword <span class="keyword">in</span> sentence:</div><div class="line">            print(f<span class="string">'句子: 【&#123;sentence&#125;】包含脏话：【&#123;keyword&#125;】'</span>)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png" alt=""></p>
-<p>现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于<code>in</code>关键字的时间复杂度为<code>O(n)</code>，如果有大量长句子，查询时间会更长。</p>
-<a id="more"></a>
-<p>例如，我们要从下面的句子里面寻找<code>CNM</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sentences = [&apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;, </div><div class="line">             &apos;人生苦短我用Python&apos;, </div><div class="line">             &apos;你TM一天到晚只知道得瑟&apos;,</div><div class="line">             &apos;不不不，我不是说你，我是说在座的各位都是垃圾。&apos;,</div><div class="line">             &apos;我CNM你个大SB&apos;,</div><div class="line">             &apos;各位同学，Good Morning！&apos;,</div><div class="line">             &apos;网络这个单词，它的英文为Network&apos;,</div><div class="line">             &apos;我不想听到有人说CNM！&apos;</div><div class="line">            ]</div></pre></td></tr></table></figure>
-<p>如果使用常规方法，那么我们的做法是：</p>
-<ol>
-<li><code>CNM</code>在<code>你说我是买苹果电脑，还是买windows电脑呢？</code>中吗？不在！</li>
-<li><code>CNM</code>在<code>人生苦短我用Python</code>吗？不在！</li>
-<li>……</li>
-<li>……</li>
-<li><code>CNM</code>在<code>我CNM你个大SB</code>吗？<strong>在</strong>！</li>
-<li><code>CNM</code>在<code>各位同学，Good Morning！</code>吗？不在！</li>
-<li><code>CMN</code>在<code>网络这个单词，它的英文为Network</code>吗？不在！</li>
-<li><code>CNM</code>在<code>我不想听到有人说CNM！</code>吗？<strong>在</strong>！</li>
-</ol>
-<p>于是就知道了，<code>CNM</code>在sentences列表下标为4和7的这两个句子中。</p>
-<p>下面，我们换一个看起来更笨的办法：</p>
-<p>要找到<code>CNM</code>在哪几句里面，可以变成：寻找<code>C</code>、<code>N</code>、<code>M</code>这三个字母在哪几句里面。然后，再找到同时有这三个字母的句子:</p>
-<ol>
-<li><code>C</code>在4, 7句</li>
-<li><code>N</code>在4，6，7句</li>
-<li><code>M</code>在2, 4，5，7句</li>
-</ol>
-<p>所以，{4, 7} 与 {4, 6, 7} 与 {4, 5, 7}做交集，得到{4, 7}说明<code>CNM</code>这个词很有可能是在第4句和第7句。</p>
-<p>为什么说很可能呢？因为假如再添加一句话：<code>今天我们学习三个单词：Cat, Network, Morning</code>。这一句也会被认为包含<code>CNM</code>这个词，但实际上它只是同时包含了<code>C</code>、<code>N</code>、<code>M</code>三个字母而已。</p>
-<p>接下来，有人会问了：原来直接查询<code>CNM</code>的时候，只需要查询8次就可以了。现在你分别查询<code>C</code> <code>N</code> <code>M</code>要查询24次。你是修复了查询时间太短的bug吗？</p>
-<p>回答这个问题之前，我们再来看另一个问题。</p>
-<p>Python里面，当我要判断字母<code>C</code>是不是在句子<code>我不想听到有人说CNM！</code>里面时，Python是如何工作的？</p>
-<p>实际上，它的工作原理可以写成：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sentence = <span class="string">'我不想听到有人说CNM！'</span></div><div class="line"><span class="keyword">for</span> char <span class="keyword">in</span> sentence:</div><div class="line">    <span class="keyword">if</span> char == <span class="string">'C'</span>:</div><div class="line">        print(<span class="string">'C在这个字符串中'</span>)</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure>
-<p>如果要判断<code>C</code>、<code>N</code>、<code>M</code>是不是都在这个字符串<code>我不想听到有人说CNM！</code>中，同一个字符串会被遍历3次。有没有办法减少这种看起来多余的遍历操作呢？</p>
-<p>如果我们把<code>我不想听到有人说CNM！</code>这个句子转成字典会怎么样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sentence = &apos;我不想听到有人说CNM！&apos;</div><div class="line">sentence_dict = &#123;char: 1 for char in sentence&#125;</div><div class="line">for letter in &apos;CNM&apos;:</div><div class="line">    if letter in sentence_dict:</div><div class="line">        print(f&apos;字母&#123;letter&#125;在句子中！&apos;)</div></pre></td></tr></table></figure>
-<p>这样一来，只需要在生成字典的时候遍历句子一次，减少了2次冗余遍历。并且，判断一个元素是否在字典里面，时间复杂度为<code>O(1)</code>，速度非常快。</p>
-<p><code>我不想听到有人说CNM！</code>生成的字典为<code>{&#39;我&#39;: 1, &#39;不&#39;: 1, &#39;想&#39;: 1, &#39;听&#39;: 1, &#39;到&#39;: 1, &#39;有&#39;: 1, &#39;人&#39;: 1, &#39;说&#39;: 1, &#39;C&#39;: 1, &#39;N&#39;: 1, &#39;M&#39;: 1, &#39;！&#39;: 1}</code>。那么如果要把列表里面的所有句子都这样处理，又怎么存放呢？此时，字典的Key就是每一个字符，而Value可以是每一句话在原来列表中的索引：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span>,</div><div class="line">             <span class="string">'我CNM你个大SB'</span>,</div><div class="line">             <span class="string">'各位同学，Good Morning！'</span>,</div><div class="line">             <span class="string">'网络这个单词，它的英文为Network'</span>,</div><div class="line">             <span class="string">'我不想听到有人说CNM！'</span>]</div><div class="line">index_dict = &#123;&#125;</div><div class="line"><span class="keyword">for</span> index, line <span class="keyword">in</span> enumerate(sentences):</div><div class="line">    print(index, line)</div><div class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> line:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> char.strip():</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        <span class="keyword">if</span> char <span class="keyword">in</span> index_dict:</div><div class="line">            index_dict[char].add(index)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            index_dict[char] = &#123;index&#125;</div></pre></td></tr></table></figure>
-<p>生成的字典为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">&#123;&apos;B&apos;: &#123;4&#125;,</div><div class="line"> &apos;C&apos;: &#123;4, 7&#125;,</div><div class="line"> &apos;G&apos;: &#123;5&#125;,</div><div class="line"> &apos;M&apos;: &#123;2, 4, 5, 7&#125;,</div><div class="line"> &apos;N&apos;: &#123;4, 6, 7&#125;,</div><div class="line"> &apos;P&apos;: &#123;1&#125;,</div><div class="line"> &apos;S&apos;: &#123;4&#125;,</div><div class="line"> &apos;T&apos;: &#123;2&#125;,</div><div class="line"> &apos;d&apos;: &#123;0, 5&#125;,</div><div class="line"> &apos;e&apos;: &#123;6&#125;,</div><div class="line"> &apos;g&apos;: &#123;5&#125;,</div><div class="line"> &apos;h&apos;: &#123;1&#125;,</div><div class="line"> &apos;i&apos;: &#123;0, 5&#125;,</div><div class="line"> &apos;k&apos;: &#123;6&#125;,</div><div class="line"> &apos;n&apos;: &#123;0, 1, 5&#125;,</div><div class="line"> &apos;o&apos;: &#123;0, 1, 5, 6&#125;,</div><div class="line"> &apos;r&apos;: &#123;5, 6&#125;,</div><div class="line"> &apos;s&apos;: &#123;0&#125;,</div><div class="line"> &apos;t&apos;: &#123;1, 6&#125;,</div><div class="line"> &apos;w&apos;: &#123;0, 6&#125;,</div><div class="line"> &apos;y&apos;: &#123;1&#125;,</div><div class="line"> &apos;。&apos;: &#123;3&#125;,</div><div class="line"> &apos;一&apos;: &#123;2&#125;,</div><div class="line"> &apos;不&apos;: &#123;3, 7&#125;,</div><div class="line"> &apos;个&apos;: &#123;4, 6&#125;,</div><div class="line"> &apos;为&apos;: &#123;6&#125;,</div><div class="line"> &apos;买&apos;: &#123;0&#125;,</div><div class="line"> &apos;人&apos;: &#123;1, 7&#125;,</div><div class="line"> &apos;位&apos;: &#123;3, 5&#125;,</div><div class="line"> &apos;你&apos;: &#123;0, 2, 3, 4&#125;,</div><div class="line"> &apos;到&apos;: &#123;2, 7&#125;,</div><div class="line"> &apos;单&apos;: &#123;6&#125;,</div><div class="line"> &apos;只&apos;: &#123;2&#125;,</div><div class="line"> &apos;各&apos;: &#123;3, 5&#125;,</div><div class="line"> &apos;同&apos;: &#123;5&#125;,</div><div class="line"> &apos;听&apos;: &#123;7&#125;,</div><div class="line"> &apos;呢&apos;: &#123;0&#125;,</div><div class="line"> &apos;在&apos;: &#123;3&#125;,</div><div class="line"> &apos;圾&apos;: &#123;3&#125;,</div><div class="line"> &apos;垃&apos;: &#123;3&#125;,</div><div class="line"> &apos;大&apos;: &#123;4&#125;,</div><div class="line"> &apos;天&apos;: &#123;2&#125;,</div><div class="line"> &apos;学&apos;: &#123;5&#125;,</div><div class="line"> &apos;它&apos;: &#123;6&#125;,</div><div class="line"> &apos;座&apos;: &#123;3&#125;,</div><div class="line"> &apos;得&apos;: &#123;2&#125;,</div><div class="line"> &apos;想&apos;: &#123;7&#125;,</div><div class="line"> &apos;我&apos;: &#123;0, 1, 3, 4, 7&#125;,</div><div class="line"> &apos;文&apos;: &#123;6&#125;,</div><div class="line"> &apos;是&apos;: &#123;0, 3&#125;,</div><div class="line"> &apos;晚&apos;: &#123;2&#125;,</div><div class="line"> &apos;有&apos;: &#123;7&#125;,</div><div class="line"> &apos;果&apos;: &#123;0&#125;,</div><div class="line"> &apos;瑟&apos;: &#123;2&#125;,</div><div class="line"> &apos;生&apos;: &#123;1&#125;,</div><div class="line"> &apos;用&apos;: &#123;1&#125;,</div><div class="line"> &apos;电&apos;: &#123;0&#125;,</div><div class="line"> &apos;的&apos;: &#123;3, 6&#125;,</div><div class="line"> &apos;知&apos;: &#123;2&#125;,</div><div class="line"> &apos;短&apos;: &#123;1&#125;,</div><div class="line"> &apos;络&apos;: &#123;6&#125;,</div><div class="line"> &apos;网&apos;: &#123;6&#125;,</div><div class="line"> &apos;脑&apos;: &#123;0&#125;,</div><div class="line"> &apos;苦&apos;: &#123;1&#125;,</div><div class="line"> &apos;英&apos;: &#123;6&#125;,</div><div class="line"> &apos;苹&apos;: &#123;0&#125;,</div><div class="line"> &apos;词&apos;: &#123;6&#125;,</div><div class="line"> &apos;说&apos;: &#123;0, 3, 7&#125;,</div><div class="line"> &apos;还&apos;: &#123;0&#125;,</div><div class="line"> &apos;这&apos;: &#123;6&#125;,</div><div class="line"> &apos;道&apos;: &#123;2&#125;,</div><div class="line"> &apos;都&apos;: &#123;3&#125;,</div><div class="line"> &apos;！&apos;: &#123;5, 7&#125;,</div><div class="line"> &apos;，&apos;: &#123;0, 3, 5, 6&#125;,</div><div class="line"> &apos;？&apos;: &#123;0&#125;&#125;</div></pre></td></tr></table></figure>
-<p>生成的字典这么长，看起来非常可怕。但是别慌，毕竟不是你人肉寻找。对Python来说，字典里面无论有多少个Key，它的查询时间都是一样的。</p>
-<p>现在，我们要寻找<code>C</code>、<code>N</code>、<code>M</code>，于是代码可以写为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">index_list = []</div><div class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> <span class="string">'CNM'</span>:</div><div class="line">    index_list.append(index_dict.get(letter, &#123;&#125;))</div><div class="line"></div><div class="line">common_index = set.intersection(*index_list)  <span class="comment"># 对包含各个字母的索引做交集，得到同时包含3个字母的句子</span></div><div class="line">print(f<span class="string">'这几个句子里面同时含有`C`、`N`、`M`：&#123;common_index&#125;'</span>)</div><div class="line"><span class="keyword">for</span> index <span class="keyword">in</span> common_index:</div><div class="line">    print(sentences[index])</div></pre></td></tr></table></figure>
-<p>运行结果如下：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-13-50-58.png" alt=""></p>
-<p>所以，对于一组需要被查询的关键字，也可以这样搜索：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> word <span class="keyword">in</span> keywords:</div><div class="line">    index_list = []</div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> word:</div><div class="line">        index_list.append(index_dict.get(letter, &#123;&#125;))</div><div class="line"></div><div class="line">    common_index = set.intersection(*index_list)</div><div class="line">    print(f<span class="string">'&gt;&gt;这几个句子里面同时含有：&#123;word&#125;'</span>)</div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> common_index:</div><div class="line">        print(sentences[index])</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png" alt=""></p>
-<p>看完这篇文章以后，你已经学会了倒排索引（Inverted-index）。这是Google搜索的核心算法之一。</p>
-<p>可以看出，对于少量数据的搜索，倒排索引并不会比常规方法节约多少时间。但是当你有100000000条句子，1000个关键词的时候，用倒排索引实现搜索，所需要的时间只有常规方法的1/10甚至更少。</p>
-<p>最后回到前面遇到的一个问题，当句子里面同时含有字母<code>C</code>、<code>N</code>、<code>M</code>，虽然这三个字母并不是组合在一起的，也会被搜索出来。这就涉及到搜索引擎的另一个核心技术——<code>分词</code>了。对于英文而言，使用空格来切分单词就好了。但是对于中文来说，不同的汉字组合在一起构成的词语，字数是不一样的。甚至有些专有名词，可能七八个字，但是也要作为整体来搜索。</p>
-<p>分词的具体做法，又是另外一个故事了。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用&lt;code&gt;in&lt;/code&gt;关键字，例如：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;苹果这个词在a字符串里面&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;如果有多个句子和多个关键字，那么可以使用&lt;code&gt;for&lt;/code&gt;循环来实现：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;sentences = [&lt;span class=&quot;string&quot;&gt;&#39;你说我是买苹果电脑，还是买windows电脑呢？&#39;&lt;/span&gt;, &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;人生苦短我用Python&#39;&lt;/span&gt;, &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;你TM一天到晚只知道得瑟&#39;&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;不不不，我不是说你，我是说在座的各位都是垃圾。&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;             &lt;span class=&quot;string&quot;&gt;&#39;我CNM你个大SB&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            ]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;keywords = [&lt;span class=&quot;string&quot;&gt;&#39;垃圾&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;CNM&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;SB&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;TM&#39;&lt;/span&gt;]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; sentence &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; sentences:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; keyword &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; keywords:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; keyword &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; sentence:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            print(f&lt;span class=&quot;string&quot;&gt;&#39;句子: 【&amp;#123;sentence&amp;#125;】包含脏话：【&amp;#123;keyword&amp;#125;】&#39;&lt;/span&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;运行效果如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于&lt;code&gt;in&lt;/code&gt;关键字的时间复杂度为&lt;code&gt;O(n)&lt;/code&gt;，如果有大量长句子，查询时间会更长。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

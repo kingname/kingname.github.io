@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-09-22T10:31:55.279Z</updated>
+  <updated>2019-10-30T14:44:12.075Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,653 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>为什么你应该学习 Python 的生成器？</title>
+    <link href="https://www.kingname.info/2019/10/30/you-should-learn-yield/"/>
+    <id>https://www.kingname.info/2019/10/30/you-should-learn-yield/</id>
+    <published>2019-10-30T14:43:37.000Z</published>
+    <updated>2019-10-30T14:44:12.075Z</updated>
+    
+    <content type="html"><![CDATA[<p>写过一段时间代码的同学，应该对这一句话深有体会：程序的时间利用率和空间利用率往往是矛盾的，可以用时间换空间，可以用空间换时间，但很难同时提高一个程序的时间利用率和空间利用率。</p>
+<p>但如果你尝试使用生成器来重构你的代码，也许你会发现，在一定程度上，你可以既提高时间利用率，又提高空间利用率。</p>
+<a id="more"></a>
+<p>我们以一个数据清洗的简单项目为例，来说明生成器如何让你的代码运行起来更加高效。</p>
+<blockquote>
+<p>在 Redis 中，有一个列表<code>datalist</code>，里面有很多的数据，这些数据可能是<code>纯阿拉伯数字</code>，<code>中文数字</code>，<code>字符串&quot;敏感信息&quot;</code>。现在我们需要实现：从 Redis 中读取所有的数据，把所有的字符串<code>敏感信息</code>全部丢掉，把所有中文数字全部转换为阿拉伯数字，以<code>{&#39;num&#39;: 12345, &#39;date&#39;: &#39;2019-10-30 18:12:14&#39;}</code>这样的格式插入到 MongoDB 中。</p>
+</blockquote>
+<p>示例数据如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">41234213424</div><div class="line">一九八八七二六三</div><div class="line">8394520342</div><div class="line">七二三六二九六六</div><div class="line">敏感信息</div><div class="line">80913408120934</div><div class="line">敏感信息</div><div class="line">敏感信息</div><div class="line">95352345345</div><div class="line">三三七四六</div><div class="line">999993232</div><div class="line">234234234</div><div class="line">三六八八七七</div><div class="line">敏感信息</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-19-27-35.png" alt=""></p>
+<p>如果让你来写这个转换程序，你可能会这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line">handler = pymongo.MongoClient().data_list.num</div><div class="line"></div><div class="line">CHINESE_NUM_DICT = &#123;</div><div class="line">    <span class="string">'一'</span>: <span class="string">'1'</span>,</div><div class="line">    <span class="string">'二'</span>: <span class="string">'2'</span>,</div><div class="line">    <span class="string">'三'</span>: <span class="string">'3'</span>,</div><div class="line">    <span class="string">'四'</span>: <span class="string">'4'</span>,</div><div class="line">    <span class="string">'五'</span>: <span class="string">'5'</span>,</div><div class="line">    <span class="string">'六'</span>: <span class="string">'6'</span>,</div><div class="line">    <span class="string">'七'</span>: <span class="string">'7'</span>,</div><div class="line">    <span class="string">'八'</span>: <span class="string">'8'</span>,</div><div class="line">    <span class="string">'九'</span>: <span class="string">'9'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">()</span>:</span></div><div class="line">    datas = []</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        data = client.lpop(<span class="string">'datalist'</span>)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        datas.append(data.decode())</div><div class="line">    <span class="keyword">return</span> datas</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_sensitive_data</span><span class="params">(datas)</span>:</span></div><div class="line">    clear_data = []</div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">if</span> data == <span class="string">'敏感信息'</span>:</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        clear_data.append(data)</div><div class="line">    <span class="keyword">return</span> clear_data</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">tranfer_chinese_num</span><span class="params">(datas)</span>:</span></div><div class="line">    number_list = []</div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            num = int(data)</div><div class="line">        <span class="keyword">except</span> ValueError:</div><div class="line">            num = <span class="string">''</span>.join(CHINESE_NUM_DICT[x] <span class="keyword">for</span> x <span class="keyword">in</span> data)</div><div class="line">        number_list.append(num)</div><div class="line">    <span class="keyword">return</span> number_list</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_data</span><span class="params">(number_list)</span>:</span></div><div class="line">    <span class="keyword">for</span> number <span class="keyword">in</span> number_list:</div><div class="line">        data = &#123;<span class="string">'num'</span>: number, <span class="string">'date'</span>: datetime.datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)&#125;</div><div class="line">        handler.insert_one(data)</div><div class="line"></div><div class="line">raw_data = get_data()</div><div class="line">safe_data = remove_sensitive_data(raw_data)</div><div class="line">number_list = tranfer_chinese_num(safe_data)</div><div class="line">save_data(number_list)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-19-45-36.png" alt=""></p>
+<p>这段代码，看起来很 Pythonic，一个函数只做一件事，看起来也满足编码规范。最后运行结果也正确。能有什么问题？</p>
+<p>问题在于，这段代码，每个函数都会创建一个列表存放处理以后的数据。如果 Redis 中的数据多到超过了你当前电脑的内存怎么办？对同一批数据多次使用 for 循环，浪费了大量的时间，能不能只循环一次？</p>
+<p>也许你会说，你可以把移除<code>敏感信息</code>，中文数字转阿拉伯数字的逻辑全部写在<code>get_data</code>函数的 <code>while</code>循环中，这样不就只循环一次了吗？</p>
+<p>可以是可以，但是这样一来，<code>get_data</code>就做了不止一件事情，代码也显得非常混乱。如果以后要增加一个新的数据处理逻辑：</p>
+<blockquote>
+<p>转换为数字以后，检查所有奇数位的数字相加之和与偶数位数字相加之和是否相等，丢弃所有相等的数字。</p>
+</blockquote>
+<p>那么你就要修改<code>get_data</code>的代码。</p>
+<p>在开发软件的时候，我们应该面向扩展开放，面向修改封闭，所以不同的逻辑，确实应该分开，所以上面把每个处理逻辑分别写成函数的写法，在软件工程上没有问题。但是如何做到处理逻辑分开，又不需要对同一批数据进行多次 for 循环呢？</p>
+<p>这个时候，就要依赖于我们的生成器了。</p>
+<p>我们先来看看下面这一段代码的运行效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_num</span><span class="params">()</span>:</span></div><div class="line">    nums = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        print(f<span class="string">'生成数据：&#123;i&#125;'</span>)</div><div class="line">        nums.append(i)</div><div class="line">    <span class="keyword">return</span> nums</div><div class="line">nums = gen_num()</div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> nums:</div><div class="line">    print(f<span class="string">'打印数据：&#123;num&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-20-04-14.png" alt=""></p>
+<p>现在，我们对代码做一下修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_num</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        print(f<span class="string">'生成数据：&#123;i&#125;'</span>)</div><div class="line">        <span class="keyword">yield</span> i</div><div class="line">nums = gen_num()</div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> nums:</div><div class="line">    print(f<span class="string">'打印数据：&#123;num&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>其运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-20-05-33.png" alt=""></p>
+<p>大家对比上面两张插图。前一张插图，先生成10个数据，然后再打印10个数据。后一张图，生成一个数据，打印一个数据，再生成一个数据，再打印一个数据……</p>
+<p>如果以代码的行号来表示运行运行逻辑，那么代码是按照这个流程运行的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">1-&gt;5-&gt;6-&gt;2-&gt;3-&gt;4-&gt;6-&gt;7-&gt;6-&gt;2-&gt;3-&gt;4-&gt;6-&gt;7-&gt;6-&gt;2-&gt;3-&gt;4-&gt;6-&gt;7....</div></pre></td></tr></table></figure>
+<p>大家可以把这段代码写在 PyCharm 中，然后使用单步调试来查看它每一步运行的是哪一行代码。</p>
+<p>程序运行到<code>yield</code>就会把它后面的数字<code>抛出</code>到外面给 for 循环， 然后进入外面 for 循环的循环体，外面的 for 循环执行完成后，又会进入<code>gen_num</code>函数里面的 <code>yield i</code>后面的一行，开启下一次 for 循环，继续生成新的数字……</p>
+<p>整个过程中，不需要额外创建一个列表来保存中间的数据，从而达到节约内存空间的目的。而整个过程中，虽然代码写了两个 for 循环，但是如果你使用单步调试，你就会发现实际上真正的循环只有<code>for i in range(10)</code>。而外面的<code>for num in nums</code>仅仅是实现了函数内外的切换，并没有新增循环。</p>
+<p>回到最开始的问题，我们如何使用生成器来修改代码呢？实际上你几乎只需要把<code>return 列表</code>改成<code>yield 每一个元素</code>即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line">handler = pymongo.MongoClient().data_list.num_yield</div><div class="line"></div><div class="line">CHINESE_NUM_DICT = &#123;</div><div class="line">    <span class="string">'一'</span>: <span class="string">'1'</span>,</div><div class="line">    <span class="string">'二'</span>: <span class="string">'2'</span>,</div><div class="line">    <span class="string">'三'</span>: <span class="string">'3'</span>,</div><div class="line">    <span class="string">'四'</span>: <span class="string">'4'</span>,</div><div class="line">    <span class="string">'五'</span>: <span class="string">'5'</span>,</div><div class="line">    <span class="string">'六'</span>: <span class="string">'6'</span>,</div><div class="line">    <span class="string">'七'</span>: <span class="string">'7'</span>,</div><div class="line">    <span class="string">'八'</span>: <span class="string">'8'</span>,</div><div class="line">    <span class="string">'九'</span>: <span class="string">'9'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        data = client.lpop(<span class="string">'datalist'</span>)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        <span class="keyword">yield</span> data.decode()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_sensitive_data</span><span class="params">(datas)</span>:</span></div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">if</span> data == <span class="string">'敏感信息'</span>:</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        <span class="keyword">yield</span> data</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">tranfer_chinese_num</span><span class="params">(datas)</span>:</span></div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            num = int(data)</div><div class="line">        <span class="keyword">except</span> ValueError:</div><div class="line">            num = <span class="string">''</span>.join(CHINESE_NUM_DICT[x] <span class="keyword">for</span> x <span class="keyword">in</span> data)</div><div class="line">        <span class="keyword">yield</span> num</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_data</span><span class="params">(number_list)</span>:</span></div><div class="line">    <span class="keyword">for</span> number <span class="keyword">in</span> number_list:</div><div class="line">        data = &#123;<span class="string">'num'</span>: number, <span class="string">'date'</span>: datetime.datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)&#125;</div><div class="line">        handler.insert_one(data)</div><div class="line"></div><div class="line">raw_data = get_data()</div><div class="line">safe_data = remove_sensitive_data(raw_data)</div><div class="line">number_list = tranfer_chinese_num(safe_data)</div><div class="line">save_data(number_list)</div></pre></td></tr></table></figure>
+<p>代码如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-20-21-57.png" alt=""></p>
+<p>如果你开启 PyCharm 调试模式，你会发现，数据的流向是这样的：</p>
+<ol>
+<li>从 Redis 获取1条数据</li>
+<li>这一条数据传给remove_sensitive_data</li>
+<li>第2步处理以后的数据传给tranfer_chinese_num</li>
+<li>第3步处理以后，传给 save_data</li>
+<li>回到第1步</li>
+</ol>
+<p>整个过程就像是一条流水线一样，数据一条一条地进行处理和存档。不需创建额外的列表，有多少条数据就循环多少次，不做多余的循环。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;写过一段时间代码的同学，应该对这一句话深有体会：程序的时间利用率和空间利用率往往是矛盾的，可以用时间换空间，可以用空间换时间，但很难同时提高一个程序的时间利用率和空间利用率。&lt;/p&gt;
+&lt;p&gt;但如果你尝试使用生成器来重构你的代码，也许你会发现，在一定程度上，你可以既提高时间利用率，又提高空间利用率。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="生成器" scheme="https://www.kingname.info/tags/%E7%94%9F%E6%88%90%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何在Python代码里面调用 pip安装第三方库</title>
+    <link href="https://www.kingname.info/2019/10/29/pip-in-code/"/>
+    <id>https://www.kingname.info/2019/10/29/pip-in-code/</id>
+    <published>2019-10-29T14:42:38.000Z</published>
+    <updated>2019-10-30T14:43:13.334Z</updated>
+    
+    <content type="html"><![CDATA[<p>说到安装 Python 的第三方库，会 Python 的同学都知道，在终端使用<code>pip install xxx</code>即可。</p>
+<p>那么如果我想在代码里面安装第三方库怎么办呢？可能有人想到使用 <code>os</code> 模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line">package_name = <span class="string">'requests'</span></div><div class="line">os.system(f<span class="string">'pip install &#123;package_name&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>这种方法确实可行，并且即使你在虚拟环境中使用这种方式安装，也确实不会安装到系统的 Python 环境中。</p>
+<a id="more"></a>
+<p>但是这种方式总感觉有点奇怪。而且如果这个<code>package_name</code>字符串经过精心构造，可以执行任意系统命令，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line">package_name = <span class="string">'requests &amp;&amp; rm -rf *'</span></div><div class="line">os.system(f<span class="string">'pip install &#123;package_name&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>为了防止这种情况发生，我们可以直接调用<code>pip</code>这个 Python 包：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pip._internal <span class="keyword">import</span> main</div><div class="line"></div><div class="line">main.main([<span class="string">'install'</span>, <span class="string">'第三方库名'</span>])</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-29-21-52-23.png" alt=""></p>
+<p>命令行下面的参数都可以通过转换为列表的形式执行，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pip._internal <span class="keyword">import</span> main</div><div class="line"></div><div class="line">main.main([<span class="string">'install'</span>, <span class="string">'-r'</span>, <span class="string">'requirements.txt'</span>])</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;说到安装 Python 的第三方库，会 Python 的同学都知道，在终端使用&lt;code&gt;pip install xxx&lt;/code&gt;即可。&lt;/p&gt;
+&lt;p&gt;那么如果我想在代码里面安装第三方库怎么办呢？可能有人想到使用 &lt;code&gt;os&lt;/code&gt; 模块：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; os&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;package_name = &lt;span class=&quot;string&quot;&gt;&#39;requests&#39;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;os.system(f&lt;span class=&quot;string&quot;&gt;&#39;pip install &amp;#123;package_name&amp;#125;&#39;&lt;/span&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这种方法确实可行，并且即使你在虚拟环境中使用这种方式安装，也确实不会安装到系统的 Python 环境中。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 Linux 自带的 logrotate 管理你的所有日志</title>
+    <link href="https://www.kingname.info/2019/10/24/logrotate/"/>
+    <id>https://www.kingname.info/2019/10/24/logrotate/</id>
+    <published>2019-10-24T14:41:27.000Z</published>
+    <updated>2019-10-30T14:42:11.542Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们在开发的过程中，会创建非常多的日志，对日志进行 rotate 是一个基本要求。</p>
+<p>所谓的<code>rotate</code>，可以理解为对日志按照一定的规则进行切分。例如，每天晚上0点生成一个新的日志文件，并把老的文件归档。又或者每个日志文件超过多少 MB 以后就自动切分，并把老的内容单独存档或者压缩。存档以后的日志文件保存多少个。超过数量以后先删除老日志再删除新日志。</p>
+<p>如果我们使用的是 Python，那么我们可以使用自带的<code>logging</code>模块或者第三方的<code>logoru</code>来写日志。但如果我们使用像是 MongoDB这种第三方的软件，那么要对日志进行 rotate 就非常麻烦了。如果不加以管理，MongoDB 的日志很容易就达到几十GB。</p>
+<p>还有其他软件，他们的日志散落在系统的各个位置，我们应该如何替他们 rotate 呢？</p>
+<a id="more"></a>
+<p>如果你的系统是 Linux，那么主流发行版一般都会自带一个软件，叫做<code>logrotate</code>，通过简单的配置，就能让它帮你管理系统中各个地方的日志。</p>
+<p>我们以 MongoDB 为例来进行说明。</p>
+<p>MongoDB 的日志默认放在<code>/var/log/mongodb</code>文件夹中，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-24-22-13-14.png" alt=""></p>
+<p>如果不干涉，那么所有的日志内容会无限制追加到这一个<code>mongod.log</code>文件中。并且，如果你的 MongoDB 正在运行，即使你使用<code>rm</code>命令删除了这个文件，它占用的空间也不会释放。</p>
+<p>但使用<code>logrotate</code>来管理这个文件以后，它能通过<code>truncate</code>操作清空这个文件，从而实现释放空间的目的。</p>
+<p><code>logrotate</code>的配置文件地址有两个，第一个主配置文件地址为<code>/etc/logrotate.conf</code>，其内容如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-24-22-16-26.png" alt=""></p>
+<p>另一个专门用于存放配置文件的地址为<code>/etc/logrotate.d/</code>，它里面的每一个文件都是一个配置文件，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-24-22-17-28.png" alt=""></p>
+<p>我们要使用<code>logrotate</code>来管理 MongoDB，所以就在<code>/etc/logrotate.d/</code>文件夹中创建一个<code>mongodb</code>文件（文件名可以任意取），内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/var/log/mongodb/*.log &#123;</div><div class="line">    rotate 5</div><div class="line">    copytruncate</div><div class="line">    missingok</div><div class="line">    compress</div><div class="line">    maxsize 200M</div><div class="line">    daily</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-24-22-20-04.png" alt=""></p>
+<p>这个配置文件的意义如下：</p>
+<p>*第一行用于指定 MongoDB 日志文件的地址为<code>/var/log/mongodb/</code>文件夹下面所有以<code>.log</code>结尾的文件。</p>
+<ul>
+<li><code>rotate 5</code>表示保留5份日志文件</li>
+<li>copytruncate 表示，日志满足要求以后，先复制一份，然后把原来的日志文件清空</li>
+<li>missingok 表示如果这个文件夹下面为空，也没关系，自动忽略</li>
+<li>compress 表示要把日志进行压缩</li>
+<li>maxsize 200M 表示每个日志最多200MB，达到200MB 以后，就进行 rotate。</li>
+<li>daily 表示每天检查一次</li>
+</ul>
+<p>保存这个文件，<code>logrotate</code>将会每天自动检查 MongoDB 的日志文件，如果发现它大小达到了200MB，那么首先会把这个日志复制出来一份（此时将会占用400MB 空间），然后把原来的日子文件内容清空（此时恢复200MB 空间占用）。被复制出来的日志文件会被压缩，并存放在当前文件夹中。当日志数量达到5个的时候，第六个日志文件生成，最开始压缩的那个文件被删除。从而保证 MongoDB 的日志及其备份总共占用空间不超过1GB。</p>
+<p><code>logrotate</code>非常强大，还有非常多的配置参数用于实现各种日志管理的操作，大家可以执行命令<code>man logrotate</code>查看它的帮助文档。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们在开发的过程中，会创建非常多的日志，对日志进行 rotate 是一个基本要求。&lt;/p&gt;
+&lt;p&gt;所谓的&lt;code&gt;rotate&lt;/code&gt;，可以理解为对日志按照一定的规则进行切分。例如，每天晚上0点生成一个新的日志文件，并把老的文件归档。又或者每个日志文件超过多少 MB 以后就自动切分，并把老的内容单独存档或者压缩。存档以后的日志文件保存多少个。超过数量以后先删除老日志再删除新日志。&lt;/p&gt;
+&lt;p&gt;如果我们使用的是 Python，那么我们可以使用自带的&lt;code&gt;logging&lt;/code&gt;模块或者第三方的&lt;code&gt;logoru&lt;/code&gt;来写日志。但如果我们使用像是 MongoDB这种第三方的软件，那么要对日志进行 rotate 就非常麻烦了。如果不加以管理，MongoDB 的日志很容易就达到几十GB。&lt;/p&gt;
+&lt;p&gt;还有其他软件，他们的日志散落在系统的各个位置，我们应该如何替他们 rotate 呢？&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://www.kingname.info/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
+    
+      <category term="Log" scheme="https://www.kingname.info/tags/Log/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用迭代器接收数据并自动停止</title>
+    <link href="https://www.kingname.info/2019/10/23/iter-and-stop/"/>
+    <id>https://www.kingname.info/2019/10/23/iter-and-stop/</id>
+    <published>2019-10-23T14:40:12.000Z</published>
+    <updated>2019-10-30T14:40:58.895Z</updated>
+    
+    <content type="html"><![CDATA[<p>假设有一个 Redis 集合，里面有 N 条数据，你不停从里面<code>lpop</code>数据，直到某一条数据的值为<code>&#39;Stop&#39;</code>字符串为止(已知里面必有一条数据为<code>&#39;Stop&#39;</code>字符串，但其位置不知道)。</p>
+<a id="more"></a>
+<p>这个需求看起来很简单，于是你立刻就着手写出了代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_data</span><span class="params">()</span>:</span></div><div class="line">    datas = []</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        data = client.lpop().decode()</div><div class="line">        <span class="keyword">if</span> data == <span class="string">'Stop'</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        datas.append(data)</div><div class="line">    <span class="keyword">return</span> datas</div></pre></td></tr></table></figure>
+<p>现在问题来了，如果 Redis 里面的数据非常多，已经超过了你的内存容量怎么办？数据全部放在<code>datas</code>列表里面再返回显然是不可取的做法。</p>
+<p>好在，这些数据读取出来以后，会传给一个<code>parse</code>函数，并且这个函数是一条一条处理数据的，它处理完成以后，就可以把数据丢弃了。</p>
+<p>于是你可能会这样改写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_data</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        data = client.lpop().decode()</div><div class="line">        <span class="keyword">if</span> data == <span class="string">'Stop'</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        parse(data)</div></pre></td></tr></table></figure>
+<p>但我们知道，在编码规范和软件工程里面，建议一个函数，它应该只做一件事情，而现在<code>read_data()</code>函数却做了两件事情：1. 从 Redis 里面读取数据。2.调用<code>parse()</code>函数。</p>
+<p>那么我们有没有办法把他们区分开来呢？如何让<code>read_data</code>能返回数据，但是又不会把内存撑爆呢？</p>
+<p>这个时候，我们就可以使用生成器来解决问题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_data</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        data = client.lpop().decode()</div><div class="line">        <span class="keyword">if</span> data == <span class="string">'Stop'</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        <span class="keyword">yield</span> data</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_data</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> read_data():</div><div class="line">        parse(data)</div></pre></td></tr></table></figure>
+<p>在这个代码里面，<code>read_data</code>变成了生成器函数，它返回一个生成器，对生成器进行迭代的时候，每次返回一条数据，这一条数据立即传给<code>parse()</code>函数。整个过程源源不断，生生不息。不需要额外创建一个列表用来存放数据。</p>
+<p>那么代码还能不能继续简化呢？此时我们就可以使用<code>iter</code>关键字了。</p>
+<p>使用了<code>iter</code>关键字的效果如下图所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_data</span><span class="params">()</span>:</span></div><div class="line">    data = client.lpop().decode()</div><div class="line">    <span class="keyword">return</span> data</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_data</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> iter(read_data, <span class="string">'Stop'</span>):</div><div class="line">        parse(data)</div></pre></td></tr></table></figure>
+<p>其中，<code>read_data</code>现在每运行一次只会返回列表最左边的数据。但是当我们直接使用<code>iter(read_data, &#39;Stop&#39;)</code>的时候，就会得到一个<code>迭代器</code>。对这个迭代器进行迭代，相当于在<code>While True</code>里面不停运行<code>read_data</code>函数，直到某一次迭代的时候，<code>read_data</code>函数返回了<code>Stop</code>，就停止。</p>
+<p>当然如果你想炫技的话，还可以进一步简化：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_data</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> iter(<span class="keyword">lambda</span>: client.lpop().decode(), <span class="string">'Stop'</span>):</div><div class="line">        parse(data)</div></pre></td></tr></table></figure>
+<p>当然，我是不推荐这样写的。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;假设有一个 Redis 集合，里面有 N 条数据，你不停从里面&lt;code&gt;lpop&lt;/code&gt;数据，直到某一条数据的值为&lt;code&gt;&amp;#39;Stop&amp;#39;&lt;/code&gt;字符串为止(已知里面必有一条数据为&lt;code&gt;&amp;#39;Stop&amp;#39;&lt;/code&gt;字符串，但其位置不知道)。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="迭代器" scheme="https://www.kingname.info/tags/%E8%BF%AD%E4%BB%A3%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何通过字符串导入 Python 模块</title>
+    <link href="https://www.kingname.info/2019/10/22/import-by-str/"/>
+    <id>https://www.kingname.info/2019/10/22/import-by-str/</id>
+    <published>2019-10-22T14:39:01.000Z</published>
+    <updated>2019-10-30T14:45:03.867Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们平时导入第三方模块的时候，一般使用的是<code>import</code>关键字，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">from</span> scrapy.spider <span class="keyword">import</span> Spider</div></pre></td></tr></table></figure>
+<p>但是如果各位同学看过 Scrapy 的<code>settings.py</code>文件，就会发现里面会通过字符串的方式来指定pipeline 和 middleware，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">    <span class="string">'Test.middlewares.ExceptionRetryMiddleware'</span>: <span class="number">545</span>,</div><div class="line">    <span class="string">'Test.middlewares.BOProxyMiddlewareV2'</span>: <span class="number">543</span>,</div><div class="line">&#125;</div><div class="line"></div><div class="line"> SPIDER_MIDDLEWARES = &#123;</div><div class="line">   <span class="string">'Test.middlewares.LoggingRequestMiddleware'</span>: <span class="number">543</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们知道，这里的<code>Test.middlewares.ExceptionRetryMiddleware</code>实际上对应了根目录下面的<code>Test</code>文件夹里面的<code>middlewares.py</code>文件中的<code>ExceptionRetryMiddleware</code>类。那么 Scrapy 是如何根据这个字符串，导入这个类的呢？</p>
+<a id="more"></a>
+<p>在 Scrapy 源代码中，我们可以找到<a href="https://github.com/scrapy/scrapy/blob/master/scrapy/utils/misc.py#L33" target="_blank" rel="external">相关的代码</a>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_object</span><span class="params">(path)</span>:</span></div><div class="line">    <span class="string">"""Load an object given its absolute object path, and return it.</span></div><div class="line">    object can be a class, function, variable or an instance.</div><div class="line">    path ie: 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware'</div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        dot = path.rindex(<span class="string">'.'</span>)</div><div class="line">    <span class="keyword">except</span> ValueError:</div><div class="line">        <span class="keyword">raise</span> ValueError(<span class="string">"Error loading object '%s': not a full path"</span> % path)</div><div class="line"></div><div class="line">    module, name = path[:dot], path[dot+<span class="number">1</span>:]</div><div class="line">    mod = import_module(module)</div><div class="line"></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        obj = getattr(mod, name)</div><div class="line">    <span class="keyword">except</span> AttributeError:</div><div class="line">        <span class="keyword">raise</span> NameError(<span class="string">"Module '%s' doesn't define any object named '%s'"</span> % (module, name))</div><div class="line"></div><div class="line">    <span class="keyword">return</span> obj</div></pre></td></tr></table></figure>
+<p>根据这段代码，我们知道，它使用了<code>importlib</code>模块的<code>import_module</code>函数：</p>
+<ol>
+<li>首先根据字符串路径最右侧的<code>.</code>把字符串路径分成两个部分，例如：<code>Test.middlewares.LoggingRequestMiddleware</code>分成<code>Test.middlewares</code>和<code>LoggingRequestMiddleware</code></li>
+<li>使用<code>import_module</code>导入左边的部分</li>
+<li>从左边部分通过<code>getattr</code>获得具体的类</li>
+</ol>
+<p>现在我们来测试一下。我们创建的测试文件结构如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-22-22-27-25.png" alt=""></p>
+<p>其中，<code>pipelines.py</code>文件的内容如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-22-22-27-57.png" alt=""></p>
+<p><code>main.py</code>文件的内容如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-22-22-31-23.png" alt=""></p>
+<p>运行<code>main.py</code>，可以看到<code>pipelines.py</code>中的<code>Pipeline</code>类被成功执行了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-22-22-33-39.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们平时导入第三方模块的时候，一般使用的是&lt;code&gt;import&lt;/code&gt;关键字，例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; scrapy&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;from&lt;/span&gt; scrapy.spider &lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; Spider&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;但是如果各位同学看过 Scrapy 的&lt;code&gt;settings.py&lt;/code&gt;文件，就会发现里面会通过字符串的方式来指定pipeline 和 middleware，例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;DOWNLOADER_MIDDLEWARES = &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;Test.middlewares.ExceptionRetryMiddleware&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;545&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;Test.middlewares.BOProxyMiddlewareV2&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;543&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; SPIDER_MIDDLEWARES = &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;   &lt;span class=&quot;string&quot;&gt;&#39;Test.middlewares.LoggingRequestMiddleware&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;543&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;我们知道，这里的&lt;code&gt;Test.middlewares.ExceptionRetryMiddleware&lt;/code&gt;实际上对应了根目录下面的&lt;code&gt;Test&lt;/code&gt;文件夹里面的&lt;code&gt;middlewares.py&lt;/code&gt;文件中的&lt;code&gt;ExceptionRetryMiddleware&lt;/code&gt;类。那么 Scrapy 是如何根据这个字符串，导入这个类的呢？&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何用 Python让自己变成天选之子</title>
+    <link href="https://www.kingname.info/2019/10/21/become-lucky-one/"/>
+    <id>https://www.kingname.info/2019/10/21/become-lucky-one/</id>
+    <published>2019-10-21T14:38:03.000Z</published>
+    <updated>2019-10-30T14:45:02.237Z</updated>
+    
+    <content type="html"><![CDATA[<p>请大家猜一猜下面这段代码的运行效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> random</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line">people = [<span class="string">'kingname'</span>, <span class="string">'王小一'</span>, <span class="string">'李小二'</span>, <span class="string">'张小三'</span>, <span class="string">'刘小四'</span>, <span class="string">'卢小五'</span>, <span class="string">'马小六'</span>, <span class="string">'周小七'</span>, <span class="string">'丁小八'</span>, <span class="string">'朱小九'</span>]</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">11</span>):</div><div class="line">    lucky_guy = random.choice(people)</div><div class="line">    print(f<span class="string">'第&#123;i&#125;次抽奖，中奖用户：&#123;lucky_guy&#125;'</span>)</div><div class="line">    time.sleep(<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>你是不是以为这段代码运行以后，结果如下图所示？</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-21-21-50-47.png" alt=""></p>
+<p>但实际上，我可以让输出结果根据我的意愿随意变动，例如像下面这个 gif ，所有输出结果都是我：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/fakerandom.gif" alt=""></p>
+<p>你可以先不要往下看，放下手机，自己写一下代码，试一试 如何才能实现 gif 中的效果。</p>
+<a id="more"></a>
+<p>下面来为大家解密。</p>
+<p>要实现这个效果，只需要两个知识点：</p>
+<ol>
+<li>Python自带模块是可以被覆盖的</li>
+<li>Python 的 import 在同一个运行时只会导入一次</li>
+</ol>
+<p>首先来看第一个知识点。Python 的自带模块是可以被覆盖的，所以我们先来定义一个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">choice</span><span class="params">(option)</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'kingname'</span></div></pre></td></tr></table></figure>
+<p>接下来，使用这个函数覆盖<code>random.choice</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> random</div><div class="line">random.choice = choice</div></pre></td></tr></table></figure>
+<p>现在，无论给<code>random.choice</code>传入什么参数，它始终都会返回<code>kingname</code>，运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-21-21-58-38.png" alt=""></p>
+<p>这个时候，你可能会说，那别人写代码的时候，又重新<code>import random</code>怎么办呢？<code>random.choice</code>不是又被改回去了吗？</p>
+<p>实际上并不会，因为Python 的包导入机制决定了，在每个运行时内部，每个包只有第一次导入的时候有效，所以只要还在当前运行时，那么后续的所有<code>import random</code>都是无效的。</p>
+<p>所以，即使重新导入了 random 模块，<code>random.choice</code>依然是你修改以后的代码。所以当你再次执行的时候，会发现返回的还是你想要的数据，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-21-22-02-38.png" alt=""></p>
+<p>可能有人会说这样容易被识破啊，别人只要先随便写一些测试数据，运行一次<code>random.choice([123, 456])</code>，发现返回的竟然是<code>kingname</code>，这不就露馅了吗？</p>
+<p>实际上完全不用担心，我们可以这样操作：</p>
+<ol>
+<li>如果备选列表里面不包含<code>kingname</code>，那么就使用原生的 <code>random.choice</code></li>
+<li>如果备选列表里面包含<code>kingname</code>，那么就以60%的概率返回<code>kingname</code></li>
+</ol>
+<p>要实现这样的功能，我们可以这样写代码：</p>
+<p>首先重启当前 Jupyter 内核，让 random 恢复成默认的，然后编码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> random</div><div class="line"></div><div class="line">origin_choice = random.choice</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">choice</span><span class="params">(option)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="string">'kingname'</span> <span class="keyword">not</span> <span class="keyword">in</span> option <span class="keyword">or</span> random.randint(<span class="number">1</span>, <span class="number">10</span>) &gt; <span class="number">6</span>:</div><div class="line">        <span class="keyword">return</span> origin_choice(option)</div><div class="line">    <span class="keyword">return</span> <span class="string">'kingname'</span></div><div class="line"></div><div class="line">random.choice = choice</div></pre></td></tr></table></figure>
+<p>这样替换以后，当有<code>kingname</code>在备选列表中时，<code>kingname</code>被有60%的概率被选中，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-21-22-13-06.png" alt=""></p>
+<p>当<code>kingname</code>不在备选列表中时，一切正常，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-21-22-13-51.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;请大家猜一猜下面这段代码的运行效果：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; random&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; time&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;people = [&lt;span class=&quot;string&quot;&gt;&#39;kingname&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;王小一&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;李小二&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;张小三&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;刘小四&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;卢小五&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;马小六&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;周小七&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;丁小八&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;朱小九&#39;&lt;/span&gt;]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; i &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; range(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;11&lt;/span&gt;):&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    lucky_guy = random.choice(people)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(f&lt;span class=&quot;string&quot;&gt;&#39;第&amp;#123;i&amp;#125;次抽奖，中奖用户：&amp;#123;lucky_guy&amp;#125;&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    time.sleep(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;你是不是以为这段代码运行以后，结果如下图所示？&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-21-21-50-47.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;但实际上，我可以让输出结果根据我的意愿随意变动，例如像下面这个 gif ，所有输出结果都是我：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/fakerandom.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;你可以先不要往下看，放下手机，自己写一下代码，试一试 如何才能实现 gif 中的效果。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何正确获取 MongoDB 集合里面的最后一条数据</title>
+    <link href="https://www.kingname.info/2019/10/19/get-last-data/"/>
+    <id>https://www.kingname.info/2019/10/19/get-last-data/</id>
+    <published>2019-10-19T14:37:12.000Z</published>
+    <updated>2019-10-30T14:45:00.072Z</updated>
+    
+    <content type="html"><![CDATA[<p>在我们使用 Python 查询 MongoDB 的时候，一般会使用MongoDB 的集合（collection）对象的 <code>find()</code>方法或者<code>find_one()</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line">handler = pymongo.MongoClient().chapter_7.example_data_4</div><div class="line"></div><div class="line"><span class="comment"># 获得一个游标操作对象，并迭代</span></div><div class="line">rows = handler.find()</div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> rows:</div><div class="line">    print(row)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 查询第一条数据</span></div><div class="line">row = handler.find_one()</div><div class="line">print(row)</div></pre></td></tr></table></figure>
+<p>其中，<code>find()</code>方法返回的是一个游标对象，我们可以直接对这个对象进行迭代，从而按顺序获取每一条数据。</p>
+<a id="more"></a>
+<p>这个游标对象还有一个<code>sort()</code>方法，可以对迭代返回的数据进行排序，例如想对数据按照<code>_id</code>倒序显示，那么可以把代码写为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">rows = handler.find().sort(<span class="string">'_id'</span>, <span class="number">-1</span>)</div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> rows:</div><div class="line">    print(row)  <span class="comment"># 此时会倒序输出内容</span></div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-19-22-14-59.png" alt=""></p>
+<p>需要注意，对游标对象执行了<code>sort()</code>方法以后，返回的依然是游标对象。所以如果我们只想获取最后一条数据怎么办呢？有如下2种方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rows = handler.find().sort(<span class="string">'_id'</span>, <span class="number">-1</span>).limit(<span class="number">1</span>)  <span class="comment"># 倒序以后，只返回1条数据</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> rows:  <span class="comment"># 这个循环只会执行1次</span></div><div class="line">    print(row)</div></pre></td></tr></table></figure>
+<p>或者我们可以使用第二种方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rows = handler.find().sort(<span class="string">'_id'</span>, <span class="number">-1</span>)</div><div class="line">row = next(rows)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-19-22-16-07.png" alt=""></p>
+<p>这是由于游标对象是一个可迭代对象，所以可以使用<code>next</code>函数获取它第一次迭代的值。</p>
+<p>我们平时使用<code>find_one()</code>时，返回的都是第一个满足条件的数据，那么有办法返回最后一个满足条件的数据呢？</p>
+<p>由于 <code>find_one()</code>返回的数据是<code>None</code>或者一个字典。他们都没有<code>sort()</code>方法，所以不能使用下面这种写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">row = handler.find_one().sort(<span class="string">'_id'</span>, <span class="number">-1</span>)</div></pre></td></tr></table></figure>
+<p>正确的写法，是把<code>sort</code>作为参数写在<code>find_one()</code>方法里面：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">row = handler.find_one(sort=[(<span class="string">'_id'</span>, <span class="number">-1</span>)])</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-19-22-20-48.png" alt=""></p>
+<p>作为参数的<code>sort</code>，它的值是一个列表，列表里面的每一个元素都是元组，元组的第一个值为需要被排序的字段名，第二个值为1或者-1，1表示正序，-1表示倒序。如果列表里面有多个元组，那么先按第一个元组对应的字段排序，第一次排序的结果里面，值相同的再按第二个元组对应的字段排序，以此类推。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在我们使用 Python 查询 MongoDB 的时候，一般会使用MongoDB 的集合（collection）对象的 &lt;code&gt;find()&lt;/code&gt;方法或者&lt;code&gt;find_one()&lt;/code&gt;方法：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; pymongo&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;handler = pymongo.MongoClient().chapter_7.example_data_4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 获得一个游标操作对象，并迭代&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;rows = handler.find()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; row &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; rows:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(row)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 查询第一条数据&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;row = handler.find_one()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;print(row)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;其中，&lt;code&gt;find()&lt;/code&gt;方法返回的是一个游标对象，我们可以直接对这个对象进行迭代，从而按顺序获取每一条数据。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/categories/MongoDB/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>你的代码是如何被炫技毁掉的</title>
+    <link href="https://www.kingname.info/2019/10/17/do-not-show/"/>
+    <id>https://www.kingname.info/2019/10/17/do-not-show/</id>
+    <published>2019-10-17T14:36:16.000Z</published>
+    <updated>2019-10-30T14:45:14.276Z</updated>
+    
+    <content type="html"><![CDATA[<p>你的代码是如何被炫技毁掉的？</p>
+<a id="more"></a>
+<p>假设有这样一个例子：</p>
+<p>一个函数接收两个参数，第一个参数为一个字典，第二个参数为一个列表，我们要把列表中的每一个元素去查字典，如果能够查询到，那么就获取值，如果不能查询到，就跳过。</p>
+<p>例如：</p>
+<p>输入：<code>{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</code>和<code>[&#39;a&#39;, &#39;d&#39;, &#39;c&#39;]</code>，那么打印：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">a=<span class="number">1</span></div><div class="line">c=<span class="number">3</span></div></pre></td></tr></table></figure>
+<p>我们可能会这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">referer_dict</span><span class="params">(target, keys)</span>:</span></div><div class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> keys:</div><div class="line">        <span class="keyword">if</span> k <span class="keyword">in</span> target:</div><div class="line">            print(f<span class="string">'&#123;k&#125;=&#123;target[k]&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>那么有没有可能把判断<code>k</code>是否在 <code>target</code>这个操作去掉呢？也可以：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">referer_dict</span><span class="params">(target, keys)</span>:</span></div><div class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> keys:</div><div class="line">        values = target.get(k, <span class="keyword">None</span>)</div><div class="line">        values <span class="keyword">is</span> <span class="keyword">None</span> <span class="keyword">or</span> print(f<span class="string">'&#123;k&#125;=&#123;target[k]&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>但这种写法实际上并没有节省代码行数，不如这样改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">referer_dict</span><span class="params">(target, keys)</span>:</span></div><div class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> keys:</div><div class="line">        k <span class="keyword">not</span> <span class="keyword">in</span> target <span class="keyword">or</span> print(f<span class="string">'&#123;k&#125;=&#123;target[k]&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>接下来还可以继续优化成一行代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">referer_dict</span><span class="params">(target, keys)</span>:</span></div><div class="line">    [print(f<span class="string">'&#123;k&#125;=&#123;target[k]&#125;'</span>) <span class="keyword">for</span> k <span class="keyword">in</span> keys <span class="keyword">if</span> k <span class="keyword">in</span> target]</div></pre></td></tr></table></figure>
+<p>停。</p>
+<p>再这样魔改下去这个函数都可以去掉。总共只需要1行代码。但是这样炫技并不可取。代码可读性和可维护性比炫技重要一万倍。</p>
+<p>第四种写法，纯粹就是为了凑出这个打印结果而强行使用了列表推导式，毫无可读性，别人接手这个代码也难以维护。</p>
+<p>保持 Python 的自文档性，优秀的 Python 代码，本身就是最好的文档，连注释都不需要就能让人理解。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;你的代码是如何被炫技毁掉的？&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在 Jupyter 中如何重新导入特定的 Python 文件？</title>
+    <link href="https://www.kingname.info/2019/10/12/reimport-in-jupyter/"/>
+    <id>https://www.kingname.info/2019/10/12/reimport-in-jupyter/</id>
+    <published>2019-10-12T14:34:58.000Z</published>
+    <updated>2019-10-30T14:45:28.936Z</updated>
+    
+    <content type="html"><![CDATA[<p>Jupyter 是数据分析领域非常有名的开发环境，使用 Jupyter 写数据分析相关的代码会大大节约开发时间。</p>
+<p>设想这样一个场景：别的部门的同事传给你一个数据分析的模块，用于实现对数据的高级分析。模块里面有上百个函数。</p>
+<a id="more"></a>
+<p>如果直接写 Python 文件来调用数据分析模块，那么使用方法非常简单：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> analyze <span class="keyword">import</span> FathersAnalyzer</div><div class="line"></div><div class="line">data = [...]</div><div class="line">father = FathersAnalyzer(data)</div><div class="line">result = father.analyze()</div><div class="line">print(f<span class="string">'分析结果为：&#123;result&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>现在，你需要使用 Jupyter 来调用这个分析模块。你应该怎么在 Jupyter里面调用？</p>
+<p>你可能会觉得，这还不简单吗？直接把这个模块的代码与 Jupyter Notebook 的 <code>.ipynb</code> 文件放在一起，然后在 Jupyter 里面像导入普通模块那样导入即可，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-12-22-34-24.png" alt=""></p>
+<p>那么现在问题来了，如果我此时修改了 <code>analyze.py</code>文件，会出现什么情况呢？</p>
+<p>我们改一下看看，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-12-22-36-31.png" alt=""></p>
+<p>重新运行这个 Cell 中的代码，代码中虽然有<code>from analyze import FathersAnalyzer</code>，看起来像是重新导入了这个模块，但是运行却发现，它运行的是修改之前的代码。</p>
+<p>这是因为，一个 Jupyter Notebook 中的所有代码，都是在同一个运行时中运行的代码，当你多次导入同一个模块时，Python 的包管理机制会自动忽略后面的导入，始终只使用第一次导入的结果（所以使用这种方式也可以实现单例模式）。</p>
+<p>那么如果我在修改了被导入的包以后，想重新导入它怎么办呢？有3种方案：</p>
+<ul>
+<li>重启整个 Notebook。但这样会导致当前运行时里面的所有变量全部丢失。</li>
+<li>使用<code>importlib</code>:</li>
+</ul>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-12-22-43-46.png" alt=""></p>
+<p>但这种方案弊端也很明显——除非你按顺序运行每一个 Cell，否则，你的代码会变成下图这样：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-12-22-49-50.png" alt=""></p>
+<p>在每一个 Cell 里面都需要 重新加载一次分析模块，否则，很有可能在你单独运行某一个 Cell 的时候，用的是老的代码，就会导致难以察觉的 bug。</p>
+<ul>
+<li>使用 Jupyter 自带的<code>%autoreload</code>:</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">%load_ext autoreload</div><div class="line">%autoreload <span class="number">1</span></div><div class="line">%aimport analyze </div><div class="line"></div><div class="line">data = <span class="number">123</span></div><div class="line">importlib.reload(analyze)</div><div class="line">father = analyze.FathersAnalyzer(data)</div><div class="line">result = father.analyze()</div><div class="line">print(result)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-12-22-53-57.png" alt=""></p>
+<p>其中关键的代码有三行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">%load_ext autoreload</div><div class="line">%autoreload <span class="number">1</span></div><div class="line">%aimport analyze</div></pre></td></tr></table></figure>
+<p>这三行代码只有在 Jupyter 里面才能正常运行，在 普通的.py 文件里面这样写会报错。它们的作用是：第1行启动<code>autoreload</code>机制。第2行，设置自动加载通过<code>%aimport</code>导入的模块。第3行使用<code>%aimport</code>导入<code>analyze</code>模块。</p>
+<p>这样写以后，任意一个 Cell 运行，所有被<code>%aimport</code>导入的模块都会被重新加载一次。从而让你每次都使用最新的代码。</p>
+<p>当然，你还可以进一步偷懒，把特殊代码缩减为2行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">%load_ext autoreload</div><div class="line">%autoreload <span class="number">2</span></div></pre></td></tr></table></figure>
+<p><code>%autoreload</code>后面的参数被设置为2时，每次运行任意一个 Cell，都会自动重新加载所有<code>import xxx</code>导入的模块。这样做的代价是，运行会慢一些。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Jupyter 是数据分析领域非常有名的开发环境，使用 Jupyter 写数据分析相关的代码会大大节约开发时间。&lt;/p&gt;
+&lt;p&gt;设想这样一个场景：别的部门的同事传给你一个数据分析的模块，用于实现对数据的高级分析。模块里面有上百个函数。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="Jupyter" scheme="https://www.kingname.info/tags/Jupyter/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>更优雅地在 Python 中写日志</title>
+    <link href="https://www.kingname.info/2019/09/29/log-gracefully/"/>
+    <id>https://www.kingname.info/2019/09/29/log-gracefully/</id>
+    <published>2019-09-29T14:33:34.000Z</published>
+    <updated>2019-10-30T14:45:46.655Z</updated>
+    
+    <content type="html"><![CDATA[<p>原来我们在 Python 中写日志，使用的是 Python 自带的 logging 模块，要实现既在终端输出，又能写文件，并且日志文件还能 rotate ，代码需要十多行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">from</span> logging.handlers <span class="keyword">import</span> RotatingFileHandler</div><div class="line"></div><div class="line">os.makedirs(<span class="string">'Logs'</span>, exists_ok=<span class="keyword">True</span>)</div><div class="line">logger = logging.getLogger(<span class="string">'Robot'</span>)</div><div class="line">handler = logging.StreamHandler()</div><div class="line">handler.setLevel(logging.DEBUG)</div><div class="line">file_handler = RotatingFileHandler(os.path.join(<span class="string">'Logs'</span>, <span class="string">'robot.log'</span>),</div><div class="line">maxBytes=<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>,</div><div class="line">backupCount=<span class="number">10</span>,</div><div class="line">encoding=<span class="string">'utf-8'</span>)</div><div class="line">formatter = logging.Formatter(<span class="string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</span>)</div><div class="line">handler.setFormatter(formatter)</div><div class="line">file_handler.setFormatter(formatter)</div><div class="line">logger.addHandler(handler)</div><div class="line">logger.addHandler(file_handler)</div><div class="line">logger.setLevel(logging.DEBUG)</div><div class="line"></div><div class="line">logger.info(<span class="string">'终于可以写日志了...'</span>)</div></pre></td></tr></table></figure>
+<p>那有没有什么简单好用，<code>for human</code>的写日志方案呢？</p>
+<a id="more"></a>
+<p>当然有，那就是使用<a href="https://github.com/Delgan/loguru" target="_blank" rel="external">loguru</a>这个模块。</p>
+<p>它有多好用呢？我们用一段代码来演示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> loguru <span class="keyword">import</span> logger</div><div class="line">logger.add(<span class="string">'logs/z_project.log'</span>,</div><div class="line">           level=<span class="string">'DEBUG'</span>,</div><div class="line">           format=<span class="string">'&#123;time:YYYY-MM-DD  :mm:ss&#125; - &#123;level&#125; - &#123;file&#125; - &#123;line&#125; - &#123;message&#125;'</span>,</div><div class="line">           rotation=<span class="string">"10 MB"</span>)</div><div class="line">logger.info(<span class="string">'可以写日志了'</span>)</div></pre></td></tr></table></figure>
+<p>不需要提前创建文件夹。不需要设置奇奇怪怪的<code>handler</code>。</p>
+<p>甚至你可以直接把它当做装饰器使用，当一个函数报错的时候，自动记录日志：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> loguru <span class="keyword">import</span> logger</div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">@logger.catch</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">'a'</span> + <span class="number">1</span></div></pre></td></tr></table></figure>
+<p>函数报错时，自动记录报错信息到日志中。</p>
+<p>他记录的报错信息有多准确呢？我们来看这个图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-29-22-03-54.png" alt=""></p>
+<p>每个变量的值都给你标出来了。</p>
+<p>使用 loguru 也只需要定义一次格式。只需要在入口文件定义好格式，在同一个项目中的其他文件中，直接</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> loguru <span class="keyword">import</span> logger</div><div class="line">logger.info(<span class="string">'可以用了'</span>)</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;原来我们在 Python 中写日志，使用的是 Python 自带的 logging 模块，要实现既在终端输出，又能写文件，并且日志文件还能 rotate ，代码需要十多行：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; logging&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;from&lt;/span&gt; logging.handlers &lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; RotatingFileHandler&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;os.makedirs(&lt;span class=&quot;string&quot;&gt;&#39;Logs&#39;&lt;/span&gt;, exists_ok=&lt;span class=&quot;keyword&quot;&gt;True&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;logger = logging.getLogger(&lt;span class=&quot;string&quot;&gt;&#39;Robot&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;handler = logging.StreamHandler()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;handler.setLevel(logging.DEBUG)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;file_handler = RotatingFileHandler(os.path.join(&lt;span class=&quot;string&quot;&gt;&#39;Logs&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;robot.log&#39;&lt;/span&gt;),&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;maxBytes=&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt; * &lt;span class=&quot;number&quot;&gt;1024&lt;/span&gt; * &lt;span class=&quot;number&quot;&gt;1024&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;backupCount=&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;encoding=&lt;span class=&quot;string&quot;&gt;&#39;utf-8&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;formatter = logging.Formatter(&lt;span class=&quot;string&quot;&gt;&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;handler.setFormatter(formatter)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;file_handler.setFormatter(formatter)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;logger.addHandler(handler)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;logger.addHandler(file_handler)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;logger.setLevel(logging.DEBUG)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;logger.info(&lt;span class=&quot;string&quot;&gt;&#39;终于可以写日志了...&#39;&lt;/span&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;那有没有什么简单好用，&lt;code&gt;for human&lt;/code&gt;的写日志方案呢？&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="loguru" scheme="https://www.kingname.info/tags/loguru/"/>
+    
+      <category term="logging" scheme="https://www.kingname.info/tags/logging/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用Pymongo实现更新并返回数据</title>
+    <link href="https://www.kingname.info/2019/09/28/pymongo-update-return/"/>
+    <id>https://www.kingname.info/2019/09/28/pymongo-update-return/</id>
+    <published>2019-09-28T14:32:03.000Z</published>
+    <updated>2019-10-30T14:46:03.020Z</updated>
+    
+    <content type="html"><![CDATA[<p>有这样一个业务场景：</p>
+<p>我有100篇故事，放在 MongoDB 里面。我做了一个 web 接口，每次请求返回一篇故事。希望能够实现：</p>
+<p>每次请求返回的故事都不一样，在100次请求里面，每篇故事都需要返回。直到100篇故事全部返回完成。第101次与第1次相同，第102次与第2次相同……</p>
+<a id="more"></a>
+<p>为了实现这个目的，在 MongoDB 里面每一篇故事有3个字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">"title"</span>: <span class="string">"故事标题"</span>, <span class="string">"content"</span>: <span class="string">"故事正文"</span>, <span class="string">"count"</span>: <span class="string">"请求计数"</span>&#125;</div></pre></td></tr></table></figure>
+<p>如果只有一个人请求这个接口，并且他会等着上一次请求返回完成了再请求下一次，那么关键代码可以这样写：</p>
+<ul>
+<li>一开始，所有故事的 <code>count</code>字段都是0</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line">handler = pymongo.MongoClient().story_project.story</div><div class="line"></div><div class="line">story = list(handler.find().sort(<span class="string">'count'</span>, <span class="number">1</span>).limit(<span class="number">1</span>))[<span class="number">0</span>]</div><div class="line">_id = story[<span class="string">'_id'</span>]</div><div class="line">handler.update_one(&#123;<span class="string">'_id'</span>: _id&#125;, &#123;<span class="string">'$inc'</span>: &#123;<span class="string">'count'</span>: <span class="number">1</span>&#125;&#125;)</div></pre></td></tr></table></figure>
+<p>每次查询都取 count 最小的这一条。查询完成以后，就更新 count 字段。</p>
+<p>但是，如果有很多人同时访问这个 web 接口，那么就会出现并发读写冲突的问题。当第一个人读取了一篇故事，还没有来得及更新 count 时，另一个人又访问接口，这样他们两人就会得到同一篇故事。</p>
+<p>为了解决这个问题，就需要把查询和更新作为一个原子操作来执行。此时，就要用到 pymongo 的<code>find_one_and_update</code>方法。它根据特定条件查询一条记录，同时更新这条记录的 count 值。这两个行为是通过一条命令完成的，即时多个人同时请求也不会出现并发冲突的情况。</p>
+<p><code>find_one_and_update</code>的使用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line">handler.find_one_and_update(&#123;&#125;,</div><div class="line">                         &#123;<span class="string">'$inc'</span>:&#123;<span class="string">'count'</span>: <span class="number">1</span>&#125;&#125;,</div><div class="line">                         sort=[(<span class="string">'count'</span>, <span class="number">1</span>)])</div></pre></td></tr></table></figure>
+<p>其中，第一个参数表示查询条件，跟<code>find</code>的第一个参数一致。第二个参数表示更新的内容，与<code>update_one</code>的第二个参数一致。<code>sort</code>表示排序方式，它的值是一个包含元组的列表，元组的第一个元素为被排序的字段名，第二个元素为1表示升序，为-1表示降序。</p>
+<p><code>update_one_and_update</code>还有其他参数，可以参考它的<a href="https://api.mongodb.com/python/current/api/pymongo/collection.html#pymongo.collection.Collection.find_one_and_update" target="_blank" rel="external">官方文档</a>。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;有这样一个业务场景：&lt;/p&gt;
+&lt;p&gt;我有100篇故事，放在 MongoDB 里面。我做了一个 web 接口，每次请求返回一篇故事。希望能够实现：&lt;/p&gt;
+&lt;p&gt;每次请求返回的故事都不一样，在100次请求里面，每篇故事都需要返回。直到100篇故事全部返回完成。第101次与第1次相同，第102次与第2次相同……&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/categories/MongoDB/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="MongoDB" scheme="https://www.kingname.info/tags/MongoDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在 Python 中，is 并不一定包含==</title>
+    <link href="https://www.kingname.info/2019/09/26/is-not-always-equal/"/>
+    <id>https://www.kingname.info/2019/09/26/is-not-always-equal/</id>
+    <published>2019-09-26T14:31:10.000Z</published>
+    <updated>2019-10-30T14:46:18.157Z</updated>
+    
+    <content type="html"><![CDATA[<p>在我们日常使用 Python 时，大家可能有这样一种认识：</p>
+<ul>
+<li>a == b 为 <code>True</code>，a is b 不一定为 <code>True</code></li>
+<li>a is b 为 <code>True</code>，则 a == b 一定为 <code>True</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;abc!&apos;</div><div class="line">&gt;&gt;&gt; b = &apos;abc!&apos;</div><div class="line">&gt;&gt;&gt; a == b</div><div class="line">True</div><div class="line">&gt;&gt;&gt; a is b</div><div class="line">False</div><div class="line">&gt;&gt;&gt; c = a</div><div class="line">&gt;&gt;&gt; a is c</div><div class="line">True</div><div class="line">&gt;&gt;&gt; a == c</div><div class="line">True</div></pre></td></tr></table></figure>
+<p>这是因为 <code>==</code> 只比较值，而 <code>is</code> 同时比较值和内存地址。简单来说:你左手边有一个人，右手边有一个人，两个人长得一模一样，那么<code>左手边的人==右手边的人</code>；你左手边有一个人，一分钟以后这个人走到了你的右手边，那么<code>刚才左手边的人 is 现在右手边的人</code></p>
+<p>但凡事总有意外，情况下面的代码：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-17-41.png" alt=""></p>
+<p>为什么会出现这种情况？<code>a is b</code>为 True，<code>a == b</code>却为 <code>False</code>。</p>
+<p>你可以先停在这里，猜一下a 和 b 里面的值到底是什么东西。</p>
+<p>现在来揭开答案，我们来网上看两行：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-23-43.png" alt=""></p>
+<p>a 和 b 的值为<code>♂</code>，它的意思是<code>Not a Number</code>，非数。</p>
+<p><code>♂</code>与任何数，包括它自己比较，结果都是 False，这是<a href="https://zh.wikipedia.org/wiki/IEEE_754#%E7%89%B9%E6%AE%8A%E5%80%BC" target="_blank" rel="external">IEEE-754</a>规定的：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-27-06.png" alt=""></p>
+<p>Python 在实现这个数据的时候，根据 IEEE-754的要求，也做了限制：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-30-08.png" alt=""></p>
+<p>相关的文档地址详见 Python 的 <a href="https://docs.python.org/3/library/math.html" target="_blank" rel="external">math 库</a></p>
+<p>所以，这里 a == b 为 False，是一种特殊情况。并不是 Python 出现了错误。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在我们日常使用 Python 时，大家可能有这样一种认识：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a == b 为 &lt;code&gt;True&lt;/code&gt;，a is b 不一定为 &lt;code&gt;True&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;a is b 为 &lt;code&gt;True&lt;/code&gt;，则
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Elasticsearch批量插入时，存在就不插入</title>
+    <link href="https://www.kingname.info/2019/09/25/es-not-insert-if-exists/"/>
+    <id>https://www.kingname.info/2019/09/25/es-not-insert-if-exists/</id>
+    <published>2019-09-25T14:29:29.000Z</published>
+    <updated>2019-10-30T14:46:40.874Z</updated>
+    
+    <content type="html"><![CDATA[<p>当我们使用 Elasticsearch-py 批量插入数据到 ES 的时候，我们常常使用它的 <code>helpers</code>模块里面的<code>bulk</code>函数。其使用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> helpers, Elasticsearch</div><div class="line"></div><div class="line">es = Elasticsearch(xxx)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    datas = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">yield</span> &#123;</div><div class="line">            <span class="string">'_id'</span>: <span class="string">"xxx"</span>,</div><div class="line">            <span class="string">'_source'</span>: &#123;</div><div class="line">                <span class="string">'age'</span>: data</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">helpers.bulk(es,</div><div class="line">index=<span class="string">'xxx'</span>,</div><div class="line">generator(),</div><div class="line">doc_type=<span class="string">'doc'</span>,)</div></pre></td></tr></table></figure>
+<p>但这种方式有一个问题，它默认相当于<code>upsert</code>操作。如果<code>_id</code> 对应的文档已经在 ES 里面了，那么数据会被更新。如果<code>_id</code> 对应的文档不在 ES 中，那么就插入。</p>
+<a id="more"></a>
+<p>如果我想实现，不存在就插入，存在就跳过怎么办？此时就需要在文档里面添加<code>_op_type</code>指定操作类型为<code>create</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> helpers, Elasticsearch</div><div class="line"></div><div class="line">es = Elasticsearch(xxx)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    datas = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">yield</span> &#123;</div><div class="line">            <span class="string">'_op_type'</span>: <span class="string">'create'</span>,</div><div class="line">            <span class="string">'_id'</span>: <span class="string">"xxx"</span>,</div><div class="line">            <span class="string">'_source'</span>: &#123;</div><div class="line">                <span class="string">'age'</span>: data</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">helpers.bulk(es,</div><div class="line">generator(),</div><div class="line">index=<span class="string">'xxx'</span>,</div><div class="line">doc_type=<span class="string">'doc'</span>)</div></pre></td></tr></table></figure>
+<p>此时，如果<code>_id</code> 对应的文档不在 ES 中，那么就会正常插入，如果<code>ES</code>里面已经有<code>_id</code>对应的数据了，那么就会报错。由于<code>bulk</code>一次性默认插入500条数据，假设其中有2条数据已经存在了，那么剩下的498条会被正常插入。然后程序报错退出，告诉你有两条写入失败，因为已经存在。</p>
+<p>如果你不想让程序报错终止，那么可以增加2个参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">helpers.bulk(es,</div><div class="line">    generator(),</div><div class="line">    index=<span class="string">'xxx'</span>,</div><div class="line">    doc_type=<span class="string">'doc'</span>,</div><div class="line">    raise_on_exception=<span class="keyword">False</span>,               raise_on_error=<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
+<p>其中<code>raise_on_exception=False</code>表示在插入数据失败时，不需要抛出异常。<code>raise_on_error=False</code>表示不抛出<code>BulkIndexError</code>。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;当我们使用 Elasticsearch-py 批量插入数据到 ES 的时候，我们常常使用它的 &lt;code&gt;helpers&lt;/code&gt;模块里面的&lt;code&gt;bulk&lt;/code&gt;函数。其使用方法如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;from&lt;/span&gt; elasticsearch &lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; helpers, Elasticsearch&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;es = Elasticsearch(xxx)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;generator&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    datas = [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; data &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; datas:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;yield&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&#39;_id&#39;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;xxx&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&#39;_source&#39;&lt;/span&gt;: &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                &lt;span class=&quot;string&quot;&gt;&#39;age&#39;&lt;/span&gt;: data&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;helpers.bulk(es,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;index=&lt;span class=&quot;string&quot;&gt;&#39;xxx&#39;&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;generator(),&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;doc_type=&lt;span class=&quot;string&quot;&gt;&#39;doc&#39;&lt;/span&gt;,)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;但这种方式有一个问题，它默认相当于&lt;code&gt;upsert&lt;/code&gt;操作。如果&lt;code&gt;_id&lt;/code&gt; 对应的文档已经在 ES 里面了，那么数据会被更新。如果&lt;code&gt;_id&lt;/code&gt; 对应的文档不在 ES 中，那么就插入。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Elasticsearch" scheme="https://www.kingname.info/categories/Elasticsearch/"/>
+    
+    
+      <category term="Elasticsearch" scheme="https://www.kingname.info/tags/Elasticsearch/"/>
+    
+  </entry>
   
   <entry>
     <title>GNE 预处理技术——如何移除特定标签但是保留文字到父标签</title>
@@ -504,984 +1151,6 @@
       <category term="JavaScript" scheme="https://www.kingname.info/tags/JavaScript/"/>
     
       <category term="少数派" scheme="https://www.kingname.info/tags/%E5%B0%91%E6%95%B0%E6%B4%BE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>为什么Python 3.6以后字典有序并且效率更高？</title>
-    <link href="https://www.kingname.info/2019/07/13/python-dict/"/>
-    <id>https://www.kingname.info/2019/07/13/python-dict/</id>
-    <published>2019-07-13T05:30:47.000Z</published>
-    <updated>2019-07-13T05:33:59.953Z</updated>
-    
-    <content type="html"><![CDATA[<p>在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。</p>
-<p>但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印Keys列表的时候，你就会发现B在A的后面。</p>
-<p>不仅如此，从Python 3.6开始，下面的三种遍历操作，效率要高于Python 3.5之前：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> 字典</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> 字典.values()</div><div class="line"></div><div class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> 字典.items()</div></pre></td></tr></table></figure>
-<p>从Python 3.6开始，字典占用内存空间的大小，视字典里面键值对的个数，只有原来的30%~95%。</p>
-<p>Python 3.6到底对字典做了什么优化呢？为了说明这个问题，我们需要先来说一说，在Python 3.5（含）之前，字典的底层原理。</p>
-<a id="more"></a>
-<p>当我们初始化一个空字典的时候，CPython的底层会初始化一个二维数组，这个数组有8行，3列，如下面的示意图所示：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">my_dict = &#123;&#125;</div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
-<p>现在，我们往字典里面添加一个数据：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'name'</span>] = <span class="string">'kingname'</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[1278649844881305901, 指向name的指针, 指向kingname的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
-<p>这里解释一下，为什么添加了一个键值对以后，内存变成了这个样子：</p>
-<p>首先我们调用Python 的<code>hash</code>函数，计算<code>name</code>这个字符串在<strong>当前运行时</strong>的hash值：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>)</div><div class="line"><span class="number">1278649844881305901</span></div></pre></td></tr></table></figure>
-<p>特别注意，我这里强调了『当前运行时』，这是因为，Python自带的这个<code>hash</code>函数，和我们传统上认为的Hash函数是不一样的。Python自带的这个<code>hash</code>函数计算出来的值，只能保证在每一个运行时的时候不变，但是当你关闭Python再重新打开，那么它的值就可能会改变，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-12-21-49-44.png" alt=""></p>
-<p>假设在某一个运行时里面，<code>hash(&#39;name&#39;)</code>的值为<code>1278649844881305901</code>。现在我们要把这个数对8取余数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1278649844881305901</span> % <span class="number">8</span></div><div class="line"><span class="number">5</span></div></pre></td></tr></table></figure>
-<p>余数为5，那么就把它放在刚刚初始化的二维数组中，下标为5的这一行。由于<code>name</code>和<code>kingname</code>是两个字符串，所以底层C语言会使用两个字符串变量存放这两个值，然后得到他们对应的指针。于是，我们这个二维数组下标为5的这一行，第一个值为<code>name</code>的hash值，第二个值为<code>name</code>这个字符串所在的内存的地址（指针就是内存地址），第三个值为<code>kingname</code>这个字符串所在的内存的地址。</p>
-<p>现在，我们再来插入两个键值对：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'age'</span>] = <span class="number">26</span></div><div class="line">my_dict[<span class="string">'salary'</span>] = <span class="number">999999</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">[[-4234469173262486640, 指向salary的指针, 指向999999的指针],</div><div class="line">[1545085610920597121, 执行age的指针, 指向26的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---],</div><div class="line">[1278649844881305901, 指向name的指针, 指向kingname的指针],</div><div class="line">[---, ---, ---],</div><div class="line">[---, ---, ---]]</div><div class="line">'''</div></pre></td></tr></table></figure>
-<p>那么字典怎么读取数据呢？首先假设我们要读取<code>age</code>对应的值。</p>
-<p>此时，Python先计算在当前运行时下面，<code>age</code>对应的Hash值是多少：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'age'</span>)</div><div class="line"><span class="number">1545085610920597121</span></div></pre></td></tr></table></figure>
-<p>现在这个hash值对8取余数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1545085610920597121</span> % <span class="number">8</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
-<p>余数为1，那么二维数组里面，下标为1的这一行就是需要的键值对。直接返回这一行第三个指针对应的内存中的值，就是<code>age</code>对应的值<code>26</code>。</p>
-<p>当你要循环遍历字典的Key的时候，Python底层会遍历这个二维数组，如果当前行有数据，那么就返回Key指针对应的内存里面的值。如果当前行没有数据，那么就跳过。所以总是会遍历整个二位数组的每一行。</p>
-<p>每一行有三列，每一列占用8byte的内存空间，所以每一行会占用24byte的内存空间。</p>
-<p>由于Hash值取余数以后，余数可大可小，所以字典的Key并不是按照插入的顺序存放的。</p>
-<blockquote>
-<p>注意，这里我省略了与本文没有太大关系的两个点：</p>
-<ol>
-<li>开放寻址，当两个不同的Key，经过Hash以后，再对8取余数，可能余数会相同。此时Python为了不覆盖之前已有的值，就会使用<code>开放寻址</code>技术重新寻找一个新的位置存放这个新的键值对。</li>
-<li>当字典的键值对数量超过当前数组长度的2/3时，数组会进行扩容，8行变成16行，16行变成32行。长度变了以后，原来的余数位置也会发生变化，此时就需要移动原来位置的数据，导致插入效率变低。</li>
-</ol>
-</blockquote>
-<p>在Python 3.6以后，字典的底层数据结构发生了变化，现在当你初始化一个空的字典以后，它在底层是这样的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">my_dict = &#123;&#125;</div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [None, None, None, None, None, None, None, None]</div><div class="line"></div><div class="line">entries = []</div><div class="line">'''</div></pre></td></tr></table></figure>
-<p>当你初始化一个字典以后，Python单独生成了一个长度为8的一维数组。然后又生成了一个空的二维数组。</p>
-<p>现在，我们往字典里面添加一个键值对：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'name'</span>] = <span class="string">'kingname'</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [None, 0, None, None, None, None, None, None]</div><div class="line"></div><div class="line">entries = [[-5954193068542476671, 指向name的指针, 执行kingname的指针]]</div><div class="line">'''</div></pre></td></tr></table></figure>
-<p>为什么内存会变成这个样子呢？我们来一步一步地看：</p>
-<p>在当前运行时，<code>name</code>这个字符串的hash值为<code>-5954193068542476671</code>，这个值对8取余数是1：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>)</div><div class="line"><span class="number">-5954193068542476671</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'name'</span>) % <span class="number">8</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
-<p>所以，我们把<code>indices</code>这个一维数组里面，下标为1的位置修改为0。</p>
-<p>这里的0是什么意思呢？0是二位数组<code>entries</code>的索引。现在<code>entries</code>里面只有一行，就是我们刚刚添加的这个键值对的三个数据：<code>name</code>的hash值、指向<code>name</code>的指针和指向<code>kinganme</code>的指针。所以<code>indices</code>里面填写的数字0，就是刚刚我们插入的这个键值对的数据在二位数组里面的行索引。</p>
-<p>好，现在我们再来插入两条数据：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">my_dict[<span class="string">'address'</span>] = <span class="string">'xxx'</span></div><div class="line">my_dict[<span class="string">'salary'</span>] = <span class="number">999999</span></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line">此时的内存示意图</div><div class="line">indices = [1, 0, None, None, None, None, 2, None]</div><div class="line"></div><div class="line">entries = [[-5954193068542476671, 指向name的指针, 执行kingname的指针],</div><div class="line">          [9043074951938101872, 指向address的指针，指向xxx的指针],</div><div class="line">          [7324055671294268046, 指向salary的指针, 指向999999的指针]</div><div class="line">         ]</div><div class="line">'''</div></pre></td></tr></table></figure>
-<p>现在如果我要读取数据怎么办呢？假如我要读取<code>salary</code>的值，那么首先计算<code>salary</code>的hash值，以及这个值对8的余数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'salary'</span>)</div><div class="line"><span class="number">7324055671294268046</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>hash(<span class="string">'salary'</span>) % <span class="number">8</span></div><div class="line"><span class="number">6</span></div></pre></td></tr></table></figure>
-<p>那么我就去读<code>indices</code>下标为6的这个值。这个值为2.</p>
-<p>然后再去读entries里面，下标为2的这一行的数据，也就是salary对应的数据了。</p>
-<p>新的这种方式，当我要插入新的数据的时候，始终只是往<code>entries</code>的后面添加数据，这样就能保证插入的顺序。当我们要遍历字典的Keys和Values的时候，直接遍历<code>entries</code>即可，里面每一行都是有用的数据，不存在跳过的情况，减少了遍历的个数。</p>
-<p>老的方式，当二维数组有8行的时候，即使有效数据只有3行，但它占用的内存空间还是 8 <em> 24 = 192 byte。但使用新的方式，如果只有三行有效数据，那么<code>entries</code>也就只有3行，占用的空间为3 </em> 24 =72 byte，而<code>indices</code>由于只是一个一维的数组，只占用8 byte，所以一共占用 80 byte。内存占用只有原来的41%。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。&lt;/p&gt;
-&lt;p&gt;但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印Keys列表的时候，你就会发现B在A的后面。&lt;/p&gt;
-&lt;p&gt;不仅如此，从Python 3.6开始，下面的三种遍历操作，效率要高于Python 3.5之前：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; key &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; 字典&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; value &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; 字典.values()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; key, value &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; 字典.items()&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;从Python 3.6开始，字典占用内存空间的大小，视字典里面键值对的个数，只有原来的30%~95%。&lt;/p&gt;
-&lt;p&gt;Python 3.6到底对字典做了什么优化呢？为了说明这个问题，我们需要先来说一说，在Python 3.5（含）之前，字典的底层原理。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用uwsgi部署Flask，不使用Unix套接字连接Nginx</title>
-    <link href="https://www.kingname.info/2019/07/08/deploy-flask-uwsgi-without-nginx/"/>
-    <id>https://www.kingname.info/2019/07/08/deploy-flask-uwsgi-without-nginx/</id>
-    <published>2019-07-08T13:27:50.000Z</published>
-    <updated>2019-07-08T13:38:52.071Z</updated>
-    
-    <content type="html"><![CDATA[<p>如果你在Google或者百度或者某些技术社区上面搜索<code>uwsgi + Flask</code>，你会发现大量的文章，是教你如何使用<code>uwsgi + flask + Nginx</code>搭建网站。如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-31-12.png" alt=""></p>
-<h2 id="怪现状"><a href="#怪现状" class="headerlink" title="怪现状"></a>怪现状</h2><p>而且这些文章，全部都像是约定俗成一样，一定会首先用命令行启动uwsgi，测试uwsgi与Flask运行是否正常，然后写uwsgi的配置文件。然后使用<code>Unix 套接字</code>沟通uwsgi与Nginx。所以uwsgi的配置文件里面一定会写成类似于下面这样：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">socket</span> = /xxx/yyy/zzz.sock</div></pre></td></tr></table></figure>
-<p>Nginx的配置一定有类似于下面这一段：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">        include uwsgi_params;</div><div class="line">        uwsgi_pass unix:///xxx/yyy/zzz.sock;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>他们为什么要这样写？因为他们看的别的博客上就是这样写的！他们知其然，但是不知其所以然。</p>
-<a id="more"></a>
-<h3 id="有什么问题？"><a href="#有什么问题？" class="headerlink" title="有什么问题？"></a>有什么问题？</h3><p>这种写法本身没有问题，甚至Flask的官方文档里面也是这样写的，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-43-07.png" alt=""></p>
-<p>但是他们这样写，有一个基本前提——就是Flask程序、uwsgi、Nginx三个东西运行在同一个服务器上。如果用Docker，那么这三个东西甚至需要运行到一个容器里面。</p>
-<p>如果是一个小网站，服务器资源足够，那么这样写没有问题，Unix套接字安全性高，速度也快。</p>
-<p>那么如果你同一个服务器上有三个Docker容器，每一个容器都有一个不同的网站，是不是每个容器里面都需要安装一个Nginx？</p>
-<p>对于大一些的网站，Nginx需要做负载均衡，如果把Nginx和网站放在同一台服务器上，无论是Nginx拖垮了服务器，还是网站拖垮了服务器，都会导致很严重的问题。</p>
-<p>能不能实现，一个服务器上直接安装Nginx，然后服务器上的三个网站分别在三个Docker容器里面，每个容器里面只有Flask和uwsgi，没有Nginx？</p>
-<p>如果你的网站大一些，你在A服务器安装Nginx，在B、C、D、E、F服务器上不安装Nginx，只安装uwsgi + Flask，又怎么做？</p>
-<p>所以进入我们今天的主题，<code>安装uwsgi + Flask(或者Django)，但是不安装Nginx（Deploy Flask with uwsgi but without Nginx）</code></p>
-<h2 id="不使用Unix套接字的uwsgi"><a href="#不使用Unix套接字的uwsgi" class="headerlink" title="不使用Unix套接字的uwsgi"></a>不使用Unix套接字的uwsgi</h2><p>Unix套接字，本质上是一个文件（Unix/Linux哲学：一切皆文件），Nginx和uwsgi通过这个文件来进行通信。所以需要Nginx与uwsgi放在同一个机器上。</p>
-<p>但实际上，uwsgi本身就是一个服务器，A服务器上的Nginx与B服务器上的uwsgi之间是可以通过http进行通信的。</p>
-<p>要让uwsgi使用http进行通信，我们可以修改uwsgi的配置文件xxx.ini：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="section">[uwsgi]</span></div><div class="line"><span class="attr">module</span> = wsgi:app</div><div class="line"><span class="attr">master</span> = <span class="literal">true</span></div><div class="line"><span class="attr">process</span> = <span class="number">5</span></div><div class="line"><span class="attr">threads</span> = <span class="number">100</span></div><div class="line"><span class="attr">gevent</span> = <span class="number">100</span></div><div class="line"><span class="attr">async</span> = <span class="number">100</span></div><div class="line"><span class="attr">http-socket</span> = <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5001</span></div><div class="line"><span class="attr">virtualenv</span> = /Users/kingname/.local/share/virtualenvs/ActiveScoreApi-Ax_h-Y5w</div></pre></td></tr></table></figure>
-<p>其他参数的意义不是本文的重点，我们要关心的是<code>http-socket = 0.0.0.0:5001</code>。它的作用把网站部署在本机的5001端口，并允许外网通过http访问。</p>
-<p>写了这个配置文件以后，通过以下命令来启动uwsgi：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">uwsgi --ini xxx.ini</div></pre></td></tr></table></figure>
-<p>然后你使用<code>IP:5001</code>就可以访问你的网站了。此时，如果你有Nginx，那么只需要在Nginx上设置反向代理，把80端口的请求代理到5001端口即可。</p>
-<p>同理，把uwsgi和网站放在Docker镜像里面，容器开放5001端口。宿主机或者其他机器上的Nginx直接通过IP:端口 就可以访问容器里面的uwsgi，不再需要设置Unix套接字了。</p>
-<p>另外，如果你阅读过uwsgi的官方文档，你还会发现，除了<code>http-socket = 0.0.0.0:5001</code>外，你也可以把它改成<code>http = 0.0.0.0:5001</code>。那么这两种写法是否一样呢？</p>
-<p>在官方文档里面特别区分了它们的使用场景：</p>
-<blockquote>
-<p>The http and http-socket options are entirely different beasts. The first one spawns an additional process forwarding requests to a series of workers (think about it as a form of shield, at the same level of apache or nginx), while the second one sets workers to natively speak the http protocol. TL/DR: if you plan to expose uWSGI directly to the public, use –http, if you want to proxy it behind a webserver speaking http with backends, use –http-socket.</p>
-</blockquote>
-<p>简言之，如果你直接把uwsgi作为服务器，uwsgi启动以后，直接就把IP:端口拿给别人访问，那么你就可以使用<code>http</code>；如果你的uwsgi前面还挡了一个Nginx，那么你就使用<code>http-socket</code>。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;如果你在Google或者百度或者某些技术社区上面搜索&lt;code&gt;uwsgi + Flask&lt;/code&gt;，你会发现大量的文章，是教你如何使用&lt;code&gt;uwsgi + flask + Nginx&lt;/code&gt;搭建网站。如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-31-12.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;h2 id=&quot;怪现状&quot;&gt;&lt;a href=&quot;#怪现状&quot; class=&quot;headerlink&quot; title=&quot;怪现状&quot;&gt;&lt;/a&gt;怪现状&lt;/h2&gt;&lt;p&gt;而且这些文章，全部都像是约定俗成一样，一定会首先用命令行启动uwsgi，测试uwsgi与Flask运行是否正常，然后写uwsgi的配置文件。然后使用&lt;code&gt;Unix 套接字&lt;/code&gt;沟通uwsgi与Nginx。所以uwsgi的配置文件里面一定会写成类似于下面这样：&lt;/p&gt;
-&lt;figure class=&quot;highlight ini&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;socket&lt;/span&gt; = /xxx/yyy/zzz.sock&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;Nginx的配置一定有类似于下面这一段：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;location / &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        include uwsgi_params;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        uwsgi_pass unix:///xxx/yyy/zzz.sock;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;他们为什么要这样写？因为他们看的别的博客上就是这样写的！他们知其然，但是不知其所以然。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="Flask" scheme="https://www.kingname.info/tags/Flask/"/>
-    
-      <category term="uwsgi" scheme="https://www.kingname.info/tags/uwsgi/"/>
-    
-      <category term="Nginx" scheme="https://www.kingname.info/tags/Nginx/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>跟着Kenneth Reitz大神学习读取类属性的三种方法</title>
-    <link href="https://www.kingname.info/2019/07/07/three-in-one/"/>
-    <id>https://www.kingname.info/2019/07/07/three-in-one/</id>
-    <published>2019-07-07T14:48:41.000Z</published>
-    <updated>2019-07-07T14:51:00.151Z</updated>
-    
-    <content type="html"><![CDATA[<p>在看Kenneth Reitz大神的<a href="https://github.com/kennethreitz/records" target="_blank" rel="external">Records项目</a>时，注意到在Readme中，读取数据有三种写法：</p>
-<blockquote>
-<p>Values can be accessed many ways: row.user_email, row[‘user_email’], or row[3]</p>
-</blockquote>
-<p>假设一个数据表如下所示：</p>
-<table>
-<thead>
-<tr>
-<th>username</th>
-<th>active</th>
-<th>name</th>
-<th>user_email</th>
-<th>timezone</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>model-t</td>
-<td>True</td>
-<td>Henry Ford</td>
-<td>model-t@gmail.com</td>
-<td>2016-02-06 22:28:23.894202</td>
-</tr>
-</tbody>
-</table>
-<p>那么，当你想读取user_email这一列的时候，除了可以使用<code>row.user_email</code>和<code>row[&#39;user_email&#39;]</code>以外，由于<code>user_email</code>在第3列（username是第0列），所以还可以使用<code>row[3]</code>来读取。</p>
-<p>今天我们就来研究一下，他是如何实现这个功能的。</p>
-<p>假设我们现在有一个类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.age = age</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div></pre></td></tr></table></figure>
-<p>基于这个类初始化一个对象kingname:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">kingname = People(<span class="string">'kingname'</span>, <span class="number">26</span>)</div><div class="line">print(kingname.age)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-02-56.png" alt=""></p>
-<p>可以看到，我们已经实现了类似于records项目中的<code>row.user_email</code>的写法。</p>
-<p>但是当我们想像字典一样取读取的时候，就会报错，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-04-11.png" alt=""></p>
-<p>此时，为了让一个对象可以像字典一样被读取，我们需要实现它的<code>__getitem__</code>方法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.info = &#123;<span class="string">'name'</span>: name,</div><div class="line">                     <span class="string">'age'</span>: age&#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div></pre></td></tr></table></figure>
-<p>此时就可以像字典一样去读取了，运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-10-00.png" alt=""></p>
-<p>但新的问题又来了，不能直接读取使用<code>kinganme.age</code>读取数据了，这样写会导致报错，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-10-57.png" alt=""></p>
-<p>为了解决这个问题，我们再来实现这个类的<code>__getattr__</code>方法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.info = &#123;<span class="string">'name'</span>: name,</div><div class="line">                     <span class="string">'age'</span>: age&#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-13-11.png" alt=""></p>
-<p>那么如何实现records里面的<code>row[3]</code>这种写法呢？这就需要先解释一下，records这个库是用来做什么的，以及它的数据是如何存放的。</p>
-<p>K大写的records这个库，是用于来更加方便地读写SQL数据库，避免繁琐地写各种SQL语句。</p>
-<p>这个库的源代码只有一个文件：<a href="https://github.com/kennethreitz/records/blob/master/records.py" target="_blank" rel="external">源代码</a></p>
-<p>我们今天要研究的这个写法，在<code>Record</code>这个类里面。这个类用来保存MySQL中的一行数据。<code>Record</code>这个类包含两个属性，分别为<code>_keys</code>和<code>_values</code>，其中<code>_keys</code>用于记录所有的字段名，<code>_values</code>用于记录一行的所有值。字段名和值是按顺序一一对应的。</p>
-<p>例如<code>_keys</code>里面下标为3表示字段名<code>user_email</code>，那么<code>_values</code>里面下标为3的数据就是<code>user_email</code>的值。</p>
-<p>正式由于这样一个一一对应的关系，所以<code>row[3]</code>才能实现<code>row[&#39;user_email&#39;]</code>、<code>row.user_email</code>相同的效果。</p>
-<p>回到我们的People类，为了实现相同的目的，我们再次修改代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self._keys = [<span class="string">'name'</span>, <span class="string">'age'</span>]</div><div class="line">        self._values = [name, age]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">if</span> isinstance(key, int):</div><div class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt;= key &lt; len(self._keys):</div><div class="line">                <span class="keyword">return</span> self._values[key]</div><div class="line">            <span class="keyword">return</span> <span class="string">'索引超出边界'</span></div><div class="line"></div><div class="line">        index = self._keys.index(key)</div><div class="line">        <span class="keyword">if</span> index == <span class="number">-1</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Key不存在'</span></div><div class="line">        <span class="keyword">return</span> self._values[index]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__getitem__(key)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-25-28.png" alt=""></p>
-<p>需要说明的是，无论是使用<code>kingname[&#39;key&#39;]</code>还是<code>kingname[1]</code>，他们都会进入到<code>__getitem__</code>方法中去。</p>
-<p>我这里给出的例子相较于<code>records</code>项目的代码做了简化，不过关键的部分都已经囊括了进来。</p>
-<p>最后，推荐有兴趣的同学通读records这个项目的源代码，你将会从K大的代码中学到非常多的东西。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在看Kenneth Reitz大神的&lt;a href=&quot;https://github.com/kennethreitz/records&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Records项目&lt;/a&gt;时，注意到在Readme中，读取数据有三种写法：&lt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>请不要再用re.compile了！</title>
-    <link href="https://www.kingname.info/2019/06/25/dont-use-re-compile/"/>
-    <id>https://www.kingname.info/2019/06/25/dont-use-re-compile/</id>
-    <published>2019-06-25T05:02:01.000Z</published>
-    <updated>2019-06-25T05:03:27.467Z</updated>
-    
-    <content type="html"><![CDATA[<p>如果大家在网上搜索<code>Python 正则表达式</code>，你将会看到大量的垃圾文章会这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line">text = <span class="string">'一段字符串'</span></div><div class="line">result = pattern.findall(text)</div></pre></td></tr></table></figure>
-<p>这些文章的作者，可能是被其他语言的坏习惯影响了，也可能是被其他垃圾文章误导了，不假思索拿来就用。</p>
-<p><strong>在Python里面，真的不需要使用re.compile!</strong></p>
-<p>为了证明这一点，我们来看Python的源代码。</p>
-<p>在PyCharm里面输入:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">re.search</div></pre></td></tr></table></figure>
-<p>然后Windows用户按住键盘上的Ctrl键，鼠标左键点击<code>search</code>，Mac用户按住键盘上的Command键，鼠标左键点击<code>search</code>，PyCharm会自动跳转到Python的re模块。在这里，你会看到我们常用的正则表达式方法，无论是<code>findall</code>还是<code>search</code>还是<code>sub</code>还是<code>match</code>，全部都是这样写的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_compile(pattern, flag).对应的方法(string)</div></pre></td></tr></table></figure>
-<p>例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">findall</span><span class="params">(pattern, string, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"""Return a list of all non-overlapping matches in the string.</span></div><div class="line"></div><div class="line">    If one or more capturing groups are present in the pattern, return</div><div class="line">    a list of groups; this will be a list of tuples if the pattern</div><div class="line">    has more than one group.</div><div class="line"></div><div class="line">    Empty matches are included in the result."""</div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags).findall(string)</div></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-41-18.png" alt=""></p>
-<p>然后我们再来看<code>compile</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compile</span><span class="params">(pattern, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"Compile a regular expression pattern, returning a Pattern object."</span></div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags)</div></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-43-19.png" alt=""></p>
-<p>看出问题来了吗？</p>
-<p>我们常用的正则表达式方法，都已经自带了<code>compile</code>了！</p>
-<p>根本没有必要多此一举先<code>re.compile</code>再调用正则表达式方法。</p>
-<p>此时，可能会有人反驳：</p>
-<p>如果我有一百万条字符串，使用某一个正则表达式去匹配，那么我可以这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    pattern.search(text)</div></pre></td></tr></table></figure>
-<p>这个时候，<code>re.compile</code>只执行了1次，而如果你像下面这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    re.search(<span class="string">'正则表达式'</span>, text)</div></pre></td></tr></table></figure>
-<p>相当于你在底层对同一个正则表达式执行了100万次<code>re.compile</code>。</p>
-<p>Talk is cheap, show me the code.</p>
-<p>我们来看源代码，正则表达式<code>re.compile</code>调用的是<code>_compile</code>，我们就去看<code>_compile</code>的源代码，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-49-36.png" alt=""></p>
-<p>红框中的代码，说明了<code>_compile</code>自带缓存。它会自动储存最多512条由type(pattern), pattern, flags)组成的Key，只要是同一个正则表达式，同一个flag，那么调用两次_compile时，第二次会直接读取缓存。</p>
-<p>综上所述，请你不要再手动调用<code>re.compile</code>了，这是从其他语言（对的，我说的就是Java）带过来的陋习。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;如果大家在网上搜索&lt;code&gt;Python 正则表达式&lt;/code&gt;，你将会看到大量的垃圾文章会这样写代码：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="正则表达式" scheme="https://www.kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python读取包里面的数据文件的三种方法</title>
-    <link href="https://www.kingname.info/2019/05/26/read-data-file-in-package/"/>
-    <id>https://www.kingname.info/2019/05/26/read-data-file-in-package/</id>
-    <published>2019-05-26T14:44:08.000Z</published>
-    <updated>2019-05-26T14:47:13.027Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们知道，写Python代码的时候，如果一个包（package）里面的一个模块要导入另一个模块，那么我们可以使用相对导入：</p>
-<p>假设当前代码结构如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-21-58-25.png" alt=""></p>
-<p>其中<code>test_1</code>是一个包，在util.py里面想导入同一个包里面的<code>read.py</code>中的<code>read</code>函数，那么代码可以写为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> .read <span class="keyword">import</span> read</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">util</span><span class="params">()</span>:</span></div><div class="line">    read()</div></pre></td></tr></table></figure>
-<p>其中的<code>.read</code>表示当前包目录下的<code>read.py</code>文件。此时<code>read.py</code>文件中的内容如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'阅读文件'</span>)</div></pre></td></tr></table></figure>
-<p>通过包外面的main.py运行代码，运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-01-32.png" alt=""></p>
-<p>现在，我们增加一个数据文件，<code>data.txt</code>，它的内容如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-02-14.png" alt=""></p>
-<p>并且想通过read.py去读取这个数据文件并打印出来。</p>
-<p>修改read.py，试图使用相对路径来打开这个文件：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'./data.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
-<p>运行代码发现报错：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-04-19.png" alt=""></p>
-<p>这个原因很简单，就是如果数据文件的地址写为：<code>./data.txt</code>，那么Python就会从当前工作区文件夹里面寻找<code>data.txt</code>。由于我们运行的是<code>main.py</code>，那么当前工作区就是<code>main.py</code>所在的文件夹，而不是<code>test_1</code>文件夹。所以就会出现找不到文件的情况。</p>
-<p>为了解决这个问题，我们有三种解决方式。</p>
-<ul>
-<li>使用绝对路径</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'/Users/kingname/Project/DataFileExample/test_1/data.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-08-26.png" alt=""></p>
-<ul>
-<li>先获取<code>read.py</code>文件的绝对路径，再拼接出数据文件的绝对路径：</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    basepath = os.path.abspath(__file__)</div><div class="line">    folder = os.path.dirname(basepath)</div><div class="line">    data_path = os.path.join(folder, <span class="string">'data.txt'</span>)</div><div class="line">    <span class="keyword">with</span> open(data_path, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-11-20.png" alt=""></p>
-<ul>
-<li>使用pkgutil库</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pkgutil</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    data_bytes = pkgutil.get_data(__package__, <span class="string">'data.txt'</span>)</div><div class="line">    data_str = data_bytes.decode()</div><div class="line">    print(data_str)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-13-36.png" alt=""></p>
-<p><code>pkgutil</code>是Python自带的用于包管理相关操作的库，<code>pkgutil</code>能根据包名找到包里面的数据文件，然后读取为bytes型的数据。如果数据文件内容是字符串，那么直接<code>decode()</code>以后就是正文内容了。</p>
-<blockquote>
-<p>为什么pkgutil读取的数据文件是bytes型的内容而不直接是字符串类型?<br>这是因为并不是所有数据文件都是字符串，如果某些数据文件是二进制文件或者图片，那么以字符串方式打开就会导致报错。所以为了通用，pkgutil会以bytes型方式读入数据，这相当于open函数的“rb”读取方式。</p>
-</blockquote>
-<p>使用<code>pkgutil</code>还有一个好处，就是只要知道包名就可以找到对应包下面的数据文件，数据文件并不一定要在当前包里面。</p>
-<p>例如修改代码结构如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-18-12.png" alt=""></p>
-<p>另一个包<code>test_2</code>里面有一个数据文件<code>data2.txt</code>。此时如果要在<code>teat_1</code>包的<code>read.py</code>中读取<code>data2.txt</code>中的内容，那么只需要修改<code>pkgutil.get_data</code>的第一个参数为<code>test_2</code>和数据文件的名字即可，运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-20-35.png" alt=""></p>
-<p>而前两种方法都不如<code>pkgutil</code>简单。</p>
-<p>所以使用<code>pkgutil</code>可以大大简化读取包里面的数据文件的代码。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们知道，写Python代码的时候，如果一个包（package）里面的一个模块要导入另一个模块，那么我们可以使用相对导入：&lt;/p&gt;
-&lt;p&gt;假设当前代码结构如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-c
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>先找到爱的人，再写出优秀的代码</title>
-    <link href="https://www.kingname.info/2019/05/20/iloveyun/"/>
-    <id>https://www.kingname.info/2019/05/20/iloveyun/</id>
-    <published>2019-05-20T14:15:35.000Z</published>
-    <updated>2019-05-22T14:22:08.048Z</updated>
-    
-    <content type="html"><![CDATA[<p>过去的你只会在代码里消磨每个周末，现在的你有她一起探索生活里的小惊喜；过去的你是一个死宅，现在的你想陪她拿着相机看遍世界的景色。</p>
-<a id="more"></a>
-<h2 id="她会让你成长，但她不会把你变成另一个人。"><a href="#她会让你成长，但她不会把你变成另一个人。" class="headerlink" title="她会让你成长，但她不会把你变成另一个人。"></a>她会让你成长，但她不会把你变成另一个人。</h2><p>我曾经为某个著名的开源项目贡献过代码。这个项目的编码之规范、测试之完整、文档之清晰在我见过的开源项目中名列前茅。</p>
-<p>它曾经是我代码编写过程中的参考标准。我的编码规范，代码风格，都是从这个项目中学到的。现在，我将会为它添砖加瓦。</p>
-<p>我修改的部分只有十几行代码，但我前前后后修改了七八次。因为我怕我的代码增加了这个项目的熵。让这个项目变得不够完美。</p>
-<p>软件开发中有一个著名的熵增加定理——随着代码复杂度的增加，系统的混乱程度也会成倍增加。</p>
-<p>所以，我在提交代码时，会确保自己的编码风格和已有的风格保持一致；确保单元测试能够测到新增代码的全部情况；确保注释清楚表达了我的逻辑；确保更新了这一段代码对应的文档；确保这一段代码看起来和它周围的代码就像是来自于同一个开发者。</p>
-<p>曾经有朋友说，Github上活跃的一些大佬，都有自己的编码风格，只要看到他们的代码，就能知道出自谁之手。为什么你在给开源项目提交代码的时候，总是会模仿已有代码的写法，而隐藏自己的风格？</p>
-<p>因为这是受到我女朋友的影响吧。一个优秀的女朋友，会让你希望和她一起成长，但又不会让她改变本来的样子。</p>
-<p>我们都是自己生活的主角，他人生活里的NPC。我们能在自己的生活里活出自己的风格，我们试图让所有东西都朝着我们期望的方向发展。</p>
-<p>但有一天，当你看到了一个人，你会怀疑，她应该才是这部戏的主角吧。这个时候，你突然发现你之前的幻想全都实现了。你不敢去触碰，害怕眼前的人像是水里的倒影，轻轻触碰就碎成一片一片。</p>
-<p>你会发现自己变了，你做了之前下了无数次决心又无数次拖延的事情，过去的你跑不了一千米，现在你能在跑步机上坚持5公里；过去的你只会在代码里消磨每个周末，现在的你有她一起探索生活里的小惊喜；过去的你是一个死宅，现在的你想陪她拿着相机看遍世界的景色。你似乎变得不一样了，但你知道你还是你自己。你迷失在她的话语里，你清醒于她的眼眸中。</p>
-<h2 id="背对背，面对360度的世界"><a href="#背对背，面对360度的世界" class="headerlink" title="背对背，面对360度的世界"></a>背对背，面对360度的世界</h2><p>在一些祖传代码里面，每一个函数开头几行一定是检查传入参数的合法性。他们怀疑一切传入的参数，即使调用这些函数之前已经充分检查。</p>
-<p>有人说这是防御性编程，对所有第三方的接口都不能完全信任，要做好接口故障的准备。但在同一个项目中的优秀开发们，应该充分相信自己的伙伴。</p>
-<p>滥用异常捕获，会让代码臃肿不堪，一个函数50行代码，其中49行都在捕获异常。Shit of Mountain就是这样来的。</p>
-<p>优秀的开发者，只在合适的地方捕获异常，他充分信任同伴的代码，他写的代码也会让同伴放心使用。</p>
-<p>一个优秀的女朋友，可以让你把后背完全信任地交给她。你专注于自己最擅长的事情，给她的后背以安全，而她擅长的，你也会完全相信她会处理得很好。</p>
-<h2 id="产品经理和开发的相处模式"><a href="#产品经理和开发的相处模式" class="headerlink" title="产品经理和开发的相处模式"></a>产品经理和开发的相处模式</h2><p>写代码的人分成很多种，码畜，码农，程序员和工程师。</p>
-<p>码畜又叫调参侠、调包侠。自己写不出几行代码。只会调用别人写好的模块，改几个参数反复尝试。</p>
-<p>码农是代码翻译员，把精确到每一步的逻辑翻译成对应的语言。</p>
-<p>程序员把业务逻辑转写成代码逻辑。</p>
-<p>工程师把现实世界映射到代码世界。</p>
-<p>产品经理没有这么多等级，但差的产品经理分为两种，一种只管提需求，不考虑开发能不能实现。一种恨不得亲自帮开发写代码。</p>
-<p>好的产品经理只有一种。她知道什么任务能做，什么任务不能做。她会挡在开发和需求方的面前，帮开发挡开不合理的需求。</p>
-<p>优秀的女朋友会帮助你成为一个优秀的工程师，她会给你合理的目标，然后给你足够的自由，让你自己决定怎么做。她知道什么时候应该提什么需求，一切都恰到好处。你们的生活，就在她的指引下，你的建设下，逐渐迭代出新的版本。</p>
-<h2 id="Hello-World；你好，另一半。"><a href="#Hello-World；你好，另一半。" class="headerlink" title="Hello World；你好，另一半。"></a>Hello World；你好，另一半。</h2><p>你让我对明天有所期许，希望你能和我一起生活在明天里。</p>
-<p>大家520快乐~</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;过去的你只会在代码里消磨每个周末，现在的你有她一起探索生活里的小惊喜；过去的你是一个死宅，现在的你想陪她拿着相机看遍世界的景色。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="程序员" scheme="https://www.kingname.info/categories/%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
-    
-    
-      <category term="产品经理" scheme="https://www.kingname.info/tags/%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86/"/>
-    
-      <category term="程序员" scheme="https://www.kingname.info/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>奇技淫巧：使用Python的or关键字实现多重选择</title>
-    <link href="https://www.kingname.info/2019/04/11/use-or-smarter/"/>
-    <id>https://www.kingname.info/2019/04/11/use-or-smarter/</id>
-    <published>2019-04-11T15:24:59.000Z</published>
-    <updated>2019-04-11T15:25:48.695Z</updated>
-    
-    <content type="html"><![CDATA[<p>在Python开发过程中，我们难免会遇到多重条件判断的情况的情况，此时除了用很多的<code>if...elif...else</code>以外，还可以巧用<code>or</code>关键字实现。</p>
-<p>例如，我们要获取天气信息，现在有三个api接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">api_1()</div><div class="line">api_2()</div><div class="line">api_3()</div></pre></td></tr></table></figure>
-<p>其中<code>api_1()</code>的数据又详细又好，但是接口不稳定，可能随时会掉线。</p>
-<p><code>api_2()</code>返回的结果比<code>api_1()</code>稍微差一点，但是稳定性还不错。</p>
-<p><code>api_3()</code>接口返回的是兜底数据，就是在前两个接口都故障的情况下才会使用。</p>
-<p>如果前两个接口正常工作时返回字典，故障时他们都会返回<code>None</code>。</p>
-<p>现在我们要获取天气信息，你可能会这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">weather = api_1()</div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> weather:</div><div class="line">    weather = api_2()</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> weather:</div><div class="line">        weather = api_3()</div></pre></td></tr></table></figure>
-<p>代码这样写，功能自然是没有问题，但是非常难看。</p>
-<p>实际上，代码可以写为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weather = api_1() <span class="keyword">or</span> api_2() <span class="keyword">or</span> api_3()</div></pre></td></tr></table></figure>
-<p>只需要1行代码就能实现自动选择。如果<code>api_1()</code>返回的是一个非空字典，那么由于<code>短路效应</code>，后面的两个函数都不会运行。当<code>api_1</code>返回None时，<code>api_2()</code>才会运行。并且如果<code>api_2()</code>返回非空字典，那么<code>api_3()</code>依然不会运行。</p>
-<p>我们现在在Jupyter里面测试一下，首先看看如果<code>api_1()</code>直接返回非空字典的情况，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-06-44.png" alt=""></p>
-<p>可以看到，在<code>api_2()</code>和<code>api_3()</code>里面的两行<code>print</code>语句都没有执行。</p>
-<p>接下来我们看看<code>api_1()</code>故障时候的情况。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-07-44.png" alt=""></p>
-<p>此时先运行<code>api_1()</code>返回None，再运行<code>api_2()</code>返回非空字典。符合预期。</p>
-<p>当前两个函数都返回None的时候，第三个函数才会运行，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-09-07.png" alt=""></p>
-<p>除了做多重条件判断外，还可以用来自己和自己取或操作，实现重试。</p>
-<p>例如<code>api_1()</code>可能成功也可能失败，所以需要尝试运行3次，那么代码可以这样写：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weather = api_1() <span class="keyword">or</span> api_1() <span class="keyword">or</span> api_1()</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在Python开发过程中，我们难免会遇到多重条件判断的情况的情况，此时除了用很多的&lt;code&gt;if...elif...else&lt;/code&gt;以外，还可以巧用&lt;code&gt;or&lt;/code&gt;关键字实现。&lt;/p&gt;
-&lt;p&gt;例如，我们要获取天气信息，现在有三个api接口。&lt;/p&gt;
-&lt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>懂博弈论的产品小姐姐的民主妙计</title>
-    <link href="https://www.kingname.info/2019/04/05/vote-is-not-always-true/"/>
-    <id>https://www.kingname.info/2019/04/05/vote-is-not-always-true/</id>
-    <published>2019-04-05T01:24:30.000Z</published>
-    <updated>2019-04-05T12:36:11.176Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="我们来投票吧"><a href="#我们来投票吧" class="headerlink" title="我们来投票吧"></a>我们来投票吧</h2><p>产品小姐姐召集了项目组的五位开发同学，宣布一项重要的决定。</p>
-<p>“作为一个产品，一定要与开发一起对项目有深入的沟通和交流，才能让项目做的更好。所以，今天我们来做一个不记名投票，确定哪几位同学可以和我一起讨论产品的设计方向。”</p>
-<p>“现在给到大家的是大老板L叔为大家的产品能力评分，最低1分，最高5分，每人都不一样。大家都只知道自己的得分，互相不知道别人的得分”</p>
-<p>“我们的投票规则，是大家一起讨论，不低于几分的人可以和产品一起讨论项目的设计方案。然后独立不记名投赞成票或者反对票”</p>
-<p>“首先，1分能力太差，所以不低于2分的人能和产品一起讨论，大家投票。”</p>
-<p>“不出所料，1票反对，4票赞成。”</p>
-<p>“那分数提高一点，不低于3分的人可以和产品一起讨论项目。大家投票。”</p>
-<p>“咦，也是1票反对，4票赞成。”</p>
-<p>“那我们看看大于等于4分，才能和产品讨论。”</p>
-<p>“也是1票反对4票赞成。”</p>
-<p>“那5分呢。”</p>
-<p>“还是一票反对，四票赞成。”</p>
-<p>“6分呢。”</p>
-<p>“还是一票反对，4票赞成。”</p>
-<p>“那么好的，经过民主投票，少数服从多数，大多数人都赞成产品能力为6分的人才能跟我一起讨论产品，由于没有人超过6分，所以这个项目我说了算。散会。”</p>
-<a id="more"></a>
-<h2 id="发生了什么"><a href="#发生了什么" class="headerlink" title="发生了什么"></a>发生了什么</h2><p>可能有人还没有反应过来发生了什么事情。那么我们从上帝视角来看看，当进行少数服从多数的独立不记名投票时，五个程序员都在想什么。</p>
-<p>由于5个程序员的产品能力分别为1-5分，在第一次以2分为基准来投票时，出现1票反对4票赞成，显然投反对票的是产品能力为1分的程序员。因为自己不能加入产品决策，所以肯定不会同意这个方案。而得分为2-5分的程序员都能参与产品决策，所以他们没有理由反对这个方案。因此出现了1票赞成4票反对。</p>
-<p>接下来，产品小姐姐把基准分数提高到了3分，为什么也会出现1票反对4票赞成？</p>
-<p>首先对于得分为3、4、5的三个程序员，他们不受此决策的影响，显然会选择赞成。</p>
-<p>对于得分为2分的程序员，由于刚刚在2分为基准时自己是可以参与决策的，现在提高到了3分，自己失去了决策的资格。他非常生气，于是投了反对票，合情合理。</p>
-<p>那么原来得分为1分的程序员为什么会赞成呢？因为无论他反对还是赞成，他都没有机会参与产品决策。假设他反对了，碰巧另外还有2个人反对。那么3分基准无效，以2分为基准，此时1分程序员仍然没有机会参与产品决策。但是如果他赞成，由于得分为2的人也没法参与决策，那么其他人看到有两个人都不能参与决策的时候，并不知道谁的产品能力最差，这样还可以为自己挽回一些颜面。所以他会赞成这个方案。</p>
-<p>同理，以4分为基准的时候，得分为4、5的程序员没有理由反对。得分为3分的程序员由于失去了机会，必定会反对。得分为1、2的程序员无论同意还是反对都没有机会参与决策，但如果赞成这个提案，还可以拉个人垫背，让人更加猜不出自己的产品水平，所以会赞成这个提案。</p>
-<p>以5分为基准的时候同理。</p>
-<p>最后以六分为基准的时候，显然产品能力最高的程序员会反对，但剩下四个程序员无论赞成还是反对，都对自己没有影响，所以会赞成。最后依然会以1票反对4票同意通过。</p>
-<p>最终的结果就是所有人都失去了与产品小姐姐一起讨论项目需求的资格。</p>
-<h2 id="现实中的例子"><a href="#现实中的例子" class="headerlink" title="现实中的例子"></a>现实中的例子</h2><p>肯定有人觉得上面这个故事是编出来的，现实中怎么可能会有这种智障程序员。当3分、4分、5分都出现一票反对四票赞成的时候，明眼人一定就能看出来产品小姐姐在耍心机，不可能一遍又一遍地参与投票。要是你自己在现场，肯定当场就摔桌子走人了。</p>
-<p>1989年，美国国会就是使用这种方案投票决定要不要给自己加薪50%。结果就遇到了这种情况。</p>
-<p>每一个议员从个人的角度来看，显然都愿意加薪。但是如果被民众知道了自己想加薪这个事情，就会获得不好的名声。毕竟你当官竟然是为了钱，而不是出于为人民服务的目的，民众是很难接受的。</p>
-<p>所以对议员来说，最佳的方案应该是，自己投反对票，但是最后提案却通过了。这种情况下，一方面自己加薪了，另一方面，又向民众展示出一个清官的样子——我是不同意加薪的，我只想全心全意为人民服务，奈何其他贪官都想加薪，我的反对无效，被迫加薪。</p>
-<p>可是，大多数议员都是这样想的，这下到底会有多少人投反对票？万一反对的人超过一半怎么办？<br>此时议员又想，如果我投票赞成加薪，可最后方案没有通过，那岂不是我钱没有拿到，还落得个一心为钱的坏名声？保险起见，反对加薪比较好。</p>
-<p>所以虽然每个人都想加薪，但是最终加薪方案以压倒性优势被反对。</p>
-<p>假如一个行动是一点一点推进的，那么随着推进过程逐步进行，每一步在绝大多数人眼里都很有吸引力，但最后的结果，可能让每个人都落得不如原来的下场。</p>
-<p>原因在于少数服从多数的投票，忽略了偏好的强度。在产品小姐姐的例子里面，投反对票的人是强烈反对，但投赞成票的人可能是可赞成可反对，稍稍偏赞成一点点。在加薪法案里面，投赞成票的人是强烈赞成，但投反对票的人是可赞成可反对，偏向反对一点点。</p>
-<h2 id="另一个启示"><a href="#另一个启示" class="headerlink" title="另一个启示"></a>另一个启示</h2><p>在产品小姐姐的产品交流投票中，之所以4分为基准点时候，1、2分的程序员会投票赞成，因为他们无论赞成还是反对，对他们来说都没有什么大的区别。每个人投票的时候是独立投票的，假设他们反对4分，另外可能还有2个人以上反对4分，那么最终3分的人能够获得资格。但这资格也落不到他们1、2分的头上。所以不如赞成提高到4分，这样自己落选是因为标准太严格，而不是因为自己能力不行。</p>
-<p>你应该还记得，当你还在上学的时候，你身边会有一些同学，成绩很差，但考试之前从不复习。因为对他来说，复习不复习都会挂科，但如果不复习挂科了，他还可以给自己找理由：我挂科是因为没有复习，不是因为我笨。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;我们来投票吧&quot;&gt;&lt;a href=&quot;#我们来投票吧&quot; class=&quot;headerlink&quot; title=&quot;我们来投票吧&quot;&gt;&lt;/a&gt;我们来投票吧&lt;/h2&gt;&lt;p&gt;产品小姐姐召集了项目组的五位开发同学，宣布一项重要的决定。&lt;/p&gt;
-&lt;p&gt;“作为一个产品，一定要与开发一起对项目有深入的沟通和交流，才能让项目做的更好。所以，今天我们来做一个不记名投票，确定哪几位同学可以和我一起讨论产品的设计方向。”&lt;/p&gt;
-&lt;p&gt;“现在给到大家的是大老板L叔为大家的产品能力评分，最低1分，最高5分，每人都不一样。大家都只知道自己的得分，互相不知道别人的得分”&lt;/p&gt;
-&lt;p&gt;“我们的投票规则，是大家一起讨论，不低于几分的人可以和产品一起讨论项目的设计方案。然后独立不记名投赞成票或者反对票”&lt;/p&gt;
-&lt;p&gt;“首先，1分能力太差，所以不低于2分的人能和产品一起讨论，大家投票。”&lt;/p&gt;
-&lt;p&gt;“不出所料，1票反对，4票赞成。”&lt;/p&gt;
-&lt;p&gt;“那分数提高一点，不低于3分的人可以和产品一起讨论项目。大家投票。”&lt;/p&gt;
-&lt;p&gt;“咦，也是1票反对，4票赞成。”&lt;/p&gt;
-&lt;p&gt;“那我们看看大于等于4分，才能和产品讨论。”&lt;/p&gt;
-&lt;p&gt;“也是1票反对4票赞成。”&lt;/p&gt;
-&lt;p&gt;“那5分呢。”&lt;/p&gt;
-&lt;p&gt;“还是一票反对，四票赞成。”&lt;/p&gt;
-&lt;p&gt;“6分呢。”&lt;/p&gt;
-&lt;p&gt;“还是一票反对，4票赞成。”&lt;/p&gt;
-&lt;p&gt;“那么好的，经过民主投票，少数服从多数，大多数人都赞成产品能力为6分的人才能跟我一起讨论产品，由于没有人超过6分，所以这个项目我说了算。散会。”&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="博弈论" scheme="https://www.kingname.info/categories/%E5%8D%9A%E5%BC%88%E8%AE%BA/"/>
-    
-    
-      <category term="博弈论" scheme="https://www.kingname.info/tags/%E5%8D%9A%E5%BC%88%E8%AE%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>为什么你需要少看垃圾博客以及如何在Python里精确地四舍五入</title>
-    <link href="https://www.kingname.info/2019/03/31/real-truth-of-round/"/>
-    <id>https://www.kingname.info/2019/03/31/real-truth-of-round/</id>
-    <published>2019-03-31T04:30:42.000Z</published>
-    <updated>2019-03-31T04:32:48.667Z</updated>
-    
-    <content type="html"><![CDATA[<p>今天又有一个Python初学者被中文技术博客中的垃圾文章给误导了。</p>
-<p>这位初学者的问题是：</p>
-<blockquote>
-<p>在Python中，如何精确地进行浮点数的四舍五入，保留两位小数？</p>
-</blockquote>
-<a id="more"></a>
-<p>如果你在Google或者百度上搜索，你会发现大量的来自CSDN或者简书上面的文章讲到这一点，但是他们的说法无外乎下面几种：</p>
-<h2 id="连例子都不举的垃圾文章"><a href="#连例子都不举的垃圾文章" class="headerlink" title="连例子都不举的垃圾文章"></a>连例子都不举的垃圾文章</h2><p>如下图所示，懒得吐槽。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-30-23-51-43.png" alt=""></p>
-<h2 id="使用round函数"><a href="#使用round函数" class="headerlink" title="使用round函数"></a>使用round函数</h2><p>他们举的例子为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>round(<span class="number">1.234</span>, <span class="number">2</span>)</div><div class="line"><span class="number">1.23</span></div></pre></td></tr></table></figure>
-<p>这种文章，他只演示了<code>四舍</code>，但是却没有演示<code>五入</code>。所以如果你代码稍作修改，就会发现有问题：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>round(<span class="number">11.245</span>, <span class="number">2</span>)</div><div class="line"><span class="number">11.24</span></div></pre></td></tr></table></figure>
-<h2 id="先放大再缩小"><a href="#先放大再缩小" class="headerlink" title="先放大再缩小"></a>先放大再缩小</h2><p>这种文章稍微好一点，知道多举几个例子：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-30-23-53-12.png" alt=""></p>
-<p>然而这种文章也是漏洞百出，只要你多尝试几个数字就会发现问题，在Python 2和Python 3下面，效果是不一样的。先来看看Python 2下面的运行效果：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-11-03-02.png" alt=""></p>
-<p>在Python 2里面，直接使用<code>round</code>，<code>1.125</code>精确到两位小数后为<code>1.13</code>，而<code>1.115</code>精确到两位小数后是<code>1.11</code>。</p>
-<p>再来看看Python 3下面的效果：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-11-04-32.png" alt=""></p>
-<p>在Python 3下面，<code>1.125</code>在精确到两位小数以后是<code>1.12</code>。</p>
-<p>他举的例子，在Python 3中先放大再缩小，也并不总是正确。</p>
-<h3 id="装逼货"><a href="#装逼货" class="headerlink" title="装逼货"></a>装逼货</h3><p>还有一种装逼货，文章和先放大再缩小差不多，但是他还知道<code>decimal</code>这个模块。</p>
-<p>不过他的使用方法，大家看他吧</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-00-12-22.png" alt=""></p>
-<p><code>具体原因不详</code> ？？？？</p>
-<p><code>不推荐使用这个方法</code>？？？</p>
-<p>这种人要先装个逼，表示自己知道有这样一个库，但是用起来发现有问题，而且不知道原因，所以不建议大家使用。</p>
-<p>decimal是专门为高精度计算用的模块，他竟然说不建议大家使用？？？</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-09-36-51.png" alt=""></p>
-<h2 id="round到底出了什么问题？"><a href="#round到底出了什么问题？" class="headerlink" title="round到底出了什么问题？"></a>round到底出了什么问题？</h2><p>骂完了，我们来说说，在Python 3里面，<code>round</code>这个内置的函数到底有什么问题。</p>
-<p>网上有人说，因为在计算机里面，小数是不精确的，例如<code>1.115</code>在计算机中实际上是<code>1.1149999999999999911182</code>，所以当你对这个小数精确到小数点后两位的时候，实际上小数点后第三位是<code>4</code>，所以四舍五入，因此结果为<code>1.11</code>。</p>
-<p>这种说法，对了一半。</p>
-<p>因为并不是所有的小数在计算机中都是不精确的。例如<code>0.125</code>这个小数在计算机中就是精确的，它就是<code>0.125</code>，没有省略后面的值，没有近似，它确确实实就是<code>0.125</code>。</p>
-<p>但是如果我们在Python中把<code>0.125</code>精确到小数点后两位，那么它的就会变成<code>0.12</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>round(<span class="number">0.125</span>, <span class="number">2</span>)</div><div class="line"><span class="number">0.12</span></div></pre></td></tr></table></figure>
-<p>为什么在这里<code>四舍</code>了？</p>
-<p>还有更奇怪的，另一个在计算机里面能够精确表示的小数<code>0.375</code>，我们来看看精确到小数点后两位是多少：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>round(<span class="number">0.375</span>, <span class="number">2</span>)</div><div class="line"><span class="number">0.38</span></div></pre></td></tr></table></figure>
-<p>为什么这里又<code>五入</code>了？</p>
-<p>因为在Python 3里面，<code>round</code>对小数的精确度采用了<code>四舍六入五成双</code>的方式。</p>
-<p>如果你写过大学物理的实验报告，那么你应该会记得老师讲过，直接使用四舍五入，最后的结果可能会偏高。所以需要使用<code>奇进偶舍</code>的处理方法。</p>
-<p>例如对于一个小数<code>a.bcd</code>，需要精确到小数点后两位，那么就要看小数点后第三位：</p>
-<ol>
-<li>如果<code>d</code>小于5，直接舍去</li>
-<li>如果<code>d</code>大于5，直接进位</li>
-<li>如果<code>d</code>等于5：<ol>
-<li><code>d</code>后面没有数据，且c为<code>偶数</code>，那么不进位，保留c</li>
-<li><code>d</code>后面没有数据，且c为<code>奇数</code>，那么进位，c变成(c + 1)</li>
-<li>如果<code>d</code>后面还有非0数字，例如实际上小数为<code>a.bcdef</code>，此时一定要进位，c变成(c + 1)</li>
-</ol>
-</li>
-</ol>
-<p>关于奇进偶舍，有兴趣的同学可以在维基百科搜索这两个词条：<code>数值修约</code>和<code>奇进偶舍</code>。</p>
-<p>所以，<code>round</code>给出的结果如果与你设想的不一样，那么你需要考虑两个原因：</p>
-<ol>
-<li>你的这个小数在计算机中能不能被精确储存？如果不能，那么它可能并没有达到四舍五入的标准，例如<code>1.115</code>，它的小数点后第三位实际上是<code>4</code>，当然会被舍去。</li>
-<li>如果你的这个小数在计算机中能被精确表示，那么，<code>round</code>采用的进位机制是<code>奇进偶舍</code>，所以这取决于你要保留的那一位，它是奇数还是偶数，以及它的下一位后面还有没有数据。</li>
-</ol>
-<h2 id="如何正确进行四舍五入"><a href="#如何正确进行四舍五入" class="headerlink" title="如何正确进行四舍五入"></a>如何正确进行四舍五入</h2><p>如果要实现我们数学上的四舍五入，那么就需要使用decimal模块。</p>
-<p>如何正确使用decimal模块呢？</p>
-<p>看官方文档，不要看中文垃圾博客！！！</p>
-<p>看官方文档，不要看中文垃圾博客！！！</p>
-<p>看官方文档，不要看中文垃圾博客！！！</p>
-<p>不要担心看不懂英文，Python已经推出了官方中文文档（有些函数的使用方法还没有翻译完成）。</p>
-<p>我们来看一下：<a href="https://docs.python.org/zh-cn/3/library/decimal.html#decimal.Decimal.quantize" target="_blank" rel="external">https://docs.python.org/zh-cn/3/library/decimal.html#decimal.Decimal.quantize</a></p>
-<p>官方文档给出了具体的写法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt;Decimal(<span class="string">'1.41421356'</span>).quantize(Decimal(<span class="string">'1.000'</span>))</div><div class="line">Decimal(<span class="string">'1.414'</span>)</div></pre></td></tr></table></figure>
-<p>那么我们来测试一下，<code>0.125</code>和<code>0.375</code>分别保留两位小数是多少：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> decimal <span class="keyword">import</span> Decimal</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="string">'0.125'</span>).quantize(Decimal(<span class="string">'0.00'</span>))</div><div class="line">Decimal(<span class="string">'0.12'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="string">'0.375'</span>).quantize(Decimal(<span class="string">'0.00'</span>))</div><div class="line">Decimal(<span class="string">'0.38'</span>)</div></pre></td></tr></table></figure>
-<p>怎么结果和<code>round</code>一样？我们来看看文档中<code>quantize</code>的函数原型和文档说明：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-10-27-41.png" alt=""></p>
-<p>这里提到了可以通过指定<code>rounding</code>参数来确定进位方式。如果没有指定<code>rounding</code>参数，那么默认使用上下文提供的进位方式。</p>
-<p>现在我们来查看一下默认上下文中的进位方式是什么：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> decimal <span class="keyword">import</span> getcontext</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>getcontext().rounding</div><div class="line"><span class="string">'ROUND_HALF_EVEN'</span></div></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-10-29-31.png" alt=""></p>
-<p><code>ROUND_HALF_EVEN</code>实际上就是<code>奇进偶舍</code>！如果要指定真正的四舍五入，那么我们需要在<code>quantize</code>中指定进位方式为<code>ROUND_HALF_UP</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> decimal <span class="keyword">import</span> Decimal, ROUND_HALF_UP</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="string">'0.375'</span>).quantize(Decimal(<span class="string">'0.00'</span>), rounding=ROUND_HALF_UP)</div><div class="line">Decimal(<span class="string">'0.38'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="string">'0.125'</span>).quantize(Decimal(<span class="string">'0.00'</span>), rounding=ROUND_HALF_UP)</div><div class="line">Decimal(<span class="string">'0.13'</span>)</div></pre></td></tr></table></figure>
-<p>现在看起来一切都正常了。</p>
-<p>那么会不会有人进一步追问一下，如果Decimal接收的参数不是字符串，而是浮点数会怎么样呢？</p>
-<p>来实验一下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="number">0.375</span>).quantize(Decimal(<span class="string">'0.00'</span>), rounding=ROUND_HALF_UP)</div><div class="line">Decimal(<span class="string">'0.38'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="number">0.125</span>).quantize(Decimal(<span class="string">'0.00'</span>), rounding=ROUND_HALF_UP)</div><div class="line">Decimal(<span class="string">'0.13'</span>)</div></pre></td></tr></table></figure>
-<p>那是不是说明，在Decimal的第一个参数，可以直接传浮点数呢？</p>
-<p>我们换一个数来测试一下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="number">11.245</span>).quantize(Decimal(<span class="string">'0.00'</span>), rounding=ROUND_HALF_UP)</div><div class="line">Decimal(<span class="string">'11.24'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="string">'11.245'</span>).quantize(Decimal(<span class="string">'0.00'</span>), rounding=ROUND_HALF_UP)</div><div class="line">Decimal(<span class="string">'11.25'</span>)</div></pre></td></tr></table></figure>
-<p>为什么浮点数<code>11.245</code>和字符串<code>&#39;11.245&#39;</code>，传进去以后，结果不一样？</p>
-<p>我们继续在文档在寻找答案。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-10-36-13.png" alt=""></p>
-<p>官方文档已经很清楚地说明了，如果你传入的参数为浮点数，并且这个浮点值在计算机里面不能被精确存储，那么它会先被转换为一个不精确的二进制值，然后再把这个不精确的二进制值转换为<code>等效的十进制值</code>。</p>
-<p>对于不能精确表示的小数，当你传入的时候，Python在拿到这个数前，这个数就已经被转成了一个不精确的数了。所以你虽然参数传入的是<code>11.245</code>，但是Python拿到的实际上是<code>11.244999999999...</code>。</p>
-<p>但是如果你传入的是字符串<code>&#39;11.245&#39;</code>，那么Python拿到它的时候，就能知道这是<code>11.245</code>，不会提前被转换为一个不精确的值，所以，建议给<code>Decimal</code>的第一个参数传入字符串型的浮点数，而不是直接写浮点数。</p>
-<p>总结，如果想实现精确的四舍五入，代码应该这样写：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> decimal <span class="keyword">import</span> Decimal, ROUND_HALF_UP</div><div class="line"></div><div class="line">origin_num = Decimal(<span class="string">'11.245'</span>)</div><div class="line">answer_num = origin_num.quantize(Decimal(<span class="string">'0.00'</span>), rounding=ROUND_HALF_UP)</div><div class="line">print(answer_num)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-31-10-44-23.png" alt=""></p>
-<p>特别注意，一旦要做精确计算，那么就不应该再单独使用浮点数，而是应该总是使用<code>Decimal(&#39;浮点数&#39;)</code>。否则，当你赋值的时候，精度已经被丢失了，建议全程使用Decimal举例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a = Decimal(&apos;0.1&apos;)</div><div class="line">b = Decimal(&apos;0.2&apos;)</div><div class="line">c = a + b</div><div class="line">print(c)</div></pre></td></tr></table></figure>
-<p>最后，如果有同学想知道为什么0.125和0.375能被精确的储存，而1.115、11.245不能被精确储存，请在这篇文章下面留言，如果想知道的同学多，我就写一篇文章来说明。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;今天又有一个Python初学者被中文技术博客中的垃圾文章给误导了。&lt;/p&gt;
-&lt;p&gt;这位初学者的问题是：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;在Python中，如何精确地进行浮点数的四舍五入，保留两位小数？&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一种字符串的两种显示方式</title>
-    <link href="https://www.kingname.info/2019/03/19/repr/"/>
-    <id>https://www.kingname.info/2019/03/19/repr/</id>
-    <published>2019-03-19T13:18:19.000Z</published>
-    <updated>2019-03-19T13:20:47.386Z</updated>
-    
-    <content type="html"><![CDATA[<p>如果你经常使用Python的命令行交互环境，你一定遇到过下面这个现象：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;test&apos;</div><div class="line">&gt;&gt;&gt; a</div><div class="line">&apos;test&apos;</div><div class="line">&gt;&gt;&gt; print(a)</div><div class="line">test</div></pre></td></tr></table></figure>
-<p>首先定义一个变量<code>a</code>，它的值为字符串<code>test</code>。现在，当你在命令行交互环境直接输入变量名再回车的时候，你看到的是<code>&#39;test&#39;</code>，当你输入<code>print(a)</code>的时候，你看到的却是<code>test</code>。</p>
-<a id="more"></a>
-<p>直接输入变量名回车，字符串会被单引号包起来。而使用<code>print</code>函数打印变量，字符串又没有引号。</p>
-<p>如果说引号只是一个小问题的话，再来看看反斜杠会怎么样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; b = &apos;D:\game\pal4&apos;</div><div class="line">&gt;&gt;&gt; b</div><div class="line">&apos;D:\\game\\pal4&apos;</div><div class="line">&gt;&gt;&gt; print(b)</div><div class="line">D:\game\pal4</div></pre></td></tr></table></figure>
-<p>在这里，<code>b</code>变量的值为Windows下面的一个文件夹路径。在定义的时候，我使用的是单根反斜杠。</p>
-<p>当我输入变量名，然后回车时，看到的结果是<code>&#39;D:\\game\\pal4&#39;</code>，不仅有最外层的引号，而且反斜杠全部变成了两根。</p>
-<p>但是当我使用<code>print</code>函数打印出来的时候，一切又正常了。</p>
-<p>觉得很诡异吗？</p>
-<p>实际上，输入变量名，回车以后，你看到的才是这个字符串真正的样子，因为在Python里面是不存在单根反斜杠的。当你要表示反斜杠本身的时候，就应该是<code>\\</code>这种写法。</p>
-<p>当然在定义的时候你可以只写单根反斜杠，在大多数情况下，Python会理解你的意图，所以它会自动把单根反斜杠转换为两个反斜杠。</p>
-<p>而使用<code>print</code>关键字打印出来的，是经过Python优化，更便于人类阅读的样子。</p>
-<p>当然，使用<code>print</code>函数也能看到字符串真正的样子，不过需要修改一下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; b = &apos;D:\game\pal4&apos;</div><div class="line">&gt;&gt;&gt; b</div><div class="line">&apos;D:\\game\\pal4&apos;</div><div class="line">&gt;&gt;&gt; print(repr(b))</div><div class="line">&apos;D:\\game\\pal4&apos;</div></pre></td></tr></table></figure>
-<p>当你使用<code>repr</code>函数先处理字符串，再打印时，它的效果就和直接输入变量名回车是一样的了。</p>
-<p>在Python中，<code>repr(对象)</code>本质上是调用了对象的<code>__repr__</code>这个方法。而如果直接<code>print(对象)</code>，实际上是打印了对象<code>__str__</code>方法返回的内容。</p>
-<p>我们来做一个实验：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'hello world！'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'为什么我总是对你说你好，因为你是我的世界啊，傻瓜'</span></div><div class="line"></div><div class="line">you = Test()</div></pre></td></tr></table></figure>
-<p>动手测试一下，输入<code>you</code>然后直接回车显示的是什么内容。输入<code>print(you)</code>显示的又是什么内容。</p>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-18-21-10-57.png" alt=""></p>
-<p>从上面的例子可以看出，直接输入变量名回车和直接用<code>print</code>函数打印调用的是对象的不同方法。所以他们当然可以不一样。</p>
-<p>回到昨天的问题上来。在PyCharm的调试模式中，你看到的内容实际上是变量对象的<code>__repr__</code>方法返回的内容，这里的内容是字符串在Python里面的真正的样子，所以斜杠会变多。</p>
-<p>上面说到，当你输入Windows路径的时候，大多数情况下，Python能够理解你的意图，把单根反斜杠转成双反斜杠。不过也有例外的情况，例如：</p>
-<p>假设有一个文件夹的名字叫做<code>u6211</code>。它在<code>pal4</code>文件夹里面。</p>
-<p>那么，路径应该是：<code>D:\game\pal4\u6211</code></p>
-<p>如果在Python里面执行，会出现什么问题？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; c = &apos;D:\game\pal4\u6211&apos;</div><div class="line">&gt;&gt;&gt; c</div><div class="line">&apos;D:\\game\\pal4我&apos;</div><div class="line">&gt;&gt;&gt; print(c)</div><div class="line">D:\game\pal4我</div></pre></td></tr></table></figure>
-<p>怎么和前面的pal4拼在一起了？因为<code>\u6211</code>是一个Unicode编码，表示中文<code>我</code>。</p>
-<p>这种情况下，你有两种解决方式：</p>
-<ol>
-<li>手动使用双反斜杠：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; b = &apos;D:\game\pal4\\u6211&apos;</div><div class="line">&gt;&gt;&gt; b</div><div class="line">&apos;D:\\game\\pal4\\u6211&apos;</div><div class="line">&gt;&gt;&gt; print(b)</div><div class="line">D:\game\pal4\u6211</div></pre></td></tr></table></figure>
-<ol>
-<li>在定义变量的时候，字符串左侧引号的左边加上字母<code>r</code>：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; b = r&apos;D:\game\pal4\u6211&apos;</div><div class="line">&gt;&gt;&gt; b</div><div class="line">&apos;D:\\game\\pal4\\u6211&apos;</div><div class="line">&gt;&gt;&gt; print(b)</div><div class="line">D:\game\pal4\u6211</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;如果你经常使用Python的命令行交互环境，你一定遇到过下面这个现象：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;test&amp;apos;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; a&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;apos;test&amp;apos;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;gt;&amp;gt;&amp;gt; print(a)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;test&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;首先定义一个变量&lt;code&gt;a&lt;/code&gt;，它的值为字符串&lt;code&gt;test&lt;/code&gt;。现在，当你在命令行交互环境直接输入变量名再回车的时候，你看到的是&lt;code&gt;&amp;#39;test&amp;#39;&lt;/code&gt;，当你输入&lt;code&gt;print(a)&lt;/code&gt;的时候，你看到的却是&lt;code&gt;test&lt;/code&gt;。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>你一定在Python中遇到过的反斜杠数量问题</title>
-    <link href="https://www.kingname.info/2019/03/19/back-slash/"/>
-    <id>https://www.kingname.info/2019/03/19/back-slash/</id>
-    <published>2019-03-19T13:18:10.000Z</published>
-    <updated>2019-03-19T13:20:34.833Z</updated>
-    
-    <content type="html"><![CDATA[<p>大家在开发Python的过程中，一定会遇到很多反斜杠的问题，很多人被反斜杠的数量搞得头大。</p>
-<a id="more"></a>
-<p>首先我们写一段非常简单的Python代码，它的作用是把一个字段先转换为JSON格式的字符串，然后把这个字符串再转换为JSON格式的字符串：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"></div><div class="line">info = &#123;<span class="string">'name'</span>: <span class="string">'kingname'</span>, <span class="string">'address'</span>: <span class="string">'杭州'</span>, <span class="string">'salary'</span>: <span class="number">99999</span>&#125;</div><div class="line">info_json = json.dumps(info)</div><div class="line"></div><div class="line"><span class="comment"># 第一次转换以后，打印出来</span></div><div class="line">print(info_json)</div><div class="line"></div><div class="line">info_json_json = json.dumps(info_json)</div><div class="line"></div><div class="line"><span class="comment"># 第二次转换以后，再打印出来</span></div><div class="line">print(info_json_json)</div></pre></td></tr></table></figure>
-<p>它的运行效果如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-17-22-44-51.png" alt=""></p>
-<p>第一次，字典转成JSON格式的字符串，只有中文<code>杭州</code>变成了Unicode编码<code>\u676d\u5dde</code>，其余地方没有出现反斜杠。</p>
-<p>在Python里面，反斜杠不能单独出现，这里<code>\u676d\u5dde</code>中的两根反斜杠，实际上应该是<code>\u</code>。表示这两个编码是Unicode编码。</p>
-<p>接下来，把第一次生成的JSON字符串：<code>{&quot;name&quot;: &quot;kingname&quot;, &quot;address&quot;: &quot;\u676d\u5dde&quot;, &quot;salary&quot;: 99999}</code>再一次转成JSON格式的字符串，这一次变成了：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"&#123;\"name\": \"kingname\", \"address\": \"\\u676d\\u5dde\", \"salary\": 99999&#125;"</span></div></pre></td></tr></table></figure>
-<p>为什么突然出现了这么多反斜杠？这是因为，JSON格式的字符串本身是使用双引号来表示字符串的。如果原来的字符串里面本身就有双引号，那就会导致混淆。此时，Python需要把原来字符串的双引号变成普通的字符，失去双引号的作用。因此使用<code>\&quot;</code>让双引号变成普通的字符。</p>
-<p>这就相当于在Python中，可以这样定义一个包含双引号的字符串：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &quot;跟我说：\&quot;你好\&quot;&quot;</div><div class="line">&gt;&gt;&gt; print(a)</div><div class="line">跟我说：&quot;你好&quot;</div></pre></td></tr></table></figure>
-<p>这里，<code>你好</code>两侧的双引号都加上了反斜杠，让它成为普通的字符，防止它们提前与最外层的双引号配对。</p>
-<p>如果不加反斜杠，就会导致字符串里面的双引号提前与外层的双引号配对，引起语法错误：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; b = &quot;跟我说：&quot;你好&quot;&quot;</div><div class="line">  File &quot;&lt;stdin&gt;&quot;, line 1</div><div class="line">    b = &quot;跟我说：&quot;你好&quot;&quot;</div><div class="line">               ^</div><div class="line">SyntaxError: invalid syntax</div></pre></td></tr></table></figure>
-<p>这里，<code>&quot;跟我说：&quot;</code>成为了一个字符串，末尾的<code>&quot;&quot;</code>成为了一个空字符串。那么中间的<code>你好</code>就变成了一个没有定义的变量。而Python里面，是不存在<code>字符串未定义的变量字符串</code>这种写法的，所以会报语法错误。</p>
-<p>而JSON格式的字符串，本质上也是字符串，所以自然而然也需要遵循这样的规则。因此，字符串原来自带的双引号左侧就被加上了反斜杠。</p>
-<p>那么，原来的<code>\u676d\u5dde</code>为什么变成了<code>\\u676d\\u5dde</code>？</p>
-<p>这是因为，当第二次执行<code>json.dumps</code>的时候，传入的参数是一个JSON格式的字符串，本质就是字符串。而一个字符串里面如果自带反斜杠，那么JSON在对他再次转换的时候，需要标记这是一个普通的字符串形式的反斜杠，不是一个有特殊意义的反斜杠，所以使用<code>\\</code>表示一个普通的反斜杠。</p>
-<p>好了，那么你可以猜一下，如果把<code>info_json_json</code>再<code>json.dumps</code>一下会怎么样？</p>
-<p>会变成：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;\&quot;&#123;\\\&quot;name\\\&quot;: \\\&quot;kingname\\\&quot;, \\\&quot;address\\\&quot;: \\\&quot;\\\\u676d\\\\u5dde\\\&quot;, \\\&quot;salary\\\&quot;: 99999&#125;\&quot;&quot;</div></pre></td></tr></table></figure>
-<p>为什么出现了三个反斜杠连用和四个反斜杠连用的问题？</p>
-<p>实际上非常简单，当你对<code>info_json_json</code>执行<code>json.dumps</code>的时候，Python是怎么转换的？</p>
-<p>我们来看：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;&#123;\&quot;name\&quot;: \&quot;kingname\&quot;, \&quot;address\&quot;: \&quot;\\u676d\\u5dde\&quot;, \&quot;salary\&quot;: 99999&#125;&quot;</div></pre></td></tr></table></figure>
-<p>对<code>字符串</code>执行<code>json.dumps</code>的时候，记住一个关键方法——从左到右，一个字符一个字符的转换。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">1. 第一个字符是双引号，所以变成\&quot;</div><div class="line">2. 第二个字符是&#123;，不是特殊符号，保留</div><div class="line">3. 第三个字符是\，把它变成\\</div><div class="line">4. 第四个字符是&quot;，把它变成\&quot;</div><div class="line">5. ……</div></pre></td></tr></table></figure>
-<p>全部执行完成了，由于这次转换是把一个字符串转换为JSON格式的字符串，所以最外侧加上双引号。</p>
-<p>于是就得到了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;\&quot;&#123;\\\&quot;name\\\&quot;: \\\&quot;kingname\\\&quot;, \\\&quot;address\\\&quot;: \\\&quot;\\\\u676d\\\\u5dde\\\&quot;, \\\&quot;salary\\\&quot;: 99999&#125;\&quot;&quot;</div></pre></td></tr></table></figure>
-<p>我们在爬虫开发过程中，可能会遇到上面这种经过多次JSON转换后的字符串，此时，千万不要轻易使用字符串的<code>.replace</code>方法把多个反斜杠替换为空或者把两个反斜杠替换为一个反斜杠。那样做只会导致你的数据更难解析。</p>
-<p>正确的做法应该是尝试对数据一层一层使用<code>json.loads</code>，把它一层一层还原，还原到最初的<code>{&#39;name&#39;: &#39;kingname&#39;, &#39;address&#39;: &#39;杭州&#39;, &#39;salary&#39;: 99999}</code>这种简单形式。</p>
-<p>好了，今天的介绍就到这里，最后留一个思考题：</p>
-<p>还是上面的代码，现在把PyCharm的调试模式打开，然后数一数<code>info_json</code>和<code>info_json_json</code>里面反斜杠的个数，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-17-23-38-30.png" alt=""></p>
-<p>为什么在<code>info_json</code>里面，出现了<code>\\u676d\\u5dde</code>，为什么在<code>info_json_json</code>里面双引号前是两根反斜杠，而<code>\&quot;\\u676d\\u5dde\&quot;</code>竟然变成了<code>\\&quot;\\\\u676d\\\\u5dde</code>。</p>
-<p>请关注公众号，下一篇文章为你解答。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;大家在开发Python的过程中，一定会遇到很多反斜杠的问题，很多人被反斜杠的数量搞得头大。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>如何在文章中隐藏版权信息</title>
-    <link href="https://www.kingname.info/2019/03/10/hide-text/"/>
-    <id>https://www.kingname.info/2019/03/10/hide-text/</id>
-    <published>2019-03-10T09:08:52.000Z</published>
-    <updated>2019-03-19T13:20:36.541Z</updated>
-    
-    <content type="html"><![CDATA[<p>这篇文章，首先会让你越看越糊涂，然后再让你越看越清醒。请坚持看完。</p>
-<a id="more"></a>
-<p>首先，我们来看一段文字：</p>
-<blockquote>
-<p>一我日是一青技南是我一是个青每南天我更是新青的南栏我目是，青希南望我做是到青在南每我天是几青分南钟我让是你青获南得我提是高青。南</p>
-</blockquote>
-<p>看完以后，你有什么想法？你会不会觉得我是自恋狂？神经病？复读机？脸滚键盘？</p>
-<p>很好，那么再看下面这一句话：</p>
-<blockquote>
-<p>一‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌日‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌一‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍技‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌是‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌一‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌个‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍每‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌天‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌更‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌新‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍的‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌栏‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌目‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌，‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍希‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌望‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌做‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌到‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍在‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌每‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌天‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌几‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍分‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌钟‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌让‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌你‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍获‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌得‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌提‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌高‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍。‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌</p>
-</blockquote>
-<p>是不是正常多了？</p>
-<p>但是如果我说这两段话，实际上是一样的，你信不信？</p>
-<p>现在有4个中文汉字：<code>我是青南</code>，首先介绍Python的<code>ord</code>函数，它可以查询Unicode字符对应的Unicode码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; ord(&apos;我&apos;)</div><div class="line">25105</div><div class="line">&gt;&gt;&gt; ord(&apos;是&apos;)</div><div class="line">26159</div><div class="line">&gt;&gt;&gt; ord(&apos;青&apos;)</div><div class="line">38738</div><div class="line">&gt;&gt;&gt; ord(&apos;南&apos;)</div><div class="line">21335</div></pre></td></tr></table></figure>
-<p>接下来，介绍另一个函数<code>chr</code>。它的作用是把Unicode编码转换为Unicode字符。</p>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; chr(21335)</div><div class="line">&apos;南&apos;</div><div class="line">&gt;&gt;&gt; chr(38738)</div><div class="line">&apos;青&apos;</div></pre></td></tr></table></figure>
-<p>最后，介绍<code>bin</code>函数，它可以把十进制数字转换为二进制数字：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; bin(6)</div><div class="line">&apos;0b110&apos;</div><div class="line">&gt;&gt;&gt; bin(57)</div><div class="line">&apos;0b111001&apos;</div></pre></td></tr></table></figure>
-<p>以上就是本文涉及到的全部知识。下面，开始转换。</p>
-<p>由于Unicode是十进制数字，那么就能进一步转换为二进制数字：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; bin(25105)</div><div class="line">&apos;0b110001000010001&apos;</div></pre></td></tr></table></figure>
-<p>把前面的<code>0b</code>去掉：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; bin(25105)[2:]</div><div class="line">&apos;110001000010001&apos;</div></pre></td></tr></table></figure>
-<p>那么，<code>我是青南</code>转换为二进制以后，分别为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; for char in &apos;我是青南&apos;:</div><div class="line">...  print(char, bin(ord(char))[2:])</div><div class="line">...</div><div class="line">我 110001000010001</div><div class="line">是 110011000101111</div><div class="line">青 1001011101010010</div><div class="line">南 101001101010111</div></pre></td></tr></table></figure>
-<p>那么原来那个看起来很混乱的句子是怎么生成的呢？</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> cycle</div><div class="line"></div><div class="line">signature = <span class="string">'我是青南'</span></div><div class="line">text = <span class="string">'一日一技是一个每天更新的栏目，希望做到在每天几分钟让你获得提高。'</span></div><div class="line">complex_text = <span class="string">''</span></div><div class="line"><span class="keyword">for</span> word, sig <span class="keyword">in</span> zip(text, cycle(signature)):</div><div class="line">    complex_text = complex_text + word + sig</div><div class="line">print(complex_text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-10-16-34-49.png" alt=""></p>
-<p>那么如果把<code>我是青南</code>先转换为他们对应的二进制字符串，然后再穿插到原文中，效果就会变成这样：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> cycle</div><div class="line"></div><div class="line">signature_bin_list = [<span class="string">'110001000010001'</span>,</div><div class="line">                      <span class="string">'110011000101111'</span>,</div><div class="line">                      <span class="string">'1001011101010010'</span>,</div><div class="line">                      <span class="string">'101001101010111'</span>]</div><div class="line">text = <span class="string">'一日一技是一个每天更新的栏目，希望做到在每天几分钟让你获得提高。'</span></div><div class="line">complex_text = <span class="string">''</span></div><div class="line"><span class="keyword">for</span> word, sig <span class="keyword">in</span> zip(text, cycle(signature_bin_list)):</div><div class="line">    complex_text = complex_text + word + sig</div><div class="line">print(complex_text)</div></pre></td></tr></table></figure>
-<p>运行效果如下：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-10-16-40-56.png" alt=""></p>
-<p>到目前为止，你肯定不知道我在干什么。</p>
-<p>下面，我将会介绍两个神奇的数字：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">8204</div><div class="line">8205</div></pre></td></tr></table></figure>
-<p>如果我使用<code>chr</code>把这两个数字转换为Unicode字符会怎么样？</p>
-<p>我们来试一试：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-10-16-54-15.png" alt=""></p>
-<p>很奇怪对吧？什么东西都没有？难道这两个数字转换为Unicode字符以后，都是空格？？</p>
-<p>没事，我们把字符串形式的二进制数字中的<code>1</code>替换为<code>chr(8204)</code>，把<code>0</code>替换为<code>chr(8025)</code></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> cycle</div><div class="line"></div><div class="line">signature_bin_list = [<span class="string">'110001000010001'</span>,</div><div class="line">                      <span class="string">'110011000101111'</span>,</div><div class="line">                      <span class="string">'1001011101010010'</span>,</div><div class="line">                      <span class="string">'101001101010111'</span>]</div><div class="line">text = <span class="string">'一日一技是一个每天更新的栏目，希望做到在每天几分钟让你获得提高。'</span></div><div class="line">complex_text = <span class="string">''</span></div><div class="line"><span class="keyword">for</span> word, sig <span class="keyword">in</span> zip(text, cycle(signature_bin_list)):</div><div class="line">    complex_text = complex_text + word + sig.replace(<span class="string">'1'</span>, chr(<span class="number">8204</span>)).replace(<span class="string">'0'</span>, chr(<span class="number">8205</span>))</div><div class="line">print(complex_text)</div></pre></td></tr></table></figure>
-<p>运行效果是什么样的？请看下面这张图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-10-16-57-26.png" alt=""></p>
-<p>奇奇怪怪的符号没有了，一切都变得干干净净，就像下面这样：</p>
-<blockquote>
-<p>一‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌日‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌一‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍技‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌是‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌一‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌个‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍每‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌天‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌更‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌新‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍的‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌栏‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌目‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌，‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍希‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌望‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌做‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌到‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍在‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌每‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌天‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌几‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍分‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌钟‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌让‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌你‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍获‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌得‌‌‍‍‍‌‍‍‍‍‌‍‍‍‌提‌‌‍‍‌‌‍‍‍‌‍‌‌‌‌高‌‍‍‌‍‌‌‌‍‌‍‌‍‍‌‍。‌‍‌‍‍‌‌‍‌‍‌‍‌‌‌</p>
-</blockquote>
-<p>现在，你在电脑上把这一段话复制下来，存到记事本里面，效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-10-17-02-40.png" alt=""></p>
-<p>看起来很正常对吧。那么现在，用vim把它打开，你看到的将会是这样的：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-10-17-03-38.png" alt=""></p>
-<p>在网页上面，一切都正常，但是一旦有人复制了你的内容，直接转载到了它自己的网站上。那么你可以到法院去起诉他了，因为这些没有宽度的符号，就是证据。</p>
-<p>在下一次的文章中，我将会讲到，如何把本文的过程你过来，把隐藏的信息提取出来。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这篇文章，首先会让你越看越糊涂，然后再让你越看越清醒。请坚持看完。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>三年写了两本书，这是我的时间管理实践</title>
-    <link href="https://www.kingname.info/2019/03/08/my-story-with-my-book/"/>
-    <id>https://www.kingname.info/2019/03/08/my-story-with-my-book/</id>
-    <published>2019-03-08T14:47:28.000Z</published>
-    <updated>2019-03-09T14:46:47.806Z</updated>
-    
-    <content type="html"><![CDATA[<p>“听说你出了两本书，说说你现在是什么感觉。”</p>
-<p>“感觉啊，感觉就像是坐了三年牢，终于放出来。”</p>
-<a id="more"></a>
-<p>2019年2月，我的第二本书在京东上架。至此，历时3年的写书计划圆满落下帷幕。</p>
-<p>在这三年里面，我经历了情绪的起起伏伏，我实践了多种不同的时间管理方法——有效的，无效的，前期立竿见影却后劲不足的，前期效果一般但越用越顺手的……并成功找到了最适合自己的方法。</p>
-<p>在这里，我想把这三年的经历写出来。权作为这两本书的结尾。这一篇，讲讲我的时间管理实践。</p>
-<h2 id="你爷爷是写过书的人"><a href="#你爷爷是写过书的人" class="headerlink" title="你爷爷是写过书的人"></a>你爷爷是写过书的人</h2><p>与出版社的接洽事宜略去不谈。</p>
-<p>书第1，2章的撰写工作非常顺利，因为新鲜感和热情都在。我晚上做梦，也常常梦到——当我老了，我会对我的孙子说，你看，这是爷爷年轻时候写的书。</p>
-<p>于是这个阶段，不需要任何的时间管理方案，只要有空闲时间，自动就会去写。生产力max。</p>
-<p>约稿合同规定的写稿时间将近一年。如果我一周写完一章，那么写完13章，只需要3个月的时间。所以，不着急。</p>
-<p>然后我的生产力就丧失了。</p>
-<p>第一波热情消散以后，就不得不依靠一些时间管理的手段来维持自己的持续产出。</p>
-<h2 id="精确到小时的枷锁"><a href="#精确到小时的枷锁" class="headerlink" title="精确到小时的枷锁"></a>精确到小时的枷锁</h2><p>“我现在手上有10个Offer，凭什么我要离开成都千里迢迢来北京，进你们公司？你们钱给得也不多，又是小公司前途未卜，北京房价还那么贵……”</p>
-<p>“我们不相信996，我们只定Deadline和目标。任何时间到公司都可以，任何时间离开公司都可以。我们公司隔壁，有至少400个单身小姐姐……”</p>
-<p>“你不用说了。我下个月就来上班。”</p>
-<p>假设我每天10点半到公司，18点下班，那么剩下的时间，可以充分利用起来完成我的书。我需要制定详细的时间计划。</p>
-<p>时不我待，时间管理是一个必需要立刻做起来的事情，于是我拿出手机，使用自带的提醒事项订好了每天的计划：</p>
-<ul>
-<li>1月7日，9:00-12:00，完成第三章第1、2节</li>
-<li>1月8日，13:00-17:00，完成第三章配套示例代码的编写。</li>
-<li>1月9日，18:00-23:00，完成第三章第3、4小节的编写。</li>
-<li>1月10日，9:00-11:00，……</li>
-</ul>
-<p>1月7日-月14日，一周的计划满满当当，有条有理，嗯，一本满足。</p>
-<p>1月8日：</p>
-<blockquote>
-<p>某君：青南，听说你提离职了？你不知道HR小姐姐可伤心了，她说要请你吃饭。<br>我：毋需多言，只需要告诉我几点钟在哪里。</p>
-</blockquote>
-<p>1月8日的任务没有完成。1月9日周一需要完成1月8日的任务，可是周日的计划是一整天，周一号并没有一整天的空闲时间，那么一部分任务需要排到周二，原来周二的任务又要排到周三……</p>
-<p>1月10日，尝试待办事项计划，半途而废。</p>
-<h2 id="有限度的自由"><a href="#有限度的自由" class="headerlink" title="有限度的自由"></a>有限度的自由</h2><p>事实证明，通过制定时间表来规划任务，现阶段对我来说还不太适合。由于这是我第一次写书，时间并不能很好的把控。一旦其中一个时间段的事情没有做完，必然会影响到下一个时间段的任务。一个任务的时间延迟，后面全都得延迟。越堆越多，计划崩溃。</p>
-<p>于是我花了一整天的时间来思考这个问题，如果我其中一个任务耗时超过预期怎么办？我应该提前终止吗？提前终止之后，先去完成后面的任务，等一天的安排都做完了，晚上再回过头来做上午没有做完的任务，这样可行吗？</p>
-<p>我得出一个结论，如果使用通过制定时间表的方式来安排，那么这是不现实的。</p>
-<p>这个时候，我遇到了一个App，Todoist。它的出现让我眼前一亮。Todoist也是一个待办事项工具，但是它有意弱化了提醒的功能。</p>
-<p>这就给我了一个提示，如果我完成任务的安排是以天为单位，只需要确定一天要完成哪些任务，会不会安排起来更加灵活呢？不用精确到小时这个粒度，只要能把一天的任务做完，具体几点做都没有关系。</p>
-<p>于是我继续用第一本书的第四章来实践这种计划方式，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-08-23-42-29.png" alt=""></p>
-<p>实时证明这是一种行之有效的办法，因为自己的行为不再被限制到小时里面，整个人突然之间变得自由了。于是第四章非常顺利地在一周内完成了。</p>
-<p>如果用小时为单位来规划任务，会把任务限制得太死，那么就以天为单位吧。</p>
-<h2 id="依赖、优先级、整体"><a href="#依赖、优先级、整体" class="headerlink" title="依赖、优先级、整体"></a>依赖、优先级、整体</h2><p>通过书稿的第四章和第五章的练习，我发现了另外一个问题。如果每个写作任务都是单独的，用Todoist来安排自然是够了。但是，倘若不同的写作任务之间有依赖关系，有优先级。这种情况下，某些任务就比另一些任务更重要。而我完成各个任务的过程，就出现了依赖关系。如果我需要在一个月内写完3章，那么哪些章节先下，哪些代码先写，哪些步骤后做，自然就需要特别重视起来。</p>
-<p>说到优先级，说到依赖关系，我立刻想到了甘特图。</p>
-<p>正好书稿第九章的撰写工作存在不少依赖关系，那么我刚好可以通过甘特图来规划一下。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-09-00-31-13.png" alt=""></p>
-<p>通过在甘特图上面安排任务的过程，我明确地知道了哪些任务需要先做，哪些任务随时都可以做。哪些任务依赖于前面的任务，哪些任务被其他任务依赖，因此必需按时完成。</p>
-<p>第九章在甘特图的帮助下，非常快速地撰写完成了，时间与计划一天不差。此时是2月20日，距离前往北京，还剩4天时间。</p>
-<p>小姐姐们，我来了。</p>
-<h2 id="别跟我说话，我的番茄正在滚动"><a href="#别跟我说话，我的番茄正在滚动" class="headerlink" title="别跟我说话，我的番茄正在滚动"></a>别跟我说话，我的番茄正在滚动</h2><p>新的风暴已经出现，怎么能够停滞不前。</p>
-<p>入职当天中午，我拒绝了老板的吃饭邀约，这个时候哪里有心情吃饭。先去公司隔壁看看。</p>
-<p>啊，真的几百个单身小姐姐……或者说……小妹妹？？？</p>
-<p>和平里第四小学？？？</p>
-<p>好了，现在我可以心无旁骛地写书和工作了……</p>
-<p>化失望为力量吧。把力量注入到写书和新的工作中。</p>
-<p>码字：“在使用mitmproxy的时候,我们可以通过……”</p>
-<p>思绪：“妈的气死老子了，我远赴他乡,离家几千里是为了什么……不行不行,思绪拉回来,继续码字.”</p>
-<p>码字: “我们可以通过Python来自定义mitmproxy的行为,从而实现……”</p>
-<p>思绪: “我还是咽不下这口气,老子被骗了……啊啊啊不能想不想想,专心工作!”</p>
-<p>……</p>
-<p>现在完全不能专心写作，写着写着就会想到其他事情上去。</p>
-<p>“咚、咚、咚，小哥哥要不要吃番茄？”</p>
-<p>“吃番茄？好啊。”</p>
-<p>等等，番茄？啊，不如试一试番茄工作法吧~</p>
-<p>于是，我开始使用番茄工作法。</p>
-<p>现在的状态，坚持写书一小时都不容易。那如果只坚持25分钟呢？然后专门拿五分钟来想各种奇奇怪怪的事情。然后再写25分钟。然后再拿5分钟来做其他事情。</p>
-<p>果然写书的效率高了很多。</p>
-<p>于是，在甘特图、Todoist，番茄工作法的帮助下，转眼到了2017年底。</p>
-<p>第一本书已经交付给了出版社，而我也早已经走出了失望的阴影。</p>
-<p>第一本书的审核周期将会长达一年（为什么我会提前知道？）。而在等待的这个时间窗口里，我去了另外一家公司，并开始了另一个计划。</p>
-<h2 id="晚上跟我一起加班吧？不，我要回家写文档"><a href="#晚上跟我一起加班吧？不，我要回家写文档" class="headerlink" title="晚上跟我一起加班吧？不，我要回家写文档"></a>晚上跟我一起加班吧？不，我要回家写文档</h2><p>就像阳光穿过黑夜，黎明悄悄划破天边。</p>
-<p>在新的公司里面，我遇到了P酱。P酱想跟我学数据库，于是我开始写数据库相关的文档。</p>
-<p>在写第一本书的过程中，我发现通过写书，把知识系统梳理，对自己有极大的好处。于是，数据库的文档，我也用写书的标准来分篇章撰写。</p>
-<p>“师傅，晚上跟我一起加班吧？”有一天P酱过来跟我说。</p>
-<p>“不行，我得回家写书。”</p>
-<p>第一本书的撰写经验告诉我，在时间管理中，三点一线并不一定是不好的东西。我已经养成这样一个生活节奏：</p>
-<ol>
-<li>早上7点起床，写1小时，去楼下买一根煮玉米</li>
-<li>写到10点，上班</li>
-<li>18:00下班</li>
-<li>18:30写到23点</li>
-<li>睡觉</li>
-</ol>
-<p>经过几个月每天养成的习惯，现在每一个动作，都变成了条件反射，时间到了，自动做这个事情，不需要特别用脑袋去想，不需要特别去关注时间。</p>
-<p>看起来和之前尝试的时间表很像，但是效果完全不一样了。通过习惯来管理时间，于是时间就不用特别管理，因为它自动就被管理了。</p>
-<p>但是弊端也很明显，就是有一天没有按照这个固定的习惯做完，就会浑身不舒服，感觉少了什么东西。所以为了不打断习惯，我拒接了很多的邀约。</p>
-<p>后来P酱成了别人的女朋友。</p>
-<h2 id="you-walk-I-walk"><a href="#you-walk-I-walk" class="headerlink" title="you walk, I walk."></a>you walk, I walk.</h2><p>失去P酱以后，另一个出版社找到我，问我要不要再写一本书。我想到了之前写给P酱的文档，于是就同意了。</p>
-<p>此时已经是2018年4月，我前往了杭州。机缘巧合认识了和P酱长得非常像的H酱。</p>
-<p>有一天，H酱问我：“听说你在写书，你能把我写进你的书里面吗？就像Jack和Rose那样。”</p>
-<p>我：“我这是技术书，不是小说。而且Jack是画家，我书看得多，你不要骗我。”</p>
-<p>H酱：“那你的书还剩多少啊.你写完了我请你看电影吧~”</p>
-<p>我:“无功不受禄,为什么要请看电影?”</p>
-<p>H酱:“因为这样我就可以让你送我一本啊~”</p>
-<p>于是,在H酱的激励下,我的第二本书很快就完成了.</p>
-<p>当有一个正向激励,那么什么时间管理技巧都不重要了,因为你自己就成了一个永动机.</p>
-<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>上面只是段子，真正的原因实际上是因为我是一个费曼学习法的实践者，我相信只有我把别人讲懂了，才能说明我自己学会了。</p>
-<p>事情起始于2016年。那时我已经在极客学院开设爬虫视频课程。在视频课程的录制过程中，我发现我对爬虫的开发经验来自于多年的工作积累。虽然能够处理各种问题，但当我给新人介绍的时候，却不能很清晰的把我的思考过程表述出来。这反应出我对这门技术的掌握却不够系统，条例不清。</p>
-<p>而彼时，人民邮电出版社教育分社恰好找到我，希望我能够出版一本爬虫书，用于作为高校的爬虫教材。于是一拍即合，不仅能够完成对我自己知识的梳理，还能顺便出版一本书。</p>
-<p>于是，我开始写我的第一本书。</p>
-<p>不止一个人问我，写书很赚钱吗？</p>
-<p>实际上写书不能赚钱，而且费时间费精力，在这个过程中作者需要放弃很多东西。如果要说最大的收获，那就是作者所写的内容，会给作者的认知更上一层楼吧（笑）。</p>
-<p>好了，下一篇文章，我将会讲到这三年里面，我内心的痛苦挣扎。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;“听说你出了两本书，说说你现在是什么感觉。”&lt;/p&gt;
-&lt;p&gt;“感觉啊，感觉就像是坐了三年牢，终于放出来。”&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="经验" scheme="https://www.kingname.info/categories/%E7%BB%8F%E9%AA%8C/"/>
-    
-    
-      <category term="经验" scheme="https://www.kingname.info/tags/%E7%BB%8F%E9%AA%8C/"/>
     
   </entry>
   

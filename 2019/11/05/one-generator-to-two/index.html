@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="我们知道，Python 里面的生成器只能被消费一次，例如如下代码：
+12345678910111213141516171819def name_generator():    for name in [&apos;产品经理&apos;, &apos;kingname&apos;]:        yield namedef say_hello(g):    print(&apos;hello 函数开始运行&apos;)    for name in g:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个生成器如何当两个用？">
+<meta property="og:url" content="https://www.kingname.info/2019/11/05/one-generator-to-two/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="我们知道，Python 里面的生成器只能被消费一次，例如如下代码：
+12345678910111213141516171819def name_generator():    for name in [&apos;产品经理&apos;, &apos;kingname&apos;]:        yield namedef say_hello(g):    print(&apos;hello 函数开始运行&apos;)    for name in g:">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-13-54.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-15-26.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-19-45.png">
+<meta property="og:updated_time" content="2019-12-11T14:37:54.433Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个生成器如何当两个用？">
+<meta name="twitter:description" content="我们知道，Python 里面的生成器只能被消费一次，例如如下代码：
+12345678910111213141516171819def name_generator():    for name in [&apos;产品经理&apos;, &apos;kingname&apos;]:        yield namedef say_hello(g):    print(&apos;hello 函数开始运行&apos;)    for name in g:">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-13-54.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2019/11/05/one-generator-to-two/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>一个生成器如何当两个用？ | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/05/one-generator-to-two/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一个生成器如何当两个用？
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-05 22:37:00" itemprop="dateCreated datePublished" datetime="2019-11-05T22:37:00+08:00">2019-11-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-12-11 22:37:54" itemprop="dateModified" datetime="2019-12-11T22:37:54+08:00">2019-12-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/05/one-generator-to-two/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/05/one-generator-to-two/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我们知道，Python 里面的生成器只能被消费一次，例如如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">name_generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> [<span class="string">'产品经理'</span>, <span class="string">'kingname'</span>]:</div><div class="line">        <span class="keyword">yield</span> name</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hello</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hello 函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hello'</span>, name)</div><div class="line">    print(<span class="string">'hello 函数运行完成'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hi</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hi函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hi'</span>, name)</div><div class="line">    print(<span class="string">'hi函数运行完成'</span>)</div><div class="line"></div><div class="line">names = name_generator()</div><div class="line">say_hello(names)</div><div class="line">say_hi(names)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-13-54.png" alt=""></p>
+<p>在 <code>say_hello</code>函数里面，生成器已经被完整遍历了一次，那么在<code>say_hi</code>里面，就什么数据都拿不到了。</p>
+<p>但如果我们用的是列表，就可以多次遍历，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-15-26.png" alt=""></p>
+<p>大家注意观察区别。</p>
+<p>那么有什么办法，能让生成器被多次完整迭代呢？这个时候就要使用<code>itertools.tee</code>这个函数了。它通过<code>dequeue</code>实现了让生成器多次消费的办法。</p>
+<a id="more"></a>
+<p><code>itertools.tee</code>的使用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">生成器<span class="number">1</span>, 生成器<span class="number">2</span>, 生成器<span class="number">3</span> = itertools.tee(原始生成器, <span class="number">3</span>)</div></pre></td></tr></table></figure>
+<p><code>itertools.tee</code>的第一个参数是原始生成器，第二个参数是你希望让它返回多少个可以复用的生成器。</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">name_generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> [<span class="string">'产品经理'</span>, <span class="string">'kingname'</span>]:</div><div class="line">        <span class="keyword">yield</span> name</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hello</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hello 函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hello'</span>, name)</div><div class="line">    print(<span class="string">'hello 函数运行完成'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hi</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hi函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hi'</span>, name)</div><div class="line">    print(<span class="string">'hi函数运行完成'</span>)</div><div class="line"></div><div class="line">names = name_generator()</div><div class="line">names_1, names_2 = itertools.tee(names, <span class="number">2</span>)</div><div class="line">say_hello(names_1)</div><div class="line">say_hi(names_2)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-19-45.png" alt=""></p>
+<p>但是，<code>itertools.tee</code>有两个缺陷：</p>
+<p>其一是如果原始生成器能循环非常多次，产生的数据量非常大，并且你在消费的时候，是先迭代第一个分裂后的生成器，完整迭代完以后再迭代第二个分裂后的生成器，那么这将会浪费大量内存。所以，应该让两个生成器能间隔着迭代，或者“同时”迭代。</p>
+<p>其二，多个生成器同时迭代也有问题，分裂出来的多个生成器不是线程安全的，在多线程里面同时运行会导致报错。</p>
+<p>在接下来的两篇文章中，我会讲到<code>itertools.tee</code>是如何做到让生成器多次迭代的，然后讲到如何让分裂以后的生成器线程安全。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/生成器/" rel="tag"># 生成器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/04/pm-get-others-thing/" rel="next" title="产品经理的故事：产品经理拿错了别人的外卖">
+                <i class="fa fa-chevron-left"></i> 产品经理的故事：产品经理拿错了别人的外卖
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/05/your-memory-boom/" rel="prev" title="炸掉你的内存—— itertools.tee 的弊端">
+                炸掉你的内存—— itertools.tee 的弊端 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">112</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">103</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

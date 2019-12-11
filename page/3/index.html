@@ -344,7 +344,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/08/15/solve-cursor-timeout/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/30/you-should-learn-yield/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -364,7 +364,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/08/15/solve-cursor-timeout/" class="post-title-link" itemprop="url">4种方法解决MongoDB游标超时的问题</a>
+                <a href="/2019/10/30/you-should-learn-yield/" class="post-title-link" itemprop="url">为什么你应该学习 Python 的生成器？</a>
               
             
           </h1>
@@ -389,7 +389,7 @@
                 
               
 
-              <time title="创建时间：2019-08-15 21:32:31 / 修改时间：21:33:36" itemprop="dateCreated datePublished" datetime="2019-08-15T21:32:31+08:00">2019-08-15</time>
+              <time title="创建时间：2019-10-30 22:43:37 / 修改时间：22:44:12" itemprop="dateCreated datePublished" datetime="2019-10-30T22:43:37+08:00">2019-10-30</time>
             
 
             
@@ -426,8 +426,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/08/15/solve-cursor-timeout/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/08/15/solve-cursor-timeout/" itemprop="commentCount"></span>
+                <a href="/2019/10/30/you-should-learn-yield/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/30/you-should-learn-yield/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -456,14 +456,12 @@
 
       
         
-          <p>当我们使用Python从MongoDB里面读取数据时，可能会这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line">handler = pymongo.MongoClient().db.col</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> handler.find():</div><div class="line">    parse_data(row)</div></pre></td></tr></table></figure>
-<p>短短4行代码，读取MongoDB里面的每一行数据，然后传入<code>parse_data</code>做处理。处理完成以后再读取下一行。逻辑清晰而简单，能有什么问题？只要parse_data(row)不报错，这一段代码就完美无缺。</p>
-<p>但事实并非这样。</p>
+          <p>写过一段时间代码的同学，应该对这一句话深有体会：程序的时间利用率和空间利用率往往是矛盾的，可以用时间换空间，可以用空间换时间，但很难同时提高一个程序的时间利用率和空间利用率。</p>
+<p>但如果你尝试使用生成器来重构你的代码，也许你会发现，在一定程度上，你可以既提高时间利用率，又提高空间利用率。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/08/15/solve-cursor-timeout/#more" rel="contents">
+              <a class="btn" href="/2019/10/30/you-should-learn-yield/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -523,7 +521,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/08/01/pool-map-run-nothing/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/29/pip-in-code/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -543,7 +541,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/08/01/pool-map-run-nothing/" class="post-title-link" itemprop="url">从Python源代码里面证明你的猜想</a>
+                <a href="/2019/10/29/pip-in-code/" class="post-title-link" itemprop="url">如何在Python代码里面调用 pip安装第三方库</a>
               
             
           </h1>
@@ -568,1381 +566,7 @@
                 
               
 
-              <time title="创建时间：2019-08-01 22:03:50 / 修改时间：22:08:06" itemprop="dateCreated datePublished" datetime="2019-08-01T22:03:50+08:00">2019-08-01</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/08/01/pool-map-run-nothing/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/08/01/pool-map-run-nothing/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>看过《Python爬虫开发 从入门到实战》的同学，应该对<code>multiprocessing</code>这个模块比较熟悉，在书上我使用这个模块通过几行代码实现了一个简单的多线程爬虫:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">from</span> multiprocessing.dummy <span class="keyword">import</span> Pool</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(url)</span>:</span></div><div class="line">    print(requests.get(url).text, <span class="string">'\n'</span>)</div><div class="line"></div><div class="line">url_list = [</div><div class="line">    <span class="string">'http://exercise.kingname.info/exercise_middleware_ip/1'</span>,</div><div class="line">    <span class="string">'http://exercise.kingname.info/exercise_middleware_ip/2'</span>,</div><div class="line">    <span class="string">'http://exercise.kingname.info/exercise_middleware_ip/3'</span>,</div><div class="line">    <span class="string">'http://exercise.kingname.info/exercise_middleware_ip/4'</span></div><div class="line">]</div><div class="line"></div><div class="line">pool = Pool(<span class="number">3</span>)</div><div class="line">result = pool.map(get, url_list)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-08-01-12-41-43.png" alt=""></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/08/01/pool-map-run-nothing/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/21/delete-pay-content-by-js/" class="post-title-link" itemprop="url">一日一技：如何使用JavaScript移除少数派的付费内容</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-21 19:01:34 / 修改时间：19:02:24" itemprop="dateCreated datePublished" datetime="2019-07-21T19:01:34+08:00">2019-07-21</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/07/21/delete-pay-content-by-js/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/21/delete-pay-content-by-js/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>少数派（<a href="https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。" target="_blank" rel="external">https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。</a></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-32-55.png" alt=""></p>
-<p>这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。</p>
-<p>作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。</p>
-<p>从网页上删除这些付费内容的原理非常简单，在网页上右键，点击“检查”，打开Chrome的开发者工具，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-36-21.png" alt=""></p>
-<p>点击箭头所指向的图标，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-37-28.png" alt=""></p>
-<p>然后在网页上任意选中一个付费内容，此时开发者工具里面将会自动变成下图所示的样子：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-38-53.png" alt=""></p>
-<p>其中方框框住的这个<code>img</code>标签对应了<code>付费内容</code>这个小图标，因此我们可以使用这个标签来进行定位。</p>
-<p>现在视线在HTML代码区域往上走，可以看到<code>dl</code>标签</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-40-31.png" alt=""></p>
-<p>每一个文章块就对应一个<code>dl</code>标签。如果我们在上面右键删除这个标签，就会发现对应的付费条目不见了，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-41-45.png" alt=""></p>
-<p>但这种做法每次只能删除一条付费内容，有没有办法把所有付费内容全部删除呢？答案就是使用JavaScript：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line"></div><div class="line"><span class="keyword">while</span>(pay_tag_list.length &gt; <span class="number">0</span>)&#123;</div><div class="line">	pay_tag = pay_tag_list[<span class="number">0</span>]</div><div class="line">    dl_tag = pay_tag.parentNode.parentNode.parentNode</div><div class="line">	div_tag = dl_tag.parentNode</div><div class="line">	div_tag.removeChild(dl_tag)</div><div class="line">    pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>复制上面这一段代码到开发者工具的Console标签页并粘贴，敲下回车键，付费内容就消失了，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-18-02-31.png" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/13/python-dict/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/13/python-dict/" class="post-title-link" itemprop="url">为什么Python 3.6以后字典有序并且效率更高？</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-13 13:30:47 / 修改时间：13:33:59" itemprop="dateCreated datePublished" datetime="2019-07-13T13:30:47+08:00">2019-07-13</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/07/13/python-dict/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/13/python-dict/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在Python 3.5（含）以前，字典是不能保证顺序的，键值对A先插入字典，键值对B后插入字典，但是当你打印字典的Keys列表时，你会发现B可能在A的前面。</p>
-<p>但是从Python 3.6开始，字典是变成有顺序的了。你先插入键值对A，后插入键值对B，那么当你打印Keys列表的时候，你就会发现B在A的后面。</p>
-<p>不仅如此，从Python 3.6开始，下面的三种遍历操作，效率要高于Python 3.5之前：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> 字典</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> 字典.values()</div><div class="line"></div><div class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> 字典.items()</div></pre></td></tr></table></figure>
-<p>从Python 3.6开始，字典占用内存空间的大小，视字典里面键值对的个数，只有原来的30%~95%。</p>
-<p>Python 3.6到底对字典做了什么优化呢？为了说明这个问题，我们需要先来说一说，在Python 3.5（含）之前，字典的底层原理。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/13/python-dict/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/08/deploy-flask-uwsgi-without-nginx/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/08/deploy-flask-uwsgi-without-nginx/" class="post-title-link" itemprop="url">使用uwsgi部署Flask，不使用Unix套接字连接Nginx</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-08 21:27:50 / 修改时间：21:38:52" itemprop="dateCreated datePublished" datetime="2019-07-08T21:27:50+08:00">2019-07-08</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/07/08/deploy-flask-uwsgi-without-nginx/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/08/deploy-flask-uwsgi-without-nginx/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>如果你在Google或者百度或者某些技术社区上面搜索<code>uwsgi + Flask</code>，你会发现大量的文章，是教你如何使用<code>uwsgi + flask + Nginx</code>搭建网站。如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-08-20-31-12.png" alt=""></p>
-<h2 id="怪现状"><a href="#怪现状" class="headerlink" title="怪现状"></a>怪现状</h2><p>而且这些文章，全部都像是约定俗成一样，一定会首先用命令行启动uwsgi，测试uwsgi与Flask运行是否正常，然后写uwsgi的配置文件。然后使用<code>Unix 套接字</code>沟通uwsgi与Nginx。所以uwsgi的配置文件里面一定会写成类似于下面这样：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">socket</span> = /xxx/yyy/zzz.sock</div></pre></td></tr></table></figure>
-<p>Nginx的配置一定有类似于下面这一段：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">        include uwsgi_params;</div><div class="line">        uwsgi_pass unix:///xxx/yyy/zzz.sock;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>他们为什么要这样写？因为他们看的别的博客上就是这样写的！他们知其然，但是不知其所以然。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/08/deploy-flask-uwsgi-without-nginx/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/07/three-in-one/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/07/three-in-one/" class="post-title-link" itemprop="url">跟着Kenneth Reitz大神学习读取类属性的三种方法</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-07 22:48:41 / 修改时间：22:51:00" itemprop="dateCreated datePublished" datetime="2019-07-07T22:48:41+08:00">2019-07-07</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/07/07/three-in-one/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/07/three-in-one/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在看Kenneth Reitz大神的<a href="https://github.com/kennethreitz/records" target="_blank" rel="external">Records项目</a>时，注意到在Readme中，读取数据有三种写法：</p>
-<blockquote>
-<p>Values can be accessed many ways: row.user_email, row[‘user_email’], or row[3]</p>
-</blockquote>
-<p>假设一个数据表如下所示：</p>
-<table>
-<thead>
-<tr>
-<th>username</th>
-<th>active</th>
-<th>name</th>
-<th>user_email</th>
-<th>timezone</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>model-t</td>
-<td>True</td>
-<td>Henry Ford</td>
-<td>model-t@gmail.com</td>
-<td>2016-02-06 22:28:23.894202</td>
-</tr>
-</tbody>
-</table>
-<p>那么，当你想读取user_email这一列的时候，除了可以使用<code>row.user_email</code>和<code>row[&#39;user_email&#39;]</code>以外，由于<code>user_email</code>在第3列（username是第0列），所以还可以使用<code>row[3]</code>来读取。</p>
-<p>今天我们就来研究一下，他是如何实现这个功能的。</p>
-<p>假设我们现在有一个类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.age = age</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div></pre></td></tr></table></figure>
-<p>基于这个类初始化一个对象kingname:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">kingname = People(<span class="string">'kingname'</span>, <span class="number">26</span>)</div><div class="line">print(kingname.age)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-02-56.png" alt=""></p>
-<p>可以看到，我们已经实现了类似于records项目中的<code>row.user_email</code>的写法。</p>
-<p>但是当我们想像字典一样取读取的时候，就会报错，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-04-11.png" alt=""></p>
-<p>此时，为了让一个对象可以像字典一样被读取，我们需要实现它的<code>__getitem__</code>方法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.info = &#123;<span class="string">'name'</span>: name,</div><div class="line">                     <span class="string">'age'</span>: age&#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div></pre></td></tr></table></figure>
-<p>此时就可以像字典一样去读取了，运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-10-00.png" alt=""></p>
-<p>但新的问题又来了，不能直接读取使用<code>kinganme.age</code>读取数据了，这样写会导致报错，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-10-57.png" alt=""></p>
-<p>为了解决这个问题，我们再来实现这个类的<code>__getattr__</code>方法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.info = &#123;<span class="string">'name'</span>: name,</div><div class="line">                     <span class="string">'age'</span>: age&#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.info.get(key, <span class="string">'不存在'</span>)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-13-11.png" alt=""></p>
-<p>那么如何实现records里面的<code>row[3]</code>这种写法呢？这就需要先解释一下，records这个库是用来做什么的，以及它的数据是如何存放的。</p>
-<p>K大写的records这个库，是用于来更加方便地读写SQL数据库，避免繁琐地写各种SQL语句。</p>
-<p>这个库的源代码只有一个文件：<a href="https://github.com/kennethreitz/records/blob/master/records.py" target="_blank" rel="external">源代码</a></p>
-<p>我们今天要研究的这个写法，在<code>Record</code>这个类里面。这个类用来保存MySQL中的一行数据。<code>Record</code>这个类包含两个属性，分别为<code>_keys</code>和<code>_values</code>，其中<code>_keys</code>用于记录所有的字段名，<code>_values</code>用于记录一行的所有值。字段名和值是按顺序一一对应的。</p>
-<p>例如<code>_keys</code>里面下标为3表示字段名<code>user_email</code>，那么<code>_values</code>里面下标为3的数据就是<code>user_email</code>的值。</p>
-<p>正式由于这样一个一一对应的关系，所以<code>row[3]</code>才能实现<code>row[&#39;user_email&#39;]</code>、<code>row.user_email</code>相同的效果。</p>
-<p>回到我们的People类，为了实现相同的目的，我们再次修改代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self._keys = [<span class="string">'name'</span>, <span class="string">'age'</span>]</div><div class="line">        self._values = [name, age]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'i am walk'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">if</span> isinstance(key, int):</div><div class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt;= key &lt; len(self._keys):</div><div class="line">                <span class="keyword">return</span> self._values[key]</div><div class="line">            <span class="keyword">return</span> <span class="string">'索引超出边界'</span></div><div class="line"></div><div class="line">        index = self._keys.index(key)</div><div class="line">        <span class="keyword">if</span> index == <span class="number">-1</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Key不存在'</span></div><div class="line">        <span class="keyword">return</span> self._values[index]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, key)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__getitem__(key)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-07-22-25-28.png" alt=""></p>
-<p>需要说明的是，无论是使用<code>kingname[&#39;key&#39;]</code>还是<code>kingname[1]</code>，他们都会进入到<code>__getitem__</code>方法中去。</p>
-<p>我这里给出的例子相较于<code>records</code>项目的代码做了简化，不过关键的部分都已经囊括了进来。</p>
-<p>最后，推荐有兴趣的同学通读records这个项目的源代码，你将会从K大的代码中学到非常多的东西。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/06/25/dont-use-re-compile/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/06/25/dont-use-re-compile/" class="post-title-link" itemprop="url">请不要再用re.compile了！</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-06-25 13:02:01 / 修改时间：13:03:27" itemprop="dateCreated datePublished" datetime="2019-06-25T13:02:01+08:00">2019-06-25</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/06/25/dont-use-re-compile/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/06/25/dont-use-re-compile/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>如果大家在网上搜索<code>Python 正则表达式</code>，你将会看到大量的垃圾文章会这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line">text = <span class="string">'一段字符串'</span></div><div class="line">result = pattern.findall(text)</div></pre></td></tr></table></figure>
-<p>这些文章的作者，可能是被其他语言的坏习惯影响了，也可能是被其他垃圾文章误导了，不假思索拿来就用。</p>
-<p><strong>在Python里面，真的不需要使用re.compile!</strong></p>
-<p>为了证明这一点，我们来看Python的源代码。</p>
-<p>在PyCharm里面输入:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">re.search</div></pre></td></tr></table></figure>
-<p>然后Windows用户按住键盘上的Ctrl键，鼠标左键点击<code>search</code>，Mac用户按住键盘上的Command键，鼠标左键点击<code>search</code>，PyCharm会自动跳转到Python的re模块。在这里，你会看到我们常用的正则表达式方法，无论是<code>findall</code>还是<code>search</code>还是<code>sub</code>还是<code>match</code>，全部都是这样写的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_compile(pattern, flag).对应的方法(string)</div></pre></td></tr></table></figure>
-<p>例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">findall</span><span class="params">(pattern, string, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"""Return a list of all non-overlapping matches in the string.</span></div><div class="line"></div><div class="line">    If one or more capturing groups are present in the pattern, return</div><div class="line">    a list of groups; this will be a list of tuples if the pattern</div><div class="line">    has more than one group.</div><div class="line"></div><div class="line">    Empty matches are included in the result."""</div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags).findall(string)</div></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-41-18.png" alt=""></p>
-<p>然后我们再来看<code>compile</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compile</span><span class="params">(pattern, flags=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">"Compile a regular expression pattern, returning a Pattern object."</span></div><div class="line">    <span class="keyword">return</span> _compile(pattern, flags)</div></pre></td></tr></table></figure>
-<p>如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-43-19.png" alt=""></p>
-<p>看出问题来了吗？</p>
-<p>我们常用的正则表达式方法，都已经自带了<code>compile</code>了！</p>
-<p>根本没有必要多此一举先<code>re.compile</code>再调用正则表达式方法。</p>
-<p>此时，可能会有人反驳：</p>
-<p>如果我有一百万条字符串，使用某一个正则表达式去匹配，那么我可以这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line">pattern = re.compile(<span class="string">'正则表达式'</span>)</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    pattern.search(text)</div></pre></td></tr></table></figure>
-<p>这个时候，<code>re.compile</code>只执行了1次，而如果你像下面这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">texts = [包含一百万个字符串的列表]</div><div class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</div><div class="line">    re.search(<span class="string">'正则表达式'</span>, text)</div></pre></td></tr></table></figure>
-<p>相当于你在底层对同一个正则表达式执行了100万次<code>re.compile</code>。</p>
-<p>Talk is cheap, show me the code.</p>
-<p>我们来看源代码，正则表达式<code>re.compile</code>调用的是<code>_compile</code>，我们就去看<code>_compile</code>的源代码，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-06-25-12-49-36.png" alt=""></p>
-<p>红框中的代码，说明了<code>_compile</code>自带缓存。它会自动储存最多512条由type(pattern), pattern, flags)组成的Key，只要是同一个正则表达式，同一个flag，那么调用两次_compile时，第二次会直接读取缓存。</p>
-<p>综上所述，请你不要再手动调用<code>re.compile</code>了，这是从其他语言（对的，我说的就是Java）带过来的陋习。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/05/26/read-data-file-in-package/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/26/read-data-file-in-package/" class="post-title-link" itemprop="url">Python读取包里面的数据文件的三种方法</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-26 22:44:08 / 修改时间：22:47:13" itemprop="dateCreated datePublished" datetime="2019-05-26T22:44:08+08:00">2019-05-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/05/26/read-data-file-in-package/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/05/26/read-data-file-in-package/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我们知道，写Python代码的时候，如果一个包（package）里面的一个模块要导入另一个模块，那么我们可以使用相对导入：</p>
-<p>假设当前代码结构如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-21-58-25.png" alt=""></p>
-<p>其中<code>test_1</code>是一个包，在util.py里面想导入同一个包里面的<code>read.py</code>中的<code>read</code>函数，那么代码可以写为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> .read <span class="keyword">import</span> read</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">util</span><span class="params">()</span>:</span></div><div class="line">    read()</div></pre></td></tr></table></figure>
-<p>其中的<code>.read</code>表示当前包目录下的<code>read.py</code>文件。此时<code>read.py</code>文件中的内容如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'阅读文件'</span>)</div></pre></td></tr></table></figure>
-<p>通过包外面的main.py运行代码，运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-01-32.png" alt=""></p>
-<p>现在，我们增加一个数据文件，<code>data.txt</code>，它的内容如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-02-14.png" alt=""></p>
-<p>并且想通过read.py去读取这个数据文件并打印出来。</p>
-<p>修改read.py，试图使用相对路径来打开这个文件：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'./data.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
-<p>运行代码发现报错：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-04-19.png" alt=""></p>
-<p>这个原因很简单，就是如果数据文件的地址写为：<code>./data.txt</code>，那么Python就会从当前工作区文件夹里面寻找<code>data.txt</code>。由于我们运行的是<code>main.py</code>，那么当前工作区就是<code>main.py</code>所在的文件夹，而不是<code>test_1</code>文件夹。所以就会出现找不到文件的情况。</p>
-<p>为了解决这个问题，我们有三种解决方式。</p>
-<ul>
-<li>使用绝对路径</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'/Users/kingname/Project/DataFileExample/test_1/data.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-08-26.png" alt=""></p>
-<ul>
-<li>先获取<code>read.py</code>文件的绝对路径，再拼接出数据文件的绝对路径：</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    basepath = os.path.abspath(__file__)</div><div class="line">    folder = os.path.dirname(basepath)</div><div class="line">    data_path = os.path.join(folder, <span class="string">'data.txt'</span>)</div><div class="line">    <span class="keyword">with</span> open(data_path, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">        text = f.read()</div><div class="line">        print(text)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-11-20.png" alt=""></p>
-<ul>
-<li>使用pkgutil库</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pkgutil</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    data_bytes = pkgutil.get_data(__package__, <span class="string">'data.txt'</span>)</div><div class="line">    data_str = data_bytes.decode()</div><div class="line">    print(data_str)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-13-36.png" alt=""></p>
-<p><code>pkgutil</code>是Python自带的用于包管理相关操作的库，<code>pkgutil</code>能根据包名找到包里面的数据文件，然后读取为bytes型的数据。如果数据文件内容是字符串，那么直接<code>decode()</code>以后就是正文内容了。</p>
-<blockquote>
-<p>为什么pkgutil读取的数据文件是bytes型的内容而不直接是字符串类型?<br>这是因为并不是所有数据文件都是字符串，如果某些数据文件是二进制文件或者图片，那么以字符串方式打开就会导致报错。所以为了通用，pkgutil会以bytes型方式读入数据，这相当于open函数的“rb”读取方式。</p>
-</blockquote>
-<p>使用<code>pkgutil</code>还有一个好处，就是只要知道包名就可以找到对应包下面的数据文件，数据文件并不一定要在当前包里面。</p>
-<p>例如修改代码结构如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-18-12.png" alt=""></p>
-<p>另一个包<code>test_2</code>里面有一个数据文件<code>data2.txt</code>。此时如果要在<code>teat_1</code>包的<code>read.py</code>中读取<code>data2.txt</code>中的内容，那么只需要修改<code>pkgutil.get_data</code>的第一个参数为<code>test_2</code>和数据文件的名字即可，运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-05-26-22-20-35.png" alt=""></p>
-<p>而前两种方法都不如<code>pkgutil</code>简单。</p>
-<p>所以使用<code>pkgutil</code>可以大大简化读取包里面的数据文件的代码。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/05/20/iloveyun/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/20/iloveyun/" class="post-title-link" itemprop="url">先找到爱的人，再写出优秀的代码</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-20 22:15:35" itemprop="dateCreated datePublished" datetime="2019-05-20T22:15:35+08:00">2019-05-20</time>
+              <time title="创建时间：2019-10-29 22:42:38" itemprop="dateCreated datePublished" datetime="2019-10-29T22:42:38+08:00">2019-10-29</time>
             
 
             
@@ -1959,7 +583,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-22 22:22:08" itemprop="dateModified" datetime="2019-05-22T22:22:08+08:00">2019-05-22</time>
+                <time title="修改时间：2019-10-30 22:43:13" itemprop="dateModified" datetime="2019-10-30T22:43:13+08:00">2019-10-30</time>
               
             
           </span>
@@ -1976,7 +600,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/程序员/" itemprop="url" rel="index"><span itemprop="name">程序员</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
 
                 
                 
@@ -1991,8 +615,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/05/20/iloveyun/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/05/20/iloveyun/" itemprop="commentCount"></span>
+                <a href="/2019/10/29/pip-in-code/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/29/pip-in-code/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2021,11 +645,14 @@
 
       
         
-          <p>过去的你只会在代码里消磨每个周末，现在的你有她一起探索生活里的小惊喜；过去的你是一个死宅，现在的你想陪她拿着相机看遍世界的景色。</p>
+          <p>说到安装 Python 的第三方库，会 Python 的同学都知道，在终端使用<code>pip install xxx</code>即可。</p>
+<p>那么如果我想在代码里面安装第三方库怎么办呢？可能有人想到使用 <code>os</code> 模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line">package_name = <span class="string">'requests'</span></div><div class="line">os.system(f<span class="string">'pip install &#123;package_name&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>这种方法确实可行，并且即使你在虚拟环境中使用这种方式安装，也确实不会安装到系统的 Python 环境中。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/20/iloveyun/#more" rel="contents">
+              <a class="btn" href="/2019/10/29/pip-in-code/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2085,7 +712,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/04/11/use-or-smarter/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/24/logrotate/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -2105,7 +732,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/04/11/use-or-smarter/" class="post-title-link" itemprop="url">奇技淫巧：使用Python的or关键字实现多重选择</a>
+                <a href="/2019/10/24/logrotate/" class="post-title-link" itemprop="url">使用 Linux 自带的 logrotate 管理你的所有日志</a>
               
             
           </h1>
@@ -2130,12 +757,215 @@
                 
               
 
-              <time title="创建时间：2019-04-11 23:24:59 / 修改时间：23:25:48" itemprop="dateCreated datePublished" datetime="2019-04-11T23:24:59+08:00">2019-04-11</time>
+              <time title="创建时间：2019-10-24 22:41:27" itemprop="dateCreated datePublished" datetime="2019-10-24T22:41:27+08:00">2019-10-24</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:42:11" itemprop="dateModified" datetime="2019-10-30T22:42:11+08:00">2019-10-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/24/logrotate/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/24/logrotate/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>我们在开发的过程中，会创建非常多的日志，对日志进行 rotate 是一个基本要求。</p>
+<p>所谓的<code>rotate</code>，可以理解为对日志按照一定的规则进行切分。例如，每天晚上0点生成一个新的日志文件，并把老的文件归档。又或者每个日志文件超过多少 MB 以后就自动切分，并把老的内容单独存档或者压缩。存档以后的日志文件保存多少个。超过数量以后先删除老日志再删除新日志。</p>
+<p>如果我们使用的是 Python，那么我们可以使用自带的<code>logging</code>模块或者第三方的<code>logoru</code>来写日志。但如果我们使用像是 MongoDB这种第三方的软件，那么要对日志进行 rotate 就非常麻烦了。如果不加以管理，MongoDB 的日志很容易就达到几十GB。</p>
+<p>还有其他软件，他们的日志散落在系统的各个位置，我们应该如何替他们 rotate 呢？</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/10/24/logrotate/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/23/iter-and-stop/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/23/iter-and-stop/" class="post-title-link" itemprop="url">使用迭代器接收数据并自动停止</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-23 22:40:12" itemprop="dateCreated datePublished" datetime="2019-10-23T22:40:12+08:00">2019-10-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:40:58" itemprop="dateModified" datetime="2019-10-30T22:40:58+08:00">2019-10-30</time>
               
             
           </span>
@@ -2167,8 +997,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/04/11/use-or-smarter/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/04/11/use-or-smarter/" itemprop="commentCount"></span>
+                <a href="/2019/10/23/iter-and-stop/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/23/iter-and-stop/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2197,33 +1027,1159 @@
 
       
         
+          <p>假设有一个 Redis 集合，里面有 N 条数据，你不停从里面<code>lpop</code>数据，直到某一条数据的值为<code>&#39;Stop&#39;</code>字符串为止(已知里面必有一条数据为<code>&#39;Stop&#39;</code>字符串，但其位置不知道)。</p>
+          <!--noindex-->
           
-            <p>在Python开发过程中，我们难免会遇到多重条件判断的情况的情况，此时除了用很多的<code>if...elif...else</code>以外，还可以巧用<code>or</code>关键字实现。</p>
-<p>例如，我们要获取天气信息，现在有三个api接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">api_1()</div><div class="line">api_2()</div><div class="line">api_3()</div></pre></td></tr></table></figure>
-<p>其中<code>api_1()</code>的数据又详细又好，但是接口不稳定，可能随时会掉线。</p>
-<p><code>api_2()</code>返回的结果比<code>api_1()</code>稍微差一点，但是稳定性还不错。</p>
-<p><code>api_3()</code>接口返回的是兜底数据，就是在前两个接口都故障的情况下才会使用。</p>
-<p>如果前两个接口正常工作时返回字典，故障时他们都会返回<code>None</code>。</p>
-<p>现在我们要获取天气信息，你可能会这样写代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">weather = api_1()</div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> weather:</div><div class="line">    weather = api_2()</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> weather:</div><div class="line">        weather = api_3()</div></pre></td></tr></table></figure>
-<p>代码这样写，功能自然是没有问题，但是非常难看。</p>
-<p>实际上，代码可以写为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weather = api_1() <span class="keyword">or</span> api_2() <span class="keyword">or</span> api_3()</div></pre></td></tr></table></figure>
-<p>只需要1行代码就能实现自动选择。如果<code>api_1()</code>返回的是一个非空字典，那么由于<code>短路效应</code>，后面的两个函数都不会运行。当<code>api_1</code>返回None时，<code>api_2()</code>才会运行。并且如果<code>api_2()</code>返回非空字典，那么<code>api_3()</code>依然不会运行。</p>
-<p>我们现在在Jupyter里面测试一下，首先看看如果<code>api_1()</code>直接返回非空字典的情况，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-06-44.png" alt=""></p>
-<p>可以看到，在<code>api_2()</code>和<code>api_3()</code>里面的两行<code>print</code>语句都没有执行。</p>
-<p>接下来我们看看<code>api_1()</code>故障时候的情况。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-07-44.png" alt=""></p>
-<p>此时先运行<code>api_1()</code>返回None，再运行<code>api_2()</code>返回非空字典。符合预期。</p>
-<p>当前两个函数都返回None的时候，第三个函数才会运行，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-04-11-23-09-07.png" alt=""></p>
-<p>除了做多重条件判断外，还可以用来自己和自己取或操作，实现重试。</p>
-<p>例如<code>api_1()</code>可能成功也可能失败，所以需要尝试运行3次，那么代码可以这样写：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weather = api_1() <span class="keyword">or</span> api_1() <span class="keyword">or</span> api_1()</div></pre></td></tr></table></figure>
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/10/23/iter-and-stop/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/22/import-by-str/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/22/import-by-str/" class="post-title-link" itemprop="url">如何通过字符串导入 Python 模块</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-22 22:39:01" itemprop="dateCreated datePublished" datetime="2019-10-22T22:39:01+08:00">2019-10-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:45:03" itemprop="dateModified" datetime="2019-10-30T22:45:03+08:00">2019-10-30</time>
+              
+            
+          </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/22/import-by-str/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/22/import-by-str/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>我们平时导入第三方模块的时候，一般使用的是<code>import</code>关键字，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">from</span> scrapy.spider <span class="keyword">import</span> Spider</div></pre></td></tr></table></figure>
+<p>但是如果各位同学看过 Scrapy 的<code>settings.py</code>文件，就会发现里面会通过字符串的方式来指定pipeline 和 middleware，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">    <span class="string">'Test.middlewares.ExceptionRetryMiddleware'</span>: <span class="number">545</span>,</div><div class="line">    <span class="string">'Test.middlewares.BOProxyMiddlewareV2'</span>: <span class="number">543</span>,</div><div class="line">&#125;</div><div class="line"></div><div class="line"> SPIDER_MIDDLEWARES = &#123;</div><div class="line">   <span class="string">'Test.middlewares.LoggingRequestMiddleware'</span>: <span class="number">543</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们知道，这里的<code>Test.middlewares.ExceptionRetryMiddleware</code>实际上对应了根目录下面的<code>Test</code>文件夹里面的<code>middlewares.py</code>文件中的<code>ExceptionRetryMiddleware</code>类。那么 Scrapy 是如何根据这个字符串，导入这个类的呢？</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/10/22/import-by-str/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/21/become-lucky-one/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/21/become-lucky-one/" class="post-title-link" itemprop="url">如何用 Python让自己变成天选之子</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-21 22:38:03" itemprop="dateCreated datePublished" datetime="2019-10-21T22:38:03+08:00">2019-10-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:45:02" itemprop="dateModified" datetime="2019-10-30T22:45:02+08:00">2019-10-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/21/become-lucky-one/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/21/become-lucky-one/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>请大家猜一猜下面这段代码的运行效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> random</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line">people = [<span class="string">'kingname'</span>, <span class="string">'王小一'</span>, <span class="string">'李小二'</span>, <span class="string">'张小三'</span>, <span class="string">'刘小四'</span>, <span class="string">'卢小五'</span>, <span class="string">'马小六'</span>, <span class="string">'周小七'</span>, <span class="string">'丁小八'</span>, <span class="string">'朱小九'</span>]</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">11</span>):</div><div class="line">    lucky_guy = random.choice(people)</div><div class="line">    print(f<span class="string">'第&#123;i&#125;次抽奖，中奖用户：&#123;lucky_guy&#125;'</span>)</div><div class="line">    time.sleep(<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>你是不是以为这段代码运行以后，结果如下图所示？</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-21-21-50-47.png" alt=""></p>
+<p>但实际上，我可以让输出结果根据我的意愿随意变动，例如像下面这个 gif ，所有输出结果都是我：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/fakerandom.gif" alt=""></p>
+<p>你可以先不要往下看，放下手机，自己写一下代码，试一试 如何才能实现 gif 中的效果。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/10/21/become-lucky-one/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/19/get-last-data/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/19/get-last-data/" class="post-title-link" itemprop="url">如何正确获取 MongoDB 集合里面的最后一条数据</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-19 22:37:12" itemprop="dateCreated datePublished" datetime="2019-10-19T22:37:12+08:00">2019-10-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:45:00" itemprop="dateModified" datetime="2019-10-30T22:45:00+08:00">2019-10-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MongoDB/" itemprop="url" rel="index"><span itemprop="name">MongoDB</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/19/get-last-data/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/19/get-last-data/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在我们使用 Python 查询 MongoDB 的时候，一般会使用MongoDB 的集合（collection）对象的 <code>find()</code>方法或者<code>find_one()</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line">handler = pymongo.MongoClient().chapter_7.example_data_4</div><div class="line"></div><div class="line"><span class="comment"># 获得一个游标操作对象，并迭代</span></div><div class="line">rows = handler.find()</div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> rows:</div><div class="line">    print(row)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 查询第一条数据</span></div><div class="line">row = handler.find_one()</div><div class="line">print(row)</div></pre></td></tr></table></figure>
+<p>其中，<code>find()</code>方法返回的是一个游标对象，我们可以直接对这个对象进行迭代，从而按顺序获取每一条数据。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/10/19/get-last-data/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/17/do-not-show/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/17/do-not-show/" class="post-title-link" itemprop="url">你的代码是如何被炫技毁掉的</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-17 22:36:16" itemprop="dateCreated datePublished" datetime="2019-10-17T22:36:16+08:00">2019-10-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:45:14" itemprop="dateModified" datetime="2019-10-30T22:45:14+08:00">2019-10-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/17/do-not-show/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/17/do-not-show/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>你的代码是如何被炫技毁掉的？</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/10/17/do-not-show/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/12/reimport-in-jupyter/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/12/reimport-in-jupyter/" class="post-title-link" itemprop="url">在 Jupyter 中如何重新导入特定的 Python 文件？</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-12 22:34:58" itemprop="dateCreated datePublished" datetime="2019-10-12T22:34:58+08:00">2019-10-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:45:28" itemprop="dateModified" datetime="2019-10-30T22:45:28+08:00">2019-10-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/12/reimport-in-jupyter/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/12/reimport-in-jupyter/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Jupyter 是数据分析领域非常有名的开发环境，使用 Jupyter 写数据分析相关的代码会大大节约开发时间。</p>
+<p>设想这样一个场景：别的部门的同事传给你一个数据分析的模块，用于实现对数据的高级分析。模块里面有上百个函数。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/10/12/reimport-in-jupyter/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/09/29/log-gracefully/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/29/log-gracefully/" class="post-title-link" itemprop="url">更优雅地在 Python 中写日志</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-29 22:33:34" itemprop="dateCreated datePublished" datetime="2019-09-29T22:33:34+08:00">2019-09-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-30 22:45:46" itemprop="dateModified" datetime="2019-10-30T22:45:46+08:00">2019-10-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/29/log-gracefully/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/29/log-gracefully/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>原来我们在 Python 中写日志，使用的是 Python 自带的 logging 模块，要实现既在终端输出，又能写文件，并且日志文件还能 rotate ，代码需要十多行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">from</span> logging.handlers <span class="keyword">import</span> RotatingFileHandler</div><div class="line"></div><div class="line">os.makedirs(<span class="string">'Logs'</span>, exists_ok=<span class="keyword">True</span>)</div><div class="line">logger = logging.getLogger(<span class="string">'Robot'</span>)</div><div class="line">handler = logging.StreamHandler()</div><div class="line">handler.setLevel(logging.DEBUG)</div><div class="line">file_handler = RotatingFileHandler(os.path.join(<span class="string">'Logs'</span>, <span class="string">'robot.log'</span>),</div><div class="line">maxBytes=<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>,</div><div class="line">backupCount=<span class="number">10</span>,</div><div class="line">encoding=<span class="string">'utf-8'</span>)</div><div class="line">formatter = logging.Formatter(<span class="string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</span>)</div><div class="line">handler.setFormatter(formatter)</div><div class="line">file_handler.setFormatter(formatter)</div><div class="line">logger.addHandler(handler)</div><div class="line">logger.addHandler(file_handler)</div><div class="line">logger.setLevel(logging.DEBUG)</div><div class="line"></div><div class="line">logger.info(<span class="string">'终于可以写日志了...'</span>)</div></pre></td></tr></table></figure>
+<p>那有没有什么简单好用，<code>for human</code>的写日志方案呢？</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/09/29/log-gracefully/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -2267,7 +2223,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2310,7 +2266,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-count">112</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2375,7 +2331,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">26</span>
+                      
+                    
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2590,7 +2548,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">101</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">103</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

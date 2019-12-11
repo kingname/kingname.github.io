@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在上一篇文章中，我们讲到了，使用itertools.tee可以让一个生成器被多次完整遍历：
+12345678910111213import itertools g = generator()g_1, g_2, g_3 = itertools.tee(g, 3)for row in g_1:    print(row)for row in g_2:    print(row)    for row">
+<meta property="og:type" content="article">
+<meta property="og:title" content="炸掉你的内存—— itertools.tee 的弊端">
+<meta property="og:url" content="https://www.kingname.info/2019/11/05/your-memory-boom/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="在上一篇文章中，我们讲到了，使用itertools.tee可以让一个生成器被多次完整遍历：
+12345678910111213import itertools g = generator()g_1, g_2, g_3 = itertools.tee(g, 3)for row in g_1:    print(row)for row in g_2:    print(row)    for row">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-25-21.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-31-28.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-42-29.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-22-04-16.png">
+<meta property="og:updated_time" content="2019-12-11T14:39:10.816Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="炸掉你的内存—— itertools.tee 的弊端">
+<meta name="twitter:description" content="在上一篇文章中，我们讲到了，使用itertools.tee可以让一个生成器被多次完整遍历：
+12345678910111213import itertools g = generator()g_1, g_2, g_3 = itertools.tee(g, 3)for row in g_1:    print(row)for row in g_2:    print(row)    for row">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-25-21.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2019/11/05/your-memory-boom/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>炸掉你的内存—— itertools.tee 的弊端 | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/05/your-memory-boom/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">炸掉你的内存—— itertools.tee 的弊端
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-05 22:38:15" itemprop="dateCreated datePublished" datetime="2019-11-05T22:38:15+08:00">2019-11-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-12-11 22:39:10" itemprop="dateModified" datetime="2019-12-11T22:39:10+08:00">2019-12-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/05/your-memory-boom/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/05/your-memory-boom/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在上一篇文章中，我们讲到了，使用<code>itertools.tee</code>可以让一个生成器被多次完整遍历：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools </div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2, g_3 = itertools.tee(g, <span class="number">3</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_1:</div><div class="line">    print(row)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_2:</div><div class="line">    print(row)</div><div class="line">    </div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_3:</div><div class="line">    print(row)</div></pre></td></tr></table></figure>
+<p>但是，我们说到<code>itertools.tee</code>有两个弊端，其一，如果分裂出来的多个生成器是按顺序执行的，其中一个完整遍历了再遍历第二个，那么就会导致内存中堆积大量的数据。</p>
+<p>要解释这个问题的原因，我们就要理解<code>itertools.tee</code>背后的原理。</p>
+<a id="more"></a>
+<p>我们知道，一个生成器只能被完整遍历一次。那么如果我想强行让他被遍历两次怎么办呢？最简单的办法是搞个列表出来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">g = generator()</div><div class="line">value_list = [x <span class="keyword">for</span> x <span class="keyword">in</span> g]</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> value_list:</div><div class="line">    print(row)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> value_list:</div><div class="line">    print(row)</div></pre></td></tr></table></figure>
+<p>转换为列表以后，你想完整遍历几次，就能完整遍历几次。但这样做，就背离了使用生成器节省内存的目的。所有的数据，全都在列表里面，如果数据量非常非常多，那么内存可能就会爆炸。</p>
+<p>所以我们需要一边迭代生成器，一边消费数据。为了实现这个目的，我们先来看看，如何一条一条地取出生成器里面的数据——<code>next</code> 函数。</p>
+<p>当我们每次执行<code>next(g)</code>的时候，生成器被迭代1次，并返回1条数据，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-25-21.png" alt=""></p>
+<p>当生成器的所有数据都被遍历完成以后，再次执行<code>next(g)</code>就会抛出<code>StopIteration</code>异常。所以当我们捕获到这个异常的时候，就说明生成器里面的所有数据都遍历完成了。</p>
+<p>现在，我们把生成器<code>分裂出来</code>，但是取极端情况，只分裂1个。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        <span class="keyword">yield</span> f<span class="string">'我是你第&#123;i&#125;个爷爷'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(g)</span>:</span></div><div class="line">    value_list = []</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> value_list:</div><div class="line">            <span class="keyword">try</span>:</div><div class="line">                value = next(g)</div><div class="line">            <span class="keyword">except</span> StopIteration:</div><div class="line">                <span class="keyword">return</span></div><div class="line">            value_list.append(value)</div><div class="line">        <span class="keyword">yield</span> value_list.pop()</div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1 = split(g)</div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_1:</div><div class="line">    print(value)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-31-28.png" alt=""></p>
+<p><code>split</code>生成器函数，写了一大堆代码，似乎做了无用功——如果<code>value_list</code>为空，那么就从原始生成器里面取一个数据，然后放入 <code>value_list</code> 列表，然后又把这个数从 <code>value_list</code>取出来，再抛给上层。</p>
+<p>这样写有什么意义呢？</p>
+<p>现在，我们修改代码，让 split 能够分裂出两个生成器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">        <span class="keyword">yield</span> f<span class="string">'我是你第&#123;i&#125;个爷爷'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(g)</span>:</span></div><div class="line">    value_list_1 = []</div><div class="line">    value_list_2 = []</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrap</span><span class="params">(queue)</span>:</span></div><div class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> queue:</div><div class="line">                <span class="keyword">try</span>:</div><div class="line">                    value = next(g)</div><div class="line">                <span class="keyword">except</span> StopIteration:</div><div class="line">                    <span class="keyword">return</span></div><div class="line">                value_list_1.append(value)</div><div class="line">                value_list_2.append(value)</div><div class="line">            <span class="keyword">yield</span> queue.pop(<span class="number">0</span>)</div><div class="line">    g_1 = wrap(value_list_1)</div><div class="line">    g_2 = wrap(value_list_2)</div><div class="line">    <span class="keyword">return</span> g_1, g_2</div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2 = split(g)</div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_1:</div><div class="line">    print(value)</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_2:</div><div class="line">    print(value)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-42-29.png" alt=""></p>
+<p>现在， <code>split</code>是一个会返回两个生成器的函数。首先创建两个列表<code>value_list_1</code>和<code>value_list_2</code>，然后定义一个闭包生成器函数<code>wrap</code>。它接收一个参数<code>queue</code>。这个参数是一个列表。</p>
+<p>如果<code>queue</code>不为空，那么取它的第0个元素，并抛出给上层。如果<code>queue</code>为空，迭代一次原始生成器，获得的值同时放进<code>value_list_1</code>和<code>value_list_2</code>这两个列表中。此时，由于<code>queue</code>列表必定是<code>value_list_1</code>或者<code>value_list_2</code>的其中一个，所以此时<code>queue</code>必定不为空，因此可以取它下标为0的元素，抛出给上层。</p>
+<p>由于<code>.pop</code>在取出数据以后，会把这个数据从列表里面删除。所以<code>queue</code>对应的列表又会变成空。</p>
+<p>但大家有没有发现，此时，另外一个列表的数据，是留在列表里面的，没有被消费。</p>
+<p>所以，如果我始终迭代<code>g_1</code>这个分裂后的生成器，那么<code>wrap</code>的参数始终是<code>value_list_1</code>，此时，<code>value_list_2</code>始终没有被消费，于是数据就会越堆越多，最后撑爆内存。</p>
+<p>所以，<code>itertools.tee</code>分裂以后的多个生成器，应该尽量间隔着迭代，或者“同时迭代”，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        value = next(g_1)</div><div class="line">        parse(value)</div><div class="line">        value = next(g_2)</div><div class="line">        parse(value)</div><div class="line">    <span class="keyword">except</span> StopIteration:</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure>
+<p>这样调用，就能始终保证两个列表最多只有1条数据，就不会出现堆积的问题。</p>
+<p>但是在实际项目中，很难这样写，所以你可能会想，是不是可以把分裂后的多个生成器，放进多个线程里面同步运行。这样虽然列表里面的数据会超过1条，但也不会堆积太多。</p>
+<p>然而这是不行的，<code>itertools.tee</code>分裂出来的多个生成器不是线程安全的，不能在多线程里面运行，否则会导致报错。这里给出一个报错的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000000</span>):</div><div class="line">        <span class="keyword">yield</span> i</div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2 = itertools.tee(g, <span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> [g_1, g_2]:</div><div class="line">    threading.Thread(target=sum, args=(x, )).start()</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-22-04-16.png" alt=""></p>
+<p>在下一篇文章中，我们将会说明，为什么分裂以后的生成器不是线程安全的，以及如何让它线程安全。</p>
+<p>P.S.:本文介绍 <code>itertools.tee</code>的代码经过简化和修改，用于表示这个函数的核心逻辑。但真正的源代码比这个简化版本要复杂得多。并且源代码中队列是使用<code>dequeue</code>而不是列表。因为<code>dequeue</code>是基于双向链表实现的，在两头增加删除数据，时间复杂度都是 O(1)，但是从列表的头部删除数据，时间复杂度为 O(n)。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/wechatplatform.jpg" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/生成器/" rel="tag"># 生成器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/05/one-generator-to-two/" rel="next" title="一个生成器如何当两个用？">
+                <i class="fa fa-chevron-left"></i> 一个生成器如何当两个用？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/06/thread-safe-in-tee/" rel="prev" title="禁止通行——如何让 itertools.tee 线程安全">
+                禁止通行——如何让 itertools.tee 线程安全 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">112</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">103</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

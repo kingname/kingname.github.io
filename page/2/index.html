@@ -344,7 +344,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/17/do-not-show/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/16/persist-data-like-dict/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -364,7 +364,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/10/17/do-not-show/" class="post-title-link" itemprop="url">你的代码是如何被炫技毁掉的</a>
+                <a href="/2019/11/16/persist-data-like-dict/" class="post-title-link" itemprop="url">在 Python 中像字典一样持久化数据</a>
               
             
           </h1>
@@ -389,7 +389,7 @@
                 
               
 
-              <time title="创建时间：2019-10-17 22:36:16" itemprop="dateCreated datePublished" datetime="2019-10-17T22:36:16+08:00">2019-10-17</time>
+              <time title="创建时间：2019-11-16 22:44:10" itemprop="dateCreated datePublished" datetime="2019-11-16T22:44:10+08:00">2019-11-16</time>
             
 
             
@@ -406,7 +406,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-10-30 22:45:14" itemprop="dateModified" datetime="2019-10-30T22:45:14+08:00">2019-10-30</time>
+                <time title="修改时间：2019-12-11 22:45:55" itemprop="dateModified" datetime="2019-12-11T22:45:55+08:00">2019-12-11</time>
               
             
           </span>
@@ -438,8 +438,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/17/do-not-show/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/17/do-not-show/" itemprop="commentCount"></span>
+                <a href="/2019/11/16/persist-data-like-dict/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/16/persist-data-like-dict/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -468,11 +468,13 @@
 
       
         
-          <p>你的代码是如何被炫技毁掉的？</p>
+          <p>我们知道，如果我们在 Python 中想把一段数据持久化到硬盘上，最简单的办法就是写文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">'data.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">    f.write(<span class="string">'username：1234567\n'</span>)</div><div class="line">    f.write(<span class="string">'password: 9876543\n'</span>)</div></pre></td></tr></table></figure>
+<p>但这样做有一个弊端，就是在读取数据的时候，我们把整个数据读入内存以后，还需要单独写一段代码，用来区分哪里是<code>username</code>对应的值，哪些是<code>password</code>对应的值。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/10/17/do-not-show/#more" rel="contents">
+              <a class="btn" href="/2019/11/16/persist-data-like-dict/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -532,7 +534,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/10/12/reimport-in-jupyter/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/13/most-simple-singletom/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -552,7 +554,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/10/12/reimport-in-jupyter/" class="post-title-link" itemprop="url">在 Jupyter 中如何重新导入特定的 Python 文件？</a>
+                <a href="/2019/11/13/most-simple-singletom/" class="post-title-link" itemprop="url">Python 下面最简单的单例模式写法</a>
               
             
           </h1>
@@ -577,7 +579,7 @@
                 
               
 
-              <time title="创建时间：2019-10-12 22:34:58" itemprop="dateCreated datePublished" datetime="2019-10-12T22:34:58+08:00">2019-10-12</time>
+              <time title="创建时间：2019-11-13 22:42:17" itemprop="dateCreated datePublished" datetime="2019-11-13T22:42:17+08:00">2019-11-13</time>
             
 
             
@@ -594,7 +596,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-10-30 22:45:28" itemprop="dateModified" datetime="2019-10-30T22:45:28+08:00">2019-10-30</time>
+                <time title="修改时间：2019-12-11 22:43:27" itemprop="dateModified" datetime="2019-12-11T22:43:27+08:00">2019-12-11</time>
               
             
           </span>
@@ -626,8 +628,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/12/reimport-in-jupyter/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/12/reimport-in-jupyter/" itemprop="commentCount"></span>
+                <a href="/2019/11/13/most-simple-singletom/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/13/most-simple-singletom/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -656,12 +658,11 @@
 
       
         
-          <p>Jupyter 是数据分析领域非常有名的开发环境，使用 Jupyter 写数据分析相关的代码会大大节约开发时间。</p>
-<p>设想这样一个场景：别的部门的同事传给你一个数据分析的模块，用于实现对数据的高级分析。模块里面有上百个函数。</p>
+          <p>二十几种设计模式中，单例模式是最简单最常用的一种。在其他语言里面实现单例模式要写不少代码，但是在 Python 里面，有一种非常简单的单例模式写法。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/10/12/reimport-in-jupyter/#more" rel="contents">
+              <a class="btn" href="/2019/11/13/most-simple-singletom/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -721,7 +722,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/09/29/log-gracefully/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/07/matrix-for-fib/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -741,7 +742,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/09/29/log-gracefully/" class="post-title-link" itemprop="url">更优雅地在 Python 中写日志</a>
+                <a href="/2019/11/07/matrix-for-fib/" class="post-title-link" itemprop="url">升维打击——算法问题的维度碾压</a>
               
             
           </h1>
@@ -766,7 +767,7 @@
                 
               
 
-              <time title="创建时间：2019-09-29 22:33:34" itemprop="dateCreated datePublished" datetime="2019-09-29T22:33:34+08:00">2019-09-29</time>
+              <time title="创建时间：2019-11-07 22:40:55" itemprop="dateCreated datePublished" datetime="2019-11-07T22:40:55+08:00">2019-11-07</time>
             
 
             
@@ -783,7 +784,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-10-30 22:45:46" itemprop="dateModified" datetime="2019-10-30T22:45:46+08:00">2019-10-30</time>
+                <time title="修改时间：2019-12-11 22:41:55" itemprop="dateModified" datetime="2019-12-11T22:41:55+08:00">2019-12-11</time>
               
             
           </span>
@@ -815,8 +816,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/09/29/log-gracefully/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/29/log-gracefully/" itemprop="commentCount"></span>
+                <a href="/2019/11/07/matrix-for-fib/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/matrix-for-fib/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -845,13 +846,13 @@
 
       
         
-          <p>原来我们在 Python 中写日志，使用的是 Python 自带的 logging 模块，要实现既在终端输出，又能写文件，并且日志文件还能 rotate ，代码需要十多行：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">from</span> logging.handlers <span class="keyword">import</span> RotatingFileHandler</div><div class="line"></div><div class="line">os.makedirs(<span class="string">'Logs'</span>, exists_ok=<span class="keyword">True</span>)</div><div class="line">logger = logging.getLogger(<span class="string">'Robot'</span>)</div><div class="line">handler = logging.StreamHandler()</div><div class="line">handler.setLevel(logging.DEBUG)</div><div class="line">file_handler = RotatingFileHandler(os.path.join(<span class="string">'Logs'</span>, <span class="string">'robot.log'</span>),</div><div class="line">maxBytes=<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>,</div><div class="line">backupCount=<span class="number">10</span>,</div><div class="line">encoding=<span class="string">'utf-8'</span>)</div><div class="line">formatter = logging.Formatter(<span class="string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</span>)</div><div class="line">handler.setFormatter(formatter)</div><div class="line">file_handler.setFormatter(formatter)</div><div class="line">logger.addHandler(handler)</div><div class="line">logger.addHandler(file_handler)</div><div class="line">logger.setLevel(logging.DEBUG)</div><div class="line"></div><div class="line">logger.info(<span class="string">'终于可以写日志了...'</span>)</div></pre></td></tr></table></figure>
-<p>那有没有什么简单好用，<code>for human</code>的写日志方案呢？</p>
+          <p>在小说《三体》里面，我们知道一个词叫做降维打击，通过把对手所在空间的维度降低从而实现团灭整个星系。</p>
+<p>但是如果对方所在的维度已经是一维了，降不动了，那么要实现维度打击的办法就是把自己的维度提升。</p>
+<p>今天我们将会从二维的层面来解决一维的问题，把时间复杂度从<code>O(n)</code>降低到 <code>O(logn)</code>。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/09/29/log-gracefully/#more" rel="contents">
+              <a class="btn" href="/2019/11/07/matrix-for-fib/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -911,7 +912,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/09/28/pymongo-update-return/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/06/thread-safe-in-tee/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -931,7 +932,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/09/28/pymongo-update-return/" class="post-title-link" itemprop="url">使用Pymongo实现更新并返回数据</a>
+                <a href="/2019/11/06/thread-safe-in-tee/" class="post-title-link" itemprop="url">禁止通行——如何让 itertools.tee 线程安全</a>
               
             
           </h1>
@@ -956,7 +957,7 @@
                 
               
 
-              <time title="创建时间：2019-09-28 22:32:03" itemprop="dateCreated datePublished" datetime="2019-09-28T22:32:03+08:00">2019-09-28</time>
+              <time title="创建时间：2019-11-06 22:39:31" itemprop="dateCreated datePublished" datetime="2019-11-06T22:39:31+08:00">2019-11-06</time>
             
 
             
@@ -973,197 +974,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-10-30 22:46:03" itemprop="dateModified" datetime="2019-10-30T22:46:03+08:00">2019-10-30</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MongoDB/" itemprop="url" rel="index"><span itemprop="name">MongoDB</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/09/28/pymongo-update-return/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/28/pymongo-update-return/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>有这样一个业务场景：</p>
-<p>我有100篇故事，放在 MongoDB 里面。我做了一个 web 接口，每次请求返回一篇故事。希望能够实现：</p>
-<p>每次请求返回的故事都不一样，在100次请求里面，每篇故事都需要返回。直到100篇故事全部返回完成。第101次与第1次相同，第102次与第2次相同……</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/09/28/pymongo-update-return/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/09/26/is-not-always-equal/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/26/is-not-always-equal/" class="post-title-link" itemprop="url">在 Python 中，is 并不一定包含==</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-26 22:31:10" itemprop="dateCreated datePublished" datetime="2019-09-26T22:31:10+08:00">2019-09-26</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-10-30 22:46:18" itemprop="dateModified" datetime="2019-10-30T22:46:18+08:00">2019-10-30</time>
+                <time title="修改时间：2019-12-11 22:40:34" itemprop="dateModified" datetime="2019-12-11T22:40:34+08:00">2019-12-11</time>
               
             
           </span>
@@ -1195,8 +1006,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/09/26/is-not-always-equal/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/26/is-not-always-equal/" itemprop="commentCount"></span>
+                <a href="/2019/11/06/thread-safe-in-tee/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/06/thread-safe-in-tee/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1225,29 +1036,18 @@
 
       
         
+          <p>在上一篇文章中，我们说到了，<code>itertools.tee</code>不是线程安全的，并给出了一个例子，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-22-04-16.png" alt=""></p>
+<p>在两个线程里面同时运行分裂出来的生成器对象，就会导致报错。</p>
+          <!--noindex-->
           
-            <p>在我们日常使用 Python 时，大家可能有这样一种认识：</p>
-<ul>
-<li>a == b 为 <code>True</code>，a is b 不一定为 <code>True</code></li>
-<li>a is b 为 <code>True</code>，则 a == b 一定为 <code>True</code></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;abc!&apos;</div><div class="line">&gt;&gt;&gt; b = &apos;abc!&apos;</div><div class="line">&gt;&gt;&gt; a == b</div><div class="line">True</div><div class="line">&gt;&gt;&gt; a is b</div><div class="line">False</div><div class="line">&gt;&gt;&gt; c = a</div><div class="line">&gt;&gt;&gt; a is c</div><div class="line">True</div><div class="line">&gt;&gt;&gt; a == c</div><div class="line">True</div></pre></td></tr></table></figure>
-<p>这是因为 <code>==</code> 只比较值，而 <code>is</code> 同时比较值和内存地址。简单来说:你左手边有一个人，右手边有一个人，两个人长得一模一样，那么<code>左手边的人==右手边的人</code>；你左手边有一个人，一分钟以后这个人走到了你的右手边，那么<code>刚才左手边的人 is 现在右手边的人</code></p>
-<p>但凡事总有意外，情况下面的代码：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-17-41.png" alt=""></p>
-<p>为什么会出现这种情况？<code>a is b</code>为 True，<code>a == b</code>却为 <code>False</code>。</p>
-<p>你可以先停在这里，猜一下a 和 b 里面的值到底是什么东西。</p>
-<p>现在来揭开答案，我们来网上看两行：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-23-43.png" alt=""></p>
-<p>a 和 b 的值为<code>♂</code>，它的意思是<code>Not a Number</code>，非数。</p>
-<p><code>♂</code>与任何数，包括它自己比较，结果都是 False，这是<a href="https://zh.wikipedia.org/wiki/IEEE_754#%E7%89%B9%E6%AE%8A%E5%80%BC" target="_blank" rel="external">IEEE-754</a>规定的：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-27-06.png" alt=""></p>
-<p>Python 在实现这个数据的时候，根据 IEEE-754的要求，也做了限制：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-09-26-22-30-08.png" alt=""></p>
-<p>相关的文档地址详见 Python 的 <a href="https://docs.python.org/3/library/math.html" target="_blank" rel="external">math 库</a></p>
-<p>所以，这里 a == b 为 False，是一种特殊情况。并不是 Python 出现了错误。</p>
-
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/11/06/thread-safe-in-tee/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
           
+          <!--/noindex-->
         
       
     </div>
@@ -1302,7 +1102,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/09/25/es-not-insert-if-exists/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/05/your-memory-boom/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -1322,7 +1122,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/09/25/es-not-insert-if-exists/" class="post-title-link" itemprop="url">Elasticsearch批量插入时，存在就不插入</a>
+                <a href="/2019/11/05/your-memory-boom/" class="post-title-link" itemprop="url">炸掉你的内存—— itertools.tee 的弊端</a>
               
             
           </h1>
@@ -1347,7 +1147,7 @@
                 
               
 
-              <time title="创建时间：2019-09-25 22:29:29" itemprop="dateCreated datePublished" datetime="2019-09-25T22:29:29+08:00">2019-09-25</time>
+              <time title="创建时间：2019-11-05 22:38:15" itemprop="dateCreated datePublished" datetime="2019-11-05T22:38:15+08:00">2019-11-05</time>
             
 
             
@@ -1364,550 +1164,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-10-30 22:46:40" itemprop="dateModified" datetime="2019-10-30T22:46:40+08:00">2019-10-30</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Elasticsearch/" itemprop="url" rel="index"><span itemprop="name">Elasticsearch</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/09/25/es-not-insert-if-exists/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/25/es-not-insert-if-exists/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>当我们使用 Elasticsearch-py 批量插入数据到 ES 的时候，我们常常使用它的 <code>helpers</code>模块里面的<code>bulk</code>函数。其使用方法如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> helpers, Elasticsearch</div><div class="line"></div><div class="line">es = Elasticsearch(xxx)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    datas = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">yield</span> &#123;</div><div class="line">            <span class="string">'_id'</span>: <span class="string">"xxx"</span>,</div><div class="line">            <span class="string">'_source'</span>: &#123;</div><div class="line">                <span class="string">'age'</span>: data</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">helpers.bulk(es,</div><div class="line">index=<span class="string">'xxx'</span>,</div><div class="line">generator(),</div><div class="line">doc_type=<span class="string">'doc'</span>,)</div></pre></td></tr></table></figure>
-<p>但这种方式有一个问题，它默认相当于<code>upsert</code>操作。如果<code>_id</code> 对应的文档已经在 ES 里面了，那么数据会被更新。如果<code>_id</code> 对应的文档不在 ES 中，那么就插入。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/09/25/es-not-insert-if-exists/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/09/22/remove-tag-without-text/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/22/remove-tag-without-text/" class="post-title-link" itemprop="url">GNE 预处理技术——如何移除特定标签但是保留文字到父标签</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-22 18:28:02 / 修改时间：18:31:55" itemprop="dateCreated datePublished" datetime="2019-09-22T18:28:02+08:00">2019-09-22</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/GNE/" itemprop="url" rel="index"><span itemprop="name">GNE</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/09/22/remove-tag-without-text/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/22/remove-tag-without-text/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在开发新闻网页正文通用抽取器<a href="https://github.com/kingname/GeneralNewsExtractor">GNE</a>的过程中，需要对目标网页的源代码进行一些预处理，从而提高正文抓取的准确性。其中之一就是把 <code>&lt;p&gt;</code>标签内部的 <code>&lt;span&gt;</code>标签中的文本，合并到<code>&lt;p&gt;</code>标签中，再删除 <code>&lt;span&gt;</code> 标签。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/09/22/remove-tag-without-text/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/09/09/generalnewsextractor/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/09/generalnewsextractor/" class="post-title-link" itemprop="url">新闻类网页正文通用抽取器（一）——项目介绍</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-09 15:20:29" itemprop="dateCreated datePublished" datetime="2019-09-09T15:20:29+08:00">2019-09-09</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-09-22 18:32:13" itemprop="dateModified" datetime="2019-09-22T18:32:13+08:00">2019-09-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/GNE/" itemprop="url" rel="index"><span itemprop="name">GNE</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/09/09/generalnewsextractor/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/09/generalnewsextractor/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="项目起源"><a href="#项目起源" class="headerlink" title="项目起源"></a>项目起源</h2><p>开发这个项目，源自于我在知网发现了一篇关于自动化抽取新闻类网站正文的算法论文——<a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFDLAST2019&amp;filename=GWDZ201908029&amp;v=MDY4MTRxVHJXTTFGckNVUkxPZmJ1Wm5GQ2poVXJyQklqclBkTEc0SDlqTXA0OUhiWVI4ZVgxTHV4WVM3RGgxVDM=">《基于文本及符号密度的网页正文提取方法》</a>）</p>
-<p>这篇论文中描述的算法看起来简洁清晰，并且符合逻辑。但由于论文中只讲了算法原理，并没有具体的语言实现，所以我使用 Python 根据论文实现了这个抽取器。并分别使用今日头条、网易新闻、游民星空、观察者网、凤凰网、腾讯新闻、ReadHub、新浪新闻做了测试，发现提取效果非常出色，几乎能够达到100%的准确率。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/09/09/generalnewsextractor/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/08/18/hide-webdriver-in-pyppeteer/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/08/18/hide-webdriver-in-pyppeteer/" class="post-title-link" itemprop="url">在Pyppeteer中正确隐藏window.navigator.webdriver</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-18 09:36:25 / 修改时间：09:37:56" itemprop="dateCreated datePublished" datetime="2019-08-18T09:36:25+08:00">2019-08-18</time>
-            
-
-            
-              
-
+                <time title="修改时间：2019-12-11 22:39:10" itemprop="dateModified" datetime="2019-12-11T22:39:10+08:00">2019-12-11</time>
               
             
           </span>
@@ -1939,8 +1196,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/08/18/hide-webdriver-in-pyppeteer/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/08/18/hide-webdriver-in-pyppeteer/" itemprop="commentCount"></span>
+                <a href="/2019/11/05/your-memory-boom/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/05/your-memory-boom/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1969,14 +1226,14 @@
 
       
         
-          <p>在我以前的一篇文章：<a href="https://mp.weixin.qq.com/s/TqL3OawPe9zW_nneyXvefQ">一日一技：如何正确移除Selenium中window.navigator.webdriver的值</a>，我讲到了如何在Selenium启动的Chrome中，通过设置启动参数隐藏<code>window.navigator.webdriver</code>，驳斥了网上垃圾文章中流传的使用JavaScript注入的弊端。</p>
-<p>由于Selenium启动的Chrome中，有几十个特征可以被识别，所以在爬虫界已经没有以前那么受欢迎了。模拟浏览器的新秀Puppeteer异军突起，逐渐受到了爬虫界的关注。Puppeteer需要使用JavaScript来控制，如果你是用Python，那么就需要使用Pyppeteer.</p>
-<p>如果你使用模拟浏览器爬淘宝，你会发现，无论怎么修改参数，Selenium总是可以立刻被识别。但是如果你使用了本文的方法，用Pyppeteer抓取淘宝，你就会发现另外一个广阔的天地。</p>
-<p>今天，我们来讲讲如何在Pyppeteer中隐藏<code>window.navigator.webdriver</code></p>
+          <p>在上一篇文章中，我们讲到了，使用<code>itertools.tee</code>可以让一个生成器被多次完整遍历：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools </div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2, g_3 = itertools.tee(g, <span class="number">3</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_1:</div><div class="line">    print(row)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_2:</div><div class="line">    print(row)</div><div class="line">    </div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_3:</div><div class="line">    print(row)</div></pre></td></tr></table></figure>
+<p>但是，我们说到<code>itertools.tee</code>有两个弊端，其一，如果分裂出来的多个生成器是按顺序执行的，其中一个完整遍历了再遍历第二个，那么就会导致内存中堆积大量的数据。</p>
+<p>要解释这个问题的原因，我们就要理解<code>itertools.tee</code>背后的原理。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/08/18/hide-webdriver-in-pyppeteer/#more" rel="contents">
+              <a class="btn" href="/2019/11/05/your-memory-boom/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2036,7 +1293,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/08/18/dont-use-re-compile-again/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/05/one-generator-to-two/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -2056,7 +1313,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/08/18/dont-use-re-compile-again/" class="post-title-link" itemprop="url">回《驳 <Python正则表达式，请不要再用re.compile了！！！>》</a>
+                <a href="/2019/11/05/one-generator-to-two/" class="post-title-link" itemprop="url">一个生成器如何当两个用？</a>
               
             
           </h1>
@@ -2081,7 +1338,564 @@
                 
               
 
-              <time title="创建时间：2019-08-18 00:10:03 / 修改时间：09:31:54" itemprop="dateCreated datePublished" datetime="2019-08-18T00:10:03+08:00">2019-08-18</time>
+              <time title="创建时间：2019-11-05 22:37:00" itemprop="dateCreated datePublished" datetime="2019-11-05T22:37:00+08:00">2019-11-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-12-11 22:37:54" itemprop="dateModified" datetime="2019-12-11T22:37:54+08:00">2019-12-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/05/one-generator-to-two/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/05/one-generator-to-two/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>我们知道，Python 里面的生成器只能被消费一次，例如如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">name_generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> [<span class="string">'产品经理'</span>, <span class="string">'kingname'</span>]:</div><div class="line">        <span class="keyword">yield</span> name</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hello</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hello 函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hello'</span>, name)</div><div class="line">    print(<span class="string">'hello 函数运行完成'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hi</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hi函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hi'</span>, name)</div><div class="line">    print(<span class="string">'hi函数运行完成'</span>)</div><div class="line"></div><div class="line">names = name_generator()</div><div class="line">say_hello(names)</div><div class="line">say_hi(names)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-13-54.png" alt=""></p>
+<p>在 <code>say_hello</code>函数里面，生成器已经被完整遍历了一次，那么在<code>say_hi</code>里面，就什么数据都拿不到了。</p>
+<p>但如果我们用的是列表，就可以多次遍历，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-15-26.png" alt=""></p>
+<p>大家注意观察区别。</p>
+<p>那么有什么办法，能让生成器被多次完整迭代呢？这个时候就要使用<code>itertools.tee</code>这个函数了。它通过<code>dequeue</code>实现了让生成器多次消费的办法。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/11/05/one-generator-to-two/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/04/pm-get-others-thing/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/04/pm-get-others-thing/" class="post-title-link" itemprop="url">产品经理的故事：产品经理拿错了别人的外卖</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-04 22:35:18" itemprop="dateCreated datePublished" datetime="2019-11-04T22:35:18+08:00">2019-11-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-12-11 22:36:29" itemprop="dateModified" datetime="2019-12-11T22:36:29+08:00">2019-12-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/博弈论/" itemprop="url" rel="index"><span itemprop="name">博弈论</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/04/pm-get-others-thing/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/04/pm-get-others-thing/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>产品经理中午没有赶上食堂的午饭，于是纠集了一批人一起点外卖。然而正当她要下单时，老板找她有开会，于是她让开发小哥随便帮忙点一份。</p>
+<p>产品经理开完会回来以后，发现还剩三份外卖没有人拿，分别是鲱鱼汤、螺蛳粉和大肠刺身。此时开发小哥碰巧不在，产品经理一时不知道哪一份才是自己的。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/11/04/pm-get-others-thing/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/03/follow-my-wechat-platform/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/03/follow-my-wechat-platform/" class="post-title-link" itemprop="url">为什么我能一天更新13篇博客？</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-03 10:46:00 / 修改时间：10:49:40" itemprop="dateCreated datePublished" datetime="2019-11-03T10:46:00+08:00">2019-11-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂谈/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/03/follow-my-wechat-platform/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/03/follow-my-wechat-platform/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>不是因为我高产似那啥。而是因为这些文章是我每天一篇发布在微信公众号上的，然后每隔一段时间整体搬运到博客上面来。</p>
+<p>所以还没有关注我微信公众号的同学，请扫描下面的二维码，关注我的公众号，每天一篇原创文章，每天都有新技能 Get。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/640.gif" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/03/flat-dict-with-list/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/03/flat-dict-with-list/" class="post-title-link" itemprop="url">使用 yield 压平多层字典列表混合嵌套数据</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-03 10:08:53 / 修改时间：10:10:08" itemprop="dateCreated datePublished" datetime="2019-11-03T10:08:53+08:00">2019-11-03</time>
             
 
             
@@ -2118,8 +1932,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/08/18/dont-use-re-compile-again/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/08/18/dont-use-re-compile-again/" itemprop="commentCount"></span>
+                <a href="/2019/11/03/flat-dict-with-list/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/03/flat-dict-with-list/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2148,14 +1962,196 @@
 
       
         
-          <p>知乎用户<a href="https://www.zhihu.com/people/li-zhe-ao/posts">@Manjusaka
-</a>在阅读了我的文章<a href="https://zhuanlan.zhihu.com/p/70680488">《Python正则表达式，请不要再用re.compile了！！！》</a>以后，写了一篇驳文<a href="https://zhuanlan.zhihu.com/p/78265675">《驳 <Python正则表达式，请不要再用re.compile了！！！>》</a></p>
-<p>今天，我在这里回应一下这篇驳文。首先标题里面，我用的是<code>回</code>，意为回复，而不是继续驳斥@Manjusaka的文章。因为没有什么好驳斥的，他的观点没有什么问题。</p>
-<p>首先说明，我自己在公司的代码里面，也会使用<code>re.compile</code>。但是，我现在仍然坚持我的观点，让看这篇文章的人，不要用<code>re.compile</code>。</p>
+          <p>在上一篇文章里面，我们讲到了如何使用Python的<code>yield</code>关键字简化代码，压平多层嵌套字典的。</p>
+<p>那么如果我们的数据不仅仅有字典，还有列表，是一个字典列表多层嵌套的数据怎么办呢？例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">nest_dict = &#123;</div><div class="line">    <span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'b'</span>: &#123;</div><div class="line">        <span class="string">'c'</span>: <span class="number">2</span>,</div><div class="line">        <span class="string">'d'</span>: <span class="number">3</span>,</div><div class="line">        <span class="string">'e'</span>: &#123;<span class="string">'f'</span>: <span class="number">4</span>&#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="string">'g'</span>: &#123;<span class="string">'h'</span>: <span class="number">5</span>&#125;,</div><div class="line">    <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line">    <span class="string">'j'</span>: &#123;<span class="string">'k'</span>: &#123;<span class="string">'l'</span>: &#123;<span class="string">'m'</span>: <span class="number">8</span>&#125;&#125;&#125;,</div><div class="line">    <span class="string">'n'</span>: [<span class="number">1</span>, &#123;<span class="string">'o'</span>: <span class="number">1</span>, <span class="string">'p'</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],  <span class="string">'q'</span>: &#123;<span class="string">'r'</span>: &#123;<span class="string">'s'</span>: <span class="number">100</span>&#125;&#125;&#125;, <span class="number">3</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">5</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在，请停下来，敲一敲代码，想想如何把处理列表的逻辑添加进去。</p>
+<p>首先，我们来看一下最终被压平以后的数据长什么样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'b_c'</span>: <span class="number">2</span>,</div><div class="line"> <span class="string">'b_d'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'b_e_f'</span>: <span class="number">4</span>,</div><div class="line"> <span class="string">'g_h'</span>: <span class="number">5</span>,</div><div class="line"> <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line"> <span class="string">'j_k_l_m'</span>: <span class="number">8</span>,</div><div class="line"> <span class="string">'n_0'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_1_o'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_1_p_0'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_1_p_1'</span>: <span class="number">2</span>,</div><div class="line"> <span class="string">'n_1_p_2'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'n_1_q_r_s'</span>: <span class="number">100</span>,</div><div class="line"> <span class="string">'n_2'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'n_3_0'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_3_1'</span>: <span class="number">2</span>,</div><div class="line"> <span class="string">'n_3_2'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'n_4'</span>: <span class="number">5</span>&#125;</div></pre></td></tr></table></figure>
+<p>对于<code>&#39;n&#39;: [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</code>这种形式的数据，我们把它转换为： <code>{&#39;n_0&#39;: &#39;a&#39;, &#39;n_1&#39;: &#39;b&#39;, &#39;n_2&#39;: &#39;c&#39;}</code></p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/08/18/dont-use-re-compile-again/#more" rel="contents">
+              <a class="btn" href="/2019/11/03/flat-dict-with-list/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/11/03/flat-deep-dict/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/03/flat-deep-dict/" class="post-title-link" itemprop="url">使用 yield 压平嵌套字典有多简单？</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-03 10:07:53 / 修改时间：10:08:40" itemprop="dateCreated datePublished" datetime="2019-11-03T10:07:53+08:00">2019-11-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/03/flat-deep-dict/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/03/flat-deep-dict/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>我们经常遇到各种字典套字典的数据，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">nest_dict = &#123;</div><div class="line">    <span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'b'</span>: &#123;</div><div class="line">        <span class="string">'c'</span>: <span class="number">2</span>,</div><div class="line">        <span class="string">'d'</span>: <span class="number">3</span>,</div><div class="line">        <span class="string">'e'</span>: &#123;<span class="string">'f'</span>: <span class="number">4</span>&#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="string">'g'</span>: &#123;<span class="string">'h'</span>: <span class="number">5</span>&#125;,</div><div class="line">    <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line">    <span class="string">'j'</span>: &#123;<span class="string">'k'</span>: &#123;<span class="string">'l'</span>: &#123;<span class="string">'m'</span>: <span class="number">8</span>&#125;&#125;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>有没有什么简单的办法，把它<code>压扁</code>，变成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'b_c'</span>: <span class="number">2</span>,</div><div class="line">    <span class="string">'b_d'</span>: <span class="number">3</span>,</div><div class="line">    <span class="string">'b_e_f'</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">'g_h'</span>: <span class="number">5</span>,</div><div class="line">    <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line">    <span class="string">'j_k_l_m'</span>: <span class="number">8</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/11/03/flat-deep-dict/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2204,7 +2200,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2247,7 +2243,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-count">112</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2312,7 +2308,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">26</span>
+                      
+                    
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2527,7 +2525,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">101</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">103</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

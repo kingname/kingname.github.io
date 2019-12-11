@@ -344,7 +344,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/21/Python正则表达式中的re-S/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2016/05/19/screenshot/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -364,7 +364,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2014/12/21/Python正则表达式中的re-S/" class="post-title-link" itemprop="url">Python正则表达式中的re.S</a>
+                <a href="/2016/05/19/screenshot/" class="post-title-link" itemprop="url">使用Python保存截图</a>
               
             
           </h1>
@@ -389,7 +389,7 @@
                 
               
 
-              <time title="创建时间：2014-12-21 09:55:54" itemprop="dateCreated datePublished" datetime="2014-12-21T09:55:54+08:00">2014-12-21</time>
+              <time title="创建时间：2016-05-19 22:47:29" itemprop="dateCreated datePublished" datetime="2016-05-19T22:47:29+08:00">2016-05-19</time>
             
 
             
@@ -438,8 +438,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2014/12/21/Python正则表达式中的re-S/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/21/Python正则表达式中的re-S/" itemprop="commentCount"></span>
+                <a href="/2016/05/19/screenshot/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/05/19/screenshot/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -469,464 +469,61 @@
       
         
           
-            <p>在Python的正则表达式中，有一个参数为re.S。它表示“.”（不包含外侧双引号，下同）的作用扩展到整个字符串，包括“\n”。看如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import re</div><div class="line">a = &apos;&apos;&apos;asdfsafhellopass:</div><div class="line">	234455</div><div class="line">	worldafdsf</div><div class="line">	&apos;&apos;&apos;</div><div class="line">b = re.findall(&apos;hello(.*?)world&apos;,a)</div><div class="line">c = re.findall(&apos;hello(.*?)world&apos;,a,re.S)</div><div class="line">print &apos;b is &apos; , b</div><div class="line">print &apos;c is &apos; , c</div></pre></td></tr></table></figure></p>
-<p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">b is  []</div><div class="line">c is  [&apos;pass:\n\t234455\n\t&apos;]</div></pre></td></tr></table></figure></p>
-<p>正则表达式中，“.”的作用是匹配除“\n”以外的任何字符，也就是说，它是在一行中进行匹配。这里的“行”是以“\n”进行区分的。a字符串有每行的末尾有一个“\n”，不过它不可见。</p>
-<p>如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始，不会跨行。而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，将“\n”当做一个普通的字符加入到这个字符串中，在整体中进行匹配。</p>
-<p>在re.py库的介绍中有以下语句：</p>
+            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>在<a href="http://jikexueyuan.com" target="_blank" rel="external">极客学院</a>讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。</p>
+<p>如果使用PIL，这个需求只需要三行代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</div><div class="line">pic = ImageGrab.grab()</div><div class="line">pic.save(<span class="string">'1.jpg'</span>)</div></pre></td></tr></table></figure></p>
+<p>但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实现截图的功能。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于被控端使用了win32api, 因此有一个方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32api.keybd_event</div></pre></td></tr></table></figure></p>
+<p>这个方法可以模拟键盘的按键动作。因此，解决方法就比较的明显了：</p>
+<ol>
+<li>模拟键盘上面的“Print Screen” 键按下</li>
+<li>从剪贴板中读取出截图</li>
+<li>将截图保存到本地 </li>
+</ol>
+<p>第一步非常的简单，实用win32api 和 win32con，两行代码就能实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import win32api</div><div class="line">import win32con</div><div class="line">win32api.keybd_event(win32con.VK_SNAPSHOT, 0)</div></pre></td></tr></table></figure></p>
+<p>其中win32con这个库里面包含了很多定义好的和Windows相关的常量，而VK_SNAPSHOT就是Print Screen键的键位码。后面的数字0表示截取整个屏幕。如果改成数字1，表示截取当前窗口。</p>
+<p>那么现在问题来了，在不实用PIL的情况下，如何将剪贴板你们的图片保存到本地？</p>
+<p>win32api有一个模块 win32clipboard 是负责剪贴板相关的操作。它有一个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(formats)</div></pre></td></tr></table></figure></p>
+<p>这个方法可以从剪贴板里面读取数据。但是需要指定数据的格式。从<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff729168\(v=vs.85\" target="_blank" rel="external">这里</a>.aspx)可以查看到更多的标准剪贴板格式(<em>Standard Clipboard Formats</em>).</p>
+<p>一开始我使用的formats是<strong>CF_BITMAP</strong>，程序返回的是一串整数，怀疑应该是一个内存地址。这也和这个format的描述：</p>
 <blockquote>
-<p>“.”      Matches any character except a newline.</p>
-<p>S  DOTALL      “.” matches any character at all, including the newline.</p>
+<p>A handle to a bitmap (<strong>HBITMAP</strong>).</p>
 </blockquote>
-<p>这里特别感谢评论中叫做Style的朋友指出了我的错误。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/18/从E-E到S-E/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/18/从E-E到S-E/" class="post-title-link" itemprop="url">从E.E到S.E</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-18 16:49:19" itemprop="dateCreated datePublished" datetime="2014-12-18T16:49:19+08:00">2014-12-18</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂念/" itemprop="url" rel="index"><span itemprop="name">杂念</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/18/从E-E到S-E/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/18/从E-E到S-E/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我在本科学的是Electric Engineering，大四找工作却当了软件工程师。这可以说是各种机缘巧合吧。</p>
-<p>我接触编程是在初中，那个时候有同学在看《黑客X档案》，当时看到一篇文章说的一个万能密码：</p>
-<pre><code>&apos;or&apos;&apos;=&apos;
-</code></pre><p>有一天在学校的网站论坛上测试了一下，发现真的登录了，而且是管理员的身份。虽然不知道是什么原理，但是觉得有点意思。</p>
-<p>后来开始不间断的买《黑客X档案》，接触到了编程，VB，C语言，Perl还有汇编。我发现VB特别好懂，于是安装了一个Visual Basic 6.0开始写小程序。我写的最大的小程序就是一个网页浏览器了，当然是跟着书上写的。这些经历现在想想也挺丰富的，入侵网站，抓取肉鸡。不过这不是今天的重点，以后单独写一篇文章吧。</p>
-<p>开始上大学了，第一学期就是C语言。周围无数的传言说C语言难得跟一坨屎一样，挂科一大半。直到现在，这四年间，每一年都能听到无数这样的话语。然而当年的C语言考试，我提前40分钟做完，不小心拿了一个满分。</p>
-<p>那个时候用的是谭浩强的C语言，被人吐槽无数的版本。里面有些东西确实脑残：</p>
-<pre><code>b = a+++++a;
-</code></pre><p>这样的问题确实没有什么意义，考试的题里面，概念题就能让你及格。剩下的改错题和编程题稍稍考一点水平，然而题目大多也是课程设计做过的。这一门课程，我的课程设计所有程序都是我自己凭脑袋想出来的，即便书上有现成代码的算法，我也是自己根据对算法的理解写出来的。而其他人有些照着书写代码，有些直接copy。这应该就是原因吧。</p>
-<p>大学前三年，断断续续的搞了一些php, Java，LaTex 但是都坚持不长时间。这也和我三分钟的热情有关。一次偶然的机会，听到了一个语言，Python，网上搜索了一下，看到很多人说用它写爬虫很方便。那个时候我学到了一个词，爬虫。</p>
-<p>今年三月份，Coursera上面开了一门课程，是Python入门。课程持续到5月份，每周课程都会有miniProject，一般来说是做小游戏。在完成每一个小项目的过程中，我发现我越来越喜欢Python。</p>
-<p>5月份Python课程结束没多久，我收到教务处的通知，周五要提交创新项目的结题报告。我才反应我过来，我去年申请的一个创新训练项目还没有做。</p>
-<p>这个项目是做一个选课辅助软件。当时申请表中，我表示准备用MFC与MSSQL制作这个软件和对应的数据库。可是，MSSQL安装好以后，我的电脑开机要5分钟。而MFC，倒腾了半个月，一点进展都没有，遂从此荒废。</p>
-<p>时间只有一个星期，现学MFC是来不及了。这个时候我想到我是会Python的人，于是果断决定使用Python + MySQL来开发这个选课辅助软件。</p>
-<p>一天半以后，软件连同图形界面全部做好了。那个时候，我觉得Python必定是神派来拯救我的天使。</p>
-<p>后来辅导员做微信公众号，我提议我可以做一个爬虫，把教务处的通知扒取下来。那天以后，我正式开始做爬虫。</p>
-<p>一开始是用Python的一个库urllib2的一个方法获取一个网页的全部代码，然互写入本地保存。这就是一个最简单的爬虫了。</p>
-<p>接下来接触了正则表达式。于是一个真正意义的爬虫诞生了。那个时候我室友过生日，我给他写了一个扒取儿（cheng）童(ren)网站里面卖肉漫画的爬虫。他高兴得不得了。关于这个爬虫，有机会我应该会放出来吧。不过担心被查水表。</p>
-<p>然后我觉得我有点了不起了，于是去淘宝开了一个店铺，专业定做Python爬虫。一个月都没有生意，直到有一天来了一个买家。他让我做百度贴吧的爬虫，于是我写了一个原始爬虫的demo给他，然后正式接手这个工作。他让他的一个下属教我Scrapy，这个爬虫框架让我的生产效率提升了一个数量级。接下来扒取各大视频网站，又指导我使用Scrapy配合Redis制作分布式爬虫，然后把数据存入MongoDB中，这样我的生产效率再一次提升了几个数量级。</p>
-<p>这样我赚取到了给自己买iPad的钱。这也奠定了我学习软件方面技术的基本方法，项目驱动，现学现用。在后面接到的项目中，无论是爬虫的模拟登陆，打码，多代理，甚至是自然语言处理，多次证实了我这个方法的正确性。</p>
-<p>从大学入学开始，我就决定要出国。可是最后TOEFL只差2分让我与资本主义国家失之交臂。一气之下决定考研。</p>
-<p>大三下期和整个暑假都在准备考研，但是考研课程老师那种卖狗皮膏药十全大补丸的样子确实让我厌烦，考研数学题做起来也甚是恶心。后来因为一些私事，我放弃了考研，中秋节过后开始准备找工作。</p>
-<p>那个时候，BAT和华为的提前批招聘都结束了。而我想都不敢想华为，因为印象中，华为是招硬件的，而且基本上都是研究生。我是学E.E的，但是我的项目经历只有学校的各种实验课做的东西。于是我抱着试一试的心态去应聘华为的软件工程师。</p>
-<p>我不得不感谢Python，他让我几乎是毫无阻力的通过了大多数公司的面试，我的所有拿得出手的项目经历，全部都有Python的身影。最后我去了MTK而拒了华为，毕竟华为太累了。在两个月之前，我都不敢想我竟然有机会拒绝华为。</p>
-<p>这样我就成了一个程序员。本科学的东西我想我还是有点用的，作为一个终身爱好也不错。毕竟搞硬件的要表白，场面炫目到秒杀码农几条街。</p>
-<p>如果没有Python，我想我现在不知道在干嘛。他让我的人生从此不同。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/15/修改Coney主题之侧边栏移位/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/15/修改Coney主题之侧边栏移位/" class="post-title-link" itemprop="url">修改Coney主题之侧边栏移位</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-15 18:09:54" itemprop="dateCreated datePublished" datetime="2014-12-15T18:09:54+08:00">2014-12-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/15/修改Coney主题之侧边栏移位/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/15/修改Coney主题之侧边栏移位/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coney_0.jpg" alt=""></p>
-<p>Coney是一个非常漂亮的Hexo主题，作者的博客请戳-&gt;<a href="http://gengbiao.me/" target="_blank" rel="external">http://gengbiao.me/</a> 本博客的主题是基于Coney修改而成。</p>
-<p>我个人比较喜欢侧边栏在左边，于是我希望能将右侧的侧边栏整体移动到左边去。大家对比我的博客首页和主题作者的博客首页就可以看出不同。</p>
-<p>在修改之前，需要解释一下div标签。不讲定义，只举例子。大家注意这篇文章的配图。设想有这样一个场景，你要搬家，从成都搬到北京。你可以一件一件的把家里的东西搬出来，然后运到北京，再放进新的家。也可以，把你的整个房子连根撬起来，用超人或者热气球直接运送到北京去。这么做的好处是，你只需要搬房子，而房子里面的东西完全不受影响。div标签就可是实现这样的功能。</p>
-<p>使用Chrome的审查元素功能，可以发现这个主题首页的正文部分的布局是这样的：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyconey_layout.png" alt=""></p>
-<p>其中A，B分别是控制侧边栏开启和关闭的开关，A是openaside, B是closeaside，在侧边栏开启的时候，A是隐藏的。</p>
-<p>当然实际的布局里还有其他div，但是当我只需要知道你有一个房子，房子里有几间房间的时候，我是没有必要去关心你卫生间里是马桶还是痰盂的。</p>
-<p>那么现在目标就是，把asidepart，openaside这两个东西移动到左边，把main移动到右边。我这里没有说closeaside，不是笔误，而是因为closeaside是在asidepart里面的，因此移动asidepart的时候，closeaside跟着就移动了。</p>
-<p>打开themes\coney\source\css_partial文件夹，发现有一个aside.styl文件，根据名字猜测，这个东西应该就是关于侧边栏的布局了。</p>
-<p>打开aside.styl文件，发现这其实就是一个css文件。首先看到前面几段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">//button</div><div class="line">.openaside</div><div class="line">  display none</div><div class="line">  position fixed</div><div class="line">  right 7.5%</div><div class="line">  top 260px</div><div class="line">  a</div><div class="line">    display block</div><div class="line">    color color-white</div><div class="line">    border 1px solid color-white</div><div class="line">    border-radius 5px</div><div class="line">    background color-theme</div><div class="line">    padding 0.2em 0.55em</div><div class="line">    &amp;::before</div><div class="line">      font-family font-icon-family</div><div class="line">      font-smoothing()</div><div class="line">      content &quot;\f0c9&quot;</div><div class="line"></div><div class="line">.closeaside</div><div class="line">  display none</div><div class="line">  a</div><div class="line">    color color-theme</div><div class="line">    &amp;:hover</div><div class="line">      color color-blue</div><div class="line">    &amp;::before</div><div class="line">      font-family font-icon-family</div><div class="line">      font-smoothing()</div><div class="line">      content &quot;\f0c9&quot;</div><div class="line">  @media tablet</div><div class="line">    display block</div><div class="line">    position absolute</div><div class="line">    right 25px</div><div class="line">    top 22px</div><div class="line"></div><div class="line">//sidebar</div><div class="line">#asidepart</div><div class="line">  background color-section</div><div class="line">  margin 1em 0 0</div><div class="line">  padding 0.5em 2% 1em</div><div class="line">  @media tablet</div><div class="line">    position relative</div><div class="line">    float left</div><div class="line">    width 18%</div><div class="line">    margin 2em 0 0 3%</div></pre></td></tr></table></figure></p>
-<p>Coney作者的命名方式非常好，于是我们很容易就看到了需要的内容。<br>在.openaside下面，看到一个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">right 7.5%</div></pre></td></tr></table></figure></p>
-<p>当我们隐藏了侧边栏以后，看到的小方块，就是箭头指向的这个</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside.jpg" alt=""></p>
-<p>如果我把这个right改成left会有什么效果呢？不妨一试</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside_change1.jpg" alt=""></p>
-<p>看起来有点效果了。那么继续看下面的.closeaside<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">right 25px</div></pre></td></tr></table></figure></p>
-<p>尝试把right修改为left,对比一下前后效果：</p>
-<p>修改前：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneycloseaside1.jpg" alt=""></p>
-<p>修改后:</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneycloseaside2.jpg" alt=""></p>
-<p>这个小图标在侧边栏里面的相对位置改变了，这就像是你从家里的卧室走到了厨房。你并不关心房子外面是不是奥特曼在打小怪兽。你只是换了一个房间。</p>
-<p>再往下走，发现#asidepart下面有个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">position relative</div><div class="line">float left</div></pre></td></tr></table></figure></p>
-<p>我想把侧边栏从右边移动到左边，那这里应该有个right才对，为什么它竟然是left？而且position的意思是位置，relative是相对，也就是说是相对位置？很奇怪，先不动它。</p>
-<p>再来找找main在哪里。在themes\coney\source\css_partial下面的index.styl里发现了它。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#main</div><div class="line">  margin 1em 0 0</div><div class="line">  line-height line-height+0.3</div><div class="line">  @media tablet</div><div class="line">    margin 2em 0 0</div><div class="line">    width 75%</div><div class="line">    position relative</div><div class="line">    float left</div><div class="line">    transition margin 0.5s ease-out</div></pre></td></tr></table></figure></p>
-<p>这里发现了一个left，既然我想把main从左边移动到右边，那就尝试把这个left改成right,然后测试一下效果。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymain_right.jpg" alt=""></p>
-<p>哈哈，成了！</p>
-<p>等等，别高兴的太早，点一下关闭侧边栏的按钮试一试。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymain_change2.jpg" alt=""></p>
-<p>是不是感觉怪怪的？对比一下作者的博客效果</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside.jpg" alt=""></p>
-<p>隐藏侧边栏以后，文章列表应该向右移动，那我把侧边栏移动到左边并隐藏以后，文章列表应该向左移动才对啊！可是它为什么死在那里了？</p>
-<p>经过询问作者，我得知这个文章列表的移动的相关javascript代码在after_footer.ejs文件中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var m = $(&apos;#main&apos;),</div><div class="line">      a = $(&apos;#asidepart&apos;),</div><div class="line">      c = $(&apos;.closeaside&apos;),</div><div class="line">      o = $(&apos;.openaside&apos;);</div><div class="line">...........</div><div class="line"></div><div class="line">c.click(function()&#123;</div><div class="line">    a.addClass(&apos;fadeOut&apos;).css(&apos;display&apos;, &apos;none&apos;);</div><div class="line">    o.css(&apos;display&apos;, &apos;block&apos;).addClass(&apos;fadeIn&apos;);</div><div class="line">    m.addClass(&apos;moveMain&apos;);</div><div class="line">  &#125;);</div><div class="line">  o.click(function()&#123;</div><div class="line">    o.css(&apos;display&apos;, &apos;none&apos;).removeClass(&apos;beforeFadeIn&apos;);</div><div class="line">    a.css(&apos;display&apos;, &apos;block&apos;).removeClass(&apos;fadeOut&apos;).addClass(&apos;fadeIn&apos;);      </div><div class="line">    m.removeClass(&apos;moveMain&apos;);</div><div class="line">  &#125;);</div></pre></td></tr></table></figure></p>
-<p>虽然我不会javascript，但是根据这段代码，猜一下意思：</p>
-<pre><code>当关闭侧边栏(closeaside)按钮被点击，就添加一个叫做moveMain的东西；
-当打开侧边栏(openaside)的按钮被点击，就移除这个叫做moveMain的东西。
-</code></pre><p>觉得moveMain很可疑，而且move移动，Main就是文章列表的div的名字，这个解释天衣无缝啊。</p>
-<p>我在themes\coney\source\css_partial文件夹下面的index.styl中找到了这个moveMain<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">.moveMain</div><div class="line">  margin-left 10% !important</div></pre></td></tr></table></figure></p>
-<p>网上搜索了一下，发现margin-left的意思是：</p>
+<p>是一致的，它是一个handle。</p>
+<p>我也尝试过CF_TIFF, 不过程序直接报错了，可见我使用Print Screen截图以后，剪贴板里面的图片格式并不是TIFF。</p>
+<p>经过查阅其他资料，我最后确定使用了CF_DIB。</p>
 <blockquote>
-<p>margin-left 属性设置元素的左外边距。</p>
+<p>A memory object containing a BITMAPINFO structure followed by the bitmap bits.</p>
 </blockquote>
-<p>就是距离左侧10%的距离，假设原来的距离小于10%，当我点了关闭侧边栏以后，为了让main距离左侧的距离达到10%，不就正好的是向右移动吗？</p>
-<p>既然这个解释天衣无缝，那就把left改成right试一试效果。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymove.jpg" alt=""></p>
-<p>这样看起来似乎已经达到效果了，但是感觉有些地方不太和谐。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis.jpg" alt=""></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis2.jpg" alt=""></p>
-<p>侧边栏距离文章列表太近了。</p>
-<p>这个时候就要用到Chrome的强大功能了，启动审查元素功能，定位到侧边栏</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis3.jpg" alt=""></p>
-<p>注意右侧<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">margin 2em 0 0 3%</div></pre></td></tr></table></figure></p>
-<p>margin是边界的意思，那么右边四个数据应该就是控制侧边栏上下左右距离的了。尝试修改，发现吧3%改成0的时候，出现了我希望的效果</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis4.jpg" alt=""></p>
-<p>这个数据是在aside.styl中，修改以后生成页面，完美实现了需求的功能。你在首页或者这个页面都可以看到最终效果。</p>
-<p>需要说明的是，虽然我写了这么长一篇，但是我实际上是没有CSS基础的，都是自己摸索，所以你也可以做出自己的主题。</p>
-<p>既然选择了Hexo，也就选择了折腾。</p>
-<p>生命不息，折腾不止。</p>
+<p>这个描述说明，CF_DIB返回的是一个内存对象，包含了BIT格式图片的信息。经过测试使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(win32con.CF_DIB)</div></pre></td></tr></table></figure></p>
+<p>以后，可以得到一个很大的字符串。显然这个字符串就是图片的内容了。但是当我把这个字符串写入到bmp格式的文件后，却发现图片无法打开。</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在StackOverflow上，我遇到了一个非常好的老先生： <a href="http://stackoverflow.com/users/355230/martineau" target="_blank" rel="external">Mr. martineau</a>他为了解答了问题，并给我提供了解决办法。以下内容翻译自martineau先生的回答，原文请戳-&gt;<a href="http://stackoverflow.com/a/35885108/3922976" target="_blank" rel="external">http://stackoverflow.com/a/35885108/3922976</a></p>
+<blockquote>
+<p>你的方法的主要问题在于，你写入文件的字符串缺少了.bmp 文件头，这个文件头是<code>BITMAPFILEHEADER</code>结构。</p>
+<p>为了创建这个文件头，使用<code>GetClipboardData()</code>返回的字符串必须要进行解码(<em>decoded</em>)。对于<code>CF_DIB</code>格式来说，返回的字符串的前面一部分就是<code>BOTMAPINFOHEADER</code>。</p>
+<p>对于各种各样有不同种类压缩的<code>DIB</code>来说，这种文件头结构是非常的普遍的。不过幸好对截图来说，只需要简单的无压缩的RGBA像素。</p>
+<p>由于<code>BOTMAPFILEHEADER</code>被放在了bf0ffBits的区域里，所以事情就变得很容易了。而其他的情况，例如大尺度的颜色表跟在<code>BITMAPINFOHEADER</code> 和像素数组的开头。</p>
+<p>（这一段我看不太懂，还请如果有能正确解释这段话的朋友指正。原文是：</p>
+<blockquote>
+<p>That fact makes things much easier because otherwise determining the value to put in the bfOffBits field of the BITMAPFILEHEADER would be complicated by the fact that in most other cases there’s also a variably-sized color table following the BITMAPINFOHEADER and the start of the pixel array.）</p>
+</blockquote>
+<p>下面的代码是一个简单的例子（仅仅针对这个需求）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">import ctypes</div><div class="line">from ctypes.wintypes import *</div><div class="line">import win32clipboard</div><div class="line">from win32con import *</div><div class="line">import sys</div><div class="line"></div><div class="line">class BITMAPFILEHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;bfType&apos;, WORD),  # file type (&quot;BM&quot;)</div><div class="line">        (&apos;bfSize&apos;, DWORD),  # file size in bytes</div><div class="line">        (&apos;bfReserved1&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfReserved2&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfOffBits&apos;, DWORD),  # byte offset to the pixel array</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPFILEHEADER = ctypes.sizeof(BITMAPFILEHEADER)</div><div class="line"></div><div class="line">class BITMAPINFOHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;biSize&apos;, DWORD),</div><div class="line">        (&apos;biWidth&apos;, LONG),</div><div class="line">        (&apos;biHeight&apos;, LONG),</div><div class="line">        (&apos;biPLanes&apos;, WORD),</div><div class="line">        (&apos;biBitCount&apos;, WORD),</div><div class="line">        (&apos;biCompression&apos;, DWORD),</div><div class="line">        (&apos;biSizeImage&apos;, DWORD),</div><div class="line">        (&apos;biXPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biYPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biClrUsed&apos;, DWORD),</div><div class="line">        (&apos;biClrImportant&apos;, DWORD)</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPINFOHEADER = ctypes.sizeof(BITMAPINFOHEADER)</div><div class="line"></div><div class="line">win32clipboard.OpenClipboard()</div><div class="line">try:</div><div class="line">    if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_DIB):</div><div class="line">        data = win32clipboard.GetClipboardData(win32clipboard.CF_DIB)</div><div class="line">    else:</div><div class="line">        print(&apos;clipboard does not contain an image in DIB format&apos;)</div><div class="line">        sys.exit(1)</div><div class="line">finally:</div><div class="line">    win32clipboard.CloseClipboard()</div><div class="line"></div><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div><div class="line"></div><div class="line">if bmih.biCompression != BI_BITFIELDS:  # RGBA?</div><div class="line">    print(&apos;insupported compression type &#123;&#125;&apos;.format(bmih.biCompression))</div><div class="line">    sys.exit(1)</div><div class="line"></div><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0, SIZEOF_BITMAPFILEHEADER)  # zero structure</div><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div><div class="line">bmfh.bfSize = SIZEOF_BITMAPFILEHEADER + len(data)  # file size</div><div class="line">SIZEOF_COLORTABLE = 0</div><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div><div class="line"></div><div class="line">bmp_filename = &apos;clipboard.bmp&apos;</div><div class="line">with open(bmp_filename, &apos;wb&apos;) as bmp_file:</div><div class="line">    bmp_file.write(bmfh)</div><div class="line">    bmp_file.write(data)</div><div class="line"></div><div class="line">print(&apos;file &quot;&#123;&#125;&quot; created from clipboard image&apos;.format(bmp_filename))</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>经过测试，这一段代码成功的实现了读取剪贴板的图片并保存到本地。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这段代码使用ctypes库来实现指针的功能，从而在内存中操作数据。这里定义了两个结构体，<code>BITMAPFILEHEADER</code> 和<code>BITMAPINFOHEADER</code>，于是，使用sizeof获取到了他们的大小。那么使用指针，从使用<code>GetClipboardData()</code>获取到的数据的头部开始移动，分别移动这两个结构体的大小，也就获取到了这两个结构体在内存中的数据。</p>
+<p>代码中使用了<code>memmove</code>和<code>memset</code>两个内存操作的方法。从ctypes的官方文档上，我们可以看到这两个方法有如下的定义：</p>
+<blockquote>
+<p><code>ctypes.memmove(dst, src, count)</code></p>
+<p>Same as the standard C memmove library function: copies count bytes from src to dst. dst and src must be integers or ctypes instances that can be converted to pointers.</p>
+<p><code>ctypes.memset(dst, c, count)</code></p>
+<p>Same as the standard C memset library function: fills the memory block at address dst with count bytes of value c. dst must be an integer specifying an address, or a ctypes instance.</p>
+</blockquote>
+<p>所以可以看出，代码里面的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div></pre></td></tr></table></figure></p>
+<p>从内存中拷贝出来了<code>BITMAPINFOHEADER</code>这么大的一块的数据，并保存到了<code>bmih</code>这个变量中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0,     SIZEOF_BITMAPFILEHEADER)</div></pre></td></tr></table></figure></p>
+<p>这一段在内存中开辟出了<code>BITMAPFILEHEADER</code>这么大一块区域，并全部填充为0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div></pre></td></tr></table></figure></p>
+<p>这一行代码使用了位操作。首先<code>ord(&#39;B&#39;)</code>的值为66，换成二进制就是<code>1000010</code>；<code>ord(&#39;M&#39;)</code>的值为77，换成二进制就是<code>1001101</code>，然后向左移动8位，得到<code>100110100000000</code>，这个值再与<code>1000010</code>取位或，得到<code>100110101000010</code>。</p>
+<p>最后，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div></pre></td></tr></table></figure></p>
+<p>拼装出头部的大小。然后以二进制方式，首先写文件头, 再写剪贴板获取到的字符串到本地的<code>.bmp</code>文件中，完成图片的生成。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Python一些轮子确实非常好的提高了开发效率，例如PIL，三行代码实现了我的需求。Python在快速开发方面确实非常的方便，但是涉及到底层的一些操作的时候，还是不得不使用C语言的一些接口来进行内存的操作。</p>
 
           
         
@@ -983,7 +580,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/14/Hexo的coney主题的一些补充说明/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/12/02/opinionchange/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -1003,7 +600,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2014/12/14/Hexo的coney主题的一些补充说明/" class="post-title-link" itemprop="url">Hexo的coney主题的一些补充说明</a>
+                <a href="/2015/12/02/opinionchange/" class="post-title-link" itemprop="url">对Java与设计模式态度的转变</a>
               
             
           </h1>
@@ -1028,7 +625,7 @@
                 
               
 
-              <time title="创建时间：2014-12-14 14:10:44" itemprop="dateCreated datePublished" datetime="2014-12-14T14:10:44+08:00">2014-12-14</time>
+              <time title="创建时间：2015-12-02 00:03:08" itemprop="dateCreated datePublished" datetime="2015-12-02T00:03:08+08:00">2015-12-02</time>
             
 
             
@@ -1062,7 +659,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/态度/" itemprop="url" rel="index"><span itemprop="name">态度</span></a></span>
 
                 
                 
@@ -1077,8 +674,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2014/12/14/Hexo的coney主题的一些补充说明/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/14/Hexo的coney主题的一些补充说明/" itemprop="commentCount"></span>
+                <a href="/2015/12/02/opinionchange/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/12/02/opinionchange/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1108,25 +705,26 @@
       
         
           
-            <p>Coney是一个非常优秀的Hexo主题，作者的网站<a href="http://gengbiao.me/" target="_blank" rel="external">http://gengbiao.me/</a>然而在使用的过程中，我发现作者有一些地方没有说清。因此在这里写一些我使用中发现的问题和解决方法。</p>
-<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>作者并未说明多个标签之间应该以何种方式分隔，我尝试使用逗号，空格以及方括号均不能正确分隔标签。后来尝试使用一种笨的方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tags: 标签一</div><div class="line">tags: 标签二</div><div class="line">tags：标签三</div></pre></td></tr></table></figure></p>
-<p>还有一种聪明的办法，就是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tags: [标签一,标签二,标签三]</div></pre></td></tr></table></figure></p>
-<h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><p>如图，标题显示异常<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/CatchC5B212-14-14-25-56.jpg" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Catch82DF12-14-14-25-56.jpg" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Catch12-14-14-25-56.jpg" alt=""></p>
-<p>出现这种问题，是由于title中加了双引号，去掉双引号以后正常。但是不知道这个双引号是怎么加上去的。</p>
-<h3 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h3><p>模板只有两个页面，如果想添加更多页面,就像这个博客上面一样，可以<br>在博客根目录下面使用git bash输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo n page About</div></pre></td></tr></table></figure></p>
-<p>这条命令新建了一个“关于”页面，在source下会生成一个About文件夹，文件夹里面有一个index.md 通过编辑index.md就可以编写“关于”页面。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogQQ截图20141214143619.jpg" alt=""></p>
-<p>接下来要如何将这个页面添加到博客上面呢？</p>
-<p>可以修改themes/coney/_config.yml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">   ##### Menu</div><div class="line">menu:</div><div class="line"> 	首页: /</div><div class="line"> 	归档: /archives</div><div class="line"> 	分类: /categories</div><div class="line"> 	标签: /tags</div><div class="line"> 	关于: /About</div></pre></td></tr></table></figure></p>
-<p>如图是我修改以后的效果：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogQQ截图20141214143922.jpg" alt=""><br>最后实际显示效果如下：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogpre.jpg" alt=""></p>
-<h3 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h3><p>也许是Hexo优化方面的问题，空格在文件修改的过程中非常重要。还是以上面的添加页面为例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">   ##### Menu</div><div class="line">menu:</div><div class="line"> 	首页: /</div><div class="line"> 	归档: /archives</div><div class="line"> 	分类: /categories</div><div class="line"> 	标签: /tags</div><div class="line"> 	关于:/About #这里少了一个空格</div></pre></td></tr></table></figure>
-<p>如果写成这样，在使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure></p>
-<p>生成静态文件的过程中，就会出错，如下图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogerror.jpg" alt=""></p>
-<p>因此，在修改文件的过程中，一定不能漏掉空格。</p>
-<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><p>Coney使用多说的评论系统。主题作者对多说系统提供的官方代码做了一些修改，从而导致了一个隐藏的bug。</p>
-<p>在themes\coney\layout_partial下的after_footer.ejs文件的112行代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var duoshuoQuery = &#123;short_name:&quot;&lt;%= theme.duoshuo.short_name %&gt;&quot;&#125;;</div></pre></td></tr></table></figure></p>
-<p>主题作者的本意是通过theme.duoshuo.short_name 调用 _config.yml中的short_name。作者的名字是英文，因此不会出问题，但是当short_name的值为中文时，会导致整个评论框消失。</p>
-<p>然而，coney作者告诉我，short_name仅仅是一个标记，在评论中并不会显示出来，因此只要随便写个英文上去就好了。</p>
+            <p>我一直自诩自己是Java一生黑。也从来不屑于设计模式这种东西，因为我一直认为，设计模式是为了解决Java的一些缺陷才存在的。对于Python来说，设计模式并不重要。不过最近在做一个新功能开发的时候对Java的态度有了一些改变。<more></more></p>
+<p>事情的起因是在一个大概有十万行代码的框架中重构他的写Log方式。这个框架原来的Log模块是原作者自己写的，通过打开关闭文件来写Log。现在需要更换成Python的logging模块。对于一个设计相当糟糕的系统来说，要重构是很麻烦的事情。</p>
+<p>在原来的Log方式中，文件的句柄通过参数的形式到处传，常常十多个文件句柄同时打开，还会互相影响，相当的混乱。最后由于需要一个地方来将所有模块的Log统一起来，还给系统的入口再加了一个入口，新的入口使用subprocess来执行</p>
+<pre><code>`python xxxx`
+</code></pre><p>调用原来的系统模块，并将控制台的输出重定向到文件。</p>
+<p>重构的过程相当的痛苦，花了我几乎整个Sprint的时间，细节我会在后续的文章中讲到。今天我要讲的是单例模式让我对设计模式看法的一些改变。</p>
+<p>对Python来说，是可以将一个类的实例通过参数的形式直接传递的，所以看起来似乎Python并不需要单例模式。对于新写的代码来说，这当然没有什么问题。但是对已有的代码添加新的功能的时候，这个方法就不太适用了。</p>
+<p>如果原来一个方法，它的参数已经有七八个了，这个时候你在加一个参数上去，并不确定会产生什么样的影响。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def foo(a, b, c):</div><div class="line">		do()</div><div class="line">		some()</div><div class="line">		thing()</div></pre></td></tr></table></figure>
+<p>如果想加一个新的参数，但是又不影响其他的已经在调用这个方法的地方，当然可以这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> def foo(a, b, c, d=None):</div><div class="line">do()</div><div class="line">some()</div><div class="line">thing()</div></pre></td></tr></table></figure>
+<p>如果代码量不大，当然没有问题，但是如果代码量大起来了，这样就会出问题。</p>
+<p>例如，现在有一个实例instanceA 在module1 中初始化了，而module3如果想使用instanceA，就必须想办法让instanceA 传递到module3去。但是原本module3和module1并没有什么关系，现在因为需要这个instanceA, 怎么办呢？这个时候发现instanceA 被传递到了module2, 然后又从module2传递到了module4, 最后在module4里面终于找到了一个地方，可以强行把instanceA和module3联系在一起。这样一来，这几个module他们被强制耦合在了一起。</p>
+<p>对于程序来说，耦合程度应该越低越好，所以这样的做法，非常不妥。</p>
+<p>于是，这个时候单例模式就出现了。</p>
+<p>对于module3来说，如果他想要instanceA, 他完全可以再重新new一个，由于是单例模式，于是新的instance 和instanceA是完全一样的。这样就并没有增加多余的耦合关系。</p>
+<p>另外，在极客学院录课的时候，最近有涉及到程序集之间通信。这个时候偶然发现设计模式里面的观察者模式可以对我的设计起到相当大的帮助。</p>
+<p>就像以前某人说的，你要讨厌一个东西，你必须要比喜欢这个东西的人更了解它。而我以前讨厌Java仅仅是因为Java看起来太罗嗦，太多冗余代码。而我不屑于设计模式，更是因为它是从Java来的。</p>
+<p>现在看起来，态度真的应该改变一下了。</p>
 
           
         
@@ -1183,7 +781,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/14/Python字符编码的一个相对万能的处理方法/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/10/07/lxmlencoding/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="谢乾坤 | Kingname"/>
@@ -1203,7 +801,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2014/12/14/Python字符编码的一个相对万能的处理方法/" class="post-title-link" itemprop="url">Python字符编码的一个相对万能的处理方法</a>
+                <a href="/2015/10/07/lxmlencoding/" class="post-title-link" itemprop="url">使用etree.HTML的编码问题</a>
               
             
           </h1>
@@ -1228,7 +826,7 @@
                 
               
 
-              <time title="创建时间：2014-12-14 12:38:44" itemprop="dateCreated datePublished" datetime="2014-12-14T12:38:44+08:00">2014-12-14</time>
+              <time title="创建时间：2015-10-07 17:56:47" itemprop="dateCreated datePublished" datetime="2015-10-07T17:56:47+08:00">2015-10-07</time>
             
 
             
@@ -1277,8 +875,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2014/12/14/Python字符编码的一个相对万能的处理方法/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/14/Python字符编码的一个相对万能的处理方法/" itemprop="commentCount"></span>
+                <a href="/2015/10/07/lxmlencoding/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/10/07/lxmlencoding/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1308,17 +906,1439 @@
       
         
           
-            <p>在使用Python做爬虫的过程中，经常遇到字符编码出问题的情况。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UnicodeEncodeError: &apos;ascii&apos; codec can&apos;t encode character u&apos;\u6211&apos; in position 0: ordinal not in range(128)</div></pre></td></tr></table></figure></p>
-<p>针对这种情况，网上已经有很多原理性的分析了，我在此就不一一列举。然而，我相信很多人，即便看完原理以后也不知道怎么解决。</p>
-<p>我自己琢磨出一种快速解决的方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def get_page_sourse(url):</div><div class="line">req = urllib2.Request(url)</div><div class="line">   for key in headers:</div><div class="line">       req.add_header(key,headers[key])</div><div class="line">       content = urllib2.urlopen(req).read()</div><div class="line">       return content</div></pre></td></tr></table></figure>
-<p> 这个函数使用urllib2扒取了一个网页的源代码。并返回了这个源代码。当我们使用文件操作准备把content的内容写到一个txt文件中时，就会出现编码错误。</p>
-<p>在这种情况下，如何快速的排除问题？</p>
-<p>只需要将最后一行改成下面这样就可以了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return content.decode(&apos;A&apos;,&apos;ingore&apos;).encode(&apos;B&apos;,&apos;ignore&apos;)</div></pre></td></tr></table></figure></p>
-<p>这里，A和B分别可以使gbk, gb2312,utf-8,它们排列组合一下，一共只有6种组合方式</p>
-<p>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">return content.decode(&apos;gbk&apos;,&apos;ingore&apos;).encode(&apos;utf-8&apos;,&apos;ignore&apos;)</div><div class="line">return content.decode(&apos;utf-8&apos;,&apos;ingore&apos;).encode(&apos;gb2312&apos;,&apos;ignore&apos;)</div><div class="line">...</div></pre></td></tr></table></figure></p>
-<p>我使用这种方式，解决了所有的我遇到的Python的编码错误。虽然是一个一个的试，但是也用不了2分钟就能搞定。</p>
-<p>至于背后原理什么的，程序跑通了以后再慢慢研究吧。</p>
+            <h2 id="出现问题"><a href="#出现问题" class="headerlink" title="出现问题"></a>出现问题</h2><p>今天指导一个学生爬取新浪体育手机版的时候，发现lxml.etree.HTML处理网页源代码会默认修改编码，导致打印出来的内容为乱码。爬取的网址为：<a href="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" title="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" target="_blank" rel="external">http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10</a></p>
+<p>首先导入我们需要用到的库文件，然后设置环境：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#-*_coding:utf8-*-</div><div class="line">import requests</div><div class="line">from lxml import etree</div><div class="line">import sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(&quot;utf-8&quot;)</div></pre></td></tr></table></figure>
+<p>然后获取网页的源代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">r = requests.get(url=&apos;http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10&apos;)# 最基本的GET请求</div><div class="line">r.encoding = &apos;utf-8&apos;</div><div class="line">r = r.content</div><div class="line">print r</div></pre></td></tr></table></figure></p>
+<p>打印出网页源代码，发现中文是乱码，如图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding1.gif" alt=""></p>
+<p>这是小问题，使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>这篇文章中讲解的方法，轻松解决。</p>
+<p>将：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure></p>
+<p>修改为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content.decode(&apos;utf-8&apos;).encode(&apos;gbk&apos;)</div></pre></td></tr></table></figure></p>
+<p>可以正常显示中文，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding2.png" alt=""></p>
+<p>接下来，使用etree.HTML处理源代码，然后使用Xpath提取内容，一切似乎看起来轻车熟路。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding3.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r)</div><div class="line">title = contentTree.xpath(<span class="string">'//h1[@class="art_title_h1"]/text()'</span>)</div><div class="line"><span class="keyword">print</span> title[<span class="number">0</span>]</div></pre></td></tr></table></figure>
+<p>但是当我打印出来，才发现问题没有这么简单。如图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding4.png" alt=""></p>
+<p>这个时候，我发现使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="external">Python字符编码的一个相对万能的处理方法</a>讲到的办法已经不能解决问题了。</p>
+<p>通过调试，我发现抓取到的内容是乱码：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding5.png" alt=""></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="使用Scrapy"><a href="#使用Scrapy" class="headerlink" title="使用Scrapy"></a>使用Scrapy</h3><p>使用Scrapy的Xpath，正常提取需要的内容：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding6.png" alt=""></p>
+<h3 id="继续用etree"><a href="#继续用etree" class="headerlink" title="继续用etree"></a>继续用etree</h3><p>实际上，Scrapy的Xpath底层还是调用的lxml,那为什么它可以，而我直接使用lxml的etree.HTML处理源代码然后Xpath提取内容就出乱码呢？</p>
+<p>显然这应该是编码的问题，在使用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">etree.HTML(r)</div></pre></td></tr></table></figure>
+<p>处理源文件的时候，由于没有指定编码，所以它使用了一个默认编码，从而导致和UTF-8冲突，产生乱码。</p>
+<p>经过查阅lxml.etree.HTML的文档，我发现etree.HTML有一个参数是parser,这个参数不是必须的，因此省略以后它就会自动使用一个默认的parser。既然如此，那我手动指定一个：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">contentTree = etree.HTML(r, parser=etree.HTMLParser(encoding=<span class="string">'utf-8'</span>))</div></pre></td></tr></table></figure>
+<p>这里我指定了etree.HTMLParser来作为一个parser,同时，etree.HTMLParser可以接受编码作为参数。于是我指定为UTF-8。</p>
+<p>运行看看效果：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding7.png" alt=""></p>
+<p>继续报错，但是出错信息改变了，提示utf8不能解码。请注意第11行，现在源代码是gbk编码，所以使用UTF-8不能解码。于是可以把第11行重新改回原来的样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">r = r.content</div></pre></td></tr></table></figure>
+<p>再一次运行，发现正常抓取信息：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding8.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一次的问题提示我们：遇到问题，通过经验解决不了的时候，请回归文档。</p>
+<p><em>原文发表在：<a href="http://blog.kingname.info/2015/10/07/lxmlencoding/" target="_blank" rel="external">http://blog.kingname.info/2015/10/07/lxmlencoding/</a>转载请注明出处！</em></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/07/19/mycodestyle/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/07/19/mycodestyle/" class="post-title-link" itemprop="url">我的编码规范</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-07-19 16:31:54" itemprop="dateCreated datePublished" datetime="2015-07-19T16:31:54+08:00">2015-07-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/07/19/mycodestyle/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/07/19/mycodestyle/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="开篇闲扯"><a href="#开篇闲扯" class="headerlink" title="开篇闲扯"></a>开篇闲扯</h2><p>距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实习的过程中逐步接手了一些维护的工作，并提交了不少代码。7月6号正式入职以后，我加入了一个Amazing的新项目的创建，目前我们做出来的Demo真是非常的Amazing。不过可惜的是，这样一个项目在最近几年是不会对外公布的。</p>
+<p>在6月之前，每晚回家就是做毕设了，这段时间休息的都比较晚，头发都白了很多。</p>
+<p>还有就是给极客学院录课，第一个系列课程《定向爬虫入门》已经全部录制完毕了，一共8课，大家可以在about me 里面找到前7课的链接，最后一课目前正在后期制作当中，上线以后会更新链接。接下来我会讲解远程控制软件的编写，欢迎大家在极客学院关注我，我的名字叫kingname~</p>
+<p>闲话完毕，那我们开始正题。</p>
+<p>##本题由来<br>其实以前我是不太注意编码风格的，觉得程序可以运行了就行。甚至网上还有一种说法：</p>
+<blockquote>
+<p>如果你急急忙忙写一个程序，都没有注重编码规范，程序可能一次就跑通了；但是如果你仔细编码，而且还把单元测试做的非常完善，很有可能程序会出现大bug,而且还难以找到原因。</p>
+</blockquote>
+<p>然而在我实习的过程中，读了公司的很多代码，才发现编码规范是如此的重要，以至于可以显著影响对代码的理解。而且由于在部门里面code review做的比较严格，因此代码的风格不统一的话，是不能merge的，于是在多次提交代码以后渐渐的总结出了一些规律。</p>
+<p>##变量命名<br>在我大一学编程的时候，老师告诉我们变量命名最后使用匈牙利命名法，例如，经常出现hszStr、istuNum之类的变量名，如果对代码不熟悉的话，都不知道是什么意思。</p>
+<p>现在我们并不使用匈牙利命名法，而是直接将变量的含义通过单纯完整拼写处理。例如：</p>
+<blockquote>
+<p>deviceSerialDict： 用于保存设备串号的字典<br>deviceSerialDictList： 用于保存设备串号字典的列表<br>unusedSerialNumList： 未使用的序列号列表</p>
+</blockquote>
+<p>我们约定：</p>
+<ul>
+<li>变量名首字母小写</li>
+<li>多个单词的构成的变量，从第二个开始首字母大写</li>
+<li>缩写词做单词处理，例如ACM在变量名中应该写为Acm而不是ACM</li>
+<li>常量大写，每个单词使用_下划线分割</li>
+<li>不允许出现Magic Number</li>
+<li>使用名词或者动宾结构</li>
+</ul>
+<p>##类与方法</p>
+<p>使用面向对象编程，这一点在我做毕业设计的程序时，帮了我大忙，大大减轻了我的工作压力。</p>
+<p>我们的风格其实有点像Java了，文件名和类名相同，如果一个文件里面有多个类，那文件名与主要的类名相同。</p>
+<p>我们约定：</p>
+<ul>
+<li>非私有的方法，首字母小写，动宾结构，例如getSerialNum</li>
+<li>对于和类本身没有什么大关系的方法，要使用@staticmethod</li>
+<li>只有类自己使用的方法需要设为私有，也就是名称前加两个下划线</li>
+</ul>
+<p>##代码细节</p>
+<ul>
+<li>逗号后面要有一个空格</li>
+<li>每一行代码后面不能有空格</li>
+<li>文件的最后要有一个空行</li>
+<li>等号左右都需要有空格，但是作为参数的时候不需要空格</li>
+<li>方法的参数大于6个，则使用列表或者字典来传递</li>
+</ul>
+<p>##总结</p>
+<p>挂一漏万，以上的规范使用Pylint都可以帮忙检查出来。没有说到的地方请大家补充，除了以上的规范以外，还有Python自己本身的编码规范，请戳-&gt;<a href="https://www.python.org/dev/peps/pep-0008/" target="_blank" rel="external">https://www.python.org/dev/peps/pep-0008/</a>。 </p>
+<p>最近重构了MCC,请大家对比</p>
+<p><a href="https://github.com/kingname/MCC" target="_blank" rel="external">https://github.com/kingname/MCC</a> </p>
+<p>与 重构之前 </p>
+<p><a href="https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb" target="_blank" rel="external">https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb</a></p>
+<p>的区别。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/04/29/lxmloldbug/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/04/29/lxmloldbug/" class="post-title-link" itemprop="url">requests的content与text导致lxml的解析问题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-04-29 22:49:31" itemprop="dateCreated datePublished" datetime="2015-04-29T22:49:31+08:00">2015-04-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/经验/" itemprop="url" rel="index"><span itemprop="name">经验</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/04/29/lxmloldbug/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/04/29/lxmloldbug/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近实习工作任务比较重，又在做数据挖掘的教学工作，同时还在做毕设，所以博客更新比较慢。不过最近肯定会有大动作。</p>
+<p>闲话毕，转正题。在制作新浪微博模拟登录的部分时，遇到了一些问题。</p>
+<p>我使用requests获取了新浪微博的源代码，通过lxml库的etree.HTML来处理一段网页源代码，从而生成一个可以被xpath解析的对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">selector = etree.HTML(html)</div></pre></td></tr></table></figure></p>
+<p>遇到报错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">selector = etree.HTML(html)</div><div class="line">  File &quot;lxml.etree.pyx&quot;, line 2953, in lxml.etree.HTML (src\lxml\lxml.etree.c:66734)</div><div class="line">  File &quot;parser.pxi&quot;, line 1780, in lxml.etree._parseMemoryDocument (src\lxml\lxml.etree.c:101591)</div><div class="line">ValueError: Unicode strings with encoding declaration are not supported. Please use bytes input or XML fragments without declaration.</div></pre></td></tr></table></figure></p>
+<p>根据报错信息推测，可能是因为不支持编码声明的Unicode字符串。Google发现这个问题在2012年就已经有人提交给作者了，但是一直没有被修复。地址在-&gt;<a href="https://gist.github.com/karlcow/3258330" target="_blank" rel="external">https://gist.github.com/karlcow/3258330</a></p>
+<p>不过下面的人也给出了解决办法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">html = bytes(bytearray(html, encoding=&apos;utf-8&apos;))</div><div class="line">selector = etree.HTML(html)</div></pre></td></tr></table></figure></p>
+<p>首先将源代码转化成比特数组，然后再将比特数组转化成一个比特对象。这样就可以绕过这个bug。</p>
+<p>然而，又有人认为这不是一个bug, 所以一直没有被修复。这是由于，我获取源代码是使用r.text<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">html = requests.get(&apos;xxxxxx&apos;,cookies=cookies).text</div></pre></td></tr></table></figure></p>
+<p>而如果使用r.content：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">html = requests.get(&apos;xxxxxx&apos;,cookies=cookies).content</div></pre></td></tr></table></figure></p>
+<p>就不会报错。</p>
+<p>那r.text与r.content有什么区别呢？分析requests的源代码发现，r.text返回的是Unicode型的数据，而使用r.content返回的是bytes型的数据。也就是说，在使用r.content的时候，他已经只带了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">html = bytes(bytearray(html, encoding=&apos;utf-8&apos;))</div></pre></td></tr></table></figure></p>
+<p>这样一个转化了。</p>
+<p>最近CentOS都声明放弃Python2了，编码问题确实浪费了很多时间，等空下来转Python3吧~</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/03/04/pythonunittest2/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/03/04/pythonunittest2/" class="post-title-link" itemprop="url">Python的单元测试（二）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-03-04 19:08:20" itemprop="dateCreated datePublished" datetime="2015-03-04T19:08:20+08:00">2015-03-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/03/04/pythonunittest2/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/03/04/pythonunittest2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在<a href="http://kingname.info/2015/02/27/Python%E7%9A%84%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" target="_blank" rel="external">Python的单元测试（一）</a>中，我们讲了单元测试的概念以及一个简单的单元测试例子。</p>
+<p>在这个例子中，只有三个函数，于是可以把每个函数的输出结果打印到屏幕上，再用肉眼去看结果是否符合预期。然而假设有一个程序，有二十个类，每个类又有几十个函数，有些函数的输出结果还多达几十行，在这种情况下，肉眼如何看得出？</p>
+<p>当然你可以使用if判断<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> 输出结果 == 预期结果:</div><div class="line">	<span class="keyword">return</span> <span class="keyword">True</span></div><div class="line"><span class="keyword">else</span>:</div><div class="line">	<span class="keyword">print</span> <span class="string">u'不相等'</span></div></pre></td></tr></table></figure></p>
+<p>这个时候，你发现，程序有几个函数，后三行就要重复几次，本着代码简洁的原则，你把这个判断的过程写到一个函数中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">isequal</span><span class="params">(output,right_output)</span>:</span></div><div class="line">	<span class="keyword">if</span> output == right_output:</div><div class="line">		<span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">	<span class="keyword">else</span>:</div><div class="line">		<span class="keyword">print</span> <span class="string">u'不相等'</span></div></pre></td></tr></table></figure></p>
+<p>那么恭喜你，你步入正规了，然而，这一切已经有人为你做好了。欢迎unittest模块出场。</p>
+<blockquote>
+<p>unittest supports test automation, sharing of setup and shutdown code for tests, aggregation of tests into collections, and independence of the tests from the reporting framework. The unittest module provides classes that make it easy to support these qualities for a set of tests.</p>
+</blockquote>
+<p>Python的官方文档这样写到，unittest支持自动化测试，测试的安装分享和关闭代码……</p>
+<p>一句话说来，就是，unittest很好用。</p>
+<p>还是用上一次的readandadd.py来演示unittest的基本用法,首先介绍unittest的一个函数，assertEqual(first,second),这个函数的作用是检查变量first的值与second的值是否相等，如果不相等就抛出错误。 </p>
+<p>先创建utest.py文件，输入以下代码并运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#-*-coding:utf-8-*-</div><div class="line">import unittest</div><div class="line">import readandadd</div><div class="line"></div><div class="line">class basictest(unittest.TestCase): #类名可以随便取</div><div class="line">    def testread(self): #每个函数都要以test开头</div><div class="line">        output = readandadd.read(&apos;1.txt&apos;)</div><div class="line">        self.assertEqual(output,&apos;2,3&apos;)</div><div class="line"></div><div class="line">    def testgetnum(self):</div><div class="line">        output = readandadd.getnum(&apos;2,3&apos;)</div><div class="line">        self.assertEqual(output,[&apos;2&apos;, &apos;3&apos;])</div><div class="line"></div><div class="line">    def testaddnum(self):</div><div class="line">        output = readandadd.addnum([2,3])</div><div class="line">        self.assertEqual(output,5)</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    unittest.main()</div></pre></td></tr></table></figure></p>
+<p>运行结果如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">----------------------------------------------------------------------</div><div class="line">Ran 3 tests <span class="keyword">in</span> 0.001s</div><div class="line"></div><div class="line">OK</div></pre></td></tr></table></figure></p>
+<p>你也许会说，就一个ok，什么都没有啊。那我先把testread()函数下面的<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.assertEqual(output,<span class="string">'2,3'</span>)</div></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.assertEqual(output,<span class="string">'2,4'</span>)</div></pre></td></tr></table></figure></p>
+<p>在运行utest.py看看输出结果如何：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">..F</div><div class="line">======================================================================</div><div class="line">FAIL: testread (__main__.basictest)</div><div class="line">----------------------------------------------------------------------</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 8, <span class="keyword">in</span> testread</div><div class="line">    self.assertEqual(output,<span class="string">'2,4'</span>)</div><div class="line">AssertionError: <span class="string">'2,3'</span> != <span class="string">'2,4'</span></div><div class="line"></div><div class="line">----------------------------------------------------------------------</div><div class="line">Ran 3 tests <span class="keyword">in</span> 0.000s</div><div class="line"></div><div class="line">FAILED (failures=1)</div></pre></td></tr></table></figure></p>
+<p>这里准确的找出了错误的位置和错误的具体内容。注意看最上面，有个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">..F</div></pre></td></tr></table></figure></p>
+<p>猜测它可能是标示错误的位置。保持testread的错误不改，再把testgetnum()函数中的以下内容<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'3'</span>])</div></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'6'</span>])</div></pre></td></tr></table></figure></p>
+<p>再运行utest.py程序，输出结果如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">.FF</div><div class="line">======================================================================</div><div class="line">FAIL: testgetnum (__main__.basictest)</div><div class="line">----------------------------------------------------------------------</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 12, <span class="keyword">in</span> testgetnum</div><div class="line">    self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'6'</span>])</div><div class="line">AssertionError: Lists differ: [<span class="string">'2'</span>, <span class="string">'3'</span>] != [<span class="string">'2'</span>, <span class="string">'6'</span>]</div><div class="line"></div><div class="line">First differing element 1:</div><div class="line">3</div><div class="line">6</div><div class="line"></div><div class="line">- [<span class="string">'2'</span>, <span class="string">'3'</span>]</div><div class="line">?        ^</div><div class="line"></div><div class="line">+ [<span class="string">'2'</span>, <span class="string">'6'</span>]</div><div class="line">?        ^</div><div class="line"></div><div class="line"></div><div class="line">======================================================================</div><div class="line">FAIL: testread (__main__.basictest)</div><div class="line">----------------------------------------------------------------------</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 8, <span class="keyword">in</span> testread</div><div class="line">    self.assertEqual(output,<span class="string">'2,4'</span>)</div><div class="line">AssertionError: <span class="string">'2,3'</span> != <span class="string">'2,4'</span></div><div class="line"></div><div class="line">----------------------------------------------------------------------</div><div class="line">Ran 3 tests <span class="keyword">in</span> 0.001s</div><div class="line"></div><div class="line">FAILED (failures=2)</div></pre></td></tr></table></figure></p>
+<p>可以看出，这里分别把两个错误显示了出来。并且第一行变成了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">.FF</div></pre></td></tr></table></figure></p>
+<p>所以，第一行的内容应该从右往左读，它标明错误函数在所有函数的相对位置。</p>
+<p>现在再把testread()和testgetnum()改回去，再看看全部正确的输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">----------------------------------------------------------------------</div><div class="line">Ran 3 tests in 0.000s</div><div class="line"></div><div class="line">OK</div></pre></td></tr></table></figure></p>
+<p>印证了那句话，没有消息就是最好的消息。</p>
+<p>这篇文章介绍了单元测试模块unittest的assertEqual的基本用法，下一篇文章将要更加全面的介绍unittest模块。</p>
+<hr>
+<p>本文首发地址:<a href="http://kingname.info/2015/03/04/pythonunittest2/" target="_blank" rel="external">http://kingname.info/2015/03/04/pythonunittest2/</a></p>
+<p>作者：青南　</p>
+<p>转载请注明出处。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/02/27/Python的单元测试/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/02/27/Python的单元测试/" class="post-title-link" itemprop="url">Python的单元测试（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-02-27 22:50:47" itemprop="dateCreated datePublished" datetime="2015-02-27T22:50:47+08:00">2015-02-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/02/27/Python的单元测试/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/02/27/Python的单元测试/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。</p>
+<p>说<strong>一个函数</strong>高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面送出来（return），他不会说，我要生产一个轮子，但是我首先需要一个女人进来，他不会说，这是计划的一部分。</p>
+<p>说<strong>几个函数</strong>是低耦合的，就是指他们的依赖性小。他们就像是葫芦娃，每个都有自己独特的能力，可以自己单干，在关键的时候还可以合体，变成小金刚。他们就像积木一样，各有各的功能，需要使用的时候直接组合在一起就可以了。</p>
+<p>使用测试驱动开发，每一个测试只测试一个功能，这样就可以迫使函数把自己独立出来，尽量减少和其他函数的依赖。</p>
+<p>例如，有一个文件1.txt，他的内容是两个数字，使用逗号隔开。形如“2,4”（不包括外侧双引号，下同）。我要写一个程序readandadd.py，读取硬盘上的1.txt文件，然后把这个文件的内容打印到屏幕上。</p>
+<p>不规范的写法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">f= open(&apos;1.txt&apos;,&apos;r&apos;)</div><div class="line">b = f.read().split(&apos;,&apos;)</div><div class="line">f.close()</div><div class="line">print int(b[0])+int(b[1])</div></pre></td></tr></table></figure></p>
+<p>不规范写法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def A():</div><div class="line">	f= open(&apos;1.txt&apos;,&apos;r&apos;)</div><div class="line">	b = f.read().split(&apos;,&apos;)</div><div class="line">	f.close()</div><div class="line">	print int(b[0])+int(b[1])</div><div class="line">A()</div></pre></td></tr></table></figure></p>
+<p>比较规范的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">def read(filename):</div><div class="line">    f= open(filename,&apos;r&apos;)</div><div class="line">    info = f.read()</div><div class="line">    f.close()</div><div class="line">    return info</div><div class="line"></div><div class="line">def getnum(info):</div><div class="line">    twonum = info.split(&apos;,&apos;)</div><div class="line">    return twonum</div><div class="line"></div><div class="line">def addnum(twonum):</div><div class="line">    return int(twonum[0])+int(twonum[1])</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">        info = read(&apos;1.txt&apos;)</div><div class="line">        twonum = getnum(info)</div><div class="line">        result = addnum(twonum)</div><div class="line">		print result</div></pre></td></tr></table></figure></p>
+<p>这样写的好处是，如果想测试读文件的功能，就只需要测试read()函数，如果想测试把两个数分开的功能，就只需要测试getnum()函数。而相反，在不规范写法二中，虽然只想测试两个数字相加的功能，可是却不得不首先打开文件并读取文件然后把数字分开。</p>
+<p>继续回到比较规范的写法当中，我相信很多人写完read()函数以后，肯定会输入如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">def read(filename):</div><div class="line">    f= open(filename,&apos;r&apos;)</div><div class="line">    info = f.read()</div><div class="line">    f.close()</div><div class="line">    return info</div><div class="line"></div><div class="line">print read(&apos;1.txt&apos;)</div></pre></td></tr></table></figure></p>
+<p>然后运行程序，发现正常打印出’2,3’以后，再开始写getnum()函数。写完getnum以后，测试getnum()函数没问题以后再开始写然后测试addnum()函数。最后测试整个程序的功能。</p>
+<p>其实这个过程，已经就是在做单元测试了。然而这样操作的弊端是什么？如果整体程序已经写好了，之前做测试点代码也就删除了。那么如果突然把程序做了修改。例如1.txt里面数字的分隔从1个逗号变成了空格，或者变成了3个数字，那必然要修改getnum()，但是又如何测试修改的部分呢？还要把不相干的代码给注释掉。不仅麻烦，而且容易出错。</p>
+<p>现在，把测试的代码单独独立出来。会有什么效果呢？尝试创建一个test.py程序，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import readandadd</div><div class="line"></div><div class="line">def testread():</div><div class="line">    print &apos;read:&apos;,readandadd.read(&apos;1.txt&apos;)</div><div class="line"></div><div class="line">def testgetnum():</div><div class="line">    print &apos;getnum:&apos;,readandadd.getnum(&apos;2,3&apos;)</div><div class="line"></div><div class="line">def testaddnum():</div><div class="line">    print &apos;addnum:&apos;,readandadd.addnum([2,3])</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    testread()</div><div class="line">    testgetnum()</div><div class="line">    testaddnum()</div></pre></td></tr></table></figure></p>
+<p>运行test.py以后输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">read: 2,3</div><div class="line">getnum: [&apos;2&apos;, &apos;3&apos;]</div><div class="line">addnum: 5</div></pre></td></tr></table></figure></p>
+<p>每一个函数的输出结果一目了然，而且在修改了readandadd.py的函数以后，重新运行test.py就可以知道输出结果有没有符合预期。</p>
+<p>当然，这里这个例子非常的简单，因此可以人工通过观察test.py的输出结果来确定是否符合预期，那对于大量的函数的测试，难道也要让肉眼来看吗？当然不是。于是，下一篇文章将会介绍Python的单元测试unittest。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/30/未知道——广场式的真匿名交流网站/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/30/未知道——广场式的真匿名交流网站/" class="post-title-link" itemprop="url">未知道——广场式的真匿名交流网站（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-30 15:24:35" itemprop="dateCreated datePublished" datetime="2015-01-30T15:24:35+08:00">2015-01-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/未知道/" itemprop="url" rel="index"><span itemprop="name">未知道</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/30/未知道——广场式的真匿名交流网站/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/30/未知道——广场式的真匿名交流网站/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近在学习Flask，本着学以致用的原则，开发了“未知道”这个网站。未知道的宗旨是，不注册，不审核，不删帖，无私聊，不记录任何信息。是一个派对式的或者说广场式的真·匿名聊天环境。</p>
+<p>网站地址请戳-&gt;<a href="http://unknown.kingname.info/" target="_blank" rel="external">http://unknown.kingname.info/</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/unknown/QQ截图20150130152847.jpg" alt=""></p>
+<p>网站上线首日访问量突破2000，上线第二日访问量突破10000。</p>
+<p>现在到处都在要求实名制，请珍惜这少有的一片匿名的净土。</p>
+<p>这个网站目前仍然在每天增加新的功能，我会开一个系列文章，用以记录在这个网站的开发过程中遇到的问题以及解决方案。请大家保持关注。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/17/xpath提取多个标签下的text/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/17/xpath提取多个标签下的text/" class="post-title-link" itemprop="url">xpath提取多个标签下的text</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-17 16:01:07" itemprop="dateCreated datePublished" datetime="2015-01-17T16:01:07+08:00">2015-01-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/17/xpath提取多个标签下的text/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/17/xpath提取多个标签下的text/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在写爬虫的时候，经常会使用xpath进行数据的提取，对于如下的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test1&quot;&gt;大家好！&lt;/div&gt;</div></pre></td></tr></table></figure></p>
+<p>使用xpath提取是非常方便的。假设网页的源代码在selector中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test1&quot;]/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
+<p>就可以把“大家好！”提取到data变量中去。</p>
+<p>然而如果遇到下面这段代码呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test2&quot;&gt;美女，&lt;font color=red&gt;你的微信是多少？&lt;/font&gt;&lt;div&gt;</div></pre></td></tr></table></figure></p>
+<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
+<p>只能提取到“美女，”；</p>
+<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/font/text()&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
+<p>又只能提取到“你的微信是多少？”</p>
+<p>可是我本意是想把“美女，你的微信是多少？”这一整个句子提取出来。</p>
+<p>这还不是最糟糕的，还有第三段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;test3&quot;&gt;我左青龙，&lt;span id=&quot;tiger&quot;&gt;右白虎，&lt;ul&gt;上朱雀，&lt;li&gt;下玄武。&lt;/li&gt;&lt;/ul&gt;老牛在当中，&lt;/span&gt;龙头在胸口。&lt;div&gt;</div></pre></td></tr></table></figure></p>
+<p>而且内部的标签还不固定，如果我有一百段这样类似的html代码，又如何使用xpath表达式，以最快最方便的方式提取出来？</p>
+<p>我差一点就去用正则表达式替换了。还好我去Stack Overflow上面提了问。于是很快就有人给我解答了。</p>
+<p><strong>使用xpath的string(.)</strong></p>
+<p>以第三段代码为例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">data = selector.xpath(&apos;//div[@id=&quot;test3&quot;]&apos;)</div><div class="line">info = data.xpath(&apos;string(.)&apos;).extract()[0]</div></pre></td></tr></table></figure></p>
+<p>这样，就可以把“我左青龙，右白虎，上朱雀，下玄武。老牛在当中，龙头在胸口”整个句子提取出来，赋值给info变量。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/08/清空Github上某个文件的历史/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/08/清空Github上某个文件的历史/" class="post-title-link" itemprop="url">清空Github上某个文件的历史</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-08 16:04:53" itemprop="dateCreated datePublished" datetime="2015-01-08T16:04:53+08:00">2015-01-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/经验/" itemprop="url" rel="index"><span itemprop="name">经验</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/08/清空Github上某个文件的历史/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/08/清空Github上某个文件的历史/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>文章首发地址：<a href="http://kingname.info" target="_blank" rel="external">http://kingname.info</a></p>
+<p>今天在Github更新代码的时候，不小心把Gmail私钥文件更新上去了。即便我立刻删除了这个文件，可是在版本历史里面仍然可以看到这个文件的内容。这可把我吓坏了。</p>
+<p>Google一圈以后，终于找到了解决办法。把某个文件的历史版本全部清空。</p>
+<p>首先cd 进入项目文件夹下，然后执行以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">git filter-branch --force --index-filter &apos;git rm --cached --ignore-unmatch 文件名&apos; --prune-empty --tag-name-filter cat -- --all</div><div class="line"></div><div class="line">git push origin master --force</div><div class="line"></div><div class="line">rm -rf .git/refs/original/</div><div class="line"></div><div class="line">git reflog expire --expire=now --all</div><div class="line"></div><div class="line">git gc --prune=now</div><div class="line"></div><div class="line">git gc --aggressive --prune=now</div></pre></td></tr></table></figure></p>
+<p>虽然不知道他们的作用是什么，不过真的解决了我的问题。看起来，以前我说我熟练掌握git，真是自不量力。</p>
 
           
         
@@ -1364,7 +2384,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1407,7 +2427,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-count">112</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1472,7 +2492,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">26</span>
+                      
+                    
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -1687,7 +2709,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">101</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">103</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

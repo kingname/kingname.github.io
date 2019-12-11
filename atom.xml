@@ -554,86 +554,6 @@
   </entry>
   
   <entry>
-    <title>升维打击——算法问题的维度碾压</title>
-    <link href="https://www.kingname.info/2019/11/07/matrix-for-fib/"/>
-    <id>https://www.kingname.info/2019/11/07/matrix-for-fib/</id>
-    <published>2019-11-07T14:40:55.000Z</published>
-    <updated>2019-12-11T15:07:28.815Z</updated>
-    
-    <content type="html"><![CDATA[<p>在小说《三体》里面，我们知道一个词叫做降维打击，通过把对手所在空间的维度降低从而实现团灭整个星系。</p>
-<p>但是如果对方所在的维度已经是一维了，降不动了，那么要实现维度打击的办法就是把自己的维度提升。</p>
-<p>今天我们将会从二维的层面来解决一维的问题，把时间复杂度从<code>O(n)</code>降低到 <code>O(logn)</code>。</p>
-<a id="more"></a>
-<p>想必大家对斐波拉契数列已经很熟悉了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">1, 1, 2, 3, 5, 8, 13, 21, 34, 55……</div></pre></td></tr></table></figure>
-<p>从第三位开始，每一位都是前面两位之和。</p>
-<p>在一维层面，我们能实现的最快的解法时间复杂度为<code>O(n)</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span><span class="params">(n)</span>:</span></div><div class="line">    <span class="keyword">if</span> n &lt; <span class="number">1</span>:</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span></div><div class="line">    <span class="keyword">if</span> n <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">2</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span></div><div class="line">    a = fib(<span class="number">1</span>)</div><div class="line">    b = fib(<span class="number">2</span>)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>, n + <span class="number">1</span>):</div><div class="line">        a, b = b, a + b</div><div class="line">    <span class="keyword">return</span> b</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-07-12-31-27.png" alt=""></p>
-<p>知道了第1个数和第2个数，才能计算第3个数。知道了第2个数和第3个数，才能计算第4个数。时间复杂度为 <code>O(n)</code>。前面的数必需都计算出来，才能计算后面的数。要知道第n位数字，就需要知道第 n - 1 位数字，要知道第 n-1 位数字，就需要知道 n-2 位数字。这不是显而易见的吗？</p>
-<p>难道还有办法在不计算第3个数的情况下，就把第4个数算出来？</p>
-<p>斐波拉契数列是一个一维的数列，看起来就像是一条线一样。你要走到第4个数，必需先走到第3个数。</p>
-<p>但如果你从二维的视角来看待，你就会发现实际上你可以从旁边绕过去。</p>
-<p>现在我们假设斐波拉契数列第 n 位的值为$F<em>n$。第 n-1位的值为$F</em>{n-1}$。那么我们可以把它表示为一个2行1列的矩阵：</p>
-<p>$$<br>\begin{bmatrix}F<em>n \ F</em>{n-1}\end{bmatrix}<br>$$</p>
-<p>由于$F<em>n = F</em>{n-1} + F_{n-2}$，所以上面的矩阵可以转换为：</p>
-<p>$$<br>\begin{bmatrix}F<em>{n-1} + F</em>{n-2} \ F_{n-1}\end{bmatrix}<br>$$</p>
-<p>再进一步转换为：</p>
-<p>$$<br>\begin{bmatrix}1 \times F<em>{n-1} + 1 \times F</em>{n-2} \ 1 \times F<em>{n-1} + 0 \times F</em>{n-2}\end{bmatrix}<br>$$</p>
-<p>我们来复习一下矩阵的乘法：</p>
-<p>$$<br>\begin{bmatrix}a &amp; b \ c &amp; d\end{bmatrix} \times \begin{bmatrix}x \ y \end{bmatrix} = \begin{bmatrix}a \times x + b \times y \ c \times x + d \times y\end{bmatrix}<br>$$</p>
-<p>所以</p>
-<p>$$<br>\begin{bmatrix}1 \times F<em>{n-1} + 1 \times F</em>{n-2} \ 1 \times F<em>{n-1} + 0 \times F</em>{n-2}\end{bmatrix} = \begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix} \times \begin{bmatrix}F<em>{n-1} \ F</em>{n-2} \end{bmatrix}<br>$$</p>
-<p>所以</p>
-<p>$$<br>\begin{bmatrix}F<em>{n} \ F</em>{n-1} \end{bmatrix} = \begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix} \times \begin{bmatrix}F<em>{n-1} \ F</em>{n-2} \end{bmatrix}<br>$$</p>
-<p>同理，</p>
-<p>$$<br>\begin{bmatrix}F<em>{n-1} \ F</em>{n-2} \end{bmatrix} = \begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix} \times \begin{bmatrix}F<em>{n-2} \ F</em>{n-3} \end{bmatrix}<br>$$</p>
-<p>所以一路推下来：</p>
-<p>$$<br>\begin{bmatrix}F<em>{n} \ F</em>{n-1} \end{bmatrix} </p>
-<p>= \begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix} \times \begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix} \times \begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix} \times \cdots \times \begin{bmatrix}F<em>{1} \ F</em>{0} \end{bmatrix} </p>
-<p>= \begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix}^{n-1} \times \begin{bmatrix}F<em>1 \ F</em>{0}\end{bmatrix}<br>$$</p>
-<p>虽然斐波那契数列没有第0个数，但是我们通过它的生成规则，可以人工设定$F_0=0$。</p>
-<p>于是，求斐波拉契数列第 n 位的值转换为矩阵运算</p>
-<p>$$<br>\begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix}^{n-1} \times \begin{bmatrix}1 \ 0\end{bmatrix}<br>$$</p>
-<p>运算结果是一个2行1列的矩阵，第1行第1列这个数就是我们需要的结果。</p>
-<p>到目前为止，矩阵运算：</p>
-<p>$$<br>\begin{bmatrix}1 &amp; 1 \ 1 &amp; 0 \end{bmatrix}^{n-1} \times \begin{bmatrix}1 \ 0\end{bmatrix}<br>$$</p>
-<p>看起来还是要乘n 次，时间复杂度还是 <code>O(n)</code>。那么优化在哪里呢？此时我们就要说到快速幂运算了。</p>
-<p>以计算$2^{16}$为例，看起来要进行15次乘法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * * 2 * 2 * 2 * 2 * 2 * 2</div></pre></td></tr></table></figure>
-<p>但实际上，我们真正运算的时候是这样的：</p>
-<p>$$<br>2 ^ 2 = 2 \times 2<br>$$<br>$$<br>2 ^ 4 = 2^2 \times 2<br>$$<br>$$<br>2 ^ 8 = 2^4 \times 2^4<br>$$<br>$$<br>2 ^ {16} = 2^8 \times 2^8<br>$$</p>
-<p>所以，要计算$2^{16}$我们可以这样写代码:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a = <span class="number">2</span> * <span class="number">2</span></div><div class="line">b = a * a</div><div class="line">c = b * b</div><div class="line">result = c * c</div></pre></td></tr></table></figure>
-<p>所以对于$x^n$，我们最多只需要计算$\log_2{n} + 1$次乘法即可解决问题（n 为偶数不加1，为奇数加1）。</p>
-<p>这种计算方法对矩阵同样适用。并且，对于矩阵计算，Python 的 numpy 库有直接可用的函数，所以要计算一个矩阵的 n 次幂，代码非常简单：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> numpy.linalg <span class="keyword">import</span> matrix_power</div><div class="line">matrix_power(矩阵, n)</div></pre></td></tr></table></figure>
-<p>所以，我们使用矩阵运算来写一个求斐波那契数列的函数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> numpy.linalg <span class="keyword">import</span> matrix_power</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib_matrix</span><span class="params">(n)</span>:</span></div><div class="line">    <span class="keyword">if</span> n == <span class="number">1</span>:</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span></div><div class="line">    matrix = np.matrix(<span class="string">'1 1; 1 0'</span>, dtype=<span class="string">'uint64'</span>)</div><div class="line">    power = matrix_power(matrix, n - <span class="number">1</span>)</div><div class="line">    base_matrix = np.matrix(<span class="string">'1; 0'</span>)</div><div class="line">    result_matrix = np.matmul(power, base_matrix)</div><div class="line">    <span class="keyword">return</span> result_matrix.item(<span class="number">0</span>)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-07-22-37-51.png" alt=""></p>
-<p>但是，由于 numpy 中对整型数字的精度有限定，超出精度以后就会出现数值溢出，变成负数的情况。对于这个问题，我们将会在下一篇文章中介绍解决办法。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在小说《三体》里面，我们知道一个词叫做降维打击，通过把对手所在空间的维度降低从而实现团灭整个星系。&lt;/p&gt;
-&lt;p&gt;但是如果对方所在的维度已经是一维了，降不动了，那么要实现维度打击的办法就是把自己的维度提升。&lt;/p&gt;
-&lt;p&gt;今天我们将会从二维的层面来解决一维的问题，把时间复杂度从&lt;code&gt;O(n)&lt;/code&gt;降低到 &lt;code&gt;O(logn)&lt;/code&gt;。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="算法" scheme="https://www.kingname.info/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
     <title>禁止通行——如何让 itertools.tee 线程安全</title>
     <link href="https://www.kingname.info/2019/11/06/thread-safe-in-tee/"/>
     <id>https://www.kingname.info/2019/11/06/thread-safe-in-tee/</id>
@@ -972,6 +892,83 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="yield" scheme="https://www.kingname.info/tags/yield/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>为什么你应该学习 Python 的生成器？</title>
+    <link href="https://www.kingname.info/2019/10/30/you-should-learn-yield/"/>
+    <id>https://www.kingname.info/2019/10/30/you-should-learn-yield/</id>
+    <published>2019-10-30T14:43:37.000Z</published>
+    <updated>2019-10-30T14:44:12.075Z</updated>
+    
+    <content type="html"><![CDATA[<p>写过一段时间代码的同学，应该对这一句话深有体会：程序的时间利用率和空间利用率往往是矛盾的，可以用时间换空间，可以用空间换时间，但很难同时提高一个程序的时间利用率和空间利用率。</p>
+<p>但如果你尝试使用生成器来重构你的代码，也许你会发现，在一定程度上，你可以既提高时间利用率，又提高空间利用率。</p>
+<a id="more"></a>
+<p>我们以一个数据清洗的简单项目为例，来说明生成器如何让你的代码运行起来更加高效。</p>
+<blockquote>
+<p>在 Redis 中，有一个列表<code>datalist</code>，里面有很多的数据，这些数据可能是<code>纯阿拉伯数字</code>，<code>中文数字</code>，<code>字符串&quot;敏感信息&quot;</code>。现在我们需要实现：从 Redis 中读取所有的数据，把所有的字符串<code>敏感信息</code>全部丢掉，把所有中文数字全部转换为阿拉伯数字，以<code>{&#39;num&#39;: 12345, &#39;date&#39;: &#39;2019-10-30 18:12:14&#39;}</code>这样的格式插入到 MongoDB 中。</p>
+</blockquote>
+<p>示例数据如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">41234213424</div><div class="line">一九八八七二六三</div><div class="line">8394520342</div><div class="line">七二三六二九六六</div><div class="line">敏感信息</div><div class="line">80913408120934</div><div class="line">敏感信息</div><div class="line">敏感信息</div><div class="line">95352345345</div><div class="line">三三七四六</div><div class="line">999993232</div><div class="line">234234234</div><div class="line">三六八八七七</div><div class="line">敏感信息</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-19-27-35.png" alt=""></p>
+<p>如果让你来写这个转换程序，你可能会这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line">handler = pymongo.MongoClient().data_list.num</div><div class="line"></div><div class="line">CHINESE_NUM_DICT = &#123;</div><div class="line">    <span class="string">'一'</span>: <span class="string">'1'</span>,</div><div class="line">    <span class="string">'二'</span>: <span class="string">'2'</span>,</div><div class="line">    <span class="string">'三'</span>: <span class="string">'3'</span>,</div><div class="line">    <span class="string">'四'</span>: <span class="string">'4'</span>,</div><div class="line">    <span class="string">'五'</span>: <span class="string">'5'</span>,</div><div class="line">    <span class="string">'六'</span>: <span class="string">'6'</span>,</div><div class="line">    <span class="string">'七'</span>: <span class="string">'7'</span>,</div><div class="line">    <span class="string">'八'</span>: <span class="string">'8'</span>,</div><div class="line">    <span class="string">'九'</span>: <span class="string">'9'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">()</span>:</span></div><div class="line">    datas = []</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        data = client.lpop(<span class="string">'datalist'</span>)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        datas.append(data.decode())</div><div class="line">    <span class="keyword">return</span> datas</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_sensitive_data</span><span class="params">(datas)</span>:</span></div><div class="line">    clear_data = []</div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">if</span> data == <span class="string">'敏感信息'</span>:</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        clear_data.append(data)</div><div class="line">    <span class="keyword">return</span> clear_data</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">tranfer_chinese_num</span><span class="params">(datas)</span>:</span></div><div class="line">    number_list = []</div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            num = int(data)</div><div class="line">        <span class="keyword">except</span> ValueError:</div><div class="line">            num = <span class="string">''</span>.join(CHINESE_NUM_DICT[x] <span class="keyword">for</span> x <span class="keyword">in</span> data)</div><div class="line">        number_list.append(num)</div><div class="line">    <span class="keyword">return</span> number_list</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_data</span><span class="params">(number_list)</span>:</span></div><div class="line">    <span class="keyword">for</span> number <span class="keyword">in</span> number_list:</div><div class="line">        data = &#123;<span class="string">'num'</span>: number, <span class="string">'date'</span>: datetime.datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)&#125;</div><div class="line">        handler.insert_one(data)</div><div class="line"></div><div class="line">raw_data = get_data()</div><div class="line">safe_data = remove_sensitive_data(raw_data)</div><div class="line">number_list = tranfer_chinese_num(safe_data)</div><div class="line">save_data(number_list)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-19-45-36.png" alt=""></p>
+<p>这段代码，看起来很 Pythonic，一个函数只做一件事，看起来也满足编码规范。最后运行结果也正确。能有什么问题？</p>
+<p>问题在于，这段代码，每个函数都会创建一个列表存放处理以后的数据。如果 Redis 中的数据多到超过了你当前电脑的内存怎么办？对同一批数据多次使用 for 循环，浪费了大量的时间，能不能只循环一次？</p>
+<p>也许你会说，你可以把移除<code>敏感信息</code>，中文数字转阿拉伯数字的逻辑全部写在<code>get_data</code>函数的 <code>while</code>循环中，这样不就只循环一次了吗？</p>
+<p>可以是可以，但是这样一来，<code>get_data</code>就做了不止一件事情，代码也显得非常混乱。如果以后要增加一个新的数据处理逻辑：</p>
+<blockquote>
+<p>转换为数字以后，检查所有奇数位的数字相加之和与偶数位数字相加之和是否相等，丢弃所有相等的数字。</p>
+</blockquote>
+<p>那么你就要修改<code>get_data</code>的代码。</p>
+<p>在开发软件的时候，我们应该面向扩展开放，面向修改封闭，所以不同的逻辑，确实应该分开，所以上面把每个处理逻辑分别写成函数的写法，在软件工程上没有问题。但是如何做到处理逻辑分开，又不需要对同一批数据进行多次 for 循环呢？</p>
+<p>这个时候，就要依赖于我们的生成器了。</p>
+<p>我们先来看看下面这一段代码的运行效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_num</span><span class="params">()</span>:</span></div><div class="line">    nums = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        print(f<span class="string">'生成数据：&#123;i&#125;'</span>)</div><div class="line">        nums.append(i)</div><div class="line">    <span class="keyword">return</span> nums</div><div class="line">nums = gen_num()</div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> nums:</div><div class="line">    print(f<span class="string">'打印数据：&#123;num&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-20-04-14.png" alt=""></p>
+<p>现在，我们对代码做一下修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_num</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        print(f<span class="string">'生成数据：&#123;i&#125;'</span>)</div><div class="line">        <span class="keyword">yield</span> i</div><div class="line">nums = gen_num()</div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> nums:</div><div class="line">    print(f<span class="string">'打印数据：&#123;num&#125;'</span>)</div></pre></td></tr></table></figure>
+<p>其运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-20-05-33.png" alt=""></p>
+<p>大家对比上面两张插图。前一张插图，先生成10个数据，然后再打印10个数据。后一张图，生成一个数据，打印一个数据，再生成一个数据，再打印一个数据……</p>
+<p>如果以代码的行号来表示运行运行逻辑，那么代码是按照这个流程运行的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">1-&gt;5-&gt;6-&gt;2-&gt;3-&gt;4-&gt;6-&gt;7-&gt;6-&gt;2-&gt;3-&gt;4-&gt;6-&gt;7-&gt;6-&gt;2-&gt;3-&gt;4-&gt;6-&gt;7....</div></pre></td></tr></table></figure>
+<p>大家可以把这段代码写在 PyCharm 中，然后使用单步调试来查看它每一步运行的是哪一行代码。</p>
+<p>程序运行到<code>yield</code>就会把它后面的数字<code>抛出</code>到外面给 for 循环， 然后进入外面 for 循环的循环体，外面的 for 循环执行完成后，又会进入<code>gen_num</code>函数里面的 <code>yield i</code>后面的一行，开启下一次 for 循环，继续生成新的数字……</p>
+<p>整个过程中，不需要额外创建一个列表来保存中间的数据，从而达到节约内存空间的目的。而整个过程中，虽然代码写了两个 for 循环，但是如果你使用单步调试，你就会发现实际上真正的循环只有<code>for i in range(10)</code>。而外面的<code>for num in nums</code>仅仅是实现了函数内外的切换，并没有新增循环。</p>
+<p>回到最开始的问题，我们如何使用生成器来修改代码呢？实际上你几乎只需要把<code>return 列表</code>改成<code>yield 每一个元素</code>即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line">handler = pymongo.MongoClient().data_list.num_yield</div><div class="line"></div><div class="line">CHINESE_NUM_DICT = &#123;</div><div class="line">    <span class="string">'一'</span>: <span class="string">'1'</span>,</div><div class="line">    <span class="string">'二'</span>: <span class="string">'2'</span>,</div><div class="line">    <span class="string">'三'</span>: <span class="string">'3'</span>,</div><div class="line">    <span class="string">'四'</span>: <span class="string">'4'</span>,</div><div class="line">    <span class="string">'五'</span>: <span class="string">'5'</span>,</div><div class="line">    <span class="string">'六'</span>: <span class="string">'6'</span>,</div><div class="line">    <span class="string">'七'</span>: <span class="string">'7'</span>,</div><div class="line">    <span class="string">'八'</span>: <span class="string">'8'</span>,</div><div class="line">    <span class="string">'九'</span>: <span class="string">'9'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        data = client.lpop(<span class="string">'datalist'</span>)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        <span class="keyword">yield</span> data.decode()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_sensitive_data</span><span class="params">(datas)</span>:</span></div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">if</span> data == <span class="string">'敏感信息'</span>:</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        <span class="keyword">yield</span> data</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">tranfer_chinese_num</span><span class="params">(datas)</span>:</span></div><div class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> datas:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            num = int(data)</div><div class="line">        <span class="keyword">except</span> ValueError:</div><div class="line">            num = <span class="string">''</span>.join(CHINESE_NUM_DICT[x] <span class="keyword">for</span> x <span class="keyword">in</span> data)</div><div class="line">        <span class="keyword">yield</span> num</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_data</span><span class="params">(number_list)</span>:</span></div><div class="line">    <span class="keyword">for</span> number <span class="keyword">in</span> number_list:</div><div class="line">        data = &#123;<span class="string">'num'</span>: number, <span class="string">'date'</span>: datetime.datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)&#125;</div><div class="line">        handler.insert_one(data)</div><div class="line"></div><div class="line">raw_data = get_data()</div><div class="line">safe_data = remove_sensitive_data(raw_data)</div><div class="line">number_list = tranfer_chinese_num(safe_data)</div><div class="line">save_data(number_list)</div></pre></td></tr></table></figure>
+<p>代码如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-30-20-21-57.png" alt=""></p>
+<p>如果你开启 PyCharm 调试模式，你会发现，数据的流向是这样的：</p>
+<ol>
+<li>从 Redis 获取1条数据</li>
+<li>这一条数据传给remove_sensitive_data</li>
+<li>第2步处理以后的数据传给tranfer_chinese_num</li>
+<li>第3步处理以后，传给 save_data</li>
+<li>回到第1步</li>
+</ol>
+<p>整个过程就像是一条流水线一样，数据一条一条地进行处理和存档。不需创建额外的列表，有多少条数据就循环多少次，不做多余的循环。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;写过一段时间代码的同学，应该对这一句话深有体会：程序的时间利用率和空间利用率往往是矛盾的，可以用时间换空间，可以用空间换时间，但很难同时提高一个程序的时间利用率和空间利用率。&lt;/p&gt;
+&lt;p&gt;但如果你尝试使用生成器来重构你的代码，也许你会发现，在一定程度上，你可以既提高时间利用率，又提高空间利用率。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="生成器" scheme="https://www.kingname.info/tags/%E7%94%9F%E6%88%90%E5%99%A8/"/>
     
   </entry>
   

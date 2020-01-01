@@ -353,6 +353,194 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/21/delete-pay-content-by-js/" class="post-title-link" itemprop="url">一日一技：如何使用JavaScript移除少数派的付费内容</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-21 19:01:34 / 修改时间：19:02:24" itemprop="dateCreated datePublished" datetime="2019-07-21T19:01:34+08:00">2019-07-21</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/21/delete-pay-content-by-js/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/21/delete-pay-content-by-js/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>少数派（<a href="https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。" target="_blank" rel="external">https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-32-55.png" alt=""></p>
+<p>这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。</p>
+<p>作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。</p>
+<p>从网页上删除这些付费内容的原理非常简单，在网页上右键，点击“检查”，打开Chrome的开发者工具，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-36-21.png" alt=""></p>
+<p>点击箭头所指向的图标，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-37-28.png" alt=""></p>
+<p>然后在网页上任意选中一个付费内容，此时开发者工具里面将会自动变成下图所示的样子：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-38-53.png" alt=""></p>
+<p>其中方框框住的这个<code>img</code>标签对应了<code>付费内容</code>这个小图标，因此我们可以使用这个标签来进行定位。</p>
+<p>现在视线在HTML代码区域往上走，可以看到<code>dl</code>标签</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-40-31.png" alt=""></p>
+<p>每一个文章块就对应一个<code>dl</code>标签。如果我们在上面右键删除这个标签，就会发现对应的付费条目不见了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-41-45.png" alt=""></p>
+<p>但这种做法每次只能删除一条付费内容，有没有办法把所有付费内容全部删除呢？答案就是使用JavaScript：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line"></div><div class="line"><span class="keyword">while</span>(pay_tag_list.length &gt; <span class="number">0</span>)&#123;</div><div class="line">	pay_tag = pay_tag_list[<span class="number">0</span>]</div><div class="line">    dl_tag = pay_tag.parentNode.parentNode.parentNode</div><div class="line">	div_tag = dl_tag.parentNode</div><div class="line">	div_tag.removeChild(dl_tag)</div><div class="line">    pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>复制上面这一段代码到开发者工具的Console标签页并粘贴，敲下回车键，付费内容就消失了，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-18-02-31.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/13/python-dict/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2096,184 +2284,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/03/19/repr/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/03/19/repr/" class="post-title-link" itemprop="url">一种字符串的两种显示方式</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-03-19 21:18:19 / 修改时间：21:20:47" itemprop="dateCreated datePublished" datetime="2019-03-19T21:18:19+08:00">2019-03-19</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/19/repr/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/19/repr/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>如果你经常使用Python的命令行交互环境，你一定遇到过下面这个现象：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;test&apos;</div><div class="line">&gt;&gt;&gt; a</div><div class="line">&apos;test&apos;</div><div class="line">&gt;&gt;&gt; print(a)</div><div class="line">test</div></pre></td></tr></table></figure>
-<p>首先定义一个变量<code>a</code>，它的值为字符串<code>test</code>。现在，当你在命令行交互环境直接输入变量名再回车的时候，你看到的是<code>&#39;test&#39;</code>，当你输入<code>print(a)</code>的时候，你看到的却是<code>test</code>。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/03/19/repr/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2321,7 +2331,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">112</span>
+                    <span class="site-state-item-count">113</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2701,7 +2711,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

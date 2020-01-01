@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2019-12-14T00:38:53.112Z</updated>
+  <updated>2020-01-01T11:08:53.318Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,92 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>GNE v0.1 正式发布： 4 行代码开发新闻网站通用爬虫</title>
+    <link href="https://www.kingname.info/2020/01/01/gne-release/"/>
+    <id>https://www.kingname.info/2020/01/01/gne-release/</id>
+    <published>2020-01-01T11:07:33.000Z</published>
+    <updated>2020-01-01T11:08:53.318Z</updated>
+    
+    <content type="html"><![CDATA[<p>GNE（GeneralNewsExtractor）是一个通用新闻网站正文抽取模块，输入一篇新闻网页的 HTML， 输出正文内容、标题、作者、发布时间、正文中的图片地址和正文所在的标签源代码。GNE在提取今日头条、网易新闻、游民星空、 观察者网、凤凰网、腾讯新闻、ReadHub、新浪新闻等数百个中文新闻网站上效果非常出色，几乎能够达到100%的准确率。</p>
+<a id="more"></a>
+<p>使用方式非常简单：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gne <span class="keyword">import</span> GeneralNewsExtractor</div><div class="line"></div><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">html = <span class="string">'网站源代码'</span></div><div class="line">result = extractor.extract(html)</div><div class="line">print(result)</div></pre></td></tr></table></figure>
+<p>GNE 的输入是<code>经过 js 渲染以后的</code> HTML 代码，所以 GNE 可以配合Selenium 或者 Pyppeteer 使用。</p>
+<p>下图是 GNE 配合 Selenium 实现的一个 Demo：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-01-01-17-51-47.png" alt=""></p>
+<p>对应的代码为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> gne <span class="keyword">import</span> GeneralNewsExtractor</div><div class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> Chrome</div><div class="line"></div><div class="line"></div><div class="line">driver = Chrome(<span class="string">'./chromedriver'</span>)</div><div class="line">driver.get(<span class="string">'https://www.toutiao.com/a6766986211736158727/'</span>)</div><div class="line">time.sleep(<span class="number">3</span>)</div><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">result = extractor.extract(driver.page_source)</div><div class="line">print(result)</div></pre></td></tr></table></figure>
+<p>下图是 GNE 配合 Pyppeteer 实现的 Demo：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-01-01-18-07-14.png" alt=""></p>
+<p>对应代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">from</span> gne <span class="keyword">import</span> GeneralNewsExtractor</div><div class="line"><span class="keyword">from</span> pyppeteer <span class="keyword">import</span> launch</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    browser = <span class="keyword">await</span> launch(executablePath=<span class="string">'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'</span>)</div><div class="line">    page = <span class="keyword">await</span> browser.newPage()</div><div class="line">    <span class="keyword">await</span> page.goto(<span class="string">'https://news.163.com/20/0101/17/F1QS286R000187R2.html'</span>)</div><div class="line">    extractor = GeneralNewsExtractor()</div><div class="line">    result = extractor.extract(<span class="keyword">await</span> page.content())</div><div class="line">    print(result)</div><div class="line">    input(<span class="string">'检查完成以后回到这里按下任意键'</span>)</div><div class="line"></div><div class="line">asyncio.run(main())</div></pre></td></tr></table></figure>
+<h2 id="如何安装-GNE"><a href="#如何安装-GNE" class="headerlink" title="如何安装 GNE"></a>如何安装 GNE</h2><p>现在你可以直接使用 pip 安装 GNE 了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install gne</div></pre></td></tr></table></figure>
+<p>如果访问pypi 官方源太慢，你也可以使用网易源：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install gne -i https://mirrors.163.com/pypi/simple/</div></pre></td></tr></table></figure>
+<p>安装过程如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-01-01-17-34-36.png" alt=""></p>
+<h2 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h2><h3 id="获取正文源代码"><a href="#获取正文源代码" class="headerlink" title="获取正文源代码"></a>获取正文源代码</h3><p>在<code>extract()</code>方法只传入网页源代码，不添加任何额外参数时，GNE 返回如下字段：</p>
+<ul>
+<li>title：新闻标题</li>
+<li>publish_time：新闻发布时间</li>
+<li>author：新闻作者</li>
+<li>content：新闻正文</li>
+<li>images: 正文中的图片（相对路径或者绝对路径）</li>
+</ul>
+<p>可能有些朋友希望获取新闻正文所在标签的源代码，此时可以给<code>extract()</code>方法传入<code>with_body_html</code>参数，设置为 True：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">extractor.extract(html, with_body_html=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>返回数据中将会增加一个字段<code>body_html</code>，它的值就是正文对应的 HTML 源代码。</p>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-01-01-18-16-25.png" alt=""></p>
+<h3 id="总是返回图片的绝对路径"><a href="#总是返回图片的绝对路径" class="headerlink" title="总是返回图片的绝对路径"></a>总是返回图片的绝对路径</h3><p>默认情况下，如果新闻中的图片使用的是相对路径，那么 GNE 返回的<code>images</code>字段对应的值也是图片相对路径的列表。</p>
+<p>如果你想始终让 GNE 返回绝对路径，那么你可以给<code>extract()</code>方法增加<code>host</code>参数，这个参数的值是图片的域名，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">extractor.extract(html, host=<span class="string">'https://www.kingname.info'</span>)</div></pre></td></tr></table></figure>
+<p>这样，如果新闻中的图片是<code>/images/pic.png</code>，那么 GNE 返回时会自动把它变为<code>https://www.kingname.info/images/pic.png</code>。</p>
+<h3 id="指定新闻标题所在的-XPath"><a href="#指定新闻标题所在的-XPath" class="headerlink" title="指定新闻标题所在的 XPath"></a>指定新闻标题所在的 XPath</h3><p>GNE 预定义了一组 XPath 和正则表达式用于提取新闻的标题。但某些特殊的新闻网站可能无法提取标题，此时，你可以给<code>extract()</code>方法指定<code>title_xpath</code>参数，用于提取新闻标题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">extractor.extract(html, title_xpath=<span class="string">'//title/text()'</span>)</div></pre></td></tr></table></figure>
+<h3 id="提前移除噪声标签"><a href="#提前移除噪声标签" class="headerlink" title="提前移除噪声标签"></a>提前移除噪声标签</h3><p>某些新闻下面可能会存在长篇大论的评论，这些评论看起来比新闻正文“更像”正文，为了防止他们干扰新闻的提取，可以通过给<code>extract()</code>方法传入<code>noise_node_list</code>参数，提前把这些噪声节点移除。<code>noise_node_list</code>的值是一个列表，里面是一个或多个 XPath：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">extractor.extract(html, noise_node_list=[<span class="string">'//div[@class="comment-list"]'</span>, <span class="string">'//*[@style="display:none"]'</span>])</div></pre></td></tr></table></figure>
+<h3 id="使用配置文件"><a href="#使用配置文件" class="headerlink" title="使用配置文件"></a>使用配置文件</h3><p>API 中的参数 <code>title_xpath</code>、 <code>host</code>、 <code>noise_node_list</code>、 <code>with_body_html</code>除了直接写到 <code>extract()</code> 方法中外，还可以通过一个配置文件来设置。</p>
+<p>请在项目的根目录创建一个文件 <code>.gne</code>，配置文件可以用 YAML 格式，也可以使用 JSON 格式。</p>
+<ul>
+<li>YAML 格式配置文件</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">title:</span></div><div class="line"><span class="attr">   xpath:</span> //title/text()</div><div class="line"><span class="attr">host:</span> https://www.xxx.com</div><div class="line"><span class="attr">noise_node_list:</span></div><div class="line"><span class="bullet">   -</span> //div[@class=\<span class="string">"comment-list\"]</span></div><div class="line">   - //*[@style=\"display:none\"]</div><div class="line">with_body_html: true</div></pre></td></tr></table></figure>
+<ul>
+<li>JSON 格式配置文件</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   <span class="attr">"title"</span>: &#123;</div><div class="line">       <span class="attr">"xpath"</span>: <span class="string">"//title/text()"</span></div><div class="line">   &#125;,</div><div class="line">   <span class="attr">"host"</span>: <span class="string">"https://www.xxx.com"</span>,</div><div class="line">   <span class="attr">"noise_node_list"</span>: [<span class="string">"//div[@class=\"comment-list\"]"</span>,</div><div class="line">                       <span class="string">"//*[@style=\"display:none\"]"</span>],</div><div class="line">   <span class="attr">"with_body_html"</span>: <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这两种写法是完全等价的。</p>
+<p>配置文件与 <code>extract()</code> 方法的参数一样，并不是所有字段都需要提供。你可以组合填写你需要的字段。</p>
+<p>如果一个参数，既在 <code>extract()</code> 方法中，又在 <code>.gne</code> 配置文件中，但值不一样，那么 <code>extract()</code> 方法中的这个参数的优先级更高。</p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><h3 id="GeneralNewsExtractor-以下简称GNE-是爬虫吗？"><a href="#GeneralNewsExtractor-以下简称GNE-是爬虫吗？" class="headerlink" title="GeneralNewsExtractor(以下简称GNE)是爬虫吗？"></a>GeneralNewsExtractor(以下简称GNE)是爬虫吗？</h3><p>GNE不是爬虫，它的项目名称General News Extractor表示通用新闻抽取器。它的输入是HTML，输出是一个包含新闻标题，新闻正文，作者，发布时间的字典。你需要自行设法获取目标网页的HTML。</p>
+<p>GNE 现在不会，将来也不会提供请求网页的功能。</p>
+<h3 id="GNE支持翻页吗？"><a href="#GNE支持翻页吗？" class="headerlink" title="GNE支持翻页吗？"></a>GNE支持翻页吗？</h3><p>GNE不支持翻页。因为GNE不会提供网页请求的功能，所以你需要自行获取每一页的HTML，并分别传递给GNE。</p>
+<h3 id="GNE支持哪些版本的Python？"><a href="#GNE支持哪些版本的Python？" class="headerlink" title="GNE支持哪些版本的Python？"></a>GNE支持哪些版本的Python？</h3><p>不小于Python 3.6.0</p>
+<h3 id="我用requests-Scrapy获取的HTML传入GNE，为什么不能提取正文？"><a href="#我用requests-Scrapy获取的HTML传入GNE，为什么不能提取正文？" class="headerlink" title="我用requests/Scrapy获取的HTML传入GNE，为什么不能提取正文？"></a>我用requests/Scrapy获取的HTML传入GNE，为什么不能提取正文？</h3><p>GNE是基于HTML来提取正文的，所以传入的HTML一定要是经过JavaScript渲染以后的HTML。而requests和Scrapy获取的只是JavaScript渲染之前的源代码，所以无法正确提取。</p>
+<p>另外，有一些网页，例如今日头条，它的新闻正文实际上是以JSON格式直接写在网页源代码的，当页面在浏览器上面打开的时候，JavaScript把源代码里面的正文解析为HTML。这种情况下，你在Chrome上面就看不到Ajax请求。</p>
+<p>所以建议你使用Puppeteer/Pyppeteer/Selenium之类的工具获取经过渲染的HTML再传入GNE。</p>
+<h3 id="GNE-支持非新闻类网站吗（例如博客、论坛……）"><a href="#GNE-支持非新闻类网站吗（例如博客、论坛……）" class="headerlink" title="GNE 支持非新闻类网站吗（例如博客、论坛……）"></a>GNE 支持非新闻类网站吗（例如博客、论坛……）</h3><p>不支持。</p>
+<h2 id="关于-GNE"><a href="#关于-GNE" class="headerlink" title="关于 GNE"></a>关于 GNE</h2><p>GNE 官方文档：<a href="https://generalnewsextractor.readthedocs.io/" target="_blank" rel="external">https://generalnewsextractor.readthedocs.io/</a></p>
+<p>GNE 的项目源代码在：<a href="https://github.com/kingname/GeneralNewsExtractor" target="_blank" rel="external">https://github.com/kingname/GeneralNewsExtractor</a>。</p>
+<h2 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h2><p>如果您觉得GNE对您的日常开发或公司有帮助，请加作者微信 mxqiuchen（或扫描下方二维码） 并注明”GNE”，作者会将你拉入群。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_3729_2.JPG" alt=""></p>
+<p>验证消息：<code>GNE</code></p>
+<p>我的公众号：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/640.gif" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;GNE（GeneralNewsExtractor）是一个通用新闻网站正文抽取模块，输入一篇新闻网页的 HTML， 输出正文内容、标题、作者、发布时间、正文中的图片地址和正文所在的标签源代码。GNE在提取今日头条、网易新闻、游民星空、 观察者网、凤凰网、腾讯新闻、ReadHub、新浪新闻等数百个中文新闻网站上效果非常出色，几乎能够达到100%的准确率。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>为什么每一个爬虫工程师都应该学习 Kafka</title>
@@ -942,47 +1028,6 @@
 &lt;p&gt;首先，我们来看一下最终被压平以后的数据长什么样：&lt;/p&gt;
 &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;a&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;b_c&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;b_d&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;b_e_f&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;g_h&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;i&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;j_k_l_m&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_0&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_o&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_p_0&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_p_1&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_p_2&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_q_r_s&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;100&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_2&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_3_0&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_3_1&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_3_2&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_4&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;对于&lt;code&gt;&amp;#39;n&amp;#39;: [&amp;#39;a&amp;#39;, &amp;#39;b&amp;#39;, &amp;#39;c&amp;#39;]&lt;/code&gt;这种形式的数据，我们把它转换为： &lt;code&gt;{&amp;#39;n_0&amp;#39;: &amp;#39;a&amp;#39;, &amp;#39;n_1&amp;#39;: &amp;#39;b&amp;#39;, &amp;#39;n_2&amp;#39;: &amp;#39;c&amp;#39;}&lt;/code&gt;&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="yield" scheme="https://www.kingname.info/tags/yield/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用 yield 压平嵌套字典有多简单？</title>
-    <link href="https://www.kingname.info/2019/11/03/flat-deep-dict/"/>
-    <id>https://www.kingname.info/2019/11/03/flat-deep-dict/</id>
-    <published>2019-11-03T02:07:53.000Z</published>
-    <updated>2019-11-03T02:08:40.750Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们经常遇到各种字典套字典的数据，例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">nest_dict = &#123;</div><div class="line">    <span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'b'</span>: &#123;</div><div class="line">        <span class="string">'c'</span>: <span class="number">2</span>,</div><div class="line">        <span class="string">'d'</span>: <span class="number">3</span>,</div><div class="line">        <span class="string">'e'</span>: &#123;<span class="string">'f'</span>: <span class="number">4</span>&#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="string">'g'</span>: &#123;<span class="string">'h'</span>: <span class="number">5</span>&#125;,</div><div class="line">    <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line">    <span class="string">'j'</span>: &#123;<span class="string">'k'</span>: &#123;<span class="string">'l'</span>: &#123;<span class="string">'m'</span>: <span class="number">8</span>&#125;&#125;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>有没有什么简单的办法，把它<code>压扁</code>，变成：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'b_c'</span>: <span class="number">2</span>,</div><div class="line">    <span class="string">'b_d'</span>: <span class="number">3</span>,</div><div class="line">    <span class="string">'b_e_f'</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">'g_h'</span>: <span class="number">5</span>,</div><div class="line">    <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line">    <span class="string">'j_k_l_m'</span>: <span class="number">8</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<a id="more"></a>
-<p>你肯定想到了使用递归来解决这个问题，那么你可以试一试，看看你的递归函数有多少行代码。</p>
-<p>今天，我们使用<code>yield</code>关键字来实现这个需求，在<code>不炫技</code>的情况下，只需要8行代码。在炫技的情况下，只需要3行代码。</p>
-<p>要快速地把这个嵌套字典压扁，我们需要从下网上来处理字段。例如对于<code>b-&gt;e-&gt;f-&gt;4</code>这条路径，我们首先把最里面的<code>{&#39;f&#39;: 4}</code>转换为一个元组<code>(&#39;f&#39;, 4)</code>。然后，把这个元组向上抛出，于是得到了元组<code>(&#39;e&#39;, (&#39;f&#39;, 4))</code>。我们把 <code>e</code>拼接到<code>f</code>的前面，变为：<code>(&#39;e_f&#39;, 4)</code>，继续往上抛出，得到<code>(&#39;b&#39;, (&#39;e_f&#39;, 4))</code>。再把<code>b</code>拼接到<code>e_f</code>上面，得到<code>(&#39;b_e_f&#39;, 4)</code>。完成一条线路的组装。</p>
-<p>这个逻辑如果使用<code>yield</code>关键字来实现，就是：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">flat</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> x.items():</div><div class="line">        <span class="keyword">if</span> isinstance(value, dict):</div><div class="line">            <span class="keyword">for</span> k, v <span class="keyword">in</span> flat(value):</div><div class="line">                k = f<span class="string">'&#123;key&#125;_&#123;k&#125;'</span></div><div class="line">                <span class="keyword">yield</span> (k, v)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">yield</span> (key, value)</div></pre></td></tr></table></figure>
-<p>运行结果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-10-31-22-14-24.png" alt=""></p>
-<p>通过使用 <code>yield</code>关键字，字典的<code>key</code>会像是在流水线上一样，一层一层从内向外进行组装，从而形成完整的路径。</p>
-<p>在下一篇文章中，我们继续使用<code>yield</code>关键字来解决字典与列表混合嵌套的情况。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们经常遇到各种字典套字典的数据，例如：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;nest_dict = &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;a&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;b&#39;&lt;/span&gt;: &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&#39;c&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&#39;d&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&#39;e&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;f&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;g&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;h&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;i&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;j&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;k&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;l&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;m&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;&amp;#125;&amp;#125;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;有没有什么简单的办法，把它&lt;code&gt;压扁&lt;/code&gt;，变成：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;a&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;b_c&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;b_d&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;b_e_f&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;g_h&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;i&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;j_k_l_m&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
     
     </summary>
     

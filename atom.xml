@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2020-01-01T11:08:53.318Z</updated>
+  <updated>2020-03-23T15:41:11.370Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -16,11 +16,534 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>你经常看到却经常忽视的__init__.py有什么用？</title>
+    <link href="https://www.kingname.info/2020/03/23/init-in-python/"/>
+    <id>https://www.kingname.info/2020/03/23/init-in-python/</id>
+    <published>2020-03-23T15:40:46.000Z</published>
+    <updated>2020-03-23T15:41:11.370Z</updated>
+    
+    <content type="html"><![CDATA[<p>Python 初学者在阅读一些 Python 开源项目时，常常会看到一个叫做<code>__init__.py</code>的文件。下图为著名的第三方库<code>requests</code>的源代码：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-43-20.png" alt=""></p>
+<p>那么<code>__init__.py</code>有什么用呢？本文介绍它的两个用途。</p>
+<a id="more"></a>
+<h2 id="精简导入路径"><a href="#精简导入路径" class="headerlink" title="精简导入路径"></a>精简导入路径</h2><p>假设我们有两个文件<code>main.py</code>与<code>writer.py</code>，他们所在的文件结构如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-48-36.png" alt=""></p>
+<p><code>main.py</code>在<code>DocParser</code>文件夹下面；<code>writer.py</code>在<code>DocParser/microsoft/docx/</code>文件夹下面。<code>writer.py</code>文件中有一个函数<code>write</code>。其内容如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-52-48.png" alt=""></p>
+<p>现在我想在<code>main.py</code>文件夹调用这个函数，那么我有3种写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> microsoft.word.docx.writer <span class="keyword">import</span> write</div><div class="line"></div><div class="line">write()</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-50-32.png" alt=""></p>
+<p>或者这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> microsoft.word.docx <span class="keyword">import</span> writer</div><div class="line"></div><div class="line">writer.write()</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-51-21.png" alt=""></p>
+<p>或者这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> microsoft.word.docx.writer</div><div class="line"></div><div class="line">microsoft.word.docx.writer.write()</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-52-02.png" alt=""></p>
+<p>但无论那种方法，都要写长长的路径，甚为不便。这个时候，我们可以在<code>microsoft</code>文件夹下面创建一个<code>__init__.py</code>文件，并在里面填写如下内容：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-54-39.png" alt=""></p>
+<p>此时，在 <code>main.py</code>，我们导入<code>write</code>函数，就像是从<code>microsoft.py</code> 文件中导入一样。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-54-39.png" alt=""></p>
+<p>注意上面我说的是就像从<code>microsoft.py 文件</code>中导入一样，这里是用的<code>文件</code>而不是<code>文件夹</code>。</p>
+<p>这是因为，当一个文件夹里面有<code>__init__.py</code>以后，这个文件夹就会被 Python 作为一个<code>包(package)</code>来处理。此时，对于这个包里面层级比较深的函数、常量、类，我们可以先把它们导入到<code>__init__.py</code>中。这样以来，包外面再想导入这些内容时，就可以用<code>from 包名 import 函数名</code>来导入了。</p>
+<h2 id="无视工作区的相对引用"><a href="#无视工作区的相对引用" class="headerlink" title="无视工作区的相对引用"></a>无视工作区的相对引用</h2><p>为什么会有<code>包</code>这个东西呢？这是因为，当有一些代码会在很多地方被使用时，我们可以把这些代码打包起来，作为一个公共的部分提供给其他模块调用。</p>
+<p>由于调用包的其他模块所在的绝对路径是千变万化的，所以在包的内部调用自身其他文件中的函数、常量、类，就应该使用相对路径，而是绝对路径。</p>
+<p>例如，现在我在<code>microsoft</code>文件夹下面再创建一个<code>parse.py</code>文件，它需要导入<code>microsoft/word/docx/writer.py</code>中的<code>write</code>函数，那么代码可以写为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> .word.docx.writer <span class="keyword">import</span> write</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_doc</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'现在在 parse.py 中调用 write 函数'</span>)</div><div class="line">    write()</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-20-08-34.png" alt=""></p>
+<p>可以看到，此时<code>from .word.docx.writer</code>中的<code>.</code>表示当前包，所以<code>.word.docx.writer</code>表示当前包下面的word 文件夹下面的 docx 文件夹下面的 writer.py 文件。</p>
+<p>然后我们修改<code>__init__.py</code>，把<code>parse_doc</code>函数导入进去，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-20-10-25.png" alt=""></p>
+<p>最后，在<code>main.py</code>中调用这个<code>parse_doc</code>函数，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-20-10-59.png" alt=""></p>
+<p>可以看到，在包里面的一个文件调用这个包里面的另一个文件，只需要知道另一个文件的相对位置就可以了，不用关心这个包被放在哪里。</p>
+<p>并且，上面<code>parse.py</code>中导入<code>write</code>函数的代码还可以进一步简化，由于<code>write</code>函数已经被导入到了<code>__init__.py</code>中，所以我们可以直接从<code>.</code>里面导入<code>write</code>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> . <span class="keyword">import</span> write</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-20-13-05.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>当一个文件夹里面包含<code>__init__.py</code>时，这个文件夹会被 Python 认为是一个<code>包(package)</code>，此时，包内部的文件之间互相导入可以使用相对导入，并且通过提前把函数、常量、类导入到<code>__init__.py</code>中再在其他文件中导入，可以精简代码。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Python 初学者在阅读一些 Python 开源项目时，常常会看到一个叫做&lt;code&gt;__init__.py&lt;/code&gt;的文件。下图为著名的第三方库&lt;code&gt;requests&lt;/code&gt;的源代码：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-29-19-43-20.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;那么&lt;code&gt;__init__.py&lt;/code&gt;有什么用呢？本文介绍它的两个用途。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>彻底搞懂Python 中的 import 与 from import</title>
+    <link href="https://www.kingname.info/2020/03/23/know-import/"/>
+    <id>https://www.kingname.info/2020/03/23/know-import/</id>
+    <published>2020-03-23T15:40:01.000Z</published>
+    <updated>2020-03-23T15:40:29.703Z</updated>
+    
+    <content type="html"><![CDATA[<p>对不少 Python 初学者来说，Python 导入其他模块的方式让他们很难理解。什么时候用<code>import xxx</code>？什么时候用<code>from xxx import yyy</code>？什么时候用<code>from xxx.yyy import zzz</code>？什么时候用<code>from xxx import *</code>？</p>
+<p>这篇文章，我们来彻底搞懂这个问题。</p>
+<a id="more"></a>
+<h2 id="系统自带的模块"><a href="#系统自带的模块" class="headerlink" title="系统自带的模块"></a>系统自带的模块</h2><p>以正则表达式模块为例，我们经常这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">target = <span class="string">'abc1234xyz'</span></div><div class="line">re.search(<span class="string">'(\d+)'</span>, target)</div></pre></td></tr></table></figure>
+<p>但有时候，你可能会看到某些人这样写代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> re <span class="keyword">import</span> search</div><div class="line">target = <span class="string">'abc1234xyz'</span></div><div class="line">search(<span class="string">'(\d+)'</span>, target)</div></pre></td></tr></table></figure>
+<p>那么这两种导入方式有什么区别呢？</p>
+<p>我们分别使用<code>type</code>函数来看看他们的类型：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import re</div><div class="line">&gt;&gt;&gt; type(re)</div><div class="line">&lt;class 'module'&gt;</div><div class="line">&gt;&gt;&gt; from re import search</div><div class="line">&gt;&gt;&gt; type(search)</div><div class="line">&lt;class 'function'&gt;</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-13-30-59.png" alt=""></p>
+<p>可以看到，直接使用<code>import re</code>导入的<code>re</code>它是一个<code>module</code>类，也就是模块。我们把它成为<code>正则表达式模块</code>。而当我们<code>from re import search</code>时，这个<code>search</code>是一个<code>function</code>类，我们称呼它为<code>search 函数</code>。</p>
+<p>一个模块里面可以包含多个函数。</p>
+<p>如果在你的代码里面，你已经确定只使用<code>search</code>函数，不会再使用正则表达式里面的其他函数了，那么你使用两种方法都可以，没什么区别。</p>
+<p>但是，如果你要使用正则表达式下面的多个函数，或者是一些常量，那么用第一种方案会更加简洁清晰。</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">re.search(<span class="string">'c(.*?)x'</span>, flags=re.S)</div><div class="line">re.sub(<span class="string">'[a-zA-Z0-9]'</span>, <span class="string">'***'</span>, target, flags=re.I)</div></pre></td></tr></table></figure>
+<p>在这个例子中，你分别使用了<code>re.search</code>，<code>re.sub</code>，<code>re.S</code>和<code>re.I</code>。后两者是常量，用于忽略换行符和大小写。</p>
+<p>但是，如果你使用<code>from re import search, sub, S, I</code>来写代码，那么代码就会变成这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">search(<span class="string">'c(.*?)x'</span>, flags=S)</div><div class="line">sub(<span class="string">'[a-zA-Z0-9]'</span>, <span class="string">'***'</span>, target, flags=I)</div></pre></td></tr></table></figure>
+<p>看起来虽然简洁了，但是，一旦你的代码行数多了以后，你很容易忘记<code>S</code>和<code>I</code>这两个变量是什么东西。而且我们自己定义的函数，也很有可能取名为<code>sub</code>或者<code>search</code>，从而覆盖正则表达式模块下面的这两个同名函数。这就会导致很多难以觉察的潜在 bug。</p>
+<p>再举一个例子。Python 的 <code>datetime</code>模块，我们可以直接<code>import datetime</code>，此时我们导入的是一个<code>datetime</code>模块，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-13-43-21.png" alt=""></p>
+<p>但是如果你写为<code>from datetime import datetime</code>，那么你导入的<code>datetime</code>是一个<code>type</code>类：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-13-45-07.png" alt=""></p>
+<p>因为这种方式导入的<code>datetime</code>，它就是Python 中的一种类型，用于表示包含日期和时间的数据。</p>
+<p>这两种导入方式导入的<code>datetime</code>，虽然名字一样，但是他们的意义完全不一样，请大家观察下面两种写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line">now = datetime.datetime.now()</div><div class="line">one_hour_ago = now - datetime.timedelta(hours=<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta</div><div class="line">now = datetime.now()</div><div class="line">one_hour_ago = now - timedelta(hours=<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>第二种写法看似简单，但实则改动起来却更为麻烦。例如我还需要增加一个变量<code>today</code>用于记录今日的日期。</p>
+<p>对于第一段代码，我们只需要增加一行即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">today = datetime.date.today()</div></pre></td></tr></table></figure>
+<p>但对于第二行来说，我们需要首先修改导入部分的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta, date</div></pre></td></tr></table></figure>
+<p>然后才能改代码：<code>today = date.today()</code></p>
+<p>这样一来你就要修改两个地方，反倒增加了负担。</p>
+<h2 id="第三方库"><a href="#第三方库" class="headerlink" title="第三方库"></a>第三方库</h2><p>在使用某些第三方库的代码里面，我们会看到类似这样的写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> lxml.html <span class="keyword">import</span> fromstring</div><div class="line"></div><div class="line">selector = fromstring(HTML)</div></pre></td></tr></table></figure>
+<p>但是我们还可以写为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> html</div><div class="line"></div><div class="line">selector = html.fromstring(HTML)</div></pre></td></tr></table></figure>
+<p>但是，下面这种写法会导致报错：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> lxml</div><div class="line">selector = lxml.html.fromstring(HTML)</div></pre></td></tr></table></figure>
+<p>那么这里的<code>lxml.html</code>又是什么东西呢？</p>
+<p>这种情况多常见于一些特别大型的第三方库中，这种库能处理多种类型的数据。例如<code>lxml</code>它既能处理<code>xml</code>的数据，又能处理<code>html</code>的数据，于是这种库会划分子模块，<code>lxml.html</code>模块专门负责<code>html</code>相关的数据。</p>
+<h2 id="自己来实现多种导入方法"><a href="#自己来实现多种导入方法" class="headerlink" title="自己来实现多种导入方法"></a>自己来实现多种导入方法</h2><p>我们现在自己来写代码，实现这多种导入方法。</p>
+<p>我们创建一个文件夹<code>DocParser</code>，在里面分别创建两个文件<code>main.py</code>和<code>util.py</code>，他们的内容如下：</p>
+<p><code>util.py</code>文件:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">write</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'write 函数被调用！'</span>)</div></pre></td></tr></table></figure>
+<p><code>main.py</code>文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> util</div><div class="line"></div><div class="line">util.write()</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-14-06-29.png" alt=""></p>
+<p>现在我们把<code>main.py</code>的导入方式修改一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> util <span class="keyword">import</span> write</div><div class="line"></div><div class="line">write()</div></pre></td></tr></table></figure>
+<p>依然正常运行，如下图所示</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-14-07-21.png" alt=""></p>
+<blockquote>
+<p>当两个文件在同一个文件夹下面，并且该文件夹里面没有<strong>init</strong>.py 文件时，两种导入方式等价。</p>
+</blockquote>
+<p>现在，我们来创建一个文件夹<code>microsoft</code>，里面再添加一个文件<code>parse.py</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'我是 microsoft 文件夹下面的 parse.py 中的 read函数'</span>)</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-14-11-17.png" alt=""></p>
+<p>此时我们在 <code>main.py</code>中对它进行调用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> microsoft <span class="keyword">import</span> parse</div><div class="line"></div><div class="line">parse.read()</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-14-12-17.png" alt=""></p>
+<p>我们也可以用另一种方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> microsoft.parse <span class="keyword">import</span> read</div><div class="line"></div><div class="line">read()</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-14-13-17.png" alt=""></p>
+<p>但是，你不能直接导入<code>microsoft</code>，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-28-14-15-35.png" alt=""></p>
+<blockquote>
+<p>你只能导入一个模块或者导入一个函数或者类，你不能导入一个文件夹</p>
+</blockquote>
+<p>无论你使用的是<code>import xxx</code>还是<code>from xxx.yyy.zzz.www import qqq</code>，你导入进来的东西，要不就是一个模块(对应到.py 文件的文件名)，或者是某个.py 文件中的函数名、类名、变量名。</p>
+<p>无论是<code>import xxx</code>还是<code>from xxx import yyy</code>，你导入进来的都不能是一个文件夹的名字。</p>
+<p>可能有这样一种情况，就是某个函数名与文件的名字相同，例如：</p>
+<p>在 <code>microsoft</code>文件夹里面有一个<code>microsoft.py</code>文件，这个文件里面有一个函数叫做<code>microsoft</code>，那么你的代码可以写为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> microsoft <span class="keyword">import</span> microsoft`</div><div class="line">microsoft.microsoft()</div></pre></td></tr></table></figure>
+<p>但请注意分辨，这里你导入的还是模块，只不过<code>microsoft.py</code>文件名与它所在的文件夹名恰好相同而已。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>无论是使用<code>import</code>还是<code>from import</code>，第一个要求是代码能够正常运行，其次，根据代码维护性，团队编码风格来确定选择哪一种方案。</p>
+<p>如果我们只会使用到某个模块下面的一个函数（或者常量、类）并且名字不会产生混淆，可识别性高，那么<code>from 模块名 import 函数名</code>这没有什么问题。</p>
+<p>如果我们会用到一个模块下面的多个函数，或者是我们将要使用的函数名、常量名、类名可能会让人产生混淆（例如 re.S、re.I），那么这种情况下，<code>import 模块名</code>然后再 <code>模块名.xxx</code>来调用会让代码更加清晰，更好维护。</p>
+<p>但无论什么情况下，都禁止使用<code>from xxx import *</code>这种写法，它会给你带来无穷无尽的噩梦。</p>
+<h2 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续"></a>未完待续</h2><p>在明天的文章中，我们来讲讲还有一种写法<code>from . import xxx</code>，以及当文件夹中存在<code>__init__.py</code>时，导入方式又有什么变化。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对不少 Python 初学者来说，Python 导入其他模块的方式让他们很难理解。什么时候用&lt;code&gt;import xxx&lt;/code&gt;？什么时候用&lt;code&gt;from xxx import yyy&lt;/code&gt;？什么时候用&lt;code&gt;from xxx.yyy import zzz&lt;/code&gt;？什么时候用&lt;code&gt;from xxx import *&lt;/code&gt;？&lt;/p&gt;
+&lt;p&gt;这篇文章，我们来彻底搞懂这个问题。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一日一技：推特时间的格式化方案</title>
+    <link href="https://www.kingname.info/2020/03/23/twitter-time-format/"/>
+    <id>https://www.kingname.info/2020/03/23/twitter-time-format/</id>
+    <published>2020-03-23T15:39:12.000Z</published>
+    <updated>2020-03-23T15:39:39.967Z</updated>
+    
+    <content type="html"><![CDATA[<p>在使用推特开放API获取推文的时候，会发现推文的发布时间是下面这样的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    ...</div><div class="line">    <span class="string">"created_at"</span>: <span class="string">"Tue Dec 24 10:51:15 +0000 2019"</span>,</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在我想把它转换为<code>2019-12-24 18:51:15</code>的形式，应该如何操作呢？</p>
+<a id="more"></a>
+<p>可能有同学会按照下面这个逻辑来处理：</p>
+<ol>
+<li>首先，使用空格把这个时间字符串切分开变成<code>[&#39;Tue&#39;, &#39;Dec&#39;, &#39;24&#39;, &#39;10:51:15&#39;, &#39;+0000&#39;, &#39;2019&#39;]</code></li>
+<li>第0项是星期，不需要，直接丢弃</li>
+<li>第1项是月份，通过一个英文月份简称到月份数字的字典，把<code>Dec</code>映射为<code>12</code></li>
+<li>第2项是日期，不做修改</li>
+<li>第3项是时分秒，不做修改</li>
+<li>第4项是时区，说明这个时间是采用的0时区，比北京时间晚8小时</li>
+<li>第5项是年份，不做修改</li>
+<li>把修改过的第1项、第2项、第3项、第5项调整顺序，拼接成一个符合要求的时间：<code>2019-12-24 10:51:15</code>。把使用<code>datetime.datetime.strptime</code>转成<code>datetime.datetime</code>对象。</li>
+<li>把这个<code>datetime.datetime</code>对象加上<code>datetime.timedelta(hours=8)</code></li>
+<li>使用<code>strftime</code>方法再把<code>datetime.datetime</code>对象转回字符串</li>
+</ol>
+<p>整个过程看起来非常麻烦。</p>
+<p>实际上，我们有更简单的办法来处理。<code>Tue Dec 24 10:51:15 +0000 2019</code>对应的时间格式为<code>%a %b %d %H:%M:%S %z %Y</code>；对于一个<code>datetime.datetime</code>对象，我们可以调用它的<code>astimezone</code>方法把时区移除，移除以后就会变成当地时间。</p>
+<p>完整代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>dt = <span class="string">'Wed Dec 25 09:09:25 +0000 2019'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>dt_obj = datetime.datetime.strptime(dt, <span class="string">'%a %b %d %H:%M:%S %z %Y'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>dt_obj.astimezone(tz=<span class="keyword">None</span>).strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)</div><div class="line"><span class="string">'2019-12-25 17:09:25'</span></div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-25-21-38-09.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在使用推特开放API获取推文的时候，会发现推文的发布时间是下面这样的：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    ...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&quot;created_at&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;Tue Dec 24 10:51:15 +0000 2019&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    ...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;现在我想把它转换为&lt;code&gt;2019-12-24 18:51:15&lt;/code&gt;的形式，应该如何操作呢？&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>逆向操作，把被压平的字典还原成嵌套字典</title>
+    <link href="https://www.kingname.info/2020/03/23/reverse-flat/"/>
+    <id>https://www.kingname.info/2020/03/23/reverse-flat/</id>
+    <published>2020-03-23T15:38:04.000Z</published>
+    <updated>2020-03-23T15:38:33.913Z</updated>
+    
+    <content type="html"><![CDATA[<p>在<a href="https://mp.weixin.qq.com/s?__biz=MzI2MzEwNTY3OQ==&amp;mid=2648977876&amp;idx=1&amp;sn=76c6f8d0a8dabaefe3aa3f666893c991&amp;chksm=f2506c34c527e522478a1c0e07d52075d05c2436bd326662746c1fd854ee922244dcae23b1dd&amp;token=821834861&amp;lang=zh_CN#rd" target="_blank" rel="external">使用 yield 压平嵌套字典有多简单？</a>这篇文章中，我们讲到，要把一个多层嵌套的字典压平，可以使用<code>yield</code>关键字来实现。</p>
+<p>今天，我们倒过来，把一个已经被压平的字典还原成嵌套字典。</p>
+<a id="more"></a>
+<p>目标字典为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">'a_b_h'</span>:<span class="number">1</span>,</div><div class="line">    <span class="string">'a_b_i'</span>:<span class="number">2</span>,</div><div class="line">    <span class="string">'a_c_j'</span>:<span class="number">3</span>,</div><div class="line">    <span class="string">'a_d'</span>:<span class="number">4</span>,</div><div class="line">    <span class="string">'a_c_k'</span>:<span class="number">5</span>,</div><div class="line">    <span class="string">'a_e'</span>:<span class="number">6</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们要把它还原为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"a"</span>: &#123;</div><div class="line">    <span class="string">"b"</span>: &#123;</div><div class="line">      <span class="string">"h"</span>: <span class="number">1</span>,</div><div class="line">      <span class="string">"i"</span>: <span class="number">2</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"c"</span>: &#123;</div><div class="line">      <span class="string">"j"</span>: <span class="number">3</span>,</div><div class="line">      <span class="string">"k"</span>: <span class="number">5</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"d"</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">"e"</span>: <span class="number">6</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>要实现这个需求，我们分成两个主要的步骤。</p>
+<h2 id="还原每一个嵌套字典"><a href="#还原每一个嵌套字典" class="headerlink" title="还原每一个嵌套字典"></a>还原每一个嵌套字典</h2><p>对于<code>{&#39;a_b_h&#39;:1}</code>，它实际上被还原以后应该是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">'a'</span>: &#123;<span class="string">'b'</span>: &#123;<span class="string">'h'</span>: <span class="number">1</span>&#125;&#125;&#125;</div></pre></td></tr></table></figure>
+<p>现在，写一个函数<code>unpack</code>，这个函数的作用是传入两个参数<code>[&#39;a&#39;, &#39;b&#39;, &#39;h&#39;]</code>和<code>1</code>输出<code>{&#39;a&#39;: {&#39;b&#39;: {&#39;h&#39;: 1}}}</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">unpack</span><span class="params">(key, value)</span>:</span></div><div class="line">    <span class="keyword">if</span> len(key) == <span class="number">1</span>:</div><div class="line">        <span class="keyword">return</span> &#123;key[<span class="number">0</span>]: value&#125;</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        prefix = key.pop(<span class="number">0</span>)</div><div class="line">        <span class="keyword">return</span> &#123;prefix: unpack(key, value)&#125;</div></pre></td></tr></table></figure>
+<p>需要注意的是，<code>unpack</code>函数的第一个参数是一个列表，形如：<code>[&#39;a&#39;, &#39;b&#39;, &#39;h&#39;]</code>。运行效果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-20-20-29-10.png" alt=""></p>
+<p>这个函数使用递归，把第一个参数列表一项一项拿出来，作为字典的 key，并把剩下的项作为子字典的 key。当列表只剩一个值的时候，说明已经到了最里面了，把这个值作为最里面字典的 key，第二个参数作为 value。</p>
+<p>接下来，我们实现第二个函数<code>deflat</code>，它把目标字典分成<code>key, value</code>对，并把 key 转换为列表以后传给<code>unpack</code>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deflat</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> x.items():</div><div class="line">        <span class="keyword">yield</span> unpack(key.split(<span class="string">'_'</span>), value)</div></pre></td></tr></table></figure>
+<p>在 <code>deflat</code>函数中，我们传入目标字典。目标字典的每一对 <code>key, value</code>被取出来，传入<code>unpack</code>函数构造每一个小的嵌套字典。</p>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-20-20-43-03.png" alt=""></p>
+<h2 id="合并字典"><a href="#合并字典" class="headerlink" title="合并字典"></a>合并字典</h2><p>有了每一个嵌套字典以后，我们要做的就是把他们合并起来。</p>
+<p>假设我们有两个字典：dst 和 src，把 src 的内容合并到 dst 字典中，有如下几种情况。</p>
+<h3 id="dst中没有-src-的-key"><a href="#dst中没有-src-的-key" class="headerlink" title="dst中没有 src 的 key"></a>dst中没有 src 的 key</h3><p>假设<code>dst = {&#39;a&#39;: 1}</code>，<code>src = {&#39;b&#39;: 1}</code>，那么合并以后，<code>dst</code>变成<code>{&#39;a&#39;: 1, &#39;b&#39;: 1}</code>。</p>
+<p>对应代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">merge</span><span class="params">(dst, src)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> src.items():</div><div class="line">        <span class="keyword">if</span> key <span class="keyword">not</span> <span class="keyword">in</span> dst:</div><div class="line">            dst[key] = value</div></pre></td></tr></table></figure>
+<h3 id="dst-中有-src-的-key且值都是字典"><a href="#dst-中有-src-的-key且值都是字典" class="headerlink" title="dst 中有 src 的 key且值都是字典"></a>dst 中有 src 的 key且值都是字典</h3><p>假设<code>dst = {&#39;a&#39;: {&#39;b&#39;: 1}}</code>， <code>src = {&#39;a&#39;: {&#39;c&#39;: 1}}</code>，那么由于<code>dst</code>与<code>src</code>都有<code>&#39;a&#39;</code>这个 key，所以问题转换为合并<code>{&#39;b&#39;: 1}</code>和<code>{&#39;c&#39;: 1}</code>，变成第一种情况。</p>
+<p>对应代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">merge</span><span class="params">(dst, src)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> src.items():</div><div class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> dst:</div><div class="line">            merge(dst[key], value)</div></pre></td></tr></table></figure>
+<h3 id="dst-中有-src-的-key-且值相同"><a href="#dst-中有-src-的-key-且值相同" class="headerlink" title="dst 中有 src 的 key 且值相同"></a>dst 中有 src 的 key 且值相同</h3><p>在本题中，这种情况不存在，因为这会导致目标字典有相同的 key。但是字典是不能重复的。</p>
+<h3 id="dst中有-src-的-key-且值的类型不同"><a href="#dst中有-src-的-key-且值的类型不同" class="headerlink" title="dst中有 src 的 key 且值的类型不同"></a>dst中有 src 的 key 且值的类型不同</h3><p>这种情况下说明目标字典有问题，无法合并。</p>
+<p>例如:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"> <span class="string">'a_b_c'</span>: <span class="number">1</span></div><div class="line"> <span class="string">'a'</span>: <span class="number">2</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种字典不存在嵌套写法，因为<code>{&#39;a&#39;: 3}</code>与<code>{&#39;a&#39;: {&#39;b&#39;: {&#39;c&#39;: 1}}}</code>只能互相覆盖，不能合并。</p>
+<h3 id="完整写法"><a href="#完整写法" class="headerlink" title="完整写法"></a>完整写法</h3><p><code>merge</code>函数的完整写法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">merge</span><span class="params">(dst, src)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> src.items():</div><div class="line">        <span class="keyword">if</span> key <span class="keyword">not</span> <span class="keyword">in</span> dst:</div><div class="line">            dst[key] = value</div><div class="line">        <span class="keyword">elif</span> isinstance(dst[key], dict) <span class="keyword">and</span> isinstance(value, dict):</div><div class="line">            merge(dst[key], value)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">raise</span> Exception(<span class="string">'数据格式有误，不能转换为嵌套字典'</span>)</div></pre></td></tr></table></figure>
+<h2 id="解答问题"><a href="#解答问题" class="headerlink" title="解答问题"></a>解答问题</h2><p>最后我们来解答这个问题，把三个函数结合起来。运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-20-21-00-23.png" alt=""></p>
+<p>当传入不能被转换的目标字典时，也会正常报错</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-20-21-01-43.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=MzI2MzEwNTY3OQ==&amp;amp;mid=2648977876&amp;amp;idx=1&amp;amp;sn=76c6f8d0a8dabaefe3aa3f666893c991&amp;amp;chksm=f2506c34c527e522478a1c0e07d52075d05c2436bd326662746c1fd854ee922244dcae23b1dd&amp;amp;token=821834861&amp;amp;lang=zh_CN#rd&quot;&gt;使用 yield 压平嵌套字典有多简单？&lt;/a&gt;这篇文章中，我们讲到，要把一个多层嵌套的字典压平，可以使用&lt;code&gt;yield&lt;/code&gt;关键字来实现。&lt;/p&gt;
+&lt;p&gt;今天，我们倒过来，把一个已经被压平的字典还原成嵌套字典。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>剖析灵魂，为什么aiohttp默认的写法那么慢？</title>
+    <link href="https://www.kingname.info/2020/03/23/why-default-aiohttp-slow/"/>
+    <id>https://www.kingname.info/2020/03/23/why-default-aiohttp-slow/</id>
+    <published>2020-03-23T15:36:58.000Z</published>
+    <updated>2020-03-23T15:37:41.416Z</updated>
+    
+    <content type="html"><![CDATA[<p>在上一篇文章中，我们提到了aiohttp官方文档中的默认写法速度与requests单线程请求没有什么区别，需要通过使用<code>asyncio.wait</code>来加速aiohttp的请求。今天我们来探讨一下这背后的原因。</p>
+<a id="more"></a>
+<p>我们使用一个可以通过URL设定返回延迟的网站来进行测试，网址为：<code>http://httpbin.org/delay/5</code>。当<code>delay</code>后面的数字为5时，表示请求这个网址以后，要等5秒才会收到返回；当<code>delay</code>后面的数字为3时，表示请求这个网址以后，要等3秒才会收到返回。大家可以在浏览器上面输入这个网址测试看看。</p>
+<p>现在我们写一段简单的aiohttp代码来进行测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> aiohttp</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:</div><div class="line">        start = time.time()</div><div class="line">        <span class="keyword">await</span> session.get(<span class="string">'http://httpbin.org/delay/3'</span>)</div><div class="line">        <span class="keyword">await</span> session.get(<span class="string">'http://httpbin.org/delay/5'</span>)</div><div class="line">        end = time.time()</div><div class="line">        print(f<span class="string">'总共耗时：&#123;end - start&#125;'</span>)</div><div class="line"></div><div class="line"></div><div class="line">asyncio.run(main())  <span class="comment"># Python 3.7或以上程序直接执行这一行即可运行</span></div><div class="line"></div><div class="line"><span class="comment"># Python 3.6或以下需要注释掉上面一行，并为下面两行解除注释</span></div><div class="line"><span class="comment">#loop = asyncio.get_event_loop()</span></div><div class="line"><span class="comment">#loop.run_until_complete(main())</span></div></pre></td></tr></table></figure>
+<p>注意，如果你的Python 版本大于等于3.7，那么你可以直接使用<code>asyncio.run</code>来运行一个协程，而不需要像昨天那样先创建一个事件循环再运行。</p>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-19-12-28-34.png" alt=""></p>
+<p>可以看到，运行时间大于8秒钟，也就是说，这段代码，是先请求第一个3秒的网址，等它运行完成以后，再请求第二个5秒的网址，他们根本就没有并行！</p>
+<p>按照我们之前的认识，协程在网络 IO 等待的时候，可以交出控制权，当 aiohttp 请求第一个3秒网址，等待返回的时候，应该就可以立刻请求第二个5秒的网址。在等待5秒网址返回的过程中，又去检查第一个3秒请求是否结束了。直到3秒请求已经返回了结果，再等待5秒的请求。</p>
+<p>那为什么上面这段代码，并没有按这段逻辑来走？</p>
+<p>这是因为，协程虽然可以充分利用网络 IO 的等待时间，但它并不会自动这么做。而是需要你把它加入到调度器里面。</p>
+<p>能被 <code>await</code>的对象有3种：协程、Task对象、future 对象。</p>
+<p>当你<code>await 协程</code>对象时，它并没有被加入到调度器中，所以它依然是串行执行的。</p>
+<p>但 Task 对象会被自动加入到调度器中，所以 Task 对象能够并发执行。</p>
+<p>要创建一个 Task 对象非常简单：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">asyncio.create_task(协程) <span class="comment">#python 3.7或以上版本的写法</span></div><div class="line">asyncio.ensure_future(协程)  <span class="comment"># python 3.6或以下的写法</span></div></pre></td></tr></table></figure>
+<p>所以我们来稍稍修改一下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> aiohttp</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:</div><div class="line">        start = time.time()</div><div class="line">        task1 = asyncio.create_task(session.get(<span class="string">'http://httpbin.org/delay/3'</span>))</div><div class="line">        task2 = asyncio.create_task(session.get(<span class="string">'http://httpbin.org/delay/5'</span>))</div><div class="line">        <span class="keyword">await</span> task1</div><div class="line">        <span class="keyword">await</span> task2</div><div class="line">        end = time.time()</div><div class="line">        print(f<span class="string">'总共耗时：&#123;end - start&#125;'</span>)</div><div class="line"></div><div class="line"></div><div class="line">asyncio.run(main())  <span class="comment"># Python 3.7或以上程序直接执行这一行即可运行</span></div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-19-12-37-55.png" alt=""></p>
+<p>可以看到，现在请求两个网址的时间加到一起，只比5秒多一点，说明确实已经实现了并发请求的效果。至于这多出来的一点点时间，是因为协程之间切换控制权导致的。</p>
+<p>那么为什么我们把很多协程放进一个 列表里面，然后把列表放进 <code>asyncio.wait</code>里面，也能实现并行呢？这是因为，<code>asyncio.wait</code>帮我们做了创建 Task 的任务。这一点我们可以在Python 的<a href="https://docs.python.org/3/library/asyncio-task.html#waiting-primitives" target="_blank" rel="external">官方文档</a>中看到原话：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-19-12-43-35.png" alt=""></p>
+<p>同理，当你把协程传入<code>asyncio.gather</code>时，这些协程也会被当做Task 来调度：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-19-12-45-34.png" alt=""></p>
+<p>回到我们昨天的问题，我们不用<code>asyncio.wait</code>也不用<code>asyncio.Queue</code>让爬虫并发起来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> aiohttp</div><div class="line"></div><div class="line">template = <span class="string">'http://exercise.kingname.info/exercise_middleware_ip/&#123;page&#125;'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(session, page)</span>:</span></div><div class="line">    url = template.format(page=page)</div><div class="line">    resp = <span class="keyword">await</span> session.get(url)</div><div class="line">    print(<span class="keyword">await</span> resp.text(encoding=<span class="string">'utf-8'</span>))</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:</div><div class="line">        tasks = []</div><div class="line">        <span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">1000</span>):</div><div class="line">            task = asyncio.create_task(get(session, page))</div><div class="line">            tasks.append(task)</div><div class="line">        <span class="keyword">for</span> task <span class="keyword">in</span> tasks:</div><div class="line">            <span class="keyword">await</span> task</div><div class="line"></div><div class="line">asyncio.run(main())</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/new-fast.2019-12-19 12_56_10.gif" alt=""></p>
+<p>但你需要注意一点，创建 Task 与<code>await Task</code>是分开执行的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">tasks = []</div><div class="line"><span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">1000</span>):</div><div class="line">    task = asyncio.create_task(get(session, page))</div><div class="line">    tasks.append(task)</div><div class="line"><span class="keyword">for</span> task <span class="keyword">in</span> tasks:</div><div class="line">    <span class="keyword">await</span> task</div></pre></td></tr></table></figure>
+<p>你不能写成下面这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> task <span class="keyword">in</span> range(<span class="number">1000</span>):</div><div class="line">    task = asyncio.create_task(get(session, page))</div><div class="line">    <span class="keyword">await</span> task</div></pre></td></tr></table></figure>
+<p>这是因为，创建Task 的时候会自动把它加入到调度队列里面，然后<code>await Task</code>的时候执行调度。上面这样写，会导致每一个 Task 被分批调度，一个 Task 在等待网络 IO 的时候，没有办法切换到第二个 Task，所以最终又会降级成串行请求。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在上一篇文章中，我们提到了aiohttp官方文档中的默认写法速度与requests单线程请求没有什么区别，需要通过使用&lt;code&gt;asyncio.wait&lt;/code&gt;来加速aiohttp的请求。今天我们来探讨一下这背后的原因。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="aiohttp" scheme="https://www.kingname.info/tags/aiohttp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>为 aiohttp 爬虫注入灵魂</title>
+    <link href="https://www.kingname.info/2020/03/23/insert-sprit/"/>
+    <id>https://www.kingname.info/2020/03/23/insert-sprit/</id>
+    <published>2020-03-23T15:35:14.000Z</published>
+    <updated>2020-03-23T15:36:17.499Z</updated>
+    
+    <content type="html"><![CDATA[<p>听说过异步爬虫的同学，应该或多或少听说过<code>aiohttp</code>这个库。它通过 Python 自带的<code>async/await</code>实现了异步爬虫。</p>
+<p>使用 aiohttp，我们可以通过 requests 的api写出并发量匹敌 Scrapy 的爬虫。</p>
+<a id="more"></a>
+<p>我们在 aiohttp 的官方文档上面，可以看到它给出了一个代码示例，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-18-21-55-56.png" alt=""></p>
+<p>我们现在稍稍修改一下，来看看这样写爬虫，运行效率如何。</p>
+<p>修改以后的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> aiohttp</div><div class="line"></div><div class="line">template = <span class="string">'http://exercise.kingname.info/exercise_middleware_ip/&#123;page&#125;'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(session, page)</span>:</span></div><div class="line">    url = template.format(page=page)</div><div class="line">    resp = <span class="keyword">await</span> session.get(url)</div><div class="line">    print(<span class="keyword">await</span> resp.text(encoding=<span class="string">'utf-8'</span>))</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:</div><div class="line">        <span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">100</span>):</div><div class="line">            <span class="keyword">await</span> get(session, page)</div><div class="line"></div><div class="line"></div><div class="line">loop = asyncio.get_event_loop()</div><div class="line">loop.run_until_complete(main())</div></pre></td></tr></table></figure>
+<p>这段代码访问我的爬虫练习站100次，获取100页的内容。</p>
+<p>大家可以通过下面这个视频看看它的运行效率：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/slow.2019-12-18 22_51_37.gif" alt=""></p>
+<p>可以说，目前这个运行速度，跟 requests 写的单线程爬虫几乎没有区别，代码还多了那么多。</p>
+<p>那么，应该如何正确释放 aiohttp 的超能力呢？</p>
+<p>我们现在把代码做一下修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> aiohttp</div><div class="line"></div><div class="line">template = <span class="string">'http://exercise.kingname.info/exercise_middleware_ip/&#123;page&#125;'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(session, queue)</span>:</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            page = queue.get_nowait()</div><div class="line">        <span class="keyword">except</span> asyncio.QueueEmpty:</div><div class="line">            <span class="keyword">return</span></div><div class="line">        url = template.format(page=page)</div><div class="line">        resp = <span class="keyword">await</span> session.get(url)</div><div class="line">        print(<span class="keyword">await</span> resp.text(encoding=<span class="string">'utf-8'</span>))</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:</div><div class="line">        queue = asyncio.Queue()</div><div class="line">        <span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">1000</span>):</div><div class="line">            queue.put_nowait(page)</div><div class="line">        tasks = []</div><div class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">100</span>):</div><div class="line">            task = get(session, queue)</div><div class="line">            tasks.append(task)</div><div class="line">        <span class="keyword">await</span> asyncio.wait(tasks)</div><div class="line"></div><div class="line"></div><div class="line">loop = asyncio.get_event_loop()</div><div class="line">loop.run_until_complete(main())</div></pre></td></tr></table></figure>
+<p>在修改以后的代码里面，我让这个爬虫爬1000页的内容，我们来看看下面这个视频。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/fast.2019-12-18 22_49_49.gif" alt=""></p>
+<p>可以看到，目前这个速度已经可以跟 Scrapy 比一比了。并且大家需要知道，这个爬虫只有1个进程1个线程，它是通过异步的方式达到这个速度的。</p>
+<p>那么，修改以后的代码，为什么速度能快那么多呢？</p>
+<p>关键的代码，就在：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">tasks = []</div><div class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">100</span>):</div><div class="line">    task = get(session, queue)</div><div class="line">    tasks.append(task)</div><div class="line"><span class="keyword">await</span> asyncio.wait(tasks)</div></pre></td></tr></table></figure>
+<p>在慢速版本里面，我们只有1个协程在运行。而在现在这个快速版本里面，我们创建了100个协程，并把它提交给<code>asyncio.wait</code>来统一调度。<code>asyncio.wait</code>会在所有协程全部结束的时候才返回。</p>
+<p>我们把1000个 URL 放在<code>asyncio.Queue</code>生成的一个异步队列里面，每一个协程都通过 while True 不停从这个异步队列里面取 URL 并进行访问，直到异步队列为空，退出。</p>
+<p>当程序运行时，Python 会自动调度这100个协程，当一个协程在等待网络 IO 返回时，切换到第二个协程并发起请求，在这个协程等待返回时，继续切换到第三个协程并发起请求……。程序充分利用了网络 IO 的等待时间，从而大大提高了运行速度。</p>
+<p>最后，感谢实习生小河给出的这种加速方案。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;听说过异步爬虫的同学，应该或多或少听说过&lt;code&gt;aiohttp&lt;/code&gt;这个库。它通过 Python 自带的&lt;code&gt;async/await&lt;/code&gt;实现了异步爬虫。&lt;/p&gt;
+&lt;p&gt;使用 aiohttp，我们可以通过 requests 的api写出并发量匹敌 Scrapy 的爬虫。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="aiohttp" scheme="https://www.kingname.info/tags/aiohttp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何使用Python读写Kafka？</title>
+    <link href="https://www.kingname.info/2020/03/23/operate-kafka-by-python/"/>
+    <id>https://www.kingname.info/2020/03/23/operate-kafka-by-python/</id>
+    <published>2020-03-23T15:34:07.000Z</published>
+    <updated>2020-03-23T15:36:25.136Z</updated>
+    
+    <content type="html"><![CDATA[<p>关于Kafka的第三篇文章，我们来讲讲如何使用Python读写Kafka。这一篇文章里面，我们要使用的一个第三方库叫做<code>kafka-python</code>。大家可以使用<code>pip</code>或者<code>pipenv</code>安装它。下面两种安装方案，任选其一即可。</p>
+<a id="more"></a>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">python3 -m pip install kafka-python</div><div class="line">pipenv install kafka-python</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-07-03.png" alt=""></p>
+<p>这篇文章，我们将会使用最短的代码来实现一个读、写Kafka的示例。</p>
+<h2 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h2><p>由于生产者和消费者都需要连接Kafka，所以我单独写了一个配置文件<code>config.py</code>用来保存连接Kafka所需要的各个参数，而不是直接把这些参数Hard Code写在代码里面：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># config.py</span></div><div class="line">SERVER = <span class="string">'123.45.32.11:1234'</span></div><div class="line">USERNAME = <span class="string">'kingname'</span></div><div class="line">PASSWORD = <span class="string">'kingnameisgod'</span></div><div class="line">TOPIC = <span class="string">'howtousekafka'</span></div></pre></td></tr></table></figure>
+<p>本文演示所用的Kafka由我司平台组的同事搭建，需要账号密码才能连接，所以我在配置文件中加上了<code>USERNAME</code>和<code>PASSWORD</code>两项。你使用的Kafka如果没有账号和密码，那么你只需要<code>SERVER</code>和<code>TOPIC</code>即可。</p>
+<h2 id="创建生产者"><a href="#创建生产者" class="headerlink" title="创建生产者"></a>创建生产者</h2><p>代码简单到甚至不需要解释。首先使用<code>KafkaProducer</code>类连接 Kafka，获得一个生产者对象，然后往里面写数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">import</span> config</div><div class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaProducer</div><div class="line"></div><div class="line"></div><div class="line">producer = KafkaProducer(bootstrap_servers=config.SERVER,</div><div class="line">                         value_serializer=<span class="keyword">lambda</span> m: json.dumps(m).encode())</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">100</span>):</div><div class="line">    data = &#123;<span class="string">'num'</span>: i, <span class="string">'ts'</span>: datetime.datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)&#125;</div><div class="line">    producer.send(config.TOPIC, data)</div><div class="line">    time.sleep(<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>参数<code>bootstrap_servers</code>用于指定 Kafka 的服务器连接地址。</p>
+<p>参数<code>value_serializer</code>用来指定序列化的方式。这里我使用 json 来序列化数据，从而实现我向 Kafka 传入一个字典，Kafka 自动把它转成 JSON 字符串的效果。</p>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-40-18.png" alt=""></p>
+<p>注意，上图中，我多写了4个参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">security_protocol=<span class="string">"SASL_PLAINTEXT"</span></div><div class="line">sasl_mechanism=<span class="string">"PLAIN"</span></div><div class="line">sasl_plain_username=config.USERNAME</div><div class="line">sasl_plain_password=config.PASSWORD</div></pre></td></tr></table></figure>
+<p>这四个参数是因为我这里需要通过密码连接 Kafka 而加上的，如果你的 Kafka 没有账号密码，就不需要这四个参数。</p>
+<h2 id="创建消费者"><a href="#创建消费者" class="headerlink" title="创建消费者"></a>创建消费者</h2><p>Kafka 消费者也需要连接 Kafka，首先使用<code>KafkaConsumer</code>类初始化一个消费者对象，然后循环读取数据。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> config</div><div class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaConsumer</div><div class="line"></div><div class="line"></div><div class="line">consumer = KafkaConsumer(config.TOPIC,</div><div class="line">                         bootstrap_servers=config.SERVER,</div><div class="line">                         group_id=<span class="string">'test'</span>,</div><div class="line">                         auto_offset_reset=<span class="string">'earliest'</span>)</div><div class="line"><span class="keyword">for</span> msg <span class="keyword">in</span> consumer:</div><div class="line">    print(msg.value)</div></pre></td></tr></table></figure>
+<p>KafkaConsumer 的第一个参数用于指定 Topic。你可以把这个 Topic 理解成 Redis 的 Key。</p>
+<p>bootstrap_servers用于指定 Kafka 服务器连接地址。</p>
+<p>group_id这个参数后面的字符串可以任意填写。如果两个程序的<code>Topic</code>与<code>group_id</code>相同，那么他们读取的数据不会重复，两个程序的<code>Topic</code>相同，但是<code>group_id</code>不同，那么他们各自消费全部数据，互不影响。</p>
+<p>auto_offset_rest 这个参数有两个值，<code>earliest</code>和<code>latest</code>，如果省略这个参数，那么默认就是<code>latest</code>。这个参数会单独介绍。这里先略过。</p>
+<p>连接好 Kafka 以后，直接对消费者对象使用 for 循环迭代，就能持续不断获取里面的数据了。</p>
+<h2 id="运行演示"><a href="#运行演示" class="headerlink" title="运行演示"></a>运行演示</h2><p>运行两个消费者程序和一个生产者程序，效果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-44-26.png" alt=""></p>
+<p>我们可以看到，两个消费者程序读取数据不重复，不遗漏。</p>
+<p>当所有数据都消费完成以后，如果你把两个消费者程序关闭，再运行其中一个，你会发现已经没有数据会被打印出来了。</p>
+<p>但如果你修改一下 group_id，程序又能正常从头开始消费了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-48-55.png" alt=""></p>
+<h2 id="很多人都会搞混的几个地方"><a href="#很多人都会搞混的几个地方" class="headerlink" title="很多人都会搞混的几个地方"></a>很多人都会搞混的几个地方</h2><h3 id="earliest-与-latest"><a href="#earliest-与-latest" class="headerlink" title="earliest 与 latest"></a>earliest 与 latest</h3><p>在我们创建消费者对象的时候，有一个参数叫做<code>auto_offset_reset=&#39;earliest&#39;</code>。有人看到<code>earliest</code>与<code>latest</code>，想当然地认为设置为<code>earliest</code>，就是从 Topic 的头往后读，设置为<code>latest</code>就是忽略之前的数据，从程序运行以后，新来的数据开始读。</p>
+<p>这种看法是不正确的。</p>
+<p><code>auto_offset_reset</code>这个参数，只有在一个<code>group</code>第一次运行的时候才有作用，从第二次运行开始，这个参数就失效了。</p>
+<p>假设现在你的 Topic 里面有100个数据，你设置了一个全新的 group_id 为<code>test2</code>。<code>auto_offset_reset</code>设置为 <code>earliest</code>。那么当你的消费者运行的时候，Kafka 会先把你的 offset 设置为0，然后让你从头开始消费的。</p>
+<p>假设现在你的 Topic 里面有100个数据，你设置了一个全新的 group_id 为<code>test3</code>。<code>auto_offset_reset</code>设置为 <code>latest</code>。那么当你的消费者运行的时候，Kafka 不会给你返回任何数据，消费者看起来就像卡住了一样，但是 Kafka 会直接强制把前100条数据的状态设置为已经被你消费的状态。所以当前你的 offset 就直接是99了。直到生产者插入了一条新的数据，此时消费者才能读取到。这条新的数据对应的 offset 就变成了100。</p>
+<p>假设现在你的 Topic 里面有100个数据，你设置了一个全新的 group_id 为<code>test4</code>。<code>auto_offset_reset</code>设置为 <code>earliest</code>。那么当你的消费者运行的时候，Kafka 会先把你的 offset 设置为0，然后让你从头开始消费的。等消费到第50条数据时，你把消费者程序关了，把<code>auto_offset_reset</code>设置为<code>latest</code>，再重新运行。此时消费者依然会接着从第51条数据开始读取。不会跳过剩下的50条数据。</p>
+<p>所以，auto_offset_reset的作用，是在你的 group 第一次运行，还没有 offset 的时候，给你设定初始的 offset。而一旦你这个 group 已经有 offset 了，那么auto_offset_reset这个参数就不会再起作用了。</p>
+<h3 id="partition-是如何分配的？"><a href="#partition-是如何分配的？" class="headerlink" title="partition 是如何分配的？"></a>partition 是如何分配的？</h3><p>对于同一个 Topic 的同一个 Group：</p>
+<p>假设你的 Topic 有10个  Partition，一开始你只启动了1个消费者。那么这个消费者会轮换着从这10个Partition 中读取数据。</p>
+<p>当你启动第二个消费者时，Kafka 会从第一个消费者手上抢走5个Partition，分给第二个消费者。于是两个消费者各自读5个 Partition。互不影响。</p>
+<p>当第三个消费者又出现时，Kafka 从第一个消费者手上再抢走1个 Partition，从第二个消费者手上抢走2个 Partition 给第三个消费者。于是，消费者1有4个 Partition，消费者2有3个 Partition，消费者3有3个 Partiton，互不影响。</p>
+<p>当你有10个消费者一起消费时，每个消费者读取一个 Partition，互不影响。</p>
+<p>当第11个消费者出现时，它由于分配不到 Partition，所以它什么都读不到。</p>
+<p>所以在上一篇文章中，我说，在同一个 Topic，同一个 Group 中，你有多少个 Partiton，就能起多少个进程同时消费。</p>
+<h3 id="Kafka-是不是完全不重复不遗漏？"><a href="#Kafka-是不是完全不重复不遗漏？" class="headerlink" title="Kafka 是不是完全不重复不遗漏？"></a>Kafka 是不是完全不重复不遗漏？</h3><p>在极端情况下，Kafka 会重复，也会遗漏，但是这种极端情况并不常见。如果你的 Kafka 频繁漏数据，或者总是出现重复数据，那么肯定是你环境没有搭建正确，或者代码有问题。</p>
+<h3 id="忠告"><a href="#忠告" class="headerlink" title="忠告"></a>忠告</h3><p>再次提醒：专业的人做专业的事情，不要轻易自建Kafka 集群。让专门的同事复制搭建和维护，你只管使用。这才是最高效省事的做法。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;关于Kafka的第三篇文章，我们来讲讲如何使用Python读写Kafka。这一篇文章里面，我们要使用的一个第三方库叫做&lt;code&gt;kafka-python&lt;/code&gt;。大家可以使用&lt;code&gt;pip&lt;/code&gt;或者&lt;code&gt;pipenv&lt;/code&gt;安装它。下面两种安装方案，任选其一即可。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Kafka" scheme="https://www.kingname.info/categories/Kafka/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="Kafka" scheme="https://www.kingname.info/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kafka 里面的信息是如何被消费的？</title>
+    <link href="https://www.kingname.info/2020/03/23/how-kafka-consume/"/>
+    <id>https://www.kingname.info/2020/03/23/how-kafka-consume/</id>
+    <published>2020-03-23T15:32:45.000Z</published>
+    <updated>2020-03-23T15:36:36.199Z</updated>
+    
+    <content type="html"><![CDATA[<p>作为一个爬虫工程师，Kafka 对你而言就是一个消息队列，你只需要掌握如何向里面写入数据，以及如何读取数据就可以m’ys’q作为一个爬虫工程师，Kafka 对你而言就是一个消息队列，你只需要掌握如何向里面写入数据，以及如何读取数据就何读取就可以可了。</p>
+<blockquote>
+<p>请谨记：使用 Kafka 很容易，但对 Kafka 集群进行搭建、维护与调优很麻烦。Kafka 集群需要有专人来维护，不要以为你能轻易胜任这个工作。</p>
+</blockquote>
+<a id="more"></a>
+<p>本文，以及接下来的几篇针对 Kafka 的文章，我们面向的对象都是爬虫工程师或者仅仅需要使用 Kafka 的读者。关于 Kafka 更深入的底层细节与核心原理，不在我们的讨论范围中。为了解释方便，文章中对 Kafka 的一些术语会使用一些不太准确但能表明意思的类比。如果你需要在面试中解释这些术语，还请阅读Kafka 的官方文档。</p>
+<p>今天我们要讨论的一个话题是，Kafka 是如何做到，对单个程序的多个进程而言，能持续消费，断点续传和并行消费；对多个程序而言又互不影响，各自独立。</p>
+<p>一个 Kafka 可以有多个不同的队列，我们把这个队列叫做<code>Topic</code>，假设其中一个队列如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-15-22-14-00.png" alt=""></p>
+<p>信息从右边进去，从左边出来。如果这是Redis 的列表，那么它弹出一条信息以后，队列会变成下面这样：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-15-22-15-28.png" alt=""></p>
+<p>最左边的<code>信息1</code>不见了。所以即使程序在消费了<code>信息1</code>后立刻关闭，再重新打开，程序也会接着从<code>信息2</code>开始消费，不会把<code>信息1</code>重复消费两次。</p>
+<p>但我如果有两个程序呢？程序1读取每一条数据，再转存到数据库。程序2读取每一条数据，再检查是否有关键词。这种情况下，<code>信息1</code>应该能被程序1消费，也能被程序2消费。但上面这种方案显然是不行的。当程序1消费了<code>信息1</code>，程序2就再也拿不到它了。</p>
+<p>所以，在 Kafka 里面，信息会停留在队列里面，但对每一个程序来说，有一个单独的记号，来记录当前消费到了哪一条数据，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-15-22-23-41.png" alt=""></p>
+<p>当程序1要读取 Kafka 里面下一条数据时，Kafka 先把当前位置的标记向右移动一位，把新的这个值返回出来。标记移动与返回这两个操作合在一起算是一个原子操作，不会出现重复读取的问题。</p>
+<p>程序1与程序2使用的是不同的标记，所以各自的标记指向哪个值，是互不影响的。</p>
+<p>当增加一个程序3的时候，只需要再加一个标记即可。新的这个标记也不受前两个标记的影响。</p>
+<p>这就实现了在多个不同的程序读取  Kafka 时，各自互不影响。</p>
+<p>现在如果你觉得程序1消费太慢了，把程序1同时运行了3次，那么由于标记和移位是原子操作，即使你看起来程序是同时去读取 Kafka，但在内部 Kafka 也会对他们进行“排队”，从而使得他们返回的结果不重复，不遗漏。</p>
+<p>如果你在网上看 Kafka 的教程，你会发现他们提到了一个叫做 <code>Offset</code> 的东西，实际上就是本文所说的各个程序里面指向当前数据的<code>标记</code>。</p>
+<p>你还会看到一个关键词叫做<code>Group</code>，实际上对应到本文的<code>程序1</code>，<code>程序2</code>和<code>程序3</code>。</p>
+<p>对同一个队列，如果多个程序使用不同的<code>Group</code>消费，那么他们读取的数据就互不干扰。</p>
+<p>对同一个队列，相同 Group 的多个进程在消费数据时，看起来就像是在对 Redis 进行 lpop 操作一样。</p>
+<p>最后，你在网上关于 Kafka 的文章里面，一定会看到一个词叫做<code>Paritition</code>或者中文<code>分片</code>。而且你会发现你无法理解这个东西。</p>
+<p>没关系，忘记它吧。你只需要知道，一个 Topic 有多少个 Partition，那么你最多能启动多少个进程读取同一个 Group。——如果一个Topic有3个Partition，那么你只能最多开3个进程同时读相同的 Group。 Topic如果有5个Partition，那么你只能最多开5个进程读同一个 Group。</p>
+<p>下一篇文章，我们用 Python 来读写一下 Kafka。只需要几行代码。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;作为一个爬虫工程师，Kafka 对你而言就是一个消息队列，你只需要掌握如何向里面写入数据，以及如何读取数据就可以m’ys’q作为一个爬虫工程师，Kafka 对你而言就是一个消息队列，你只需要掌握如何向里面写入数据，以及如何读取数据就何读取就可以可了。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;请谨记：使用 Kafka 很容易，但对 Kafka 集群进行搭建、维护与调优很麻烦。Kafka 集群需要有专人来维护，不要以为你能轻易胜任这个工作。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Kafka" scheme="https://www.kingname.info/categories/Kafka/"/>
+    
+    
+      <category term="Kafka" scheme="https://www.kingname.info/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
     <title>GNE v0.1 正式发布： 4 行代码开发新闻网站通用爬虫</title>
     <link href="https://www.kingname.info/2020/01/01/gne-release/"/>
     <id>https://www.kingname.info/2020/01/01/gne-release/</id>
     <published>2020-01-01T11:07:33.000Z</published>
-    <updated>2020-01-01T11:08:53.318Z</updated>
+    <updated>2020-03-23T15:34:45.069Z</updated>
     
     <content type="html"><![CDATA[<p>GNE（GeneralNewsExtractor）是一个通用新闻网站正文抽取模块，输入一篇新闻网页的 HTML， 输出正文内容、标题、作者、发布时间、正文中的图片地址和正文所在的标签源代码。GNE在提取今日头条、网易新闻、游民星空、 观察者网、凤凰网、腾讯新闻、ReadHub、新浪新闻等数百个中文新闻网站上效果非常出色，几乎能够达到100%的准确率。</p>
 <a id="more"></a>
@@ -644,399 +1167,6 @@
     
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在 Python 中像字典一样持久化数据</title>
-    <link href="https://www.kingname.info/2019/11/16/persist-data-like-dict/"/>
-    <id>https://www.kingname.info/2019/11/16/persist-data-like-dict/</id>
-    <published>2019-11-16T14:44:10.000Z</published>
-    <updated>2019-12-11T14:45:55.876Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们知道，如果我们在 Python 中想把一段数据持久化到硬盘上，最简单的办法就是写文件：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">'data.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">    f.write(<span class="string">'username：1234567\n'</span>)</div><div class="line">    f.write(<span class="string">'password: 9876543\n'</span>)</div></pre></td></tr></table></figure>
-<p>但这样做有一个弊端，就是在读取数据的时候，我们把整个数据读入内存以后，还需要单独写一段代码，用来区分哪里是<code>username</code>对应的值，哪些是<code>password</code>对应的值。</p>
-<a id="more"></a>
-<p>实际上，在 Python 中，我们可以使用<code>shelve</code>模块，像读写字典一样持久化存储数据。例如，在 <code>write.py</code>文件中，我们写如下代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> shelve</div><div class="line"></div><div class="line"><span class="keyword">with</span> shelve.open(<span class="string">'data'</span>) <span class="keyword">as</span> db:</div><div class="line">    db[<span class="string">'username'</span>] = <span class="number">12345678</span></div><div class="line">    db[<span class="string">'password'</span>] = <span class="number">98765432</span></div></pre></td></tr></table></figure>
-<p>运行完成以后，会在<code>write.py</code>所在的文件夹下面生成一个<code>data.db</code>文件，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-16-22-07-33.png" alt=""></p>
-<p>现在，我们再写一个<code>read.py</code>，其内容如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> shelve</div><div class="line"></div><div class="line"><span class="keyword">with</span> shelve.open(<span class="string">'data'</span>) <span class="keyword">as</span> db:</div><div class="line">    username = db[<span class="string">'username'</span>]</div><div class="line">    password = db[<span class="string">'password'</span>]</div><div class="line"></div><div class="line">print(f<span class="string">'账号为：&#123;username&#125;'</span>)</div><div class="line">print(f<span class="string">'密码为：&#123;password&#125;'</span>)</div></pre></td></tr></table></figure>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-16-22-09-20.png" alt=""></p>
-<p>不需要我们单独做额外的解析，就能像读取字典一样读取持久化到硬盘中的数据。</p>
-<p>并且，原来写文本文件的时候，如果我们的数据是字典或者列表，直接写入还会报错，必需先转成 JSON 字符串才能写入。</p>
-<p>但<code>shelve</code>模块没有这个限制，所有能被 <code>pickle</code>的对象，都可以存入，例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> shelve</div><div class="line"></div><div class="line"><span class="keyword">with</span> shelve.open(<span class="string">'data'</span>) <span class="keyword">as</span> db:</div><div class="line">    db[<span class="string">'complex_data'</span>] = [&#123;<span class="string">'a'</span>: <span class="number">1</span>, <span class="string">'b'</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]&#125;, <span class="number">2</span>, <span class="string">'a'</span>]</div></pre></td></tr></table></figure>
-<p>需要注意的是，<code>shelve</code>模块底层基于<code>pickle</code>模块，所以当别人传给你一个 <code>shelve</code>生成的文件时，不能贸然打开，否则可能会执行危险的代码。</p>
-<p>另外，<code>shelve</code>模块只支持多线程同时读取。不支持多线程写入，也不支持同时读写。</p>
-<p>关于<code>shelve</code>的更多参数，可以参阅它的<a href="https://docs.python.org/3.8/library/shelve.html" target="_blank" rel="external">官方文档</a>.</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们知道，如果我们在 Python 中想把一段数据持久化到硬盘上，最简单的办法就是写文件：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;with&lt;/span&gt; open(&lt;span class=&quot;string&quot;&gt;&#39;data.txt&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;w&#39;&lt;/span&gt;, encoding=&lt;span class=&quot;string&quot;&gt;&#39;utf-8&#39;&lt;/span&gt;) &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; f:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    f.write(&lt;span class=&quot;string&quot;&gt;&#39;username：1234567\n&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    f.write(&lt;span class=&quot;string&quot;&gt;&#39;password: 9876543\n&#39;&lt;/span&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;但这样做有一个弊端，就是在读取数据的时候，我们把整个数据读入内存以后，还需要单独写一段代码，用来区分哪里是&lt;code&gt;username&lt;/code&gt;对应的值，哪些是&lt;code&gt;password&lt;/code&gt;对应的值。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python 下面最简单的单例模式写法</title>
-    <link href="https://www.kingname.info/2019/11/13/most-simple-singletom/"/>
-    <id>https://www.kingname.info/2019/11/13/most-simple-singletom/</id>
-    <published>2019-11-13T14:42:17.000Z</published>
-    <updated>2019-12-11T14:43:27.917Z</updated>
-    
-    <content type="html"><![CDATA[<p>二十几种设计模式中，单例模式是最简单最常用的一种。在其他语言里面实现单例模式要写不少代码，但是在 Python 里面，有一种非常简单的单例模式写法。</p>
-<a id="more"></a>
-<p>为了演示这种简单的写法，我们首先创建一个文件，<code>DBUtil.py</code>文件，用来模拟数据库操作类。这个文件里面的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DBUtil</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.conn = self.connect()</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'创建数据库连接'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="string">'connect'</span></div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">write</span><span class="params">(self, data)</span>:</span></div><div class="line">        print(f<span class="string">'写入数据：&#123;data&#125;'</span>)</div><div class="line">   </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'从数据库中读取数据'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="number">123</span></div></pre></td></tr></table></figure>
-<p>现在我们创建两个文件：<code>a.py</code>和<code>b.py</code>，用来模拟在一个工程里面的两个不同地方同时调用数据库操作类并初始化的过程。</p>
-<p><code>a.py</code>内容如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> DBUtil <span class="keyword">import</span> DBUtil</div><div class="line"><span class="keyword">from</span> b <span class="keyword">import</span> run</div><div class="line"></div><div class="line">data = run()</div><div class="line">db_util = DBUtil()</div><div class="line">db_util.write(data)</div></pre></td></tr></table></figure>
-<p><code>b.py</code>的内容如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> DBUtil <span class="keyword">import</span> DBUtil</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></div><div class="line">    db_util = DBUtil()</div><div class="line">    data = db_util.read()</div><div class="line">    <span class="keyword">return</span> data</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-12-22-52-47.png" alt=""></p>
-<p>可以看到，<code>创建数据库连接</code>被打印了两次，说明<code>DBUtil</code>类被实例化了两次。对应到真实的项目中，就是创建了多个到数据库的链接。这样是很浪费资源的。</p>
-<p>当然，你可以在 <code>a.py</code>中初始化<code>DBUtil</code>，然后把这个对象作为参数传入<code>run</code>函数里面，再<code>run</code>函数里面调用这个对象的<code>read()</code>方法。</p>
-<p>但是在实际项目中，往往会出现很多层的调用，如果要把一个对象一层一层传下去，不仅让参数列表显得杂乱，还容易漏掉或者搞错顺序。</p>
-<p>所以，使用单例模式就能避免通过参数传递对象，但又不会创建多个数据库连接。</p>
-<p>网上关于单例模式的代码有很多。本文将会介绍最简单的一种，利用 Python 的<code>import</code>机制。在 Python 里面，一个模块只会被导入1次，如果多次使用<code>import xxx</code>导入同一个模块，后面的导入语句会被自动忽略。你用这个机制，我们就能很容易实现单例模式。</p>
-<p>修改<code>DBUtil.py</code>，在它的最下面加上一行代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DBUtil</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.conn = self.connect()</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'创建数据库连接'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="string">'connect'</span></div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">write</span><span class="params">(self, data)</span>:</span></div><div class="line">        print(f<span class="string">'写入数据：&#123;data&#125;'</span>)</div><div class="line">   </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">read</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'从数据库中读取数据'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="number">123</span></div><div class="line"></div><div class="line">db_util = DBUtil()</div></pre></td></tr></table></figure>
-<p>修改<code>a.py</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> DBUtil <span class="keyword">import</span> db_util</div><div class="line"><span class="keyword">from</span> b <span class="keyword">import</span> run</div><div class="line"></div><div class="line">data = run()</div><div class="line">db_util.write(data)</div></pre></td></tr></table></figure>
-<p>修改<code>b.py</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> DBUtil <span class="keyword">import</span> db_util</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></div><div class="line">    data = db_util.read()</div><div class="line">    <span class="keyword">return</span> data</div></pre></td></tr></table></figure>
-<p>运行以后的效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-12-23-02-25.png" alt=""></p>
-<p>可以看到，<code>创建数据库连接</code>只打印了1次，说明单例模式成功。</p>
-<p>这种单例模式非常简单，但是有一个弊端，就是无法实现懒加载。程序刚刚开始运行，<code>DBUtil</code>类就会被实例化，无法做到等到需要的时候才实例化。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;二十几种设计模式中，单例模式是最简单最常用的一种。在其他语言里面实现单例模式要写不少代码，但是在 Python 里面，有一种非常简单的单例模式写法。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="设计模式" scheme="https://www.kingname.info/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>禁止通行——如何让 itertools.tee 线程安全</title>
-    <link href="https://www.kingname.info/2019/11/06/thread-safe-in-tee/"/>
-    <id>https://www.kingname.info/2019/11/06/thread-safe-in-tee/</id>
-    <published>2019-11-06T14:39:31.000Z</published>
-    <updated>2019-12-11T14:40:34.880Z</updated>
-    
-    <content type="html"><![CDATA[<p>在上一篇文章中，我们说到了，<code>itertools.tee</code>不是线程安全的，并给出了一个例子，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-22-04-16.png" alt=""></p>
-<p>在两个线程里面同时运行分裂出来的生成器对象，就会导致报错。</p>
-<a id="more"></a>
-<p>现在，你想看看<code>itertools.tee</code>的源代码，但是你会发现，在 PyCharm 里面，它的源代码如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-06-21-55-40.png" alt=""></p>
-<p>这是因为，在 CPython 中，<code>itertools.tee</code>底层是通过C 语言实现的，所以你不能在 PyCharm 中看到它的源代码。但是你可以通过阅读 <a href="https://github.com/python/cpython/blob/master/Modules/itertoolsmodule.c" target="_blank" rel="external">Python 的源代码中的Modules/itertoolsmodule.c文件</a>，找到它的实现算法。</p>
-<p>导致问题的核心部分在如下图所示的两段代码中：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-06-22-03-11.png" alt=""></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-06-22-05-19.png" alt=""></p>
-<p>大家看不懂也没有关系，根据我上一篇文章中使用 Python 实现的简化版本就足够帮助理解了。</p>
-<p>我们使用简化版本来解释其中线程不安全的地方：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">        <span class="keyword">yield</span> f<span class="string">'我是你第&#123;i&#125;个爷爷'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(g)</span>:</span></div><div class="line">    value_list_1 = []</div><div class="line">    value_list_2 = []</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrap</span><span class="params">(queue)</span>:</span></div><div class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> queue:</div><div class="line">                <span class="keyword">try</span>:</div><div class="line">                    value = next(g)</div><div class="line">                <span class="keyword">except</span> StopIteration:</div><div class="line">                    <span class="keyword">return</span></div><div class="line">                value_list_1.append(value)</div><div class="line">                value_list_2.append(value)</div><div class="line">            <span class="keyword">yield</span> queue.pop(<span class="number">0</span>)</div><div class="line">    g_1 = wrap(value_list_1)</div><div class="line">    g_2 = wrap(value_list_2)</div><div class="line">    <span class="keyword">return</span> g_1, g_2</div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2 = split(g)</div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_1:</div><div class="line">    print(value)</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_2:</div><div class="line">    print(value)</div></pre></td></tr></table></figure>
-<p>当两个线程同时运行到<code>if not queue</code>时，发现当前各自的队列都是空的，于是进入<code>value = next(g)</code>获取下一个值。其中，线程 A 先进入那么几毫秒。然后线程 B 进入<code>value = next(g)</code>。但由于此时线程 A 中的<code>next(g)</code>正在运行，尚未结束，线程 B 又跑来运行，于是就导致了报错的发生。Python 中，生成器不是线程安全的。</p>
-<p>那么如何让<code>itertools.tee</code>分裂出来的多个生成器可以在多线程中运行呢？其关键因素就是让<code>value = next(g)</code>这一行一次只能让一个线程运行。所以我们可以通过加锁来实现。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools</div><div class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> Lock</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">KingnameTee</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, tee_obj, lock)</span>:</span></div><div class="line">        self.tee_obj = tee_obj</div><div class="line">        self.lock = lock</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self</div><div class="line">   </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__next__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">with</span> self.lock:</div><div class="line">            <span class="keyword">return</span> next(self.tee_obj)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__copy__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> KingnameTee(self.tee_obj.__copy__(), self.lock)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">safe_tee</span><span class="params">(iterable, n=<span class="number">2</span>)</span>:</span></div><div class="line">    <span class="string">"""tuple of n independent thread-safe iterators"""</span></div><div class="line">    lock = Lock()</div><div class="line">    <span class="keyword">return</span> tuple(KingnameTee(tee_obj, lock) <span class="keyword">for</span> tee_obj <span class="keyword">in</span> itertools.tee(iterable, n))</div></pre></td></tr></table></figure>
-<p>我们来看看运行效果：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-06-22-21-01.png" alt=""></p>
-<p>多线程完美运行。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在上一篇文章中，我们说到了，&lt;code&gt;itertools.tee&lt;/code&gt;不是线程安全的，并给出了一个例子，如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-22-04-16.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;在两个线程里面同时运行分裂出来的生成器对象，就会导致报错。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="生成器" scheme="https://www.kingname.info/tags/%E7%94%9F%E6%88%90%E5%99%A8/"/>
-    
-      <category term="多线程" scheme="https://www.kingname.info/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>炸掉你的内存—— itertools.tee 的弊端</title>
-    <link href="https://www.kingname.info/2019/11/05/your-memory-boom/"/>
-    <id>https://www.kingname.info/2019/11/05/your-memory-boom/</id>
-    <published>2019-11-05T14:38:15.000Z</published>
-    <updated>2019-12-11T14:39:10.816Z</updated>
-    
-    <content type="html"><![CDATA[<p>在上一篇文章中，我们讲到了，使用<code>itertools.tee</code>可以让一个生成器被多次完整遍历：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools </div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2, g_3 = itertools.tee(g, <span class="number">3</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_1:</div><div class="line">    print(row)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_2:</div><div class="line">    print(row)</div><div class="line">    </div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> g_3:</div><div class="line">    print(row)</div></pre></td></tr></table></figure>
-<p>但是，我们说到<code>itertools.tee</code>有两个弊端，其一，如果分裂出来的多个生成器是按顺序执行的，其中一个完整遍历了再遍历第二个，那么就会导致内存中堆积大量的数据。</p>
-<p>要解释这个问题的原因，我们就要理解<code>itertools.tee</code>背后的原理。</p>
-<a id="more"></a>
-<p>我们知道，一个生成器只能被完整遍历一次。那么如果我想强行让他被遍历两次怎么办呢？最简单的办法是搞个列表出来：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">g = generator()</div><div class="line">value_list = [x <span class="keyword">for</span> x <span class="keyword">in</span> g]</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> value_list:</div><div class="line">    print(row)</div><div class="line"></div><div class="line"><span class="keyword">for</span> row <span class="keyword">in</span> value_list:</div><div class="line">    print(row)</div></pre></td></tr></table></figure>
-<p>转换为列表以后，你想完整遍历几次，就能完整遍历几次。但这样做，就背离了使用生成器节省内存的目的。所有的数据，全都在列表里面，如果数据量非常非常多，那么内存可能就会爆炸。</p>
-<p>所以我们需要一边迭代生成器，一边消费数据。为了实现这个目的，我们先来看看，如何一条一条地取出生成器里面的数据——<code>next</code> 函数。</p>
-<p>当我们每次执行<code>next(g)</code>的时候，生成器被迭代1次，并返回1条数据，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-25-21.png" alt=""></p>
-<p>当生成器的所有数据都被遍历完成以后，再次执行<code>next(g)</code>就会抛出<code>StopIteration</code>异常。所以当我们捕获到这个异常的时候，就说明生成器里面的所有数据都遍历完成了。</p>
-<p>现在，我们把生成器<code>分裂出来</code>，但是取极端情况，只分裂1个。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        <span class="keyword">yield</span> f<span class="string">'我是你第&#123;i&#125;个爷爷'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(g)</span>:</span></div><div class="line">    value_list = []</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> value_list:</div><div class="line">            <span class="keyword">try</span>:</div><div class="line">                value = next(g)</div><div class="line">            <span class="keyword">except</span> StopIteration:</div><div class="line">                <span class="keyword">return</span></div><div class="line">            value_list.append(value)</div><div class="line">        <span class="keyword">yield</span> value_list.pop()</div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1 = split(g)</div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_1:</div><div class="line">    print(value)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-31-28.png" alt=""></p>
-<p><code>split</code>生成器函数，写了一大堆代码，似乎做了无用功——如果<code>value_list</code>为空，那么就从原始生成器里面取一个数据，然后放入 <code>value_list</code> 列表，然后又把这个数从 <code>value_list</code>取出来，再抛给上层。</p>
-<p>这样写有什么意义呢？</p>
-<p>现在，我们修改代码，让 split 能够分裂出两个生成器：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">        <span class="keyword">yield</span> f<span class="string">'我是你第&#123;i&#125;个爷爷'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(g)</span>:</span></div><div class="line">    value_list_1 = []</div><div class="line">    value_list_2 = []</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrap</span><span class="params">(queue)</span>:</span></div><div class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> queue:</div><div class="line">                <span class="keyword">try</span>:</div><div class="line">                    value = next(g)</div><div class="line">                <span class="keyword">except</span> StopIteration:</div><div class="line">                    <span class="keyword">return</span></div><div class="line">                value_list_1.append(value)</div><div class="line">                value_list_2.append(value)</div><div class="line">            <span class="keyword">yield</span> queue.pop(<span class="number">0</span>)</div><div class="line">    g_1 = wrap(value_list_1)</div><div class="line">    g_2 = wrap(value_list_2)</div><div class="line">    <span class="keyword">return</span> g_1, g_2</div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2 = split(g)</div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_1:</div><div class="line">    print(value)</div><div class="line"></div><div class="line"><span class="keyword">for</span> value <span class="keyword">in</span> g_2:</div><div class="line">    print(value)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-21-42-29.png" alt=""></p>
-<p>现在， <code>split</code>是一个会返回两个生成器的函数。首先创建两个列表<code>value_list_1</code>和<code>value_list_2</code>，然后定义一个闭包生成器函数<code>wrap</code>。它接收一个参数<code>queue</code>。这个参数是一个列表。</p>
-<p>如果<code>queue</code>不为空，那么取它的第0个元素，并抛出给上层。如果<code>queue</code>为空，迭代一次原始生成器，获得的值同时放进<code>value_list_1</code>和<code>value_list_2</code>这两个列表中。此时，由于<code>queue</code>列表必定是<code>value_list_1</code>或者<code>value_list_2</code>的其中一个，所以此时<code>queue</code>必定不为空，因此可以取它下标为0的元素，抛出给上层。</p>
-<p>由于<code>.pop</code>在取出数据以后，会把这个数据从列表里面删除。所以<code>queue</code>对应的列表又会变成空。</p>
-<p>但大家有没有发现，此时，另外一个列表的数据，是留在列表里面的，没有被消费。</p>
-<p>所以，如果我始终迭代<code>g_1</code>这个分裂后的生成器，那么<code>wrap</code>的参数始终是<code>value_list_1</code>，此时，<code>value_list_2</code>始终没有被消费，于是数据就会越堆越多，最后撑爆内存。</p>
-<p>所以，<code>itertools.tee</code>分裂以后的多个生成器，应该尽量间隔着迭代，或者“同时迭代”，例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        value = next(g_1)</div><div class="line">        parse(value)</div><div class="line">        value = next(g_2)</div><div class="line">        parse(value)</div><div class="line">    <span class="keyword">except</span> StopIteration:</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure>
-<p>这样调用，就能始终保证两个列表最多只有1条数据，就不会出现堆积的问题。</p>
-<p>但是在实际项目中，很难这样写，所以你可能会想，是不是可以把分裂后的多个生成器，放进多个线程里面同步运行。这样虽然列表里面的数据会超过1条，但也不会堆积太多。</p>
-<p>然而这是不行的，<code>itertools.tee</code>分裂出来的多个生成器不是线程安全的，不能在多线程里面运行，否则会导致报错。这里给出一个报错的例子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000000</span>):</div><div class="line">        <span class="keyword">yield</span> i</div><div class="line"></div><div class="line">g = generator()</div><div class="line">g_1, g_2 = itertools.tee(g, <span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> [g_1, g_2]:</div><div class="line">    threading.Thread(target=sum, args=(x, )).start()</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-05-22-04-16.png" alt=""></p>
-<p>在下一篇文章中，我们将会说明，为什么分裂以后的生成器不是线程安全的，以及如何让它线程安全。</p>
-<p>P.S.:本文介绍 <code>itertools.tee</code>的代码经过简化和修改，用于表示这个函数的核心逻辑。但真正的源代码比这个简化版本要复杂得多。并且源代码中队列是使用<code>dequeue</code>而不是列表。因为<code>dequeue</code>是基于双向链表实现的，在两头增加删除数据，时间复杂度都是 O(1)，但是从列表的头部删除数据，时间复杂度为 O(n)。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在上一篇文章中，我们讲到了，使用&lt;code&gt;itertools.tee&lt;/code&gt;可以让一个生成器被多次完整遍历：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; itertools &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;g = generator()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;g_1, g_2, g_3 = itertools.tee(g, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; row &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; g_1:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(row)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; row &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; g_2:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(row)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; row &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; g_3:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(row)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;但是，我们说到&lt;code&gt;itertools.tee&lt;/code&gt;有两个弊端，其一，如果分裂出来的多个生成器是按顺序执行的，其中一个完整遍历了再遍历第二个，那么就会导致内存中堆积大量的数据。&lt;/p&gt;
-&lt;p&gt;要解释这个问题的原因，我们就要理解&lt;code&gt;itertools.tee&lt;/code&gt;背后的原理。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="生成器" scheme="https://www.kingname.info/tags/%E7%94%9F%E6%88%90%E5%99%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一个生成器如何当两个用？</title>
-    <link href="https://www.kingname.info/2019/11/05/one-generator-to-two/"/>
-    <id>https://www.kingname.info/2019/11/05/one-generator-to-two/</id>
-    <published>2019-11-05T14:37:00.000Z</published>
-    <updated>2019-12-11T14:37:54.433Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们知道，Python 里面的生成器只能被消费一次，例如如下代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">name_generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> [<span class="string">'产品经理'</span>, <span class="string">'kingname'</span>]:</div><div class="line">        <span class="keyword">yield</span> name</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hello</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hello 函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hello'</span>, name)</div><div class="line">    print(<span class="string">'hello 函数运行完成'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hi</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hi函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hi'</span>, name)</div><div class="line">    print(<span class="string">'hi函数运行完成'</span>)</div><div class="line"></div><div class="line">names = name_generator()</div><div class="line">say_hello(names)</div><div class="line">say_hi(names)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-13-54.png" alt=""></p>
-<p>在 <code>say_hello</code>函数里面，生成器已经被完整遍历了一次，那么在<code>say_hi</code>里面，就什么数据都拿不到了。</p>
-<p>但如果我们用的是列表，就可以多次遍历，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-15-26.png" alt=""></p>
-<p>大家注意观察区别。</p>
-<p>那么有什么办法，能让生成器被多次完整迭代呢？这个时候就要使用<code>itertools.tee</code>这个函数了。它通过<code>dequeue</code>实现了让生成器多次消费的办法。</p>
-<a id="more"></a>
-<p><code>itertools.tee</code>的使用方法如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">生成器<span class="number">1</span>, 生成器<span class="number">2</span>, 生成器<span class="number">3</span> = itertools.tee(原始生成器, <span class="number">3</span>)</div></pre></td></tr></table></figure>
-<p><code>itertools.tee</code>的第一个参数是原始生成器，第二个参数是你希望让它返回多少个可以复用的生成器。</p>
-<p>例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> itertools</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">name_generator</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> [<span class="string">'产品经理'</span>, <span class="string">'kingname'</span>]:</div><div class="line">        <span class="keyword">yield</span> name</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hello</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hello 函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hello'</span>, name)</div><div class="line">    print(<span class="string">'hello 函数运行完成'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hi</span><span class="params">(g)</span>:</span></div><div class="line">    print(<span class="string">'hi函数开始运行'</span>)</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> g:</div><div class="line">        print(<span class="string">'hi'</span>, name)</div><div class="line">    print(<span class="string">'hi函数运行完成'</span>)</div><div class="line"></div><div class="line">names = name_generator()</div><div class="line">names_1, names_2 = itertools.tee(names, <span class="number">2</span>)</div><div class="line">say_hello(names_1)</div><div class="line">say_hi(names_2)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-19-45.png" alt=""></p>
-<p>但是，<code>itertools.tee</code>有两个缺陷：</p>
-<p>其一是如果原始生成器能循环非常多次，产生的数据量非常大，并且你在消费的时候，是先迭代第一个分裂后的生成器，完整迭代完以后再迭代第二个分裂后的生成器，那么这将会浪费大量内存。所以，应该让两个生成器能间隔着迭代，或者“同时”迭代。</p>
-<p>其二，多个生成器同时迭代也有问题，分裂出来的多个生成器不是线程安全的，在多线程里面同时运行会导致报错。</p>
-<p>在接下来的两篇文章中，我会讲到<code>itertools.tee</code>是如何做到让生成器多次迭代的，然后讲到如何让分裂以后的生成器线程安全。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们知道，Python 里面的生成器只能被消费一次，例如如下代码：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;name_generator&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; name &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; [&lt;span class=&quot;string&quot;&gt;&#39;产品经理&#39;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;kingname&#39;&lt;/span&gt;]:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;yield&lt;/span&gt; name&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;say_hello&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(g)&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(&lt;span class=&quot;string&quot;&gt;&#39;hello 函数开始运行&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; name &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; g:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        print(&lt;span class=&quot;string&quot;&gt;&#39;hello&#39;&lt;/span&gt;, name)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(&lt;span class=&quot;string&quot;&gt;&#39;hello 函数运行完成&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;say_hi&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(g)&lt;/span&gt;:&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(&lt;span class=&quot;string&quot;&gt;&#39;hi函数开始运行&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; name &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; g:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        print(&lt;span class=&quot;string&quot;&gt;&#39;hi&#39;&lt;/span&gt;, name)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    print(&lt;span class=&quot;string&quot;&gt;&#39;hi函数运行完成&#39;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;names = name_generator()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;say_hello(names)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;say_hi(names)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;运行效果如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-13-54.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;在 &lt;code&gt;say_hello&lt;/code&gt;函数里面，生成器已经被完整遍历了一次，那么在&lt;code&gt;say_hi&lt;/code&gt;里面，就什么数据都拿不到了。&lt;/p&gt;
-&lt;p&gt;但如果我们用的是列表，就可以多次遍历，如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-04-23-15-26.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;大家注意观察区别。&lt;/p&gt;
-&lt;p&gt;那么有什么办法，能让生成器被多次完整迭代呢？这个时候就要使用&lt;code&gt;itertools.tee&lt;/code&gt;这个函数了。它通过&lt;code&gt;dequeue&lt;/code&gt;实现了让生成器多次消费的办法。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="生成器" scheme="https://www.kingname.info/tags/%E7%94%9F%E6%88%90%E5%99%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>产品经理的故事：产品经理拿错了别人的外卖</title>
-    <link href="https://www.kingname.info/2019/11/04/pm-get-others-thing/"/>
-    <id>https://www.kingname.info/2019/11/04/pm-get-others-thing/</id>
-    <published>2019-11-04T14:35:18.000Z</published>
-    <updated>2019-12-11T14:36:29.895Z</updated>
-    
-    <content type="html"><![CDATA[<p>产品经理中午没有赶上食堂的午饭，于是纠集了一批人一起点外卖。然而正当她要下单时，老板找她有开会，于是她让开发小哥随便帮忙点一份。</p>
-<p>产品经理开完会回来以后，发现还剩三份外卖没有人拿，分别是鲱鱼汤、螺蛳粉和大肠刺身。此时开发小哥碰巧不在，产品经理一时不知道哪一份才是自己的。</p>
-<a id="more"></a>
-<p>产品经理想随便选一份，于是选了鲱鱼汤。正当她抱起鲱鱼汤准备走时，开发小哥风风火火跑过来，拿着螺蛳粉又跑了，产品经理甚至来不及询问哪一个才是自己的。</p>
-<p>产品经理一想，虽然自己是文科生，但是现在只剩两个外卖，选哪一个都是二分之一的概率。所以直接拿走了鲱鱼汤。</p>
-<p>3分钟以后，研究员小哥咆哮一声：谁拿走了我的鲱鱼汤？</p>
-<p>产品经理赶紧喝完了汤，若无其事地把鲱鱼汤的包装扔进了垃圾桶。</p>
-<p>躲在暗处的开发小哥注视着刚才发生的一切，用中指推了推眼镜，镜片上一道光芒闪过，转身走向了厕所。</p>
-<p>其实，开发小哥在不久之前才教会了产品经理使用 Python，如果产品经理写几行代码验证一下概率，就会发现事情并不简单。</p>
-<p>我们假设：</p>
-<ol>
-<li>这三个外卖里面，有且只有一份是产品经理的</li>
-<li>开发小哥跑过来，不会抢产品经理手上拿着的外卖</li>
-<li>开发小哥拿走的，一定不是属于产品经理的外卖</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> random</div><div class="line"></div><div class="line">options = &#123;<span class="string">'鲱鱼汤'</span>, <span class="string">'螺蛳粉'</span>, <span class="string">'大肠刺身'</span>&#125;</div><div class="line">pm = random.choice(list(options))  <span class="comment"># 开发小哥给产品经理点的外卖</span></div><div class="line">right = <span class="number">0</span></div><div class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">100000</span>):</div><div class="line">    guess = random.choice(list(options)) <span class="comment"># 产品经理随机选的外卖</span></div><div class="line">    </div><div class="line">    <span class="comment"># 开发小哥会从剩下的两个外卖中，拿走不属于产品经理的一个</span></div><div class="line">    exclude_options = options - &#123;guess, pm&#125;  </div><div class="line">    exclude = random.choice(list(exclude_options))</div><div class="line"></div><div class="line">    <span class="comment"># 如果产品经理此时更换了选项</span></div><div class="line">    new_guess_option = options - &#123;exclude, guess&#125;</div><div class="line">    new_guess = random.choice(list(new_guess_option))</div><div class="line">    <span class="keyword">if</span> new_guess == pm:</div><div class="line">        right += <span class="number">1</span></div><div class="line">print(right / <span class="number">100000</span>)</div></pre></td></tr></table></figure>
-<p>运行结果如下：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-03-15-06-51.png" alt=""></p>
-<p>如果产品经理在看到开发小哥拿走了外卖以后，更换自己的选择，那么选对的概率是2/3.如果不更换自己的选择，选中的概率为1/3.</p>
-<p>相信很多人都会跟产品经理一样，觉得选对的概率是1/2.对代码的计算结果感到惊讶，这非常违反直觉。</p>
-<p>其实，整个问题的关键在于，开发小哥不是随机从剩下的两个外卖中拿走一个。开发小哥拿走的一定是不属于产品经理的外卖。</p>
-<p>相信很多人不想看概率公式，所以我们今天不用概率来解释。我另外举一个例子：</p>
-<p>我现在有三个盒子，其中一个盒子里面放手机。但你不知道手机在哪个盒子里面。</p>
-<ol>
-<li>你选一个盒子放在你的包里面，另外两个盒子放在我的包里面，我问你换不换包，你会换吗？我包里面有两个盒子，所以我的<code>包</code>里面有手机的概率是2/3，你显然要换。</li>
-<li>你选一个盒子放在你的包里面，另外两个盒子放在我的包里面，然后我从我包里面丢掉一个空盒子，再问你换不换包。此时，我丢掉空盒子并不会影响我包里面有手机的概率为2/3.你显然要换。</li>
-<li>现在去掉<code>包</code>这个可有可无的东西——你选一个盒子，我从剩下两个盒子里面扔掉一个空盒子，问你要不要更换选择？你说换不换？</li>
-</ol>
-<p>最后我们再从概率上来定量解释一下这个问题。如果产品经理始终选择要更换，那么：</p>
-<ol>
-<li>第一次就选中了她的外卖，此时更换以后，选对的概率为1/3 * 0</li>
-<li>第一次选中了别人的外卖1，开发小哥必定拿走别人的外卖2，此时产品经理选对的概率为：1/3 * 1 = 1/3</li>
-<li>第一次选中了别人的外卖2，开发小哥必定拿走别人的外卖1，此时产品经理选对的概率为：1/3 * 1 = 1/3</li>
-</ol>
-<p>所以如果选择要换，产品经理选对的概率为<code>0 + 1/3 + 1/3 = 2/3</code></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;产品经理中午没有赶上食堂的午饭，于是纠集了一批人一起点外卖。然而正当她要下单时，老板找她有开会，于是她让开发小哥随便帮忙点一份。&lt;/p&gt;
-&lt;p&gt;产品经理开完会回来以后，发现还剩三份外卖没有人拿，分别是鲱鱼汤、螺蛳粉和大肠刺身。此时开发小哥碰巧不在，产品经理一时不知道哪一份才是自己的。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="博弈论" scheme="https://www.kingname.info/categories/%E5%8D%9A%E5%BC%88%E8%AE%BA/"/>
-    
-    
-      <category term="博弈论" scheme="https://www.kingname.info/tags/%E5%8D%9A%E5%BC%88%E8%AE%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>为什么我能一天更新13篇博客？</title>
-    <link href="https://www.kingname.info/2019/11/03/follow-my-wechat-platform/"/>
-    <id>https://www.kingname.info/2019/11/03/follow-my-wechat-platform/</id>
-    <published>2019-11-03T02:46:00.000Z</published>
-    <updated>2019-11-03T02:49:40.009Z</updated>
-    
-    <content type="html"><![CDATA[<p>不是因为我高产似那啥。而是因为这些文章是我每天一篇发布在微信公众号上的，然后每隔一段时间整体搬运到博客上面来。</p>
-<p>所以还没有关注我微信公众号的同学，请扫描下面的二维码，关注我的公众号，每天一篇原创文章，每天都有新技能 Get。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/640.gif" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;不是因为我高产似那啥。而是因为这些文章是我每天一篇发布在微信公众号上的，然后每隔一段时间整体搬运到博客上面来。&lt;/p&gt;
-&lt;p&gt;所以还没有关注我微信公众号的同学，请扫描下面的二维码，关注我的公众号，每天一篇原创文章，每天都有新技能 Get。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;
-    
-    </summary>
-    
-      <category term="杂谈" scheme="https://www.kingname.info/categories/%E6%9D%82%E8%B0%88/"/>
-    
-    
-      <category term="公众号" scheme="https://www.kingname.info/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用 yield 压平多层字典列表混合嵌套数据</title>
-    <link href="https://www.kingname.info/2019/11/03/flat-dict-with-list/"/>
-    <id>https://www.kingname.info/2019/11/03/flat-dict-with-list/</id>
-    <published>2019-11-03T02:08:53.000Z</published>
-    <updated>2019-11-03T02:10:08.035Z</updated>
-    
-    <content type="html"><![CDATA[<p>在上一篇文章里面，我们讲到了如何使用Python的<code>yield</code>关键字简化代码，压平多层嵌套字典的。</p>
-<p>那么如果我们的数据不仅仅有字典，还有列表，是一个字典列表多层嵌套的数据怎么办呢？例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">nest_dict = &#123;</div><div class="line">    <span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'b'</span>: &#123;</div><div class="line">        <span class="string">'c'</span>: <span class="number">2</span>,</div><div class="line">        <span class="string">'d'</span>: <span class="number">3</span>,</div><div class="line">        <span class="string">'e'</span>: &#123;<span class="string">'f'</span>: <span class="number">4</span>&#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="string">'g'</span>: &#123;<span class="string">'h'</span>: <span class="number">5</span>&#125;,</div><div class="line">    <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line">    <span class="string">'j'</span>: &#123;<span class="string">'k'</span>: &#123;<span class="string">'l'</span>: &#123;<span class="string">'m'</span>: <span class="number">8</span>&#125;&#125;&#125;,</div><div class="line">    <span class="string">'n'</span>: [<span class="number">1</span>, &#123;<span class="string">'o'</span>: <span class="number">1</span>, <span class="string">'p'</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],  <span class="string">'q'</span>: &#123;<span class="string">'r'</span>: &#123;<span class="string">'s'</span>: <span class="number">100</span>&#125;&#125;&#125;, <span class="number">3</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">5</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>现在，请停下来，敲一敲代码，想想如何把处理列表的逻辑添加进去。</p>
-<p>首先，我们来看一下最终被压平以后的数据长什么样：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">'a'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'b_c'</span>: <span class="number">2</span>,</div><div class="line"> <span class="string">'b_d'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'b_e_f'</span>: <span class="number">4</span>,</div><div class="line"> <span class="string">'g_h'</span>: <span class="number">5</span>,</div><div class="line"> <span class="string">'i'</span>: <span class="number">6</span>,</div><div class="line"> <span class="string">'j_k_l_m'</span>: <span class="number">8</span>,</div><div class="line"> <span class="string">'n_0'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_1_o'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_1_p_0'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_1_p_1'</span>: <span class="number">2</span>,</div><div class="line"> <span class="string">'n_1_p_2'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'n_1_q_r_s'</span>: <span class="number">100</span>,</div><div class="line"> <span class="string">'n_2'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'n_3_0'</span>: <span class="number">1</span>,</div><div class="line"> <span class="string">'n_3_1'</span>: <span class="number">2</span>,</div><div class="line"> <span class="string">'n_3_2'</span>: <span class="number">3</span>,</div><div class="line"> <span class="string">'n_4'</span>: <span class="number">5</span>&#125;</div></pre></td></tr></table></figure>
-<p>对于<code>&#39;n&#39;: [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</code>这种形式的数据，我们把它转换为： <code>{&#39;n_0&#39;: &#39;a&#39;, &#39;n_1&#39;: &#39;b&#39;, &#39;n_2&#39;: &#39;c&#39;}</code></p>
-<a id="more"></a>
-<p>我们原来的核心代码是这样的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">flat</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> x.items():</div><div class="line">        <span class="keyword">if</span> isinstance(value, dict):</div><div class="line">            <span class="keyword">for</span> k, v <span class="keyword">in</span> flat(value):</div><div class="line">                k = f<span class="string">'&#123;key&#125;_&#123;k&#125;'</span></div><div class="line">                <span class="keyword">yield</span> (k, v)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">yield</span> (key, value)</div></pre></td></tr></table></figure>
-<p>你的第一反应，是不是这样修改代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">flat</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> x.items():</div><div class="line">        <span class="keyword">if</span> isinstance(value, dict):</div><div class="line">            <span class="keyword">for</span> k, v <span class="keyword">in</span> flat(value):</div><div class="line">                k = f<span class="string">'&#123;key&#125;_&#123;k&#125;'</span></div><div class="line">                <span class="keyword">yield</span> (k, v)</div><div class="line">        <span class="keyword">elif</span> isinstance(value, list):</div><div class="line">            <span class="string">"一大堆处理列表的代码"</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">yield</span> (key, value)</div></pre></td></tr></table></figure>
-<p>如果你使用<code>return</code>和递归，你可能确实需要这样写。</p>
-<p>但如果你使用<code>yield</code>关键字，那么，你虽然也要修改代码，可是修改的地方却不是这里。我们要修改的地方在<code>for key, value in x.items()</code>。</p>
-<p>因为<code>.items()</code>这个方法是字典的方法，列表没有这个方法。所以我们需要写一个通用的迭代生成器，支持字典和列表，所以我们增加一个函数：<code>iter_x</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">iter_x</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">if</span> isinstance(x, dict):</div><div class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> x.items():</div><div class="line">            <span class="keyword">yield</span> (key, value)</div><div class="line">    <span class="keyword">elif</span> isinstance(x, list):</div><div class="line">        <span class="keyword">for</span> index, value <span class="keyword">in</span> enumerate(x):</div><div class="line">            <span class="keyword">yield</span> (index, value)</div></pre></td></tr></table></figure>
-<p>现在，我们在原来的代码中调用这段个新的生成器函数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">flat</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">for</span> key, value <span class="keyword">in</span> iter_x(x):</div><div class="line">        <span class="keyword">if</span> isinstance(value, (dict, list)):</div><div class="line">            <span class="keyword">for</span> k, v <span class="keyword">in</span> flat(value):</div><div class="line">                k = f<span class="string">'&#123;key&#125;_&#123;k&#125;'</span></div><div class="line">                <span class="keyword">yield</span> (k, v)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">yield</span> (key, value)</div></pre></td></tr></table></figure>
-<p>其中，<code>isinstance(value, (dict, list))</code>，相当于<code>isinstance(value, dict) or isinstance(value, list)</code>。</p>
-<p>我们来看一下运行效果：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-02-22-25-08.png" alt=""></p>
-<p>掌握<code>yield</code>关键字，你的编程思路和想问题的方式会发生一个重大的转变。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在上一篇文章里面，我们讲到了如何使用Python的&lt;code&gt;yield&lt;/code&gt;关键字简化代码，压平多层嵌套字典的。&lt;/p&gt;
-&lt;p&gt;那么如果我们的数据不仅仅有字典，还有列表，是一个字典列表多层嵌套的数据怎么办呢？例如：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;nest_dict = &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;a&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;b&#39;&lt;/span&gt;: &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&#39;c&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&#39;d&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&#39;e&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;f&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;g&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;h&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;i&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;j&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;k&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;l&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;m&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;&amp;#125;&amp;#125;&amp;#125;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;n&#39;&lt;/span&gt;: [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;o&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;p&#39;&lt;/span&gt;: [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;],  &lt;span class=&quot;string&quot;&gt;&#39;q&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;r&#39;&lt;/span&gt;: &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;s&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;100&lt;/span&gt;&amp;#125;&amp;#125;&amp;#125;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;, [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;], &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;现在，请停下来，敲一敲代码，想想如何把处理列表的逻辑添加进去。&lt;/p&gt;
-&lt;p&gt;首先，我们来看一下最终被压平以后的数据长什么样：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;a&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;b_c&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;b_d&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;b_e_f&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;g_h&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;i&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;j_k_l_m&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_0&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_o&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_p_0&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_p_1&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_p_2&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_1_q_r_s&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;100&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_2&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_3_0&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_3_1&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_3_2&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;/div&gt;&lt;div class=&quot;line&quot;&gt; &lt;span class=&quot;string&quot;&gt;&#39;n_4&#39;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;对于&lt;code&gt;&amp;#39;n&amp;#39;: [&amp;#39;a&amp;#39;, &amp;#39;b&amp;#39;, &amp;#39;c&amp;#39;]&lt;/code&gt;这种形式的数据，我们把它转换为： &lt;code&gt;{&amp;#39;n_0&amp;#39;: &amp;#39;a&amp;#39;, &amp;#39;n_1&amp;#39;: &amp;#39;b&amp;#39;, &amp;#39;n_2&amp;#39;: &amp;#39;c&amp;#39;}&lt;/code&gt;&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="yield" scheme="https://www.kingname.info/tags/yield/"/>
     
   </entry>
   

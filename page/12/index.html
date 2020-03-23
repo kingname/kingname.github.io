@@ -353,6 +353,1780 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（三）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-02 15:42:22" itemprop="dateCreated datePublished" datetime="2015-01-02T15:42:22+08:00">2015-01-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在上一篇文章<a href="http://kingname.info/2014/12/31/%E4%BD%BF%E7%94%A8%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91AWS%E6%90%AD%E5%BB%BAGmail%E9%82%AE%E4%BB%B6%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1%E4%BA%8C/" target="_blank" rel="external">使用AWS亚马逊云搭建Gmail转发服务（二）</a>中，我们已经介绍了如何把邮件转发程序部署在服务器上。但是这样还不够。还需要实时监控程序的运行状态。于是，给程序增加日志记录功能是非常重要的。</p>
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>这里使用Python的logging库，实现日志记录功能。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">import logging</div><div class="line"></div><div class="line">logging.basicConfig(level=logging.DEBUG,</div><div class="line">                format=&apos;%(asctime)s %(filename)s %(levelname)s %(message)s&apos;,</div><div class="line">                datefmt=&apos;%Y %m %d %H:%M:%S&apos;, #日期格式：年月日时分秒</div><div class="line">                filename=&apos;mail_note.log&apos;, #文件名</div><div class="line">                filemode=&apos;a&apos;) #以最佳的方式添加日志</div><div class="line">mail_log = logging.getLogger(&apos;maillog&apos;)</div></pre></td></tr></table></figure></p>
+<p>以上代码的作用是导入logging库功能。然后配置logging的输出格式。<br>各行代码的作用已经注释。</p>
+<p>要使用日志的时候，通过以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">logging.info(&apos;日志内容&apos;)</div></pre></td></tr></table></figure></p>
+<p>同类的还有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mail_log.debug(&apos;内容&apos;)</div><div class="line">mail_log.warning(&apos;内容&apos;)</div><div class="line">mail_log.error(&apos;内容&apos;)</div><div class="line">……</div></pre></td></tr></table></figure></p>
+<p>logging库的功能还有很多，这里只是简单的介绍一下，更多的功能可以查阅相关的资料。</p>
+<h2 id="Flask"><a href="#Flask" class="headerlink" title="Flask"></a>Flask</h2><p>现在日志已经生成。又如何通过Flask查看呢？由于我的前端不行。因此这里就不使用精细的模板了。Flask的部署就不叙述了，各位可以参考Flask官方文档<a href="http://dormousehole.readthedocs.org/en/latest/" target="_blank" rel="external">http://dormousehole.readthedocs.org/en/latest/</a></p>
+<p>这里我只演示一个非常简单的日志输出功能。编写gmail_flask.py,请看代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#-*-coding:utf-8-*-</div><div class="line">from flask import Flask</div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line">@app.route(&apos;/&apos;)</div><div class="line">def index():</div><div class="line">    f = open(&apos;mail_note.log&apos;,&apos;rb&apos;) #以读文件的方式打开mail_note.log文件</div><div class="line">    content = f.readlines()#按行读取日志</div><div class="line">    s = &apos;&apos;</div><div class="line">    for each in content:</div><div class="line">        s += each</div><div class="line">        s += &apos;&lt;/p&gt;&apos;#输出日志</div><div class="line">    f.close()</div><div class="line">    return s</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    app.run(host=&apos;0.0.0.0&apos;) #开发外网访问</div></pre></td></tr></table></figure></p>
+<p>这个功能是把日志按行输出到网页上。<br>现在测试一下功能：<br>在终端窗口输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">screen</div><div class="line">python gmail_helper.py</div></pre></td></tr></table></figure></p>
+<p>然后Ctrl+A+D返回，再输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">screen</div><div class="line">python gmail_flask.py</div></pre></td></tr></table></figure></p>
+<p>然后访问服务器的5000端口查看效果。如图是我的服务器返回信息：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog.jpg" alt=""></p>
+<p>这里出现了Google的很多信息，这是由于Gmail的API库文件discovery.py里面也有用到日志功能。这个时候这里调用根logging，就会把discovery.py里面logging.info输出的信息写出来。这个时候怎么办呢？我对logging不是很熟悉，还请熟悉logging模块的朋友指点迷津。</p>
+<p>我使用了一个变通的办法：</p>
+<p>修改gmail_flask.py文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#-*-coding:utf-8-*-</div><div class="line">from flask import Flask</div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line">@app.route(&apos;/&apos;)</div><div class="line">def index():</div><div class="line">    f = open(&apos;mail_note.log&apos;,&apos;rb&apos;) #以读文件的方式打开mail_note.log文件</div><div class="line">    content = f.readlines()#按行读取日志</div><div class="line">    s = &apos;&apos;</div><div class="line">    for each in content:</div><div class="line">		if &apos;gmail_helper.py&apos; in each: #判定信息来自gmail_helper.py而不是discovery.py</div><div class="line">	        s += each</div><div class="line">	        s += &apos;&lt;/p&gt;&apos;#输出日志</div><div class="line">    f.close()</div><div class="line">    return s</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    app.run(host=&apos;0.0.0.0&apos;) #开发外网访问</div></pre></td></tr></table></figure></p>
+<p>效果如下图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog2.jpg" alt=""></p>
+<p>源代码已更新到Github，请戳-&gt;<a href="https://github.com/kingname/MCC/blob/master/ghelper_with_log" target="_blank" rel="external">https://github.com/kingname/MCC/blob/master/ghelper_with_log</a></p>
+<p>我的日志会通过博客进行开放，地址请戳：</p>
+<p><a href="http://flask.kingname.info:5000" target="_blank" rel="external">http://flask.kingname.info:5000</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/01/Linux的screen/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/01/Linux的screen/" class="post-title-link" itemprop="url">断电不断网——Linux的screen</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-01 20:20:23" itemprop="dateCreated datePublished" datetime="2015-01-01T20:20:23+08:00">2015-01-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/01/Linux的screen/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/01/Linux的screen/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在<a href="http://kingname.info/2014/12/31/%E4%BD%BF%E7%94%A8%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91AWS%E6%90%AD%E5%BB%BAGmail%E9%82%AE%E4%BB%B6%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1%E4%BA%8C/" target="_blank" rel="external">使用AWS亚马逊云搭建Gmail转发服务（二）</a>中，我们最后运行了邮件转发程序。本以为程序就可以正常工作了，于是我关闭了Putty窗口。几个小时后回来，发现程序早就终止运行了。</p>
+<p>原来，在一般情况下，当一个session结束时，这个session里面运行的进程也会同时结束。这可不能达到我们要的效果。于是screen命令登场了。</p>
+<p>使用screen命令，可以让程序在断开session的时候继续运行。要打开screen，只需要在终端输入screen这个命令即可。请看下面演示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd wwwproject/ghelper</div><div class="line">screen</div><div class="line">python gmail_helper.py</div></pre></td></tr></table></figure>
+<p>这样就在一个screen里面运行了邮件转发程序。那么如何退出呢？</p>
+<p>键盘上Ctrl+A+D三个键一起按。这样就返回到了进入screen之前的终端界面。而邮件转发程序仍然在后台默默的运行。现在可以关闭putty，然后放心的去睡觉了。</p>
+<p>那重新SSH登录服务器以后，想关闭这个邮件转发程序怎么办？</p>
+<p>两个方法：</p>
+<p>方法一，直接结束Python进程。</p>
+<p>方法二，在终端窗口输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">screen -ls</div></pre></td></tr></table></figure></p>
+<p>终端窗口返回：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">ubuntu@ip-172-31-15-35:~$ screen -ls</div><div class="line">There is a screen on:</div><div class="line">        7956.pts-0.ip-172-31-15-35      (01/01/2015 12:16:10 PM)        (Detached)</div><div class="line">1 Socket in /var/run/screen/S-ubuntu.</div></pre></td></tr></table></figure></p>
+<p>注意这里的7956就是pid，于是输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">screen -r 7956</div></pre></td></tr></table></figure></p>
+<p>就能回到Python的运行窗口了。于是，Ctrl+C结束程序运行。</p>
+<p>有了screen命令，再也不怕关闭session后程序结束运行了。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（二）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-31 14:44:27" itemprop="dateCreated datePublished" datetime="2014-12-31T14:44:27+08:00">2014-12-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在上一篇文章<a href="http://kingname.info/2014/12/30/%E4%BD%BF%E7%94%A8AWS%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91%E6%90%AD%E5%BB%BAGmail%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1/" target="_blank" rel="external">使用AWS亚马逊云搭建Gmail转发服务（一）</a>中，我们介绍了如何在亚马逊AWS的免费主机EC2中使用Gmai API从而接收邮件的操作。在这篇文章中，将要讲解如何制作一个邮件转发服务。</p>
+<p>我之前有写一篇文章，<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="external">使用微信控制你的电脑</a>其中有讲解如何使用Python的smtplib库实现发送邮件。于是Gmail邮件转发的思路就出来了：</p>
+<p>程序定期检查Gmail邮箱，如果发现有新的邮件，就将新邮件的标题，发送人，还有邮件正文提取出来，并使用 MIMEText构造一个邮件的object 然后再用国内邮箱发送给自己的主邮箱。</p>
+<p>这里涉及到三个邮箱：Gmail，国内邮箱一（发送），国内邮箱二（接收）。其中国内邮箱二是我的常用邮箱，我将它和微信绑定，因此一旦有新邮件，就会收到提醒。国内邮箱一是一个备胎邮箱，他的作用就是一个转发而已。</p>
+<p>可能有人会问为什么不用Gmail直接转发？因为我觉得很有可能不久以后，Gmail发送的邮件，国内邮箱收不到。</p>
+<p>那么我们将<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="external">使用微信控制你的电脑</a>这篇文章中涉及到的auto.py进行修改，编写一个ghelper_sender.py：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">#-*-coding:utf-8 -*-</div><div class="line"></div><div class="line">import smtplib</div><div class="line">import sys</div><div class="line">from email.mime.text import MIMEText</div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(&apos;utf-8&apos;)</div><div class="line"></div><div class="line">username = &quot;123@sina.com&quot;# 接收邮箱</div><div class="line">password = &quot;123abc&quot;# 接收邮箱密码</div><div class="line">mailbox = &quot;greensouth@foxmail.com&quot; #国内邮箱二</div><div class="line"></div><div class="line">def send_mail(subject,body=&apos;Success&apos;):</div><div class="line">        msg = MIMEText(body,&apos;plain&apos;,&apos;utf-8&apos;)#中文需参数‘utf-8’，单字节字符不需要</div><div class="line">        msg[&apos;Subject&apos;] = subject</div><div class="line">        msg[&apos;from&apos;] = username</div><div class="line">        handle = smtplib.SMTP(&apos;smtp.sina.com&apos;, 25)</div><div class="line">        handle.login(username,password)</div><div class="line">		handle.sendmail(username,mailbox, msg.as_string())</div><div class="line">        handle.close()</div></pre></td></tr></table></figure></p>
+<p>这里需要注意，msg[‘from’] 的值必须是国内邮箱一，而不是发邮件到Gmail邮箱的那个地址，否则会报错。</p>
+<p>现在打开上一篇文章中的ghelper_api.py，在最开头添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">from ghelper_sender import send_mail</div></pre></td></tr></table></figure></p>
+<p>导入send_mail函数。</p>
+<p>由于ghelper_api.py 中，上一篇文章中通过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</div><div class="line">b = GetMessage(gmail_service,&apos;me&apos;,a)</div></pre></td></tr></table></figure></p>
+<p>获得你邮件的正文和发件人，现在再获取邮件的标题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</div></pre></td></tr></table></figure></p>
+<p>这里我把发件人和邮件正文添加到一起，于是得到以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</div><div class="line">b = GetMessage(gmail_service,&apos;me&apos;,a)</div><div class="line">content =  b[&apos;snippet&apos;]</div><div class="line">sender =  b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]</div><div class="line">subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</div><div class="line">body = sender + &apos;\n&apos; + content</div><div class="line">send_mail(subject,body)</div><div class="line">print subject</div><div class="line">print body</div><div class="line">print &apos;============================&apos;</div></pre></td></tr></table></figure></p>
+<p>这样就能发送一次邮件了。接收到的效果如图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmail.jpg" alt=""><br>但是这显然不是我们需要的效果。我们希望这个程序能够自动运行，自动查看邮箱。于是，编写一个函数isnew()来检测是否有新的邮件发送过来，如果有就获取新邮件并发送。</p>
+<p>设定一个全局变量last_email用于保存已读的最后一封邮件，令他的初始化为当前邮箱里面最新的一封邮件的id.接下来每过一段时间，程序就检查邮箱里面邮件的id，如果和last_email相同，就什么都不做；如果不相同，则程序就读取邮件，直到读取到某一封邮件的id和last_email相同为止。再令last_email的值为当前最新的id.代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">def init():</div><div class="line">  global last_email</div><div class="line">  last_email = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</div><div class="line"></div><div class="line">def isnew():</div><div class="line">  global last_email</div><div class="line">  themail = ListMessagesWithLabels(gmail_service,&apos;me&apos;)</div><div class="line">  for each in themail:</div><div class="line">    if each[&apos;id&apos;] != last_email:</div><div class="line">      tosend(each[&apos;id&apos;])</div><div class="line">    else:</div><div class="line">      break</div><div class="line">  last_email = themail[0][&apos;id&apos;]</div><div class="line"></div><div class="line">def tosend(id):</div><div class="line">  b = GetMessage(gmail_service,&apos;me&apos;,id)</div><div class="line">  content =  b[&apos;snippet&apos;]</div><div class="line">  sender =  b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]</div><div class="line">  subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</div><div class="line">  body = sender + &apos;\n&apos; + content</div><div class="line">  send_mail(subject,body)</div><div class="line">  print subject</div><div class="line">  print body</div><div class="line">  print &apos;============================&apos;</div></pre></td></tr></table></figure></p>
+<p>设定一个主函数，并把上面的代码放在主函数里面,并循环执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">if __name__==&apos;__main__&apos;:</div><div class="line">    init()</div><div class="line">    while 1:</div><div class="line">        time.sleep(3600) #每一小时检查一次邮箱</div><div class="line">        isnew()</div></pre></td></tr></table></figure></p>
+<p>完整的代码我放在了Github上面，请戳-&gt;<a href="https://github.com/kingname/MCC/tree/master/ghelper" target="_blank" rel="external">https://github.com/kingname/MCC/tree/master/ghelper</a></p>
+<p>在下一篇文章中，将介绍Python的logging库，并将每次的发送记录通过日志记录下来。同时用Flask搭建一个网站，从而方便直观的检查这个程序的运行情况。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-30 15:41:35" itemprop="dateCreated datePublished" datetime="2014-12-30T15:41:35+08:00">2014-12-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h2><p>2014年12月28号开始，Gmail被伟大的墙从协议上封禁，POP3、SMTP、IAMP全部阵亡。于是不仅网页不能打开Gmail，连邮件客服端都不能使用Gmail收发邮件了。</p>
+<p>Gmail在国内的用户相当的广泛，难道就真的不用了吗？当然不是。虽然使用VPN可以翻出长城，但是开着VPN做其他事情又不太方便。于是，一种Gmail的转发服务变得重要起来。</p>
+<p>这篇文章将详细介绍如何使用亚马逊云AWS的免费主机EC2，配合Gmail的API来编写一个Gmail的转发程序。程序在设定时间内访问Gmail收件箱，发现新邮件以后，就通过另一个邮箱转发到国内邮箱中。每一次转发记录到一个日志文件中，并使用Flask搭建网站来，从而直观的检查接收发送记录。</p>
+<p>AWS的免费主机EC2的申请不是本文的重点，网上有很多教程，故略去不讲。<br>Flask环境的搭建不是本文重点，网上有很多教程，故略去不讲。</p>
+<p>本篇先讲解Gmail API的使用，下一篇讲解如何制作转发程序。</p>
+<h2 id="授权之路"><a href="#授权之路" class="headerlink" title="授权之路"></a>授权之路</h2><p>既然要是用Gmail的API，那就要开通Gmail的授权。Google的官方英文教程请戳-&gt;<a href="https://developers.google.com/gmail/api/quickstart/quickstart-python" target="_blank" rel="external">Run a Gmail App in Python</a></p>
+<h3 id="打开Gmail-API"><a href="#打开Gmail-API" class="headerlink" title="打开Gmail API"></a>打开Gmail API</h3><p>访问<a href="https://console.developers.google.com/project" target="_blank" rel="external">https://console.developers.google.com/project</a>，单击“建立档案”选项，新建一个项目。我这里新建的项目叫做“gmail”，如下图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/1.jpg" alt=""></p>
+<p>单击新建的档案“gmail”，在左侧点击“API和验证”，选择“API”，然后再右侧中间搜索框中输入Gmail，找到后打开。如下图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/开启gmailapi.jpg" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/openapi.jpg" alt=""></p>
+<p>然后点击左侧“凭证”，选择“建立新的用户端ID”</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/凭证.jpg" alt=""></p>
+<p>这个时候注意一定要选择第三项，才能正确生成json文件。选择第三项，并填写完一些信息后，做如下选择，并点击“建立用户端ID”</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/id.jpg" alt=""></p>
+<p>接下来，下载json文件。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/oau.jpg" alt=""></p>
+<h3 id="验证机器"><a href="#验证机器" class="headerlink" title="验证机器"></a>验证机器</h3><p>在服务器上新建ghelper文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir ghelper</div><div class="line">cd ghelper</div></pre></td></tr></table></figure></p>
+<p>然后安装Google API Python Client库。建议使用pip安装而不是easy_install，因为pip安装的库文件可以卸载，而easy_install安装的库文件不能卸载。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pip install --upgrade google-api-python-client</div></pre></td></tr></table></figure></p>
+<p>为了使代码中的run.tools()能够正常执行，还需要安装gflags:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pip install python-gflags</div></pre></td></tr></table></figure></p>
+<p>将json文件上传到AWS服务器上，我放在了~/wwwproject/ghelper目录下面,并且重命名为client_secret.json,这样代码就不需要进行修改了。同时在本目录下面新建ghelper_api.py文件，文件内容为官方指南中的验证机器的代码，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">import httplib2</div><div class="line"></div><div class="line">from apiclient.discovery import build</div><div class="line">from oauth2client.client import flow_from_clientsecrets</div><div class="line">from oauth2client.file import Storage</div><div class="line">from oauth2client.tools import run</div><div class="line"></div><div class="line"># Path to the client_secret.json file downloaded from the Developer Console</div><div class="line">CLIENT_SECRET_FILE = &apos;client_secret.json&apos;</div><div class="line"></div><div class="line"># Check https://developers.google.com/gmail/api/auth/scopes for all available scopes</div><div class="line">OAUTH_SCOPE = &apos;https://www.googleapis.com/auth/gmail.readonly&apos;</div><div class="line"></div><div class="line"># Location of the credentials storage file</div><div class="line">STORAGE = Storage(&apos;gmail.storage&apos;)</div><div class="line"></div><div class="line"># Start the OAuth flow to retrieve credentials</div><div class="line">flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=OAUTH_SCOPE)</div><div class="line">http = httplib2.Http()</div><div class="line"></div><div class="line"># Try to retrieve credentials from storage or run the flow to generate them</div><div class="line">credentials = STORAGE.get()</div><div class="line">if credentials is None or credentials.invalid:</div><div class="line">  credentials = run(flow, STORAGE, http=http)</div><div class="line"></div><div class="line"># Authorize the httplib2.Http object with our credentials</div><div class="line">http = credentials.authorize(http)</div><div class="line"></div><div class="line"># Build the Gmail service from discovery</div><div class="line">gmail_service = build(&apos;gmail&apos;, &apos;v1&apos;, http=http)</div><div class="line"></div><div class="line"># Retrieve a page of threads</div><div class="line">threads = gmail_service.users().threads().list(userId=&apos;me&apos;).execute()</div><div class="line"></div><div class="line"># Print ID for each thread</div><div class="line">if threads[&apos;threads&apos;]:</div><div class="line">  for thread in threads[&apos;threads&apos;]:</div><div class="line">    print &apos;Thread ID: %s&apos; % (thread[&apos;id&apos;])</div></pre></td></tr></table></figure></p>
+<p>运行ghelper_api.py，进入Google验证阶段。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python ghelper_api.py</div></pre></td></tr></table></figure></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sigin.jpg" alt=""></p>
+<p>在红线处按回车键就可以进入输入模式。输入gmail和密码以后，移动光标到“Sign in”回车，然后进入如下页面：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sign2.jpg" alt=""></p>
+<p>输入你的信息，验证通过以后会让你进入开启浏览器的javascript功能。可是Linux服务器哪来的浏览器？这个时候按键盘的Ctrl + Z来取消。</p>
+<p>继续输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python ghelper_api.py --noauth_local_webserver</div></pre></td></tr></table></figure></p>
+<p>会提示离线验证，如果仍然失败的话，就继续Ctrl+Z然后再输入上面的代码，很快就会让你离线验证：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sign3.jpg" alt=""></p>
+<p>复制他给出的网址，并在自己电脑上登录后，复制他给出的代码并粘贴回服务器上。验证通过。</p>
+<h3 id="使用API"><a href="#使用API" class="headerlink" title="使用API"></a>使用API</h3><p>打开<a href="https://developers.google.com/gmail/api/v1/reference/" target="_blank" rel="external">API Reference</a>，查看Gmail API的用法。</p>
+<p>这里用Users.messages的list和get方法来演示API的使用。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/listget.jpg" alt=""></p>
+<p>先查看list的说明:</p>
+<blockquote>
+<p>Lists the messages in the user’s mailbox.</p>
+</blockquote>
+<p>列出邮箱里的信息。这里实际上列出来的是每一封邮件的id,于是，使用这个id，通过get就能获得邮件的内容。</p>
+<p>通过查看list和get的使用范例：</p>
+<p>list:<br><a href="https://developers.google.com/gmail/api/v1/reference/users/messages/list" target="_blank" rel="external">https://developers.google.com/gmail/api/v1/reference/users/messages/list</a><br>get:<br><a href="https://developers.google.com/gmail/api/v1/reference/users/messages/get" target="_blank" rel="external">https://developers.google.com/gmail/api/v1/reference/users/messages/get</a></p>
+<p>构造出以下的完整代码：</p>
+<pre><code>#-*-coding:utf-8 -*-
+import httplib2
+
+from apiclient.discovery import build
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.file import Storage
+from oauth2client.tools import run
+from apiclient import errors
+import base64
+import email
+
+
+# Path to the client_secret.json file downloaded from the Developer Console
+CLIENT_SECRET_FILE = &apos;client_secret.json&apos;
+
+# Check https://developers.google.com/gmail/api/auth/scopes for all available scopes
+OAUTH_SCOPE = &apos;https://www.googleapis.com/auth/gmail.readonly&apos;
+
+# Location of the credentials storage file
+STORAGE = Storage(&apos;gmail.storage&apos;)
+
+# Start the OAuth flow to retrieve credentials
+flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=OAUTH_SCOPE)
+http = httplib2.Http()
+
+# Try to retrieve credentials from storage or run the flow to generate them
+credentials = STORAGE.get()
+if credentials is None or credentials.invalid:
+  credentials = run(flow, STORAGE, http=http)
+
+# Authorize the httplib2.Http object with our credentials
+http = credentials.authorize(http)
+
+# Build the Gmail service from discovery
+gmail_service = build(&apos;gmail&apos;, &apos;v1&apos;, http=http)
+
+# Retrieve a page of threads
+# threads = gmail_service.users().threads().list(userId=&apos;me&apos;).execute()
+
+# # Print ID for each thread
+# if threads[&apos;threads&apos;]:
+#   for thread in threads[&apos;threads&apos;]:
+#     print &apos;Thread ID: %s&apos; % (thread[&apos;id&apos;])
+
+def ListMessagesWithLabels(service, user_id, label_ids=[]):
+  &quot;&quot;&quot;List all Messages of the user&apos;s mailbox with label_ids applied.
+
+  Args:
+    service: Authorized Gmail API service instance.
+    user_id: User&apos;s email address. The special value &quot;me&quot;
+    can be used to indicate the authenticated user.
+    label_ids: Only return Messages with these labelIds applied.
+
+  Returns:
+    List of Messages that have all required Labels applied. Note that the
+    returned list contains Message IDs, you must use get with the
+    appropriate id to get the details of a Message.
+  &quot;&quot;&quot;
+  try:
+    response = service.users().messages().list(userId=user_id,
+                                               labelIds=label_ids).execute()
+    messages = []
+    if &apos;messages&apos; in response:
+      messages.extend(response[&apos;messages&apos;])
+
+    while &apos;nextPageToken&apos; in response:
+      page_token = response[&apos;nextPageToken&apos;]
+      response = service.users().messages().list(userId=user_id,
+                                                 labelIds=label_ids,
+                                                 pageToken=page_token).execute()
+      messages.extend(response[&apos;messages&apos;])
+
+    return messages
+  except errors.HttpError, error:
+    print &apos;An error occurred: %s&apos; % error
+
+def GetMessage(service, user_id, msg_id):
+  &quot;&quot;&quot;Get a Message with given ID.
+
+  Args:
+    service: Authorized Gmail API service instance.
+    user_id: User&apos;s email address. The special value &quot;me&quot;
+    can be used to indicate the authenticated user.
+    msg_id: The ID of the Message required.
+
+  Returns:
+    A Message.
+  &quot;&quot;&quot;
+  try:
+    message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+
+    print &apos;Message snippet: %s&apos; % message[&apos;snippet&apos;]
+
+    return message
+  except errors.HttpError, error:
+    print &apos;An error occurred: %s&apos; % error
+
+a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]
+b = GetMessage(gmail_service,&apos;me&apos;,a)
+print b[&apos;snippet&apos;]
+print b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]
+</code></pre><p>通过观察GetMessage返回的数据，可以看到，返回的是一个字典dict,邮件的内容在key为snippet的里面。发件人在[‘payload’][‘headers’][3][‘value’]里面，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/data1.jpg" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/data2.jpg" alt=""></p>
+<p>代码在服务器上运行效果如图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/show.jpg" alt=""></p>
+<p>至此，Gmail API在AWS服务器上的部署完成。下一篇文章将会介绍如何使用Python轮询Gmail的收件箱，并在有新邮件的时候转发到国内邮箱。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" class="post-title-link" itemprop="url">对一个罗马数字与阿拉伯数字转换算法的分析</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-29 18:34:30" itemprop="dateCreated datePublished" datetime="2014-12-29T18:34:30+08:00">2014-12-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在看《Dive into Python》的单元测试时，发现用作例子的“阿拉伯数字-罗马数字”的转换算法非常的巧妙，现在发上来和大家分享一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">romanNumeralMap = ((&apos;M&apos;,1000),</div><div class="line">		(&apos;CM&apos;,900),</div><div class="line">		(&apos;D&apos;,500),</div><div class="line">		(&apos;CD&apos;,400),</div><div class="line">		(&apos;C&apos;,100),</div><div class="line">		(&apos;XC&apos;,90),</div><div class="line">		(&apos;L&apos;,50),</div><div class="line">		(&apos;XL&apos;,40),</div><div class="line">		(&apos;X&apos;,10),</div><div class="line">		(&apos;IX&apos;,9),</div><div class="line">		(&apos;V&apos;,5),</div><div class="line">		(&apos;IV&apos;,4),</div><div class="line">		(&apos;I&apos;,1))</div><div class="line">def toRoman(n):</div><div class="line">	result = &quot;&quot;</div><div class="line">	for numeral, integer in romanNumeralMap:</div><div class="line">		while n &gt;= integer:</div><div class="line">	 		result += numeral</div><div class="line">	 		n -= integer</div><div class="line">	return result</div><div class="line"></div><div class="line">def fromRoman(s):</div><div class="line">	result = 0</div><div class="line">	index = 0</div><div class="line">	for numeral, integer in romanNumeralMap:</div><div class="line">		while s[index:index+len(numeral)] == numeral:</div><div class="line">	 		result += integer</div><div class="line">	 		index += len(numeral)</div><div class="line">	return result</div><div class="line"></div><div class="line">print toRoman(1356)</div><div class="line">print fromRoman(&apos;MCMLXXII&apos;)</div></pre></td></tr></table></figure>
+<p>这个算法的聪明之处，就在于他通过一个romanNumeralMap，把罗马数字与阿拉伯数字里面的“边界值”做出一一对应。这个边界刚刚好是罗马数字组合之间的转换。例如，I，II，III都可以通过第一个边界值组合获得；V，VI，VII，VIII可以通过V和I的组合获得。而对于一些特殊的值，则直接列出来。例如IV。通过这个边界值的组合，就能实现所需求的转换。这就类似于在一些机读卡上，需要填写1到100的数字，他会使用0,1,2,4,7这样以来:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">3 = 1 + 2;</div><div class="line">5 = 4 + 1;</div><div class="line">6 = 4 + 2;</div><div class="line">8 = 7 + 1;</div><div class="line">9 = 7 + 2.</div></pre></td></tr></table></figure></p>
+<p>首先看一下toRoman()函数，把阿拉伯数字转换成罗马数字。它使用Python连接字符串的操作符号 + 来使“边界值”连接到一起。例如用作例子的n = 1356，程序遍历romanNumeralMap，寻找n对应的罗马数字，如果找不到，那就找刚刚比n小一点的数字对应的罗马字符。遍历在能使n 在romanNumeralMap有对应值时结束。</p>
+<pre><code>找到刚刚比1356小的那个值对应的罗马数字，也就是1000，M
+再继续找刚刚比n = 1356 - 1000 = 356小的数，也就是100，C;
+又继续找比n = 356 - 100 = 256小的数，还是100，也就是C;
+再找比n = 256 - 100 = 156小的数，仍然是100，C；
+继续找比n = 156 - 100 = 56 小的数，50，L；
+继续找比n = 56 - 50 = 6小的数，5，V；
+继续找n = 6 - 5 = 1对于的数，1，I。 结束。
+</code></pre><p>所以1356对应的值为MCCCLVI。 这样的操作很类似于在十进制里面，一个数字1356 = 1000 +　300 + 50 + 6，只是阿拉伯数字里面6是一个单独的符号，而罗马数字里面VI是个V + I的组合而已。</p>
+<p>下面再说说fromRoman()函数，把罗马数字转换成阿拉伯数字。这个函数在理解上面可能比toRoman()稍稍要困难一点。</p>
+<p>还是用例子来说明，MCMLXXII转换成阿拉伯数字。<br>其中如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">s[index:index+len(numeral)]</div></pre></td></tr></table></figure></p>
+<p>作用是把字符串s中，从第index位到第index+ len(numeral)位（不包含第index + len(numeral)位自身）的字符提取出来。比如：</p>
+<pre><code>&gt;&gt;&gt; a = &apos;helloworld&apos;
+&gt;&gt;&gt; print a[2:5]
+llo
+</code></pre><p>即s的第2,3,4位被取出。</p>
+<p>回到对s = ‘MCMLXXII’的处理。</p>
+<pre><code>首先map中第一个罗马字符是M，只有一位，就把s 的第0位拿出来对比，发现s的第0位刚刚好是M，于是得到一个1000，index变为1，则之后从s的第一位开始。简单的说，相当于s 变成了s = &apos;CMLXXII&apos;
+
+接下来，经过一些无效的值以后，轮换到CM，发现CM为两位，就取出s的前两位，也就是CM，发现在s中刚刚好有CM,于是得到900. index再加2，则实际上s就相当于变成了LXXII
+
+继续经过一些无效值以后，轮换到了L，发现s当前的1位为L，于是在map中有对应的值50.然后index加1，s相当于变成了XXII
+
+接下来到了X，发现s当前的1位为X，在map中有对应的值10.然后index 再加1，s变成了XII
+
+虽然这个时候人已经知道是12了，但是计算机还是不知道，于是继续一个X，s变为II
+
+然后出现一个I，s变为I
+
+终于程序找到了一个直接相等的值I，于是转换结束。
+</code></pre><p>所以MCMLXXII对于的阿拉伯数字是1000+900+50+10+10+1+1 = 1972</p>
+<p>这个方法，把一个罗马数字从高位开始逐次剥离最高位，从而渐渐的把数字缩小。</p>
+<p>最近正在学习算法。因为越来越发现现在做的东西，如果仅仅实现功能的话，性能会出现瓶颈。希望我以后能写出更好的算法。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/23/A-Totally-Amazing/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/23/A-Totally-Amazing/" class="post-title-link" itemprop="url">使用微信控制你的电脑</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-23 22:44:20" itemprop="dateCreated datePublished" datetime="2014-12-23T22:44:20+08:00">2014-12-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/23/A-Totally-Amazing/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/23/A-Totally-Amazing/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>A totally amazing!!!</p>
+<p>源代码请戳-&gt;<a href="https://github.com/kingname/MCC" target="_blank" rel="external">https://github.com/kingname/MCC</a></p>
+<p>实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~</p>
+<h2 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h2><p>程序由两部分构成:</p>
+<ul>
+<li>_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令</li>
+<li>auto.py为程序的主体文件，相关的实现代码均在里面</li>
+</ul>
+<h2 id="软件原理"><a href="#软件原理" class="headerlink" title="软件原理"></a>软件原理</h2><p>本程序需要使用两个邮箱，我给他们取名字为【主人邮箱】和【奴隶邮箱】。建议奴隶邮箱使用小号。主人邮箱使用大号，我是使用的我的QQ邮箱作为主人邮箱，临时申请的一个新浪邮箱作为奴隶邮箱。目前奴隶邮箱使用新浪邮箱测试通过，其他邮箱未做测试。各位有兴趣的朋友可以测试一下并反馈给我，非常感谢~</p>
+<p>本程序使用Python的poplib提供的函数，周期性读取奴隶邮箱最新的一封邮件，如果这封邮件是主人邮箱发送的，并且标题在_config.ini文件中有定义，则执行本标题定义的操作。</p>
+<p>例如，_config.ini文件中有如下定义：</p>
+<pre><code>music=D:\backup\Music\Intro.mp3
+</code></pre><p>主人邮箱发送一份邮件，标题为music，电脑就会调用默认播放器，播放D盘中的这个名叫Intro.mp3的音乐。如果这个Intro.mp3本身只有1秒钟，且没有内容，而音乐播放器设置为随机播放，就间接地实现了打开播放器随机播放音乐的目的。</p>
+<p>目前程序可以实现两类功能：<br>运行命令与打开文件。</p>
+<h3 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h3><p>其中运行命令的原理是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">os.system(command)</div></pre></td></tr></table></figure>
+<p>理论上任何在CMD命令提示符下可以执行的命令，在这里都可以执行。_config.ini中默认提供了两个样例，一个关闭计算机：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shutdown=shutdown -f -s -t 10 -c closing...</div></pre></td></tr></table></figure>
+<p>另一个是列出当前目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dir=dir</div></pre></td></tr></table></figure></p>
+<p>等号左侧为此命令的名字，也就是在邮件中可以发送的标题内容，等号右侧为命令本身。注意等号左右均不能有空格。</p>
+<h3 id="打开文件"><a href="#打开文件" class="headerlink" title="打开文件"></a>打开文件</h3><p>打开文件的原理是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</div></pre></td></tr></table></figure></p>
+<p>其中，open_file为文件在电脑中的位置。函数调用Windows的API来运行程序，效果和用鼠标双击相同。</p>
+<h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p>程序运行以后，先加载_config.ini，配置主人邮箱和奴隶邮箱，并确定扫描频率（time_limit）为多少秒检查一次邮箱。同时使用字典将命令的名称和命令本身添加到内存中。接下来的操作如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/MCCliuchen.png" alt=""></p>
+<p>使用主人邮箱发送相应的命令名称以后，就能触发电脑的相关操作。</p>
+<h2 id="程序配置"><a href="#程序配置" class="headerlink" title="程序配置"></a>程序配置</h2><p>打开_config.ini文件:</p>
+<ul>
+<li><p>host填写奴隶邮箱的pop3服务器，例如新浪的pop3服务器为</p>
+<pre><code>pop.sina.com
+</code></pre></li>
+<li><p>username为奴隶邮箱的邮箱号</p>
+</li>
+<li>password为奴隶邮箱的密码</li>
+<li>boss_email为主人邮箱号</li>
+<li>time_limit控制程序检查邮箱的评论，默认为300秒，也就是5分钟</li>
+<li><p>＜command＞与＜/command＞之间为命令区，此处可以使用任何能在CMD命令提示符中执行的命令格式为：</p>
+<pre><code>名字=命令
+</code></pre><p>注意=左右不能出现空格</p>
+</li>
+<li><p>＜open_file＞＜/open_file＞之间为可以打开的文件。任何在电脑上可以使用鼠标双击打开的程序、文件均可把其地址写在此处。格式为：</p>
+<pre><code>名字=地址
+</code></pre><p>注意=左右不能出现空格</p>
+</li>
+</ul>
+<h2 id="编译程序"><a href="#编译程序" class="headerlink" title="编译程序"></a>编译程序</h2><p>使用py2exe编译。进入代码目测，执行以下代码：</p>
+<pre><code>python mysetup.py py2exe
+</code></pre><h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>接下来的版本升级中</p>
+<ul>
+<li>会添加更多的操作进去</li>
+<li>开发图像界面，使配置更方便</li>
+<li>动态调整检查频率</li>
+<li>通过邮件的内容返回命令的执行状态</li>
+<li>通过邮件内容返回文件列表</li>
+<li>解决打开的文件功能在文件名和路径不能有汉字的bug</li>
+</ul>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>感谢知乎用户 <a href="http://www.zhihu.com/people/yin-fitz" title="@印如意fitz" target="_blank" rel="external">@印如意fitz</a>的启发与思路提供。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/21/Python正则表达式中的re-S/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/21/Python正则表达式中的re-S/" class="post-title-link" itemprop="url">Python正则表达式中的re.S</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-21 09:55:54" itemprop="dateCreated datePublished" datetime="2014-12-21T09:55:54+08:00">2014-12-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/21/Python正则表达式中的re-S/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/21/Python正则表达式中的re-S/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Python的正则表达式中，有一个参数为re.S。它表示“.”（不包含外侧双引号，下同）的作用扩展到整个字符串，包括“\n”。看如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import re</div><div class="line">a = &apos;&apos;&apos;asdfsafhellopass:</div><div class="line">	234455</div><div class="line">	worldafdsf</div><div class="line">	&apos;&apos;&apos;</div><div class="line">b = re.findall(&apos;hello(.*?)world&apos;,a)</div><div class="line">c = re.findall(&apos;hello(.*?)world&apos;,a,re.S)</div><div class="line">print &apos;b is &apos; , b</div><div class="line">print &apos;c is &apos; , c</div></pre></td></tr></table></figure></p>
+<p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">b is  []</div><div class="line">c is  [&apos;pass:\n\t234455\n\t&apos;]</div></pre></td></tr></table></figure></p>
+<p>正则表达式中，“.”的作用是匹配除“\n”以外的任何字符，也就是说，它是在一行中进行匹配。这里的“行”是以“\n”进行区分的。a字符串有每行的末尾有一个“\n”，不过它不可见。</p>
+<p>如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始，不会跨行。而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，将“\n”当做一个普通的字符加入到这个字符串中，在整体中进行匹配。</p>
+<p>在re.py库的介绍中有以下语句：</p>
+<blockquote>
+<p>“.”      Matches any character except a newline.</p>
+<p>S  DOTALL      “.” matches any character at all, including the newline.</p>
+</blockquote>
+<p>这里特别感谢评论中叫做Style的朋友指出了我的错误。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/18/从E-E到S-E/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/18/从E-E到S-E/" class="post-title-link" itemprop="url">从E.E到S.E</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-18 16:49:19" itemprop="dateCreated datePublished" datetime="2014-12-18T16:49:19+08:00">2014-12-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂念/" itemprop="url" rel="index"><span itemprop="name">杂念</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/18/从E-E到S-E/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/18/从E-E到S-E/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我在本科学的是Electric Engineering，大四找工作却当了软件工程师。这可以说是各种机缘巧合吧。</p>
+<p>我接触编程是在初中，那个时候有同学在看《黑客X档案》，当时看到一篇文章说的一个万能密码：</p>
+<pre><code>&apos;or&apos;&apos;=&apos;
+</code></pre><p>有一天在学校的网站论坛上测试了一下，发现真的登录了，而且是管理员的身份。虽然不知道是什么原理，但是觉得有点意思。</p>
+<p>后来开始不间断的买《黑客X档案》，接触到了编程，VB，C语言，Perl还有汇编。我发现VB特别好懂，于是安装了一个Visual Basic 6.0开始写小程序。我写的最大的小程序就是一个网页浏览器了，当然是跟着书上写的。这些经历现在想想也挺丰富的，入侵网站，抓取肉鸡。不过这不是今天的重点，以后单独写一篇文章吧。</p>
+<p>开始上大学了，第一学期就是C语言。周围无数的传言说C语言难得跟一坨屎一样，挂科一大半。直到现在，这四年间，每一年都能听到无数这样的话语。然而当年的C语言考试，我提前40分钟做完，不小心拿了一个满分。</p>
+<p>那个时候用的是谭浩强的C语言，被人吐槽无数的版本。里面有些东西确实脑残：</p>
+<pre><code>b = a+++++a;
+</code></pre><p>这样的问题确实没有什么意义，考试的题里面，概念题就能让你及格。剩下的改错题和编程题稍稍考一点水平，然而题目大多也是课程设计做过的。这一门课程，我的课程设计所有程序都是我自己凭脑袋想出来的，即便书上有现成代码的算法，我也是自己根据对算法的理解写出来的。而其他人有些照着书写代码，有些直接copy。这应该就是原因吧。</p>
+<p>大学前三年，断断续续的搞了一些php, Java，LaTex 但是都坚持不长时间。这也和我三分钟的热情有关。一次偶然的机会，听到了一个语言，Python，网上搜索了一下，看到很多人说用它写爬虫很方便。那个时候我学到了一个词，爬虫。</p>
+<p>今年三月份，Coursera上面开了一门课程，是Python入门。课程持续到5月份，每周课程都会有miniProject，一般来说是做小游戏。在完成每一个小项目的过程中，我发现我越来越喜欢Python。</p>
+<p>5月份Python课程结束没多久，我收到教务处的通知，周五要提交创新项目的结题报告。我才反应我过来，我去年申请的一个创新训练项目还没有做。</p>
+<p>这个项目是做一个选课辅助软件。当时申请表中，我表示准备用MFC与MSSQL制作这个软件和对应的数据库。可是，MSSQL安装好以后，我的电脑开机要5分钟。而MFC，倒腾了半个月，一点进展都没有，遂从此荒废。</p>
+<p>时间只有一个星期，现学MFC是来不及了。这个时候我想到我是会Python的人，于是果断决定使用Python + MySQL来开发这个选课辅助软件。</p>
+<p>一天半以后，软件连同图形界面全部做好了。那个时候，我觉得Python必定是神派来拯救我的天使。</p>
+<p>后来辅导员做微信公众号，我提议我可以做一个爬虫，把教务处的通知扒取下来。那天以后，我正式开始做爬虫。</p>
+<p>一开始是用Python的一个库urllib2的一个方法获取一个网页的全部代码，然互写入本地保存。这就是一个最简单的爬虫了。</p>
+<p>接下来接触了正则表达式。于是一个真正意义的爬虫诞生了。那个时候我室友过生日，我给他写了一个扒取儿（cheng）童(ren)网站里面卖肉漫画的爬虫。他高兴得不得了。关于这个爬虫，有机会我应该会放出来吧。不过担心被查水表。</p>
+<p>然后我觉得我有点了不起了，于是去淘宝开了一个店铺，专业定做Python爬虫。一个月都没有生意，直到有一天来了一个买家。他让我做百度贴吧的爬虫，于是我写了一个原始爬虫的demo给他，然后正式接手这个工作。他让他的一个下属教我Scrapy，这个爬虫框架让我的生产效率提升了一个数量级。接下来扒取各大视频网站，又指导我使用Scrapy配合Redis制作分布式爬虫，然后把数据存入MongoDB中，这样我的生产效率再一次提升了几个数量级。</p>
+<p>这样我赚取到了给自己买iPad的钱。这也奠定了我学习软件方面技术的基本方法，项目驱动，现学现用。在后面接到的项目中，无论是爬虫的模拟登陆，打码，多代理，甚至是自然语言处理，多次证实了我这个方法的正确性。</p>
+<p>从大学入学开始，我就决定要出国。可是最后TOEFL只差2分让我与资本主义国家失之交臂。一气之下决定考研。</p>
+<p>大三下期和整个暑假都在准备考研，但是考研课程老师那种卖狗皮膏药十全大补丸的样子确实让我厌烦，考研数学题做起来也甚是恶心。后来因为一些私事，我放弃了考研，中秋节过后开始准备找工作。</p>
+<p>那个时候，BAT和华为的提前批招聘都结束了。而我想都不敢想华为，因为印象中，华为是招硬件的，而且基本上都是研究生。我是学E.E的，但是我的项目经历只有学校的各种实验课做的东西。于是我抱着试一试的心态去应聘华为的软件工程师。</p>
+<p>我不得不感谢Python，他让我几乎是毫无阻力的通过了大多数公司的面试，我的所有拿得出手的项目经历，全部都有Python的身影。最后我去了MTK而拒了华为，毕竟华为太累了。在两个月之前，我都不敢想我竟然有机会拒绝华为。</p>
+<p>这样我就成了一个程序员。本科学的东西我想我还是有点用的，作为一个终身爱好也不错。毕竟搞硬件的要表白，场面炫目到秒杀码农几条街。</p>
+<p>如果没有Python，我想我现在不知道在干嘛。他让我的人生从此不同。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/15/修改Coney主题之侧边栏移位/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -779,203 +2553,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/14/Python字符编码的一个相对万能的处理方法/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/14/Python字符编码的一个相对万能的处理方法/" class="post-title-link" itemprop="url">Python字符编码的一个相对万能的处理方法</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-14 12:38:44" itemprop="dateCreated datePublished" datetime="2014-12-14T12:38:44+08:00">2014-12-14</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/14/Python字符编码的一个相对万能的处理方法/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/14/Python字符编码的一个相对万能的处理方法/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在使用Python做爬虫的过程中，经常遇到字符编码出问题的情况。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UnicodeEncodeError: &apos;ascii&apos; codec can&apos;t encode character u&apos;\u6211&apos; in position 0: ordinal not in range(128)</div></pre></td></tr></table></figure></p>
-<p>针对这种情况，网上已经有很多原理性的分析了，我在此就不一一列举。然而，我相信很多人，即便看完原理以后也不知道怎么解决。</p>
-<p>我自己琢磨出一种快速解决的方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def get_page_sourse(url):</div><div class="line">req = urllib2.Request(url)</div><div class="line">   for key in headers:</div><div class="line">       req.add_header(key,headers[key])</div><div class="line">       content = urllib2.urlopen(req).read()</div><div class="line">       return content</div></pre></td></tr></table></figure>
-<p> 这个函数使用urllib2扒取了一个网页的源代码。并返回了这个源代码。当我们使用文件操作准备把content的内容写到一个txt文件中时，就会出现编码错误。</p>
-<p>在这种情况下，如何快速的排除问题？</p>
-<p>只需要将最后一行改成下面这样就可以了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return content.decode(&apos;A&apos;,&apos;ingore&apos;).encode(&apos;B&apos;,&apos;ignore&apos;)</div></pre></td></tr></table></figure></p>
-<p>这里，A和B分别可以使gbk, gb2312,utf-8,它们排列组合一下，一共只有6种组合方式</p>
-<p>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">return content.decode(&apos;gbk&apos;,&apos;ingore&apos;).encode(&apos;utf-8&apos;,&apos;ignore&apos;)</div><div class="line">return content.decode(&apos;utf-8&apos;,&apos;ingore&apos;).encode(&apos;gb2312&apos;,&apos;ignore&apos;)</div><div class="line">...</div></pre></td></tr></table></figure></p>
-<p>我使用这种方式，解决了所有的我遇到的Python的编码错误。虽然是一个一个的试，但是也用不了2分钟就能搞定。</p>
-<p>至于背后原理什么的，程序跑通了以后再慢慢研究吧。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1018,7 +2600,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">113</span>
+                    <span class="site-state-item-count">121</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1087,7 +2669,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">28</span>
+                      
+                    
+                    <span class="site-state-item-count">29</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -1308,7 +2892,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">104</span>
+                      
+                    
+                    <span class="site-state-item-count">105</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1567,6 +3153,20 @@
 
   
   
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
     
       
     

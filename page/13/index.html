@@ -353,6 +353,845 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/21/Python正则表达式中的re-S/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/21/Python正则表达式中的re-S/" class="post-title-link" itemprop="url">Python正则表达式中的re.S</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-21 09:55:54" itemprop="dateCreated datePublished" datetime="2014-12-21T09:55:54+08:00">2014-12-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/21/Python正则表达式中的re-S/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/21/Python正则表达式中的re-S/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Python的正则表达式中，有一个参数为re.S。它表示“.”（不包含外侧双引号，下同）的作用扩展到整个字符串，包括“\n”。看如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import re</div><div class="line">a = &apos;&apos;&apos;asdfsafhellopass:</div><div class="line">	234455</div><div class="line">	worldafdsf</div><div class="line">	&apos;&apos;&apos;</div><div class="line">b = re.findall(&apos;hello(.*?)world&apos;,a)</div><div class="line">c = re.findall(&apos;hello(.*?)world&apos;,a,re.S)</div><div class="line">print &apos;b is &apos; , b</div><div class="line">print &apos;c is &apos; , c</div></pre></td></tr></table></figure></p>
+<p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">b is  []</div><div class="line">c is  [&apos;pass:\n\t234455\n\t&apos;]</div></pre></td></tr></table></figure></p>
+<p>正则表达式中，“.”的作用是匹配除“\n”以外的任何字符，也就是说，它是在一行中进行匹配。这里的“行”是以“\n”进行区分的。a字符串有每行的末尾有一个“\n”，不过它不可见。</p>
+<p>如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始，不会跨行。而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，将“\n”当做一个普通的字符加入到这个字符串中，在整体中进行匹配。</p>
+<p>在re.py库的介绍中有以下语句：</p>
+<blockquote>
+<p>“.”      Matches any character except a newline.</p>
+<p>S  DOTALL      “.” matches any character at all, including the newline.</p>
+</blockquote>
+<p>这里特别感谢评论中叫做Style的朋友指出了我的错误。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/18/从E-E到S-E/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/18/从E-E到S-E/" class="post-title-link" itemprop="url">从E.E到S.E</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-18 16:49:19" itemprop="dateCreated datePublished" datetime="2014-12-18T16:49:19+08:00">2014-12-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂念/" itemprop="url" rel="index"><span itemprop="name">杂念</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/18/从E-E到S-E/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/18/从E-E到S-E/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我在本科学的是Electric Engineering，大四找工作却当了软件工程师。这可以说是各种机缘巧合吧。</p>
+<p>我接触编程是在初中，那个时候有同学在看《黑客X档案》，当时看到一篇文章说的一个万能密码：</p>
+<pre><code>&apos;or&apos;&apos;=&apos;
+</code></pre><p>有一天在学校的网站论坛上测试了一下，发现真的登录了，而且是管理员的身份。虽然不知道是什么原理，但是觉得有点意思。</p>
+<p>后来开始不间断的买《黑客X档案》，接触到了编程，VB，C语言，Perl还有汇编。我发现VB特别好懂，于是安装了一个Visual Basic 6.0开始写小程序。我写的最大的小程序就是一个网页浏览器了，当然是跟着书上写的。这些经历现在想想也挺丰富的，入侵网站，抓取肉鸡。不过这不是今天的重点，以后单独写一篇文章吧。</p>
+<p>开始上大学了，第一学期就是C语言。周围无数的传言说C语言难得跟一坨屎一样，挂科一大半。直到现在，这四年间，每一年都能听到无数这样的话语。然而当年的C语言考试，我提前40分钟做完，不小心拿了一个满分。</p>
+<p>那个时候用的是谭浩强的C语言，被人吐槽无数的版本。里面有些东西确实脑残：</p>
+<pre><code>b = a+++++a;
+</code></pre><p>这样的问题确实没有什么意义，考试的题里面，概念题就能让你及格。剩下的改错题和编程题稍稍考一点水平，然而题目大多也是课程设计做过的。这一门课程，我的课程设计所有程序都是我自己凭脑袋想出来的，即便书上有现成代码的算法，我也是自己根据对算法的理解写出来的。而其他人有些照着书写代码，有些直接copy。这应该就是原因吧。</p>
+<p>大学前三年，断断续续的搞了一些php, Java，LaTex 但是都坚持不长时间。这也和我三分钟的热情有关。一次偶然的机会，听到了一个语言，Python，网上搜索了一下，看到很多人说用它写爬虫很方便。那个时候我学到了一个词，爬虫。</p>
+<p>今年三月份，Coursera上面开了一门课程，是Python入门。课程持续到5月份，每周课程都会有miniProject，一般来说是做小游戏。在完成每一个小项目的过程中，我发现我越来越喜欢Python。</p>
+<p>5月份Python课程结束没多久，我收到教务处的通知，周五要提交创新项目的结题报告。我才反应我过来，我去年申请的一个创新训练项目还没有做。</p>
+<p>这个项目是做一个选课辅助软件。当时申请表中，我表示准备用MFC与MSSQL制作这个软件和对应的数据库。可是，MSSQL安装好以后，我的电脑开机要5分钟。而MFC，倒腾了半个月，一点进展都没有，遂从此荒废。</p>
+<p>时间只有一个星期，现学MFC是来不及了。这个时候我想到我是会Python的人，于是果断决定使用Python + MySQL来开发这个选课辅助软件。</p>
+<p>一天半以后，软件连同图形界面全部做好了。那个时候，我觉得Python必定是神派来拯救我的天使。</p>
+<p>后来辅导员做微信公众号，我提议我可以做一个爬虫，把教务处的通知扒取下来。那天以后，我正式开始做爬虫。</p>
+<p>一开始是用Python的一个库urllib2的一个方法获取一个网页的全部代码，然互写入本地保存。这就是一个最简单的爬虫了。</p>
+<p>接下来接触了正则表达式。于是一个真正意义的爬虫诞生了。那个时候我室友过生日，我给他写了一个扒取儿（cheng）童(ren)网站里面卖肉漫画的爬虫。他高兴得不得了。关于这个爬虫，有机会我应该会放出来吧。不过担心被查水表。</p>
+<p>然后我觉得我有点了不起了，于是去淘宝开了一个店铺，专业定做Python爬虫。一个月都没有生意，直到有一天来了一个买家。他让我做百度贴吧的爬虫，于是我写了一个原始爬虫的demo给他，然后正式接手这个工作。他让他的一个下属教我Scrapy，这个爬虫框架让我的生产效率提升了一个数量级。接下来扒取各大视频网站，又指导我使用Scrapy配合Redis制作分布式爬虫，然后把数据存入MongoDB中，这样我的生产效率再一次提升了几个数量级。</p>
+<p>这样我赚取到了给自己买iPad的钱。这也奠定了我学习软件方面技术的基本方法，项目驱动，现学现用。在后面接到的项目中，无论是爬虫的模拟登陆，打码，多代理，甚至是自然语言处理，多次证实了我这个方法的正确性。</p>
+<p>从大学入学开始，我就决定要出国。可是最后TOEFL只差2分让我与资本主义国家失之交臂。一气之下决定考研。</p>
+<p>大三下期和整个暑假都在准备考研，但是考研课程老师那种卖狗皮膏药十全大补丸的样子确实让我厌烦，考研数学题做起来也甚是恶心。后来因为一些私事，我放弃了考研，中秋节过后开始准备找工作。</p>
+<p>那个时候，BAT和华为的提前批招聘都结束了。而我想都不敢想华为，因为印象中，华为是招硬件的，而且基本上都是研究生。我是学E.E的，但是我的项目经历只有学校的各种实验课做的东西。于是我抱着试一试的心态去应聘华为的软件工程师。</p>
+<p>我不得不感谢Python，他让我几乎是毫无阻力的通过了大多数公司的面试，我的所有拿得出手的项目经历，全部都有Python的身影。最后我去了MTK而拒了华为，毕竟华为太累了。在两个月之前，我都不敢想我竟然有机会拒绝华为。</p>
+<p>这样我就成了一个程序员。本科学的东西我想我还是有点用的，作为一个终身爱好也不错。毕竟搞硬件的要表白，场面炫目到秒杀码农几条街。</p>
+<p>如果没有Python，我想我现在不知道在干嘛。他让我的人生从此不同。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/15/修改Coney主题之侧边栏移位/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/15/修改Coney主题之侧边栏移位/" class="post-title-link" itemprop="url">修改Coney主题之侧边栏移位</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-15 18:09:54" itemprop="dateCreated datePublished" datetime="2014-12-15T18:09:54+08:00">2014-12-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/15/修改Coney主题之侧边栏移位/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/15/修改Coney主题之侧边栏移位/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coney_0.jpg" alt=""></p>
+<p>Coney是一个非常漂亮的Hexo主题，作者的博客请戳-&gt;<a href="http://gengbiao.me/" target="_blank" rel="external">http://gengbiao.me/</a> 本博客的主题是基于Coney修改而成。</p>
+<p>我个人比较喜欢侧边栏在左边，于是我希望能将右侧的侧边栏整体移动到左边去。大家对比我的博客首页和主题作者的博客首页就可以看出不同。</p>
+<p>在修改之前，需要解释一下div标签。不讲定义，只举例子。大家注意这篇文章的配图。设想有这样一个场景，你要搬家，从成都搬到北京。你可以一件一件的把家里的东西搬出来，然后运到北京，再放进新的家。也可以，把你的整个房子连根撬起来，用超人或者热气球直接运送到北京去。这么做的好处是，你只需要搬房子，而房子里面的东西完全不受影响。div标签就可是实现这样的功能。</p>
+<p>使用Chrome的审查元素功能，可以发现这个主题首页的正文部分的布局是这样的：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyconey_layout.png" alt=""></p>
+<p>其中A，B分别是控制侧边栏开启和关闭的开关，A是openaside, B是closeaside，在侧边栏开启的时候，A是隐藏的。</p>
+<p>当然实际的布局里还有其他div，但是当我只需要知道你有一个房子，房子里有几间房间的时候，我是没有必要去关心你卫生间里是马桶还是痰盂的。</p>
+<p>那么现在目标就是，把asidepart，openaside这两个东西移动到左边，把main移动到右边。我这里没有说closeaside，不是笔误，而是因为closeaside是在asidepart里面的，因此移动asidepart的时候，closeaside跟着就移动了。</p>
+<p>打开themes\coney\source\css_partial文件夹，发现有一个aside.styl文件，根据名字猜测，这个东西应该就是关于侧边栏的布局了。</p>
+<p>打开aside.styl文件，发现这其实就是一个css文件。首先看到前面几段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">//button</div><div class="line">.openaside</div><div class="line">  display none</div><div class="line">  position fixed</div><div class="line">  right 7.5%</div><div class="line">  top 260px</div><div class="line">  a</div><div class="line">    display block</div><div class="line">    color color-white</div><div class="line">    border 1px solid color-white</div><div class="line">    border-radius 5px</div><div class="line">    background color-theme</div><div class="line">    padding 0.2em 0.55em</div><div class="line">    &amp;::before</div><div class="line">      font-family font-icon-family</div><div class="line">      font-smoothing()</div><div class="line">      content &quot;\f0c9&quot;</div><div class="line"></div><div class="line">.closeaside</div><div class="line">  display none</div><div class="line">  a</div><div class="line">    color color-theme</div><div class="line">    &amp;:hover</div><div class="line">      color color-blue</div><div class="line">    &amp;::before</div><div class="line">      font-family font-icon-family</div><div class="line">      font-smoothing()</div><div class="line">      content &quot;\f0c9&quot;</div><div class="line">  @media tablet</div><div class="line">    display block</div><div class="line">    position absolute</div><div class="line">    right 25px</div><div class="line">    top 22px</div><div class="line"></div><div class="line">//sidebar</div><div class="line">#asidepart</div><div class="line">  background color-section</div><div class="line">  margin 1em 0 0</div><div class="line">  padding 0.5em 2% 1em</div><div class="line">  @media tablet</div><div class="line">    position relative</div><div class="line">    float left</div><div class="line">    width 18%</div><div class="line">    margin 2em 0 0 3%</div></pre></td></tr></table></figure></p>
+<p>Coney作者的命名方式非常好，于是我们很容易就看到了需要的内容。<br>在.openaside下面，看到一个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">right 7.5%</div></pre></td></tr></table></figure></p>
+<p>当我们隐藏了侧边栏以后，看到的小方块，就是箭头指向的这个</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside.jpg" alt=""></p>
+<p>如果我把这个right改成left会有什么效果呢？不妨一试</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside_change1.jpg" alt=""></p>
+<p>看起来有点效果了。那么继续看下面的.closeaside<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">right 25px</div></pre></td></tr></table></figure></p>
+<p>尝试把right修改为left,对比一下前后效果：</p>
+<p>修改前：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneycloseaside1.jpg" alt=""></p>
+<p>修改后:</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneycloseaside2.jpg" alt=""></p>
+<p>这个小图标在侧边栏里面的相对位置改变了，这就像是你从家里的卧室走到了厨房。你并不关心房子外面是不是奥特曼在打小怪兽。你只是换了一个房间。</p>
+<p>再往下走，发现#asidepart下面有个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">position relative</div><div class="line">float left</div></pre></td></tr></table></figure></p>
+<p>我想把侧边栏从右边移动到左边，那这里应该有个right才对，为什么它竟然是left？而且position的意思是位置，relative是相对，也就是说是相对位置？很奇怪，先不动它。</p>
+<p>再来找找main在哪里。在themes\coney\source\css_partial下面的index.styl里发现了它。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#main</div><div class="line">  margin 1em 0 0</div><div class="line">  line-height line-height+0.3</div><div class="line">  @media tablet</div><div class="line">    margin 2em 0 0</div><div class="line">    width 75%</div><div class="line">    position relative</div><div class="line">    float left</div><div class="line">    transition margin 0.5s ease-out</div></pre></td></tr></table></figure></p>
+<p>这里发现了一个left，既然我想把main从左边移动到右边，那就尝试把这个left改成right,然后测试一下效果。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymain_right.jpg" alt=""></p>
+<p>哈哈，成了！</p>
+<p>等等，别高兴的太早，点一下关闭侧边栏的按钮试一试。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymain_change2.jpg" alt=""></p>
+<p>是不是感觉怪怪的？对比一下作者的博客效果</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside.jpg" alt=""></p>
+<p>隐藏侧边栏以后，文章列表应该向右移动，那我把侧边栏移动到左边并隐藏以后，文章列表应该向左移动才对啊！可是它为什么死在那里了？</p>
+<p>经过询问作者，我得知这个文章列表的移动的相关javascript代码在after_footer.ejs文件中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var m = $(&apos;#main&apos;),</div><div class="line">      a = $(&apos;#asidepart&apos;),</div><div class="line">      c = $(&apos;.closeaside&apos;),</div><div class="line">      o = $(&apos;.openaside&apos;);</div><div class="line">...........</div><div class="line"></div><div class="line">c.click(function()&#123;</div><div class="line">    a.addClass(&apos;fadeOut&apos;).css(&apos;display&apos;, &apos;none&apos;);</div><div class="line">    o.css(&apos;display&apos;, &apos;block&apos;).addClass(&apos;fadeIn&apos;);</div><div class="line">    m.addClass(&apos;moveMain&apos;);</div><div class="line">  &#125;);</div><div class="line">  o.click(function()&#123;</div><div class="line">    o.css(&apos;display&apos;, &apos;none&apos;).removeClass(&apos;beforeFadeIn&apos;);</div><div class="line">    a.css(&apos;display&apos;, &apos;block&apos;).removeClass(&apos;fadeOut&apos;).addClass(&apos;fadeIn&apos;);      </div><div class="line">    m.removeClass(&apos;moveMain&apos;);</div><div class="line">  &#125;);</div></pre></td></tr></table></figure></p>
+<p>虽然我不会javascript，但是根据这段代码，猜一下意思：</p>
+<pre><code>当关闭侧边栏(closeaside)按钮被点击，就添加一个叫做moveMain的东西；
+当打开侧边栏(openaside)的按钮被点击，就移除这个叫做moveMain的东西。
+</code></pre><p>觉得moveMain很可疑，而且move移动，Main就是文章列表的div的名字，这个解释天衣无缝啊。</p>
+<p>我在themes\coney\source\css_partial文件夹下面的index.styl中找到了这个moveMain<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">.moveMain</div><div class="line">  margin-left 10% !important</div></pre></td></tr></table></figure></p>
+<p>网上搜索了一下，发现margin-left的意思是：</p>
+<blockquote>
+<p>margin-left 属性设置元素的左外边距。</p>
+</blockquote>
+<p>就是距离左侧10%的距离，假设原来的距离小于10%，当我点了关闭侧边栏以后，为了让main距离左侧的距离达到10%，不就正好的是向右移动吗？</p>
+<p>既然这个解释天衣无缝，那就把left改成right试一试效果。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymove.jpg" alt=""></p>
+<p>这样看起来似乎已经达到效果了，但是感觉有些地方不太和谐。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis.jpg" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis2.jpg" alt=""></p>
+<p>侧边栏距离文章列表太近了。</p>
+<p>这个时候就要用到Chrome的强大功能了，启动审查元素功能，定位到侧边栏</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis3.jpg" alt=""></p>
+<p>注意右侧<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">margin 2em 0 0 3%</div></pre></td></tr></table></figure></p>
+<p>margin是边界的意思，那么右边四个数据应该就是控制侧边栏上下左右距离的了。尝试修改，发现吧3%改成0的时候，出现了我希望的效果</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis4.jpg" alt=""></p>
+<p>这个数据是在aside.styl中，修改以后生成页面，完美实现了需求的功能。你在首页或者这个页面都可以看到最终效果。</p>
+<p>需要说明的是，虽然我写了这么长一篇，但是我实际上是没有CSS基础的，都是自己摸索，所以你也可以做出自己的主题。</p>
+<p>既然选择了Hexo，也就选择了折腾。</p>
+<p>生命不息，折腾不止。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/14/Hexo的coney主题的一些补充说明/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/14/Hexo的coney主题的一些补充说明/" class="post-title-link" itemprop="url">Hexo的coney主题的一些补充说明</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-14 14:10:44" itemprop="dateCreated datePublished" datetime="2014-12-14T14:10:44+08:00">2014-12-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/14/Hexo的coney主题的一些补充说明/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/14/Hexo的coney主题的一些补充说明/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Coney是一个非常优秀的Hexo主题，作者的网站<a href="http://gengbiao.me/" target="_blank" rel="external">http://gengbiao.me/</a>然而在使用的过程中，我发现作者有一些地方没有说清。因此在这里写一些我使用中发现的问题和解决方法。</p>
+<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>作者并未说明多个标签之间应该以何种方式分隔，我尝试使用逗号，空格以及方括号均不能正确分隔标签。后来尝试使用一种笨的方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tags: 标签一</div><div class="line">tags: 标签二</div><div class="line">tags：标签三</div></pre></td></tr></table></figure></p>
+<p>还有一种聪明的办法，就是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tags: [标签一,标签二,标签三]</div></pre></td></tr></table></figure></p>
+<h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><p>如图，标题显示异常<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/CatchC5B212-14-14-25-56.jpg" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Catch82DF12-14-14-25-56.jpg" alt=""><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/Catch12-14-14-25-56.jpg" alt=""></p>
+<p>出现这种问题，是由于title中加了双引号，去掉双引号以后正常。但是不知道这个双引号是怎么加上去的。</p>
+<h3 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h3><p>模板只有两个页面，如果想添加更多页面,就像这个博客上面一样，可以<br>在博客根目录下面使用git bash输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo n page About</div></pre></td></tr></table></figure></p>
+<p>这条命令新建了一个“关于”页面，在source下会生成一个About文件夹，文件夹里面有一个index.md 通过编辑index.md就可以编写“关于”页面。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogQQ截图20141214143619.jpg" alt=""></p>
+<p>接下来要如何将这个页面添加到博客上面呢？</p>
+<p>可以修改themes/coney/_config.yml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">   ##### Menu</div><div class="line">menu:</div><div class="line"> 	首页: /</div><div class="line"> 	归档: /archives</div><div class="line"> 	分类: /categories</div><div class="line"> 	标签: /tags</div><div class="line"> 	关于: /About</div></pre></td></tr></table></figure></p>
+<p>如图是我修改以后的效果：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogQQ截图20141214143922.jpg" alt=""><br>最后实际显示效果如下：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogpre.jpg" alt=""></p>
+<h3 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h3><p>也许是Hexo优化方面的问题，空格在文件修改的过程中非常重要。还是以上面的添加页面为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">   ##### Menu</div><div class="line">menu:</div><div class="line"> 	首页: /</div><div class="line"> 	归档: /archives</div><div class="line"> 	分类: /categories</div><div class="line"> 	标签: /tags</div><div class="line"> 	关于:/About #这里少了一个空格</div></pre></td></tr></table></figure>
+<p>如果写成这样，在使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure></p>
+<p>生成静态文件的过程中，就会出错，如下图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/blogerror.jpg" alt=""></p>
+<p>因此，在修改文件的过程中，一定不能漏掉空格。</p>
+<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><p>Coney使用多说的评论系统。主题作者对多说系统提供的官方代码做了一些修改，从而导致了一个隐藏的bug。</p>
+<p>在themes\coney\layout_partial下的after_footer.ejs文件的112行代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var duoshuoQuery = &#123;short_name:&quot;&lt;%= theme.duoshuo.short_name %&gt;&quot;&#125;;</div></pre></td></tr></table></figure></p>
+<p>主题作者的本意是通过theme.duoshuo.short_name 调用 _config.yml中的short_name。作者的名字是英文，因此不会出问题，但是当short_name的值为中文时，会导致整个评论框消失。</p>
+<p>然而，coney作者告诉我，short_name仅仅是一个标记，在评论中并不会显示出来，因此只要随便写个英文上去就好了。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/14/Python字符编码的一个相对万能的处理方法/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -577,7 +1416,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">121</span>
+                    <span class="site-state-item-count">125</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -871,7 +1710,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">105</span>
+                      
+                    
+                    <span class="site-state-item-count">106</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1130,6 +1971,14 @@
 
   
   
+    
+      
+    
+      
+    
+      
+    
+      
     
       
     

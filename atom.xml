@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2020-03-23T15:41:11.370Z</updated>
+  <updated>2020-03-23T15:47:20.191Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -14,6 +14,198 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：实现有过期时间的LRU缓存</title>
+    <link href="https://www.kingname.info/2020/03/23/lru-with-expire-time/"/>
+    <id>https://www.kingname.info/2020/03/23/lru-with-expire-time/</id>
+    <published>2020-03-23T15:46:52.000Z</published>
+    <updated>2020-03-23T15:47:20.191Z</updated>
+    
+    <content type="html"><![CDATA[<p>在<a href="https://mp.weixin.qq.com/s/F7D9MjGypRj5J1EZVvPv0Q" target="_blank" rel="external">一日一技：实现函数调用结果的 LRU 缓存</a>一文中，我们提到Python自带的LRU缓存<code>lru_cache</code>。通过这个装饰器可以非常轻松地实现缓存。</p>
+<a id="more"></a>
+<p>现在我们考虑下面这个应用场景：MongoDB中有100对id-用户名的对应关系，我从Redis中持续不断读取id，如果id能在MongoDB中找到对应关系，那么就把对应的用户名打印出来。如果找不到对应关系，那么就把这个id丢弃。</p>
+<p>为了防止频繁读取MongoDB，我在程序开始的时候直接读取这一百对对应关系，并存为字典：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line">handler = pymongo.MongoClient().weibo.id_name_map</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_id_name_map</span><span class="params">()</span>:</span></div><div class="line">    id_name = &#123;&#125;</div><div class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> handler.find():</div><div class="line">        id_name[row[<span class="string">'id'</span>]] = row[<span class="string">'name'</span>]</div><div class="line">    <span class="keyword">return</span> id_name</div><div class="line"></div><div class="line"></div><div class="line">id_name_map = read_id_name_map()</div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    data = client.blpop(<span class="string">'weibo_id'</span>)</div><div class="line">    user_id = data[<span class="number">1</span>].decode()</div><div class="line">    <span class="keyword">if</span> user_id <span class="keyword">in</span> id_name_map:</div><div class="line">        print(id_name_map[user_id])</div></pre></td></tr></table></figure>
+<p>大家可以思考一下，上面这段代码有没有什么问题。然后继续看后面。</p>
+<p>如果我现在需要再增加100个id-用户名的对应关系怎么办？</p>
+<p>由于这个程序运行以后就一直阻塞式地读取Redis，不会停止，所以整个过程只会读取一次MongoDB。后面即使我向MongoDB中添加了新的对应关系，只要程序不重启，就无法读取到新的对应关系。</p>
+<p>肯定有同学想到，在while循环里面增加一个计时器，每x分钟就重新调用一下read_id_name_map()函数，更新对应关系。</p>
+<p>不过今天我们要讲的是另一个更有创意的办法，使用<code>lru_cache</code>来实现。</p>
+<p>对于这个例子来说，lru_cache的<code>maxsize</code>参数只需要设置为1，因为只需要存放1份对应关系即可。那么我们如何做到，比如每10分钟更新一次呢？我们知道，在使用lru_cache时，如果调用同一个函数，并且传入的参数相同，那么从第二次开始就会使用缓存。现在我们如何让时间在每10分钟内相同呢？</p>
+<p>我们来看现在的时间戳：1578399211.30042</p>
+<p>它除以600，值是<code>1578399211.30042 // 600 = 2630665.0</code>。然后我让这个时间戳加5分钟，也就是增加300秒，变成<code>1578399511.30042</code>。这个新的时间戳再除以600，发现结果还是<code>2630665.0</code>。但如果原来的时间戳增加超过10分钟，例如增加了601秒，我们再来看看效果<code>(1578399211.30042 + 601) // 600 = 2630666.0</code>，此时的结果也发生了变化。</p>
+<p>利用这个特点，修改一下我们的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"><span class="keyword">import</span> redis</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> lru_cache</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line">handler = pymongo.MongoClient().weibo.id_name_map</div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">@lru_cache(maxsize=1)</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_id_name_map</span><span class="params">(_)</span>:</span></div><div class="line">    id_name = &#123;&#125;</div><div class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> handler.find():</div><div class="line">        id_name[row[<span class="string">'id'</span>]] = row[<span class="string">'name'</span>]</div><div class="line">    <span class="keyword">return</span> id_name</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    data = client.blpop(<span class="string">'weibo_id'</span>)</div><div class="line">    id_name_map = read_id_name_map(time.time() // <span class="number">600</span>)</div><div class="line">    user_id = data[<span class="number">1</span>].decode()</div><div class="line">    <span class="keyword">if</span> user_id <span class="keyword">in</span> id_name_map:</div><div class="line">        print(id_name_map[user_id])</div></pre></td></tr></table></figure>
+<p>现在，我们直接在while循环内部调用<code>read_id_name_map</code>，如果两次调用的时间间隔小于600秒，那么<code>time.time() // 600</code>的值是相同的，第二次直接使用缓存，也就不会查询MongoDB了。当时间超过10分钟后，时间戳除以600的值增加了，于是缓存没有命中，进入查询MongoDB的过程，更新id_name_map。实现了有过期时间的LRU缓存。</p>
+<p>补充：可能有同学注意到定义<code>read_id_name_map</code>函数的时候，参数我写的是下划线。这是Python 编码规范中建议的一种写法。当一个变量不会被使用，但又需要保留时，就可以用下划线表示。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在&lt;a href=&quot;https://mp.weixin.qq.com/s/F7D9MjGypRj5J1EZVvPv0Q&quot;&gt;一日一技：实现函数调用结果的 LRU 缓存&lt;/a&gt;一文中，我们提到Python自带的LRU缓存&lt;code&gt;lru_cache&lt;/code&gt;。通过这个装饰器可以非常轻松地实现缓存。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="LRU" scheme="https://www.kingname.info/tags/LRU/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>拒绝想当然，不看文档导致GNE 的隐秘 bug</title>
+    <link href="https://www.kingname.info/2020/03/23/bug-for-gne/"/>
+    <id>https://www.kingname.info/2020/03/23/bug-for-gne/</id>
+    <published>2020-03-23T15:45:55.000Z</published>
+    <updated>2020-03-23T15:46:27.498Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/kingname/GeneralNewsExtractor" target="_blank" rel="external">GNE</a>上线4天，已经有很多朋友通过它来编写自己的新闻类网页通用爬虫。</p>
+<a id="more"></a>
+<p>今天有一个用户来跟我反馈，GNE 0.1.4版本在提取澎湃新闻时，只能提取一小部分的内容。</p>
+<p>一开始我以为是提取算法有问题，Debug 了半天，最后才发现，是新闻正文在预处理的时候，就被提前<code>删除</code>了！</p>
+<p>为了解释这个问题，我们用一小段 HTML 代码来还原当时的场景：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">h = <span class="string">'''</span></div><div class="line">&lt;html&gt;</div><div class="line">    &lt;body&gt;</div><div class="line">        &lt;div class="txt"&gt;</div><div class="line">        第一行</div><div class="line">        &lt;p class="con" /&gt;</div><div class="line">        第二行</div><div class="line">        &lt;p class="con" /&gt;</div><div class="line">        第三行</div><div class="line">        &lt;/div&gt;</div><div class="line">    &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>阅读过 GNE 源代码的朋友都知道，GNE 会在预处理阶段尽可能移除没什么用的 HTML 标签。例如上面这段代码中的两行<code>&lt;p class=&quot;con&quot; /&gt;</code>都属于会干扰提取结果，且对提取没有任何帮助的标签。</p>
+<p>于是我们使用 lxml 库的方法来移除它：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> lxml.html <span class="keyword">import</span> fromstring</div><div class="line"></div><div class="line">selector = fromstring(h)</div><div class="line">useless_list = selector.xpath(<span class="string">'//p[@class="con"]'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> useless <span class="keyword">in</span> useless_list:</div><div class="line">    useless.getparent().remove(useless)</div></pre></td></tr></table></figure>
+<p>根据想当然的理论：</p>
+<ol>
+<li>找到<code>&lt;p class=&quot;con&quot; /&gt;</code>标签</li>
+<li>找到它的父标签</li>
+<li>从父标签里面把这两个无效标签移除掉</li>
+</ol>
+<p>整个过程看起来没有问题，并且预期移除以后的 HTML 应该是这样的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">h = <span class="string">'''</span></div><div class="line">&lt;html&gt;</div><div class="line">    &lt;body&gt;</div><div class="line">        &lt;div class="txt"&gt;</div><div class="line">        第一行</div><div class="line">        </div><div class="line">        第二行</div><div class="line">        </div><div class="line">        第三行</div><div class="line">        &lt;/div&gt;</div><div class="line">    &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div><div class="line">'''</div></pre></td></tr></table></figure>
+<p>但实际上，现实情况与想当然的情况自然不一样。真正的输出结果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-01-04-16-12-49.png" alt=""></p>
+<p><code>&lt;div class=&quot;txt&quot;&gt;</code>这个标签下面的<code>text()</code>有三行，分别为<code>第一行</code>、<code>第二行</code>、<code>第三行</code>。但是使用上面的代码移除时，<code>第二行</code>与<code>第三行</code>都一并被删除了。</p>
+<p>这是因为，这就是<code>ElementTree.remove</code>这个方法的行为。它不仅会移除这个节点，还会移除这个节点父节点的 text()中，位于这个节点后面的所有内容。</p>
+<p>所以，正常的做法应该是直接调用要被移除这个节点的<code>.drop_tag()</code>方法。我们修改一下上面的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> lxml.html <span class="keyword">import</span> fromstring</div><div class="line"><span class="keyword">from</span> html <span class="keyword">import</span> unescape</div><div class="line"><span class="keyword">from</span> lxml.html <span class="keyword">import</span> etree</div><div class="line"></div><div class="line">h = <span class="string">'''</span></div><div class="line">&lt;html&gt;</div><div class="line">    &lt;body&gt;</div><div class="line">        &lt;div class="txt"&gt;</div><div class="line">        第一行</div><div class="line">        &lt;p class="con" /&gt;</div><div class="line">        第二行</div><div class="line">        &lt;p class="con" /&gt;</div><div class="line">        第三行</div><div class="line">        &lt;/div&gt;</div><div class="line">    &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div><div class="line">'''</div><div class="line"></div><div class="line">selector = fromstring(h)</div><div class="line">useless_list = selector.xpath(<span class="string">'//p[@class="con"]'</span>)</div><div class="line"><span class="keyword">for</span> useless <span class="keyword">in</span> useless_list:</div><div class="line">    useless.drop_tag()</div><div class="line"></div><div class="line">print(unescape(etree.tostring(selector).decode()))</div></pre></td></tr></table></figure>
+<p>运行效果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-01-04-16-14-38.png" alt=""></p>
+<p>成功达到了我们想要的目的。</p>
+<p>GNE 已经更新了版本，修复了这个 bug。使用 GNE 的同学请升级到0.1.5以上版本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install --upgrade gne</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://github.com/kingname/GeneralNewsExtractor&quot;&gt;GNE&lt;/a&gt;上线4天，已经有很多朋友通过它来编写自己的新闻类网页通用爬虫。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="GNE" scheme="https://www.kingname.info/categories/GNE/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="GNE" scheme="https://www.kingname.info/tags/GNE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一日一技：应该传入对象还是在用的时候再初始化？</title>
+    <link href="https://www.kingname.info/2020/03/23/pass-or-create/"/>
+    <id>https://www.kingname.info/2020/03/23/pass-or-create/</id>
+    <published>2020-03-23T15:45:05.000Z</published>
+    <updated>2020-03-23T15:45:32.539Z</updated>
+    
+    <content type="html"><![CDATA[<p>在写 Python 代码的时候，大家可能会在不知不觉中使用一些设计范式。我们来看两个例子。</p>
+<a id="more"></a>
+<p>假设有一个类<code>People</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age, sex)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.age = age</div><div class="line">        self.sex = sex</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dance</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在跳舞'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">study</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在学习'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">eat</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在吃东西'</span>)</div></pre></td></tr></table></figure>
+<p>现在我们有另一个类<code>ClassRoom</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassRoom</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, size)</span>:</span></div><div class="line">        self.size = size</div><div class="line">        self.student = People(<span class="string">'小明'</span>, <span class="number">17</span>, <span class="string">'男'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_class</span><span class="params">(self)</span>:</span></div><div class="line">        self.student.study()</div></pre></td></tr></table></figure>
+<p>我们在<code>ClassRoom</code>的构造函数中，初始化了一个 student 对象，然后在<code>start_class</code>方法中，调用了这个对象的<code>study</code>方法。</p>
+<p>这个过程看起来似乎没有什么问题，相信很多读者也是这样写代码的。</p>
+<p>现在，我们再增加两个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Restaurant</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.consumer = People(<span class="string">'张三'</span>, <span class="number">30</span>, <span class="string">'男'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_launch</span><span class="params">(self)</span>:</span></div><div class="line">        self.consumer.eat()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Ballroom</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, address)</span>:</span></div><div class="line">        self.address = address</div><div class="line">        self.dancer = People(<span class="string">'小红'</span>, <span class="number">20</span>, <span class="string">'女'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">open</span><span class="params">(self)</span>:</span></div><div class="line">        self.dancer.dance()</div></pre></td></tr></table></figure>
+<p>新增加的两个类<code>Restaurant</code>和<code>Ballroom</code>的构造函数里面都通过<code>People</code>类初始化了对象。然后在调用这个对象的方法。</p>
+<p>这样写看起来没有问题，能正常工作，代码也不丑。</p>
+<p>现在，<code>People</code>类需要修改一下它的构造函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age, sex, address)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.age = age</div><div class="line">        self.sex = sex</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dance</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在跳舞'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">study</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在学习'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">eat</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在吃东西'</span>)</div></pre></td></tr></table></figure>
+<p>在初始化<code>People</code>类时，需要传入一个<code>address</code>参数。现在怎么办？</p>
+<p>于是<code>ClassRoom</code>、<code>Restaurant</code>、<code>Ballroom</code>这三个类的构造函数都要随之做修改，全都得加上这个<code>address</code>参数。</p>
+<p>这就叫做<code>牵一发而动全身</code>。</p>
+<p>很多人为了避免做这样的修改，会把新增加的这个参数<code>address</code>改成默认参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age, sex, address=<span class="string">''</span>)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.age = age</div><div class="line">        self.sex = sex</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dance</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在跳舞'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">study</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在学习'</span>)</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">eat</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我在吃东西'</span>)</div></pre></td></tr></table></figure>
+<p>这样看起来，另外三个类的代码就不需要做任何修改了。</p>
+<blockquote>
+<p>这就是为什么你们公司的代码里面，很多函数会带上大量奇奇怪怪的默认参数的原因。</p>
+</blockquote>
+<p>在编程范式中，有一个术语叫做<code>依赖注入</code>，就是为了解决这个问题的。</p>
+<p>而且做起来简单到你觉得这是在逗你，把<code>People</code>初始化以后的对象传到其他类的构造函数中即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Ballroom</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, address, dancer)</span>:</span></div><div class="line">        self.address = address</div><div class="line">        self.dancer = dancer</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">open</span><span class="params">(self)</span>:</span></div><div class="line">        self.dancer.dance()</div><div class="line"></div><div class="line">dancer = People(<span class="string">'小红'</span>, <span class="number">20</span>, <span class="string">'女'</span>)</div><div class="line">ballroom = Ballroom(<span class="string">'xxx'</span>, dancer)</div><div class="line">ballroom.open()</div></pre></td></tr></table></figure>
+<p>虽然叫做编程范式，但也不是说应该始终使用依赖注入。例如你的代码会层层调用，难道从第一层把对象一层一层传到最里面去？所以应该根据实际情况来进行选择。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在写 Python 代码的时候，大家可能会在不知不觉中使用一些设计范式。我们来看两个例子。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一日一技：使用二分法排查正则表达式的异常</title>
+    <link href="https://www.kingname.info/2020/03/23/binary-search-for-regex/"/>
+    <id>https://www.kingname.info/2020/03/23/binary-search-for-regex/</id>
+    <published>2020-03-23T15:44:11.000Z</published>
+    <updated>2020-03-23T15:44:40.471Z</updated>
+    
+    <content type="html"><![CDATA[<p>现在我有10亿条微博正文，并从同事手上拿到了15000条需要过滤的垃圾信息正则表达式，只要微博正文符合任何一条正则表达式，就删除这条微博。</p>
+<a id="more"></a>
+<p>正则表达式的格式为：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">^你成功领取</div><div class="line">|^感谢您的积</div><div class="line">|^在第\d+次抽奖.</div><div class="line">|^只有帮主才</div><div class="line">|^目标有相应</div><div class="line">|^宝宝#G.</div><div class="line">|^提交失败，</div><div class="line">|^您已领取过</div><div class="line">|^破军争夺战</div><div class="line">|^首席大弟子</div><div class="line">|数第\d+个丫鬟</div><div class="line">|你的店铺</div><div class="line">|恭喜.*?投中了</div><div class="line">|&lt;web</div><div class="line">|你将该物品拆解成</div><div class="line">|^你身上没有</div><div class="line">|欢迎参加微博抽奖</div><div class="line">|蔡徐坤</div><div class="line">|王一博</div><div class="line">|朱一龙</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>存放在一个名为<code>trash.txt</code>的文本文件中，每个正则表达式一行。</p>
+<p>一般情况下，我只需要使用如下几行代码就能实现这个功能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"><span class="keyword">with</span> open(<span class="string">'trash.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">    lines = [x.strip() <span class="keyword">for</span> x <span class="keyword">in</span> f]</div><div class="line">    pattern = re.compile(<span class="string">''</span>.join(lines))</div><div class="line"></div><div class="line"><span class="keyword">for</span> weibo <span class="keyword">in</span> weibo_list:</div><div class="line">    <span class="keyword">if</span> pattern.search(weibo):</div><div class="line">        print(<span class="string">'垃圾信息，过滤！'</span>)</div></pre></td></tr></table></figure>
+<p>但是当我的代码运行到<code>re.compile</code>这一行时，报错了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-30-12-56-46.png" alt=""></p>
+<p>并且，即使你在 Google 上面搜索：<code>re.error: multiple repeat at position</code>，截至2019年12月30日，你能找到的都是对这个报错的讨论，但没有一个讨论能解决本文描述的问题。</p>
+<p>那我们自食其力，来试着解决一下这个问题。它报错报的是<code>position 167</code>，那么我们来看看第167个字符有什么问题。在 PyCharm 中，可以在右下角查看你选中了多少个字符，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-30-12-59-22.png" alt=""></p>
+<p>从截图中可以看到，第167个字符所在的这一行正则表达式为：<code>|张三丰.*?张翠山.*?张无忌</code>，但是我完全看不出这一行正则表达式有什么问题。</p>
+<p>由于报错了，那么肯定至少有一行正则表达式有问题，我们假设有问题的正则表达式有且只有一行。现在我们有15000行正则表达式，如何找出有问题的这一行呢？</p>
+<p>这个时候，我们就可以使用二分查找来解决这个问题，$log_{2}15000=13.8$，我们最多查找14次就能找到有问题的这一行正则表达式。</p>
+<p>由于正则表达式一共有15000行，我们就先看0-7500行在编译时是否会报错，如果报错，在看<code>0-3750</code>行是否报错，如果不报错，在看<code>3750-7500</code>行是否报错……如此分割下去，直到找到报错的这一行正则表达式。</p>
+<p>二分查找的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"><span class="keyword">with</span> open(<span class="string">'trash.txt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">    lines = [x.strip() <span class="keyword">for</span> x <span class="keyword">in</span> f]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_compile_success</span><span class="params">(regex)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        re.compile(regex)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">except</span> Exception:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(regex_list)</span>:</span></div><div class="line">    <span class="keyword">if</span> len(regex_list) == <span class="number">1</span>:</div><div class="line">        print(regex_list[<span class="number">0</span>])</div><div class="line">        <span class="keyword">return</span></div><div class="line">    mid = len(regex_list) // <span class="number">2</span></div><div class="line">    part_1 = <span class="string">''</span>.join(regex_list[: mid])</div><div class="line">    part_2 = <span class="string">''</span>.join(regex_list[mid: ])</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> is_compile_success(part_1):</div><div class="line">        search(regex_list[: mid])</div><div class="line">        <span class="keyword">return</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> is_compile_success(part_2):</div><div class="line">        search(regex_list[mid:])</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line"></div><div class="line">search(lines)</div></pre></td></tr></table></figure>
+<p>运行结果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-30-13-20-24.png" alt=""></p>
+<p>原来出问题的地方在：<code>.*??</code>，这里多写了一个问号。把这一行改成<code>|赵大.*?包</code>以后，编译成功通过。</p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><ol>
+<li>如果要把出问题的这一行所在的行号打印出来，应该如何修改代码？</li>
+<li>如果有问题的正则表达式不止一行，应该如何修改代码，从而打印所有有问题的正则表达式？</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;现在我有10亿条微博正文，并从同事手上拿到了15000条需要过滤的垃圾信息正则表达式，只要微博正文符合任何一条正则表达式，就删除这条微博。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="正则表达式" scheme="https://www.kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>你经常看到却经常忽视的__init__.py有什么用？</title>
@@ -979,187 +1171,6 @@
 &lt;p&gt;为了防止它报错，我们可以使用&lt;code&gt;.get()&lt;/code&gt;方法：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-30-22-43-26.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;但每次都要写&lt;code&gt;.get()&lt;/code&gt;稍显麻烦。于是我们可以通过自己实现一个自定义的字典对象，来解决这个问题。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在 Python 中编写抽象类</title>
-    <link href="https://www.kingname.info/2019/11/26/abstract-class-in-python/"/>
-    <id>https://www.kingname.info/2019/11/26/abstract-class-in-python/</id>
-    <published>2019-11-26T14:55:20.000Z</published>
-    <updated>2019-12-11T14:55:59.869Z</updated>
-    
-    <content type="html"><![CDATA[<p>在极客时间某设计模式相关的课程中，某老师说 Python 不支持抽象类和接口。</p>
-<p>但实际上，Python 支持抽象类。</p>
-<a id="more"></a>
-<p>Python 自带的<code>abc</code>模块用于实现抽象类相关的定义和操作。</p>
-<p>我们通过一个简单的例子来说明，如何在 Python 中实现抽象类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span><span class="params">(ABC)</span>:</span></div><div class="line"><span class="meta">    @abstractmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line">    </div><div class="line"><span class="meta">    @abstractmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">eat</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dance</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'我正在跳舞'</span>)</div></pre></td></tr></table></figure>
-<p>从<code>abc</code>模块导入<code>ABC</code>类，和<code>abstractmethod</code>抽象方法装饰器。基于<code>ABC</code>类可以实现一个抽象类。通过<code>@abstractmethod</code>装饰一个方法，让它成为一个抽象方法。抽象方法在子类中必需被实现。</p>
-<p>抽象类不能被实例化，所以我们实例化一下，可以看到这里报错了，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-26-19-43-11.png" alt=""></p>
-<p>我们再看一下，如果继承抽象类，但是没有实现其中的某个抽象方法，也会导致报错。如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-26-19-47-41.png" alt=""></p>
-<p>当我们把所有抽象方法都实现了以后，子类就能够正常初始化了，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-26-19-49-23.png" alt=""></p>
-<p>抽象类<code>People</code>中的<code>dance</code>不是抽象方法，所以子类不需要覆盖。</p>
-<p>抽象类是软件开发中一个非常重要的概念，通过定义抽象类，我们可以约定子类必需实现的方法。当我们一个类有几十上百个方法时，用抽象方法来防止子类漏掉某些方法是非常方便的做法。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在极客时间某设计模式相关的课程中，某老师说 Python 不支持抽象类和接口。&lt;/p&gt;
-&lt;p&gt;但实际上，Python 支持抽象类。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>GNE v0.04版更新，支持提取正文图片与源代码</title>
-    <link href="https://www.kingname.info/2019/11/25/gne-0-4/"/>
-    <id>https://www.kingname.info/2019/11/25/gne-0-4/</id>
-    <published>2019-11-25T14:54:01.000Z</published>
-    <updated>2019-12-11T14:54:53.559Z</updated>
-    
-    <content type="html"><![CDATA[<p><code>GeneralNewsExtractor</code>以下简称<code>GNE</code>是一个新闻网页通用抽取器，能够在不指定任何抽取规则的情况下，把新闻网站的正文提取出来。</p>
-<p>我们来看一下它的基本使用方法。</p>
-<a id="more"></a>
-<h2 id="安装-GNE"><a href="#安装-GNE" class="headerlink" title="安装 GNE"></a>安装 GNE</h2><p>使用 pip 安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install --upgrade git+https://github.com/kingname/GeneralNewsExtractor.git</div></pre></td></tr></table></figure>
-<p>当然你也可以使用<code>pipenv</code>安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pipenv install git+https://github.com/kingname/GeneralNewsExtractor.git<span class="comment">#egg=gne</span></div></pre></td></tr></table></figure>
-<h2 id="获取新闻网页源代码"><a href="#获取新闻网页源代码" class="headerlink" title="获取新闻网页源代码"></a>获取新闻网页源代码</h2><p>GNE 现在不会，将来也不会提供网页请求的功能，所以你需要自行想办法获取<code>经过渲染以后的</code>网页源代码。你可以使用<code>Selenium</code>或者<code>Pyppeteer</code>或者直接从浏览器上复制。</p>
-<p>这里演示如何直接从浏览器中复制网页的源代码：</p>
-<ol>
-<li>在 Chrome 浏览器中打开对应页面，然后开启开发者工具，如下图所示：</li>
-</ol>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-25-22-21-06.png" alt=""></p>
-<ol>
-<li>在Elements标签页定位到<html>标签，并右键，选择Copy-Copy OuterHTML，如下图所示</html></li>
-</ol>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-25-22-22-12.png" alt=""></p>
-<ol>
-<li>把源代码保存为1.html</li>
-</ol>
-<h2 id="提取正文信息"><a href="#提取正文信息" class="headerlink" title="提取正文信息"></a>提取正文信息</h2><p>编写如下代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gne <span class="keyword">import</span> GeneralNewsExtractor</div><div class="line"></div><div class="line"><span class="keyword">with</span> open(<span class="string">'1.html'</span>) <span class="keyword">as</span> f:</div><div class="line">    html = f.read()</div><div class="line"></div><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">result = extractor.extract(html)</div><div class="line">print(result)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-25-22-41-02.png" alt=""></p>
-<h2 id="这次更新了什么"><a href="#这次更新了什么" class="headerlink" title="这次更新了什么"></a>这次更新了什么</h2><p>在最新更新的 v0.04版本中，开放了正文图片提取功能，与返回正文源代码功能。其中返回图片 URL 的功能在上面已经演示了，结果中的<code>images</code>字段就是正文中的图片。</p>
-<p>那么怎么返回正文源代码呢？只需要增加一个参数<code>with_body_html=True</code>即可：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gne <span class="keyword">import</span> GeneralNewsExtractor</div><div class="line"></div><div class="line"><span class="keyword">with</span> open(<span class="string">'1.html'</span>) <span class="keyword">as</span> f:</div><div class="line">    html = f.read()</div><div class="line"></div><div class="line">extractor = GeneralNewsExtractor()</div><div class="line">result = extractor.extract(html, with_body_html=<span class="keyword">True</span>)</div><div class="line">print(result)</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-25-22-42-45.png" alt=""></p>
-<p>返回结果中的<code>body_html</code>就是正文的 html 源代码。</p>
-<p>关于 GNE 的深入使用，可以访问GNE 的Github: <a href="https://github.com/kingname/GeneralNewsExtractor。" target="_blank" rel="external">https://github.com/kingname/GeneralNewsExtractor。</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;code&gt;GeneralNewsExtractor&lt;/code&gt;以下简称&lt;code&gt;GNE&lt;/code&gt;是一个新闻网页通用抽取器，能够在不指定任何抽取规则的情况下，把新闻网站的正文提取出来。&lt;/p&gt;
-&lt;p&gt;我们来看一下它的基本使用方法。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="GNE" scheme="https://www.kingname.info/categories/GNE/"/>
-    
-    
-      <category term="GNE" scheme="https://www.kingname.info/tags/GNE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>如何使用 Flupy 构建数据处理管道</title>
-    <link href="https://www.kingname.info/2019/11/23/flupy/"/>
-    <id>https://www.kingname.info/2019/11/23/flupy/</id>
-    <published>2019-11-23T14:49:18.000Z</published>
-    <updated>2019-12-11T14:50:40.623Z</updated>
-    
-    <content type="html"><![CDATA[<p>经常使用 Linux 的同学，肯定对<code>|</code>这个符号不陌生，这个符号是 Linux 的管道符号，可以把左边的数据传递给右边。</p>
-<a id="more"></a>
-<p>例如我有一个<code>spider.log</code>文件，我想查看里面包含”ERROR”关键词，同时时间为<code>2019-11-23</code>的数据，那么我可以这样写命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat spider.log | grep ERROR | grep <span class="string">"2019-11-23"</span></div></pre></td></tr></table></figure>
-<p>但是，如果你想执行更复杂的操作，例如提取关键词<code>fail on: https://xxx.com</code>后面的这个网址，然后对所有获得的网址进行去重，那么虽然 shell 命令也能办到，但写起来却稍显麻烦。</p>
-<p>这个时候，你就可以使用 Flupy来实现你的需求。首先我们使用 Python 3.6以上的版本安装<code>Flupy</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 -m pip install flupy</div></pre></td></tr></table></figure>
-<p>然后开始写代码，看看这几步操作有多简单：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">from</span> flupy <span class="keyword">import</span> flu</div><div class="line"></div><div class="line"><span class="keyword">with</span> open(<span class="string">'spider.log'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</div><div class="line">    error_url = (flu(f).filter(<span class="keyword">lambda</span> x: <span class="string">'ERROR'</span> <span class="keyword">in</span> x)</div><div class="line">                      .map(<span class="keyword">lambda</span> x: re.search(<span class="string">'fail on: (.*?),'</span>, x))</div><div class="line">                      .filter(<span class="keyword">lambda</span> x: x <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>)</div><div class="line">                      .map(<span class="keyword">lambda</span> x: x.group(<span class="number">1</span>))</div><div class="line">                      .unique())</div><div class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> error_url:</div><div class="line">        print(url)</div></pre></td></tr></table></figure>
-<p>首先<code>flu</code>接收一个可迭代对象，无论是列表还是生成器都可以。然后对里面的每一条数据应用后面的规则。这个过程都是基于生成器实现的，所以不会有内存不足的问题，对于 PB 级别的数据也不在话下。</p>
-<p>在上面的例子中，<code>Flupy</code>获取日志文件的每一行内容，首先使用<code>filter</code>进行过滤，只保留包含<code>ERROR</code>字符串的行。然后对这些行通过<code>map</code>方法执行正则表达式，搜索满足<code>fail on: (.*?)\n</code>的内容。由于有些行有，有些行没有，所以这一步返回的数据有些是 None，有些是正则表达式对象，所以进一步再使用<code>filter</code>关键字，把所有返回<code>None</code>的都过滤掉。然后继续使用<code>map</code>关键字，对每一个正则表达式对象获取<code>.group(1)</code>。并把结果输出。</p>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-23-20-49-04.png" alt=""></p>
-<p>实现了数据的提取和去重。并且整个过程通过 Python 实现，代码也比 Shell 简单直观。</p>
-<p>由于<code>Flupy</code>可以接收任何可迭代对象，所以传入数据库游标也是没有问题的，例如从 MongoDB 中读取数据并进行处理的一个例子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"><span class="keyword">from</span> flupy <span class="keyword">import</span> flu</div><div class="line"></div><div class="line"></div><div class="line">handler = pymongo.MongoClient().db.col</div><div class="line"></div><div class="line">cursor = handler.find()</div><div class="line">data = flu(cursor).filter(<span class="keyword">lambda</span> x: x[<span class="string">'date'</span>] &gt;= <span class="string">'2019-11-10'</span>).map(<span class="keyword">lambda</span> x: x[<span class="string">'text'</span>]).take_while(<span class="keyword">lambda</span> x: <span class="string">'kingname'</span> <span class="keyword">in</span> x)</div></pre></td></tr></table></figure>
-<p>这一段代码的意思是说，从数据库中一行一行检查数据，如果<code>date</code>字段大于<code>2019-11-10</code>就获取<code>text</code>字段的数据，满足一条就获取一条，直到某条数据包含<code>kingname</code>为止。</p>
-<p>使用<code>Flupy</code>不仅可以通过写<code>.py</code>文件实现，还可以直接在命令行中执行，例如上面读取<code>spider.log</code>的代码，可以转换为终端命令：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">flu -f spider.log <span class="string">"_.filter(lambda x: 'ERROR' in x).map(lambda x: re.search('fail on: (.*?),', x)).filter(lambda x: x is not None).map(lambda x: x.group(1)).unique()"</span> -i re</div></pre></td></tr></table></figure>
-<p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-23-21-00-44.png" alt=""></p>
-<p>通过<code>-i</code> 参数导入不同的库，无论是系统自带的库或者第三方库都可以。</p>
-<p>Flupy 的更多使用参数，可以参阅它的<a href="https://flupy.readthedocs.io/en/latest/welcome.html" target="_blank" rel="external">官方文档</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;经常使用 Linux 的同学，肯定对&lt;code&gt;|&lt;/code&gt;这个符号不陌生，这个符号是 Linux 的管道符号，可以把左边的数据传递给右边。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在 Python 中小括号的另类用法</title>
-    <link href="https://www.kingname.info/2019/11/21/brack-in-python/"/>
-    <id>https://www.kingname.info/2019/11/21/brack-in-python/</id>
-    <published>2019-11-21T14:46:59.000Z</published>
-    <updated>2019-12-11T14:47:51.935Z</updated>
-    
-    <content type="html"><![CDATA[<p>在写 Python 代码时，小括号必定是天天跟我们打交道的符号。无论是函数还是类或是运算优先级都会涉及到大量的小括号。</p>
-<p>今天我们来讲讲小括号不为人知的另外两种用法。</p>
-<a id="more"></a>
-<h3 id="优化单行字符串的显示"><a href="#优化单行字符串的显示" class="headerlink" title="优化单行字符串的显示"></a>优化单行字符串的显示</h3><p>我有一行非常长的单行字符串，如果放在一行，看起来非常不方便，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-21-22-16-22.png" alt=""></p>
-<p>但是，如果我使用三引号分行显示，那么就会引入不必要的换行符，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-21-22-18-19.png" alt=""></p>
-<p>当然我们可以使用单引号加上反斜杠实现相同的效果：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-21-22-20-11.png" alt=""></p>
-<p>但引入这么多的反斜杠，一是非常难看，而是很容易引入空格，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-21-22-21-20.png" alt=""></p>
-<p>实际上，我们只需要使用小括号把多个字符串包在一起，他们自动就会组合成一个整体：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-21-22-24-08.png" alt=""></p>
-<p>这样代码的可读性就大大提高了。</p>
-<h3 id="if-条件语句的换行"><a href="#if-条件语句的换行" class="headerlink" title="if 条件语句的换行"></a>if 条件语句的换行</h3><p>Python 的 if 条件语句是 Python 的基本语法，我们在日常使用中可能会出现这样的写法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="number">1</span> + <span class="number">1</span> == <span class="number">2</span> <span class="keyword">and</span> <span class="number">2</span> + <span class="number">2</span> == <span class="number">4</span> <span class="keyword">and</span> <span class="number">4</span> + <span class="number">4</span> == <span class="number">8</span>:</div><div class="line">    print(<span class="string">'正确'</span>)</div></pre></td></tr></table></figure>
-<p>一个 if 语句里面可能会出现多个表达式，他们使用<code>and</code>或者<code>or</code>进行连接。这就会导致有时候一个 if 语句变得非常长。</p>
-<p>遇到这种情况，你可能会想到使用反斜杠进行分行，例如：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-21-22-25-12.png" alt=""></p>
-<p>但反斜杠看起来非常碍眼，此时，我们也可以通过小括号来实现换行：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-11-21-22-25-53.png" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在写 Python 代码时，小括号必定是天天跟我们打交道的符号。无论是函数还是类或是运算优先级都会涉及到大量的小括号。&lt;/p&gt;
-&lt;p&gt;今天我们来讲讲小括号不为人知的另外两种用法。&lt;/p&gt;
     
     </summary>
     

@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="起因在极客学院讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。
+如果使用PIL，这个需求只需要三行代码：123from PIL import ImageGrabpic = ImageGrab.grab()pic.save(&apos;1.jpg&apos;)
+但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Python保存截图">
+<meta property="og:url" content="https://www.kingname.info/2016/05/19/screenshot/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="起因在极客学院讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。
+如果使用PIL，这个需求只需要三行代码：123from PIL import ImageGrabpic = ImageGrab.grab()pic.save(&apos;1.jpg&apos;)
+但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Python保存截图">
+<meta name="twitter:description" content="起因在极客学院讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。
+如果使用PIL，这个需求只需要三行代码：123from PIL import ImageGrabpic = ImageGrab.grab()pic.save(&apos;1.jpg&apos;)
+但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2016/05/19/screenshot/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>使用Python保存截图 | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2016/05/19/screenshot/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用Python保存截图
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-05-19 22:47:29" itemprop="dateCreated datePublished" datetime="2016-05-19T22:47:29+08:00">2016-05-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/19/screenshot/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/05/19/screenshot/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>在<a href="http://jikexueyuan.com" target="_blank" rel="external">极客学院</a>讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。</p>
+<p>如果使用PIL，这个需求只需要三行代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</div><div class="line">pic = ImageGrab.grab()</div><div class="line">pic.save(<span class="string">'1.jpg'</span>)</div></pre></td></tr></table></figure></p>
+<p>但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实现截图的功能。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于被控端使用了win32api, 因此有一个方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32api.keybd_event</div></pre></td></tr></table></figure></p>
+<p>这个方法可以模拟键盘的按键动作。因此，解决方法就比较的明显了：</p>
+<ol>
+<li>模拟键盘上面的“Print Screen” 键按下</li>
+<li>从剪贴板中读取出截图</li>
+<li>将截图保存到本地 </li>
+</ol>
+<p>第一步非常的简单，实用win32api 和 win32con，两行代码就能实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import win32api</div><div class="line">import win32con</div><div class="line">win32api.keybd_event(win32con.VK_SNAPSHOT, 0)</div></pre></td></tr></table></figure></p>
+<p>其中win32con这个库里面包含了很多定义好的和Windows相关的常量，而VK_SNAPSHOT就是Print Screen键的键位码。后面的数字0表示截取整个屏幕。如果改成数字1，表示截取当前窗口。</p>
+<p>那么现在问题来了，在不实用PIL的情况下，如何将剪贴板你们的图片保存到本地？</p>
+<p>win32api有一个模块 win32clipboard 是负责剪贴板相关的操作。它有一个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(formats)</div></pre></td></tr></table></figure></p>
+<p>这个方法可以从剪贴板里面读取数据。但是需要指定数据的格式。从<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff729168\(v=vs.85\" target="_blank" rel="external">这里</a>.aspx)可以查看到更多的标准剪贴板格式(<em>Standard Clipboard Formats</em>).</p>
+<p>一开始我使用的formats是<strong>CF_BITMAP</strong>，程序返回的是一串整数，怀疑应该是一个内存地址。这也和这个format的描述：</p>
+<blockquote>
+<p>A handle to a bitmap (<strong>HBITMAP</strong>).</p>
+</blockquote>
+<p>是一致的，它是一个handle。</p>
+<p>我也尝试过CF_TIFF, 不过程序直接报错了，可见我使用Print Screen截图以后，剪贴板里面的图片格式并不是TIFF。</p>
+<p>经过查阅其他资料，我最后确定使用了CF_DIB。</p>
+<blockquote>
+<p>A memory object containing a BITMAPINFO structure followed by the bitmap bits.</p>
+</blockquote>
+<p>这个描述说明，CF_DIB返回的是一个内存对象，包含了BIT格式图片的信息。经过测试使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">win32clipboard.GetClipboardData(win32con.CF_DIB)</div></pre></td></tr></table></figure></p>
+<p>以后，可以得到一个很大的字符串。显然这个字符串就是图片的内容了。但是当我把这个字符串写入到bmp格式的文件后，却发现图片无法打开。</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在StackOverflow上，我遇到了一个非常好的老先生： <a href="http://stackoverflow.com/users/355230/martineau" target="_blank" rel="external">Mr. martineau</a>他为了解答了问题，并给我提供了解决办法。以下内容翻译自martineau先生的回答，原文请戳-&gt;<a href="http://stackoverflow.com/a/35885108/3922976" target="_blank" rel="external">http://stackoverflow.com/a/35885108/3922976</a></p>
+<blockquote>
+<p>你的方法的主要问题在于，你写入文件的字符串缺少了.bmp 文件头，这个文件头是<code>BITMAPFILEHEADER</code>结构。</p>
+<p>为了创建这个文件头，使用<code>GetClipboardData()</code>返回的字符串必须要进行解码(<em>decoded</em>)。对于<code>CF_DIB</code>格式来说，返回的字符串的前面一部分就是<code>BOTMAPINFOHEADER</code>。</p>
+<p>对于各种各样有不同种类压缩的<code>DIB</code>来说，这种文件头结构是非常的普遍的。不过幸好对截图来说，只需要简单的无压缩的RGBA像素。</p>
+<p>由于<code>BOTMAPFILEHEADER</code>被放在了bf0ffBits的区域里，所以事情就变得很容易了。而其他的情况，例如大尺度的颜色表跟在<code>BITMAPINFOHEADER</code> 和像素数组的开头。</p>
+<p>（这一段我看不太懂，还请如果有能正确解释这段话的朋友指正。原文是：</p>
+<blockquote>
+<p>That fact makes things much easier because otherwise determining the value to put in the bfOffBits field of the BITMAPFILEHEADER would be complicated by the fact that in most other cases there’s also a variably-sized color table following the BITMAPINFOHEADER and the start of the pixel array.）</p>
+</blockquote>
+<p>下面的代码是一个简单的例子（仅仅针对这个需求）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">import ctypes</div><div class="line">from ctypes.wintypes import *</div><div class="line">import win32clipboard</div><div class="line">from win32con import *</div><div class="line">import sys</div><div class="line"></div><div class="line">class BITMAPFILEHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;bfType&apos;, WORD),  # file type (&quot;BM&quot;)</div><div class="line">        (&apos;bfSize&apos;, DWORD),  # file size in bytes</div><div class="line">        (&apos;bfReserved1&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfReserved2&apos;, WORD),  # must be zero</div><div class="line">        (&apos;bfOffBits&apos;, DWORD),  # byte offset to the pixel array</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPFILEHEADER = ctypes.sizeof(BITMAPFILEHEADER)</div><div class="line"></div><div class="line">class BITMAPINFOHEADER(ctypes.Structure):</div><div class="line">    _pack_ = 1  # structure field byte alignment</div><div class="line">    _fields_ = [</div><div class="line">        (&apos;biSize&apos;, DWORD),</div><div class="line">        (&apos;biWidth&apos;, LONG),</div><div class="line">        (&apos;biHeight&apos;, LONG),</div><div class="line">        (&apos;biPLanes&apos;, WORD),</div><div class="line">        (&apos;biBitCount&apos;, WORD),</div><div class="line">        (&apos;biCompression&apos;, DWORD),</div><div class="line">        (&apos;biSizeImage&apos;, DWORD),</div><div class="line">        (&apos;biXPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biYPelsPerMeter&apos;, LONG),</div><div class="line">        (&apos;biClrUsed&apos;, DWORD),</div><div class="line">        (&apos;biClrImportant&apos;, DWORD)</div><div class="line">    ]</div><div class="line">SIZEOF_BITMAPINFOHEADER = ctypes.sizeof(BITMAPINFOHEADER)</div><div class="line"></div><div class="line">win32clipboard.OpenClipboard()</div><div class="line">try:</div><div class="line">    if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_DIB):</div><div class="line">        data = win32clipboard.GetClipboardData(win32clipboard.CF_DIB)</div><div class="line">    else:</div><div class="line">        print(&apos;clipboard does not contain an image in DIB format&apos;)</div><div class="line">        sys.exit(1)</div><div class="line">finally:</div><div class="line">    win32clipboard.CloseClipboard()</div><div class="line"></div><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div><div class="line"></div><div class="line">if bmih.biCompression != BI_BITFIELDS:  # RGBA?</div><div class="line">    print(&apos;insupported compression type &#123;&#125;&apos;.format(bmih.biCompression))</div><div class="line">    sys.exit(1)</div><div class="line"></div><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0, SIZEOF_BITMAPFILEHEADER)  # zero structure</div><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div><div class="line">bmfh.bfSize = SIZEOF_BITMAPFILEHEADER + len(data)  # file size</div><div class="line">SIZEOF_COLORTABLE = 0</div><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div><div class="line"></div><div class="line">bmp_filename = &apos;clipboard.bmp&apos;</div><div class="line">with open(bmp_filename, &apos;wb&apos;) as bmp_file:</div><div class="line">    bmp_file.write(bmfh)</div><div class="line">    bmp_file.write(data)</div><div class="line"></div><div class="line">print(&apos;file &quot;&#123;&#125;&quot; created from clipboard image&apos;.format(bmp_filename))</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>经过测试，这一段代码成功的实现了读取剪贴板的图片并保存到本地。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这段代码使用ctypes库来实现指针的功能，从而在内存中操作数据。这里定义了两个结构体，<code>BITMAPFILEHEADER</code> 和<code>BITMAPINFOHEADER</code>，于是，使用sizeof获取到了他们的大小。那么使用指针，从使用<code>GetClipboardData()</code>获取到的数据的头部开始移动，分别移动这两个结构体的大小，也就获取到了这两个结构体在内存中的数据。</p>
+<p>代码中使用了<code>memmove</code>和<code>memset</code>两个内存操作的方法。从ctypes的官方文档上，我们可以看到这两个方法有如下的定义：</p>
+<blockquote>
+<p><code>ctypes.memmove(dst, src, count)</code></p>
+<p>Same as the standard C memmove library function: copies count bytes from src to dst. dst and src must be integers or ctypes instances that can be converted to pointers.</p>
+<p><code>ctypes.memset(dst, c, count)</code></p>
+<p>Same as the standard C memset library function: fills the memory block at address dst with count bytes of value c. dst must be an integer specifying an address, or a ctypes instance.</p>
+</blockquote>
+<p>所以可以看出，代码里面的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmih = BITMAPINFOHEADER()</div><div class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</div></pre></td></tr></table></figure></p>
+<p>从内存中拷贝出来了<code>BITMAPINFOHEADER</code>这么大的一块的数据，并保存到了<code>bmih</code>这个变量中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bmfh = BITMAPFILEHEADER()</div><div class="line">ctypes.memset(ctypes.pointer(bmfh), 0,     SIZEOF_BITMAPFILEHEADER)</div></pre></td></tr></table></figure></p>
+<p>这一段在内存中开辟出了<code>BITMAPFILEHEADER</code>这么大一块区域，并全部填充为0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</div></pre></td></tr></table></figure></p>
+<p>这一行代码使用了位操作。首先<code>ord(&#39;B&#39;)</code>的值为66，换成二进制就是<code>1000010</code>；<code>ord(&#39;M&#39;)</code>的值为77，换成二进制就是<code>1001101</code>，然后向左移动8位，得到<code>100110100000000</code>，这个值再与<code>1000010</code>取位或，得到<code>100110101000010</code>。</p>
+<p>最后，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</div></pre></td></tr></table></figure></p>
+<p>拼装出头部的大小。然后以二进制方式，首先写文件头, 再写剪贴板获取到的字符串到本地的<code>.bmp</code>文件中，完成图片的生成。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Python一些轮子确实非常好的提高了开发效率，例如PIL，三行代码实现了我的需求。Python在快速开发方面确实非常的方便，但是涉及到底层的一些操作的时候，还是不得不使用C语言的一些接口来进行内存的操作。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/Win32Api/" rel="tag"># Win32Api</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/02/opinionchange/" rel="next" title="对Java与设计模式态度的转变">
+                <i class="fa fa-chevron-left"></i> 对Java与设计模式态度的转变
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/29/raspberryCI-1/" rel="prev" title="搭建持续集成环境(一)">
+                搭建持续集成环境(一) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">106</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决办法"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">4.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

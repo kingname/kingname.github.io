@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="关于Kafka的第三篇文章，我们来讲讲如何使用Python读写Kafka。这一篇文章里面，我们要使用的一个第三方库叫做kafka-python。大家可以使用pip或者pipenv安装它。下面两种安装方案，任选其一即可。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用Python读写Kafka？">
+<meta property="og:url" content="https://www.kingname.info/2020/03/23/operate-kafka-by-python/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="关于Kafka的第三篇文章，我们来讲讲如何使用Python读写Kafka。这一篇文章里面，我们要使用的一个第三方库叫做kafka-python。大家可以使用pip或者pipenv安装它。下面两种安装方案，任选其一即可。">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-07-03.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-40-18.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-44-26.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-48-55.png">
+<meta property="og:updated_time" content="2020-03-23T15:36:25.136Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用Python读写Kafka？">
+<meta name="twitter:description" content="关于Kafka的第三篇文章，我们来讲讲如何使用Python读写Kafka。这一篇文章里面，我们要使用的一个第三方库叫做kafka-python。大家可以使用pip或者pipenv安装它。下面两种安装方案，任选其一即可。">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-07-03.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2020/03/23/operate-kafka-by-python/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>如何使用Python读写Kafka？ | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2020/03/23/operate-kafka-by-python/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何使用Python读写Kafka？
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-23 23:34:07 / 修改时间：23:36:25" itemprop="dateCreated datePublished" datetime="2020-03-23T23:34:07+08:00">2020-03-23</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/23/operate-kafka-by-python/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/03/23/operate-kafka-by-python/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于Kafka的第三篇文章，我们来讲讲如何使用Python读写Kafka。这一篇文章里面，我们要使用的一个第三方库叫做<code>kafka-python</code>。大家可以使用<code>pip</code>或者<code>pipenv</code>安装它。下面两种安装方案，任选其一即可。</p>
+<a id="more"></a>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">python3 -m pip install kafka-python</div><div class="line">pipenv install kafka-python</div></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-07-03.png" alt=""></p>
+<p>这篇文章，我们将会使用最短的代码来实现一个读、写Kafka的示例。</p>
+<h2 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h2><p>由于生产者和消费者都需要连接Kafka，所以我单独写了一个配置文件<code>config.py</code>用来保存连接Kafka所需要的各个参数，而不是直接把这些参数Hard Code写在代码里面：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># config.py</span></div><div class="line">SERVER = <span class="string">'123.45.32.11:1234'</span></div><div class="line">USERNAME = <span class="string">'kingname'</span></div><div class="line">PASSWORD = <span class="string">'kingnameisgod'</span></div><div class="line">TOPIC = <span class="string">'howtousekafka'</span></div></pre></td></tr></table></figure>
+<p>本文演示所用的Kafka由我司平台组的同事搭建，需要账号密码才能连接，所以我在配置文件中加上了<code>USERNAME</code>和<code>PASSWORD</code>两项。你使用的Kafka如果没有账号和密码，那么你只需要<code>SERVER</code>和<code>TOPIC</code>即可。</p>
+<h2 id="创建生产者"><a href="#创建生产者" class="headerlink" title="创建生产者"></a>创建生产者</h2><p>代码简单到甚至不需要解释。首先使用<code>KafkaProducer</code>类连接 Kafka，获得一个生产者对象，然后往里面写数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">import</span> config</div><div class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaProducer</div><div class="line"></div><div class="line"></div><div class="line">producer = KafkaProducer(bootstrap_servers=config.SERVER,</div><div class="line">                         value_serializer=<span class="keyword">lambda</span> m: json.dumps(m).encode())</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">100</span>):</div><div class="line">    data = &#123;<span class="string">'num'</span>: i, <span class="string">'ts'</span>: datetime.datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)&#125;</div><div class="line">    producer.send(config.TOPIC, data)</div><div class="line">    time.sleep(<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>参数<code>bootstrap_servers</code>用于指定 Kafka 的服务器连接地址。</p>
+<p>参数<code>value_serializer</code>用来指定序列化的方式。这里我使用 json 来序列化数据，从而实现我向 Kafka 传入一个字典，Kafka 自动把它转成 JSON 字符串的效果。</p>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-40-18.png" alt=""></p>
+<p>注意，上图中，我多写了4个参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">security_protocol=<span class="string">"SASL_PLAINTEXT"</span></div><div class="line">sasl_mechanism=<span class="string">"PLAIN"</span></div><div class="line">sasl_plain_username=config.USERNAME</div><div class="line">sasl_plain_password=config.PASSWORD</div></pre></td></tr></table></figure>
+<p>这四个参数是因为我这里需要通过密码连接 Kafka 而加上的，如果你的 Kafka 没有账号密码，就不需要这四个参数。</p>
+<h2 id="创建消费者"><a href="#创建消费者" class="headerlink" title="创建消费者"></a>创建消费者</h2><p>Kafka 消费者也需要连接 Kafka，首先使用<code>KafkaConsumer</code>类初始化一个消费者对象，然后循环读取数据。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> config</div><div class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaConsumer</div><div class="line"></div><div class="line"></div><div class="line">consumer = KafkaConsumer(config.TOPIC,</div><div class="line">                         bootstrap_servers=config.SERVER,</div><div class="line">                         group_id=<span class="string">'test'</span>,</div><div class="line">                         auto_offset_reset=<span class="string">'earliest'</span>)</div><div class="line"><span class="keyword">for</span> msg <span class="keyword">in</span> consumer:</div><div class="line">    print(msg.value)</div></pre></td></tr></table></figure>
+<p>KafkaConsumer 的第一个参数用于指定 Topic。你可以把这个 Topic 理解成 Redis 的 Key。</p>
+<p>bootstrap_servers用于指定 Kafka 服务器连接地址。</p>
+<p>group_id这个参数后面的字符串可以任意填写。如果两个程序的<code>Topic</code>与<code>group_id</code>相同，那么他们读取的数据不会重复，两个程序的<code>Topic</code>相同，但是<code>group_id</code>不同，那么他们各自消费全部数据，互不影响。</p>
+<p>auto_offset_rest 这个参数有两个值，<code>earliest</code>和<code>latest</code>，如果省略这个参数，那么默认就是<code>latest</code>。这个参数会单独介绍。这里先略过。</p>
+<p>连接好 Kafka 以后，直接对消费者对象使用 for 循环迭代，就能持续不断获取里面的数据了。</p>
+<h2 id="运行演示"><a href="#运行演示" class="headerlink" title="运行演示"></a>运行演示</h2><p>运行两个消费者程序和一个生产者程序，效果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-44-26.png" alt=""></p>
+<p>我们可以看到，两个消费者程序读取数据不重复，不遗漏。</p>
+<p>当所有数据都消费完成以后，如果你把两个消费者程序关闭，再运行其中一个，你会发现已经没有数据会被打印出来了。</p>
+<p>但如果你修改一下 group_id，程序又能正常从头开始消费了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-17-20-48-55.png" alt=""></p>
+<h2 id="很多人都会搞混的几个地方"><a href="#很多人都会搞混的几个地方" class="headerlink" title="很多人都会搞混的几个地方"></a>很多人都会搞混的几个地方</h2><h3 id="earliest-与-latest"><a href="#earliest-与-latest" class="headerlink" title="earliest 与 latest"></a>earliest 与 latest</h3><p>在我们创建消费者对象的时候，有一个参数叫做<code>auto_offset_reset=&#39;earliest&#39;</code>。有人看到<code>earliest</code>与<code>latest</code>，想当然地认为设置为<code>earliest</code>，就是从 Topic 的头往后读，设置为<code>latest</code>就是忽略之前的数据，从程序运行以后，新来的数据开始读。</p>
+<p>这种看法是不正确的。</p>
+<p><code>auto_offset_reset</code>这个参数，只有在一个<code>group</code>第一次运行的时候才有作用，从第二次运行开始，这个参数就失效了。</p>
+<p>假设现在你的 Topic 里面有100个数据，你设置了一个全新的 group_id 为<code>test2</code>。<code>auto_offset_reset</code>设置为 <code>earliest</code>。那么当你的消费者运行的时候，Kafka 会先把你的 offset 设置为0，然后让你从头开始消费的。</p>
+<p>假设现在你的 Topic 里面有100个数据，你设置了一个全新的 group_id 为<code>test3</code>。<code>auto_offset_reset</code>设置为 <code>latest</code>。那么当你的消费者运行的时候，Kafka 不会给你返回任何数据，消费者看起来就像卡住了一样，但是 Kafka 会直接强制把前100条数据的状态设置为已经被你消费的状态。所以当前你的 offset 就直接是99了。直到生产者插入了一条新的数据，此时消费者才能读取到。这条新的数据对应的 offset 就变成了100。</p>
+<p>假设现在你的 Topic 里面有100个数据，你设置了一个全新的 group_id 为<code>test4</code>。<code>auto_offset_reset</code>设置为 <code>earliest</code>。那么当你的消费者运行的时候，Kafka 会先把你的 offset 设置为0，然后让你从头开始消费的。等消费到第50条数据时，你把消费者程序关了，把<code>auto_offset_reset</code>设置为<code>latest</code>，再重新运行。此时消费者依然会接着从第51条数据开始读取。不会跳过剩下的50条数据。</p>
+<p>所以，auto_offset_reset的作用，是在你的 group 第一次运行，还没有 offset 的时候，给你设定初始的 offset。而一旦你这个 group 已经有 offset 了，那么auto_offset_reset这个参数就不会再起作用了。</p>
+<h3 id="partition-是如何分配的？"><a href="#partition-是如何分配的？" class="headerlink" title="partition 是如何分配的？"></a>partition 是如何分配的？</h3><p>对于同一个 Topic 的同一个 Group：</p>
+<p>假设你的 Topic 有10个  Partition，一开始你只启动了1个消费者。那么这个消费者会轮换着从这10个Partition 中读取数据。</p>
+<p>当你启动第二个消费者时，Kafka 会从第一个消费者手上抢走5个Partition，分给第二个消费者。于是两个消费者各自读5个 Partition。互不影响。</p>
+<p>当第三个消费者又出现时，Kafka 从第一个消费者手上再抢走1个 Partition，从第二个消费者手上抢走2个 Partition 给第三个消费者。于是，消费者1有4个 Partition，消费者2有3个 Partition，消费者3有3个 Partiton，互不影响。</p>
+<p>当你有10个消费者一起消费时，每个消费者读取一个 Partition，互不影响。</p>
+<p>当第11个消费者出现时，它由于分配不到 Partition，所以它什么都读不到。</p>
+<p>所以在上一篇文章中，我说，在同一个 Topic，同一个 Group 中，你有多少个 Partiton，就能起多少个进程同时消费。</p>
+<h3 id="Kafka-是不是完全不重复不遗漏？"><a href="#Kafka-是不是完全不重复不遗漏？" class="headerlink" title="Kafka 是不是完全不重复不遗漏？"></a>Kafka 是不是完全不重复不遗漏？</h3><p>在极端情况下，Kafka 会重复，也会遗漏，但是这种极端情况并不常见。如果你的 Kafka 频繁漏数据，或者总是出现重复数据，那么肯定是你环境没有搭建正确，或者代码有问题。</p>
+<h3 id="忠告"><a href="#忠告" class="headerlink" title="忠告"></a>忠告</h3><p>再次提醒：专业的人做专业的事情，不要轻易自建Kafka 集群。让专门的同事复制搭建和维护，你只管使用。这才是最高效省事的做法。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/23/how-kafka-consume/" rel="next" title="Kafka 里面的信息是如何被消费的？">
+                <i class="fa fa-chevron-left"></i> Kafka 里面的信息是如何被消费的？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/23/insert-sprit/" rel="prev" title="为 aiohttp 爬虫注入灵魂">
+                为 aiohttp 爬虫注入灵魂 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">106</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建配置文件"><span class="nav-number">1.</span> <span class="nav-text">创建配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建生产者"><span class="nav-number">2.</span> <span class="nav-text">创建生产者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建消费者"><span class="nav-number">3.</span> <span class="nav-text">创建消费者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行演示"><span class="nav-number">4.</span> <span class="nav-text">运行演示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#很多人都会搞混的几个地方"><span class="nav-number">5.</span> <span class="nav-text">很多人都会搞混的几个地方</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#earliest-与-latest"><span class="nav-number">5.1.</span> <span class="nav-text">earliest 与 latest</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#partition-是如何分配的？"><span class="nav-number">5.2.</span> <span class="nav-text">partition 是如何分配的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-是不是完全不重复不遗漏？"><span class="nav-number">5.3.</span> <span class="nav-text">Kafka 是不是完全不重复不遗漏？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#忠告"><span class="nav-number">5.4.</span> <span class="nav-text">忠告</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

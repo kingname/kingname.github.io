@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="我们都有这样的生活体验
+
+我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？
+
+如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？
+看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手">
+<meta property="og:type" content="article">
+<meta property="og:title" content="30秒找到藏在家里的手机">
+<meta property="og:url" content="https://www.kingname.info/2017/01/07/findmyphone/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="我们都有这样的生活体验
+
+我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？
+
+如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？
+看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-40-02.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-41-25.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-27-38.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-50-03.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-04-56.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-49.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-24.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-16-49.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-19-27.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-20-50.png">
+<meta property="og:updated_time" content="2018-09-25T13:33:27.410Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="30秒找到藏在家里的手机">
+<meta name="twitter:description" content="我们都有这样的生活体验
+
+我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？
+
+如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？
+看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-40-02.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2017/01/07/findmyphone/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>30秒找到藏在家里的手机 | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2017/01/07/findmyphone/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">30秒找到藏在家里的手机
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-01-07 14:02:02" itemprop="dateCreated datePublished" datetime="2017-01-07T14:02:02+08:00">2017-01-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/07/findmyphone/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/01/07/findmyphone/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我们都有这样的生活体验</p>
+<blockquote>
+<p>我清清楚楚的记得半个小时前还用手机打了电话，怎么现在手机找不到了？这半个小时我一直在房间里，难道手机还会长翅膀飞走了吗？</p>
+</blockquote>
+<p>如果你有两个手机而且你的手机没有静音，那可以用另一个手机给不见的手机打一个电话。可是如果你的手机静音了呢？有人说可以等到晚上打电话，看家里哪里在发光。那么如果你的手机不仅静音，还屏幕朝下呢？</p>
+<p>看了这篇文章以后，只要你的手机在家里，只要手机开机，只要手机可以上网，那么你就可以在30秒以内找到它，不论它是否静音。</p>
+<a id="more"></a>
+<p>根本原理还是让手机播放音乐，我们通过音乐来找到手机。但是在放音乐之前，需要让手机自动解除静音，并将音量调到最大声。</p>
+<p>和<a href="http://kingname.info/2016/11/07/autoalarmclock/" target="_blank" rel="external">《如果我提前起床，闹钟你就别响》</a>一样，这一次的任务依然是借助Python语言+ Flask框架 + 安卓上面的自动化程序：Automate来完成。不过，这一次我会把这个工具提供给大家一起使用。</p>
+<h2 id="四个网址"><a href="#四个网址" class="headerlink" title="四个网址"></a>四个网址</h2><p>本文将会涉及到四个网址：</p>
+<ul>
+<li>注册你的账号&gt;<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a></li>
+<li>获取当前状态&gt;<a href="http://automatic.kingname.info:8888/kingname" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a></li>
+<li>让手机在30秒以后放音乐&gt;<a href="http://automatic.kingname.info:8888/kingname/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a></li>
+<li>停止寻找手机&gt;<a href="http://automatic.kingname.info:8888/kingname/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a></li>
+</ul>
+<h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3><p>为了让每个人都能使用这个服务，我开放了账号注册的功能。注册只需要提供用户名即可，不需要密码，不需要邮箱，不需要手机号。注册账号只需要访问<a href="http://automatic.kingname.info:8888/账号/register" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/register</a> 其中，账号只能使用大小写字母或者数字或者下划线。如果你的账号可以使用，你将会看到如下画面：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-40-02.png" alt=""><br>就是这么简单。你的账号已经注册成功了，接下来就可以使用服务了。</p>
+<p>当然，如果你的账号不巧被别人注册过了，你将会看到如下的提示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-41-25.png" alt=""><br>这个时候你需要换一个账号注册。</p>
+<h3 id="获得状态"><a href="#获得状态" class="headerlink" title="获得状态"></a>获得状态</h3><p>注册完成以后，访问<a href="http://automatic.kingname.info:8888/账号" target="_blank" rel="external">http://automatic.kingname.info:8888/账号</a>, 你可以看到当前的状态，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-27-38.png" alt=""><br>这句话表示，现在不需要让手机自己叫起来。这个网址是给手机上面的Automate使用的，一般情况下不需要手动输入。</p>
+<h3 id="呼叫手机"><a href="#呼叫手机" class="headerlink" title="呼叫手机"></a>呼叫手机</h3><p>突然，你发现你的手机不见了。这个时候，赶紧访问<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a>, 如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-14-50-03.png" alt=""><br>当你访问了这个页面以后，在30秒内，你的手机就会欢快的播放音乐了。各位需要把这个网址保存为书签，方便以后直接使用。</p>
+<h3 id="停止呼叫"><a href="#停止呼叫" class="headerlink" title="停止呼叫"></a>停止呼叫</h3><p>当你找到了手机，你就需要这个网址：<a href="http://automatic.kingname.info:8888/账号/cancel" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/cancel</a> 这个网址一般情况下是给Automate使用的，大家不需要手动输入。</p>
+<h2 id="Automate"><a href="#Automate" class="headerlink" title="Automate"></a>Automate</h2><p>现在再来看看安卓上面的Automate应该如何配置流程。我已经将文件放在了：<a href="https://github.com/kingname/Automatic/blob/master/BackEnd/automate/Find%20my%20phone.flo" target="_blank" rel="external">Github</a>上面。点击Download按钮即可下载，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-04-56.png" alt=""></p>
+<p>下载完成以后，将这个文件放在手机中，打开手机上的Automate，点击右上角的三个竖着的点，选择<code>Import</code>，如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-49.png" alt=""></p>
+<p>再点击<code>SD card</code>,如下图所示：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-08-24.png" alt=""></p>
+<p>选中刚刚下载的文件，即可导入成功。导入完成以后，打开这个flow, 点击右上角铅笔的图标，可以打开整个流程图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-16-49.png" alt=""><br>你需要修改的，只有我画红框的三个方块。</p>
+<p>对于这两个HTTP Request，你只需要在<code>REQUEST URL</code>中，把网址里面的账号修改成你自己的账号。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-19-27.png" alt=""></p>
+<p>对于Sound Play这个方块，因为我手机上面的音乐不一定在你手机上也有同样的，所以一定要修改音乐：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-07-15-20-50.png" alt=""><br>点<code>SOUND URI</code>，选择你一个你喜欢的音乐。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>Flow设置完成，点击右上角✓保存，然后点击<code>Start</code>启动这个Flow。在电脑或者手机浏览器中访问：<a href="http://automatic.kingname.info:8888/账号/find" target="_blank" rel="external">http://automatic.kingname.info:8888/账号/find</a> 坐等30秒，听一下你的手机相应你的呼唤吧。然后再试一试把手机调成静音，看看它是不是依然可以大声的叫出来~</p>
+<p>本文设计到的网页源代码，请访问：<a href="https://github.com/kingname/Automatic" target="_blank" rel="external">https://github.com/kingname/Automatic</a>获取。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/Workflow/" rel="tag"># Workflow</a>
+          
+            <a href="/tags/Automatic/" rel="tag"># Automatic</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/04/how-to-know-webpage-loaded/" rel="next" title="用图像识别来自动确认网页加载成功">
+                <i class="fa fa-chevron-left"></i> 用图像识别来自动确认网页加载成功
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/05/tweet/" rel="prev" title="技巧收集-M1701">
+                技巧收集-M1701 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">106</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#四个网址"><span class="nav-number">1.</span> <span class="nav-text">四个网址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册账号"><span class="nav-number">1.1.</span> <span class="nav-text">注册账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获得状态"><span class="nav-number">1.2.</span> <span class="nav-text">获得状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#呼叫手机"><span class="nav-number">1.3.</span> <span class="nav-text">呼叫手机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#停止呼叫"><span class="nav-number">1.4.</span> <span class="nav-text">停止呼叫</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Automate"><span class="nav-number">2.</span> <span class="nav-text">Automate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

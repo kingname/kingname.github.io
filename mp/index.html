@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="公众号[未闻Code]日更干货，欢迎扫码关注。
+
+
+
+=========2018年10月以后，本页面停更，所有内容转移到微信公众号。=========
+
+2018.09由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。
+有这样一段代码：
+123456class Robot(object):    def __init__(self):        se">
+<meta property="og:type" content="website">
+<meta property="og:title" content="谢乾坤 | Kingname">
+<meta property="og:url" content="https://www.kingname.info/mp/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="公众号[未闻Code]日更干货，欢迎扫码关注。
+
+
+
+=========2018年10月以后，本页面停更，所有内容转移到微信公众号。=========
+
+2018.09由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。
+有这样一段代码：
+123456class Robot(object):    def __init__(self):        se">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/mp.jpg">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-09-18-22-01-45.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-09-18-22-03-29.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-06-21-22-31-04.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-05-04-09-58-18.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/count.gif">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-28-16-59-48.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/170122.png">
+<meta property="og:updated_time" content="2019-09-09T15:07:40.103Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谢乾坤 | Kingname">
+<meta name="twitter:description" content="公众号[未闻Code]日更干货，欢迎扫码关注。
+
+
+
+=========2018年10月以后，本页面停更，所有内容转移到微信公众号。=========
+
+2018.09由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。
+有这样一段代码：
+123456class Robot(object):    def __init__(self):        se">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/mp.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/mp/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title> | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public menu-item-active">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <center>公众号[未闻Code]日更干货，欢迎扫码关注。</center>
+
+
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/mp.jpg" alt="未闻Code"></p>
+<center>=========2018年10月以后，本页面停更，所有内容转移到微信公众号。=========</center>
+
+<h2 id="2018-09"><a href="#2018-09" class="headerlink" title="2018.09"></a>2018.09</h2><p>由于Python是动态语言，不需要为变量提前设定类型，这为开发提供便捷的同时也带来了一些麻烦。</p>
+<p>有这样一段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Robot</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.name = <span class="string">'Cruse'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'I am walk.'</span>)</div></pre></td></tr></table></figure>
+<p>我定义了一个类<code>Robot</code>，这个类有一个属性<code>name</code>和一个方法<code>walk</code>。接下来我又定义了一个函数<code>run_a_robot</code>，这个函数接收一个参数<code>robot_object</code>，这个参数是<code>Robot</code>类的一个实例。在函数里面，我希望使用这个实例的属性和方法。但此时，可以看出，PyCharm的自动补全功能失效了。它不知道<code>robot_object</code>这个变量是什么东西，没有办法帮我补全这个实例的属性和方法名。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-09-18-22-01-45.png" alt=""></p>
+<p>这个时候，如果你使用的是Python 3，那么你可以使用类型标注来告诉PyCharm，这个robot_object是Robot类的一个实例，从而使PyCharm提供自动补全。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-09-18-22-03-29.png" alt=""></p>
+<p>类型标注的格式为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">变量名: 类型 = 值</div></pre></td></tr></table></figure>
+<p>举一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">age: int = <span class="number">24</span> <span class="comment"># 定义一个变量age，它的类型为int，值为24</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(name: str, age: int=<span class="number">25</span>, other_info: dict=None)</span>:</span> <span class="comment"># test函数接收两个参数，第一个参数name是str类型，第二个参数age是int型并且默认值为25，并且第三个参数other_info是字典，默认值为None</span></div><div class="line">    age = detail_info[<span class="string">'age'</span>]</div></pre></td></tr></table></figure>
+<p>关于类型标注的详细说明，请看这篇文章：<a href="https://www.kingname.info/2017/06/11/type-hints-in-python3/">https://www.kingname.info/2017/06/11/type-hints-in-python3/</a></p>
+<h2 id="2018-08"><a href="#2018-08" class="headerlink" title="2018.08"></a>2018.08</h2><p>Docker的Log中不能显示Python print的内容，解决方法：</p>
+<p>在Dockerfile 中添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ENV PYTHONUNBUFFERED=0</div></pre></td></tr></table></figure>
+<p>添加以后就可以在Log中看到Python print出来的log了。</p>
+<hr>
+<p>在Standalone-chrome找不到Chrome的问题，解决办法：</p>
+<p>如果是普通Docker容器，可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-v /dev/shm:/dev/shm</div></pre></td></tr></table></figure>
+<p>如果是Docker Swarm，需要：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--mount-add type=tmpfs,dst=/dev/shm,tmpfs-size=2147483648</div></pre></td></tr></table></figure>
+<hr>
+<p>由于docker中为root用户，因此在Selenium中启动Chrome的时候，需要加–no-sandbox参数，否则会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">chrome_options = webdriver.ChromeOptions()</div><div class="line">chrome_options.add_argument(&apos;--no-sandbox&apos;)</div><div class="line">driver=webdriver.Chrome(&apos;./chromedriver&apos;, chrome_options=chrome_options)</div></pre></td></tr></table></figure>
+<hr>
+<p>在MySQL中查询重复行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select host_id, count(host_id) from host_info group by host_id, platform having count(host_id) &gt; 1</div></pre></td></tr></table></figure>
+<p>在MySQL中移除重复行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">delete t1 from host_info t1 inner join host_info t2 where t1.id&lt;t2.id and t1.host_id = t2.host_id and t1.platform = t2.platform</div></pre></td></tr></table></figure>
+<hr>
+<p>使用Python的logging模块时，不仅要给StreamHandler设定Level，还需要给Logger设level，只有这样才能正常输出内容到控制台。</p>
+<hr>
+<p>在创建Docker Service的时候，需要指定参数<code>--network=host</code>这样才能使用主机的网络。如果不使用这个参数，那么就无法访问有防火墙限制的局域网中的其他服务器。</p>
+<h2 id="2018-07"><a href="#2018-07" class="headerlink" title="2018.07"></a>2018.07</h2><p>为Git设置socks5代理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global http.proxy &apos;socks5://127.0.0.1:1080&apos;</div><div class="line">git config --global https.proxy &apos;socks5://127.0.0.1:1080&apos;</div></pre></td></tr></table></figure></p>
+<h2 id="2018-05"><a href="#2018-05" class="headerlink" title="2018.05"></a>2018.05</h2><p>grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
+<hr>
+<ul>
+<li>根据index读list，时间复杂度为O(1)但deque是O(n)</li>
+<li>在两头插入数据，deque的时间复杂度为O(1), list为O(n)</li>
+<li>deque是一个双向链表，所以操作头尾非常简单。</li>
+<li>随机往中间插入数据，deque与list的时间复杂度都是O(n)</li>
+</ul>
+<h2 id="2018-04"><a href="#2018-04" class="headerlink" title="2018.04"></a>2018.04</h2><p>MongoDB的聚合查询中，<code>$substr</code>只能匹配ASCII的数据，对于中文要使用<code>$substrCP</code></p>
+<hr>
+<p>Flask的上下文对象current_app只能在请求线程里存在，因此它的生命周期也是在应用上下文里，离开了应用上下文也就无法使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app = Flask(<span class="string">'__name__'</span>)print(current_app.name)</div></pre></td></tr></table></figure></p>
+<p>会报错：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RuntimeError: working outside of application context</div></pre></td></tr></table></figure></p>
+<p>此时可以手动创建应用上下文：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> app.app_context():    print(current_app.name)</div></pre></td></tr></table></figure></p>
+<hr>
+<p>扩展AWS的磁盘空间：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-06-21-22-31-04.png" alt=""></p>
+<p>点击<code>修改卷</code>增加磁盘配额，SSH进入服务器，输入以下代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">lsblk  <span class="comment">#这条命令用来确定当前可用的磁盘空间小于磁盘配额</span></div><div class="line">sudo growpart /dev/xvda 1</div><div class="line">sudo resize2fs /dev/xvda1</div></pre></td></tr></table></figure>
+<p>再次执行<code>df -h</code>可以看到已经使用了新的空间</p>
+<h2 id="2018-03"><a href="#2018-03" class="headerlink" title="2018.03"></a>2018.03</h2><p>在Docker查看正在运行的容器是通过什么命令启动的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker ps -a --no-trunc</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在全新的Ubuntu中安装pip：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade</div><div class="line">sudo apt-get install python3-pip</div><div class="line">sudo apt-get install build-essential libssl-dev libffi-dev python3-dev</div></pre></td></tr></table></figure></p>
+<hr>
+<p>tar压缩文件的时候排除特定文件和文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar --exclude=&apos;./folder&apos; --exclude=&apos;./upload/folder2&apos; -zcvf /backup/filename.tgz .</div></pre></td></tr></table></figure></p>
+<h2 id="2018-02"><a href="#2018-02" class="headerlink" title="2018.02"></a>2018.02</h2><p>在MongoDB使用自带的mongodump备份数据的时候，如果数据库设置了密码，那么在指定mongodump的<code>--password 密码</code>参数的同时，还必须指定<code>--authenticationDatabase admin</code></p>
+<h2 id="2018-01"><a href="#2018-01" class="headerlink" title="2018.01"></a>2018.01</h2><p>使用grep持续监控Log：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail <span class="_">-f</span> file | grep --line-buffered my_pattern</div></pre></td></tr></table></figure></p>
+<hr>
+<p>使用rsync通过SSH从服务器拉取数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
+<p>如果有SSH Key的话，使用下面的命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rsync -avzP <span class="_">-e</span> <span class="string">"ssh -i ~/sshkey.pem"</span> ubuntu@xx.xxx.xx.xxx:Projects/sample.csv ~/sample.csv</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在Ubuntu中修改时区：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo timedatectl <span class="built_in">set</span>-timezone Asia/Shanghai</div></pre></td></tr></table></figure></p>
+<hr>
+<p>使用XPath获取名称包含特定字符的属性的属性值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">//span/img/@*[contains(name(), <span class="string">"src"</span>)]</div></pre></td></tr></table></figure></p>
+<hr>
+<p>AWS在一年免费期间内，换机房不用给钱。先在老的实例生成AMI，再把AMI复制到新的城市，再从新城市的AMI创建实例。然后把老城市的实例彻底终结，取消老城市和新城市的AMI。全程不收费。</p>
+<hr>
+<p>在Python中执行Shell命令并获取返回结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line">shell_result = subprocess.check_output(<span class="string">'ps -ef | grep 进程名 | grep -v grep'</span>, shell=<span class="keyword">True</span>).decode().strip().split(<span class="string">'\n)</span></div></pre></td></tr></table></figure></p>
+<p>如果命令本身没有返回，则会抛出一个<code>subprocess.CalledProcessError</code></p>
+<hr>
+<p>在Shell中判断一个进程是否存在：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ps -ef | grep 进程名 | grep -v grep &gt; /dev/null</div><div class="line"><span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程存在"</span></div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"进程不存在"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure></p>
+<h2 id="2017-12"><a href="#2017-12" class="headerlink" title="2017.12"></a>2017.12</h2><p>firewalld对特定IP开放特定端口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --zone=public --add-rich-rule=&apos;rule family=&quot;ipv4&quot; source address=&quot;特定IP&quot; port protocol=&quot;tcp&quot; port=&quot;特定端口&quot; accept&apos;</div></pre></td></tr></table></figure></p>
+<hr>
+<p>生成文件树并过滤特定文件或文件夹：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tree -I <span class="string">'__pycache__|pyc|Logs'</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>统计代码行数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find . -name <span class="string">"*.py"</span> | xargs wc <span class="_">-l</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>为pip设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip3.6 --proxy http://代理IP:端口 install -r requirements.txt</div></pre></td></tr></table></figure></p>
+<hr>
+<p>为Git设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN git config --global http.proxy http://代理IP:端口</div><div class="line">RUN git config --global http.sslverify <span class="string">"false"</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>为Ubuntu的<code>apt-get</code>设置代理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/apt/apt.conf.d/01turnkey</div></pre></td></tr></table></figure></p>
+<p>在里面插入一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Acquire::http::Proxy &quot;http://your.proxy.here:port/&quot;;</div></pre></td></tr></table></figure>
+<p>保存以后，下一次执行<code>apt-get</code>命令就会使用代理了。</p>
+<h2 id="2017-11"><a href="#2017-11" class="headerlink" title="2017.11"></a>2017.11</h2><p>修改Elasticsearch默认的数据文件地址到/mnt/es文件夹，需要首先创建这个文件夹，然后为elasticsearch这个用户添加这个文件夹的权限:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Chown -R elasticsearch:elasticsearch /mnt/es/</div></pre></td></tr></table></figure></p>
+<p>然后再修改elasticsearch的配置文件。</p>
+<hr>
+<p>在postgres中，占位符是<code>$1</code>, <code>$2</code>而不是MySQL中的<code>？</code></p>
+<h2 id="2017-10"><a href="#2017-10" class="headerlink" title="2017.10"></a>2017.10</h2><p>使用<code>urlpare</code>从URL中获取Host：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urlparse</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'https://nanjirenlk.tmall.com/shop/view_shop.htm'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x = urlparse(url)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>x.netloc</div><div class="line"><span class="string">'nanjirenlk.tmall.com'</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>解压<code>tar.gz</code>压缩文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zxvf 文件名</div></pre></td></tr></table></figure>
+<hr>
+<p>根据进程名字在Linux里杀进程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ps -ef | grep <span class="string">"进程关键字"</span> | grep -v grep | awk <span class="string">'&#123;print $2&#125;'</span> | xargs <span class="built_in">kill</span> -9</div></pre></td></tr></table></figure>
+<hr>
+<p>在Python 的<code>try ... except Exception ...</code>中显示tracebook:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> traceback</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="number">1</span> + <span class="string">'a'</span></div><div class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">    tb = traceback.format_exc()</div><div class="line">    print(tb)</div></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">2</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">TypeError: unsupported operand type(s) <span class="keyword">for</span> +: <span class="string">'int'</span> <span class="keyword">and</span> <span class="string">'str'</span></div></pre></td></tr></table></figure>
+<p>这个功能在多层<code>try ... except Exception ...</code> 嵌套的时候特别有用。</p>
+<h2 id="2017-09"><a href="#2017-09" class="headerlink" title="2017.09"></a>2017.09</h2><p>在macOS中直接复制文件路径，在Finder中选中文件，按下快捷键：<code>Command</code> + <code>Option</code> + <code>C</code></p>
+<hr>
+<p>以KB，MB，GB方式显示文件大小<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -lh</div></pre></td></tr></table></figure></p>
+<hr>
+<p>删除超大文本文件的特定行数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed <span class="_">-e</span> <span class="string">'10000,50000d'</span> xxx.txt &gt; new_xxx.txt  //删除xxx.txt的第10000行到50000行的所有内容,并将结果保存到new_xxx.txt</div></pre></td></tr></table></figure>
+<hr>
+<p>切分超大文本文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">split -b 2G <span class="_">-d</span> <span class="_">-a</span> 2 deletelines.txt  da  //把超大文件切分为多个文件，每个文件2GB，前缀为da，后缀为2位数字</div></pre></td></tr></table></figure>
+<hr>
+<p>修改Linux当前用户密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">passwd</div></pre></td></tr></table></figure>
+<hr>
+<p>使用Python打开一个未知编码的文件：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">"your_file"</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> fp:</div><div class="line">    file_data = fp.read()</div><div class="line">    result = chardet.detect(file_data)</div><div class="line">    file_content = file_data.decode(encoding=result[<span class="string">'encoding'</span>])</div></pre></td></tr></table></figure></p>
+<h2 id="2017-08"><a href="#2017-08" class="headerlink" title="2017.08"></a>2017.08</h2><p>在SSH + Tmux中，如果想复制，按住<code>Alt</code>或者<code>Option</code>键再选择就可以复制了。</p>
+<hr>
+<p>关闭requests的SSL警告<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line">requests.packages.urllib3.disable_warnings()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在VIM中，<code>Crtl</code> + <code>V</code> <code>Ctrl</code> + <code>A</code>可以输出特殊符合<code>^A</code>，把A改为可以得到<code>^M</code></p>
+<h2 id="2017-07"><a href="#2017-07" class="headerlink" title="2017.07"></a>2017.07</h2><p>在Python中，pymongo的find方法返回的是一个生成器，只有在迭代的时候才会执行里面的具体代码去读MongoDB。但是在Golang的Mgo包中，如果想让Find返回一个迭代器而不是直接把所有结果全部返回，就需要手动指定：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> xInfo <span class="keyword">struct</span> &#123;</div><div class="line">	ID <span class="keyword">int</span> <span class="string">`bson:"mt_poi_id"`</span></div><div class="line">	Count <span class="keyword">int</span> <span class="string">`bson:"count"`</span></div><div class="line">&#125;</div><div class="line">resultIter = m.handler.Find(<span class="literal">nil</span>).Select(bson.M&#123;<span class="string">"_id"</span>: <span class="number">0</span>, <span class="string">"mt_poi_id"</span>: <span class="number">1</span>, <span class="string">"count"</span>: <span class="number">1</span>&#125;).Iter()</div><div class="line"><span class="keyword">var</span> x xInfo</div><div class="line"><span class="keyword">for</span> resultIter.Next(&amp;xInfo) &#123;</div><div class="line">    fmt.Println(xInfo.Id)</div><div class="line">    fmt.Println(xInfo.Count)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="2017-06"><a href="#2017-06" class="headerlink" title="2017.06"></a>2017.06</h2><p>在Golang中，使用MySQL的事务：<br><figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// paraArray为一个channel，里面是更新所需要的参数</span></div><div class="line">tx, _ := db.Begin()</div><div class="line">    <span class="keyword">for</span> _, para := <span class="keyword">range</span> paraArray&#123;</div><div class="line">        tx.Exec(<span class="string">"update....."</span>, para) </div><div class="line">    &#125;</div><div class="line">    tx.Commit()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>由于更新MySQL会锁表，因此使用多个goroutine来更新MySQL，效果可能还不如直接在主线程中更新来的高。</p>
+<hr>
+<p>在Golang中，使用goroutine太多反而会导致性能下降。</p>
+<h2 id="2017-05"><a href="#2017-05" class="headerlink" title="2017.05"></a>2017.05</h2><p>在Python中，可以使用<code>&gt;</code>或者<code>&gt;=</code>来判断一个集合是不是另一个集合的子集。只有是子集才会返回<code>True</code><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-05-04-09-58-18.png" alt=""></p>
+<h2 id="2017-04"><a href="#2017-04" class="headerlink" title="2017.04"></a>2017.04</h2><p>在MongoDB中，通过_id来更新数据：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bson.objectid <span class="keyword">import</span> ObjectId</div><div class="line"><span class="keyword">import</span> pymongo</div><div class="line">conn = pymongo.MongoClient().XX.YY</div><div class="line">conn.update(&#123;<span class="string">'_id'</span>: ObjectId(<span class="string">'adf84a8fafasf3213'</span>), &#123;<span class="string">'$set'</span>: &#123;<span class="string">'name'</span>: <span class="string">'aaa'</span>&#125;&#125;&#125;)</div></pre></td></tr></table></figure></p>
+<hr>
+<p>在Python 3中，计算两个日期相隔了多少秒：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"></div><div class="line">start = <span class="string">'2017-03-21 17:21:30'</span></div><div class="line">end = <span class="string">'2017-03-21 18:10:13'</span></div><div class="line"></div><div class="line">start_datetime = datetime.datetime.strptime(start, <span class="string">'%Y-%m-%d %H:%M:%S'</span>)</div><div class="line">end_datetime = datetime.datetime.strptime(end, <span class="string">'%Y-%m-%d %H:%M:%S'</span>)</div><div class="line"></div><div class="line">total_seconds = (end_datetime - start_datetime).total_seconds()</div></pre></td></tr></table></figure></p>
+<hr>
+<p>Scrapy中，通过覆写items.py中，每个item的__repr__方法，可以减少打印出来的Log信息。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">XXXItem</span><span class="params">(Item)</span>:</span></div><div class="line">    name = Field()</div><div class="line">    age = Field()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'======data has been stored.======='</span></div></pre></td></tr></table></figure></p>
+<hr>
+<p>在VIM粘贴Python代码的时候，缩进会一不小心爆炸。为了避免这个问题，应该先在normal模式输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:set paste</div></pre></td></tr></table></figure></p>
+<p>回车，再按i，再粘贴。这样Python的缩进就不会乱掉了。</p>
+<hr>
+<p>Selenium的Debug级的Log有时候打得太多了，为了去掉Selenium的Debug Log又不影响其他部份的Debug Log，可以使用如下命令完成：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">from</span> selenium.webdriver.remote.remote_connection <span class="keyword">import</span> LOGGER</div><div class="line">LOGGER.setLevel(logging.WARNING)</div></pre></td></tr></table></figure></p>
+<h2 id="2017-02"><a href="#2017-02" class="headerlink" title="2017.02"></a>2017.02</h2><p>To use the decorator, apply it as innermost decorator to a view function. When applying further decorators, <em>always</em> remember that the <code>route()</code> decorator is the outermost.</p>
+<hr>
+<p>效率的关键就是不公平，80/20原则，刻意练习。</p>
+<h2 id="2017-01"><a href="#2017-01" class="headerlink" title="2017.01"></a>2017.01</h2><p>HTML的<code>&lt;select&gt;&lt;/select&gt;</code>标签可以实现下拉选择框。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">class</span>=<span class="string">"form-control"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span> <span class="attr">selected</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span>&gt;</span>viewer<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"admin"</span>&gt;</span>guest<span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>运行效果如下：</p>
+<p><select class="form-control"><br>    <option value="admin" selected>admin</option><br>    <option value="admin">viewer</option><br>    <option value="admin">guest</option><br></select></p>
+<hr>
+<p>通过二进制的位操作，可以简化很多问题的分析。</p>
+<p>例如现在有四个角色，分别为：读者，作者，编辑和管理员。有四个不同的权限使用四位的二进制数表示：</p>
+<ul>
+<li>阅读权限：0001</li>
+<li>写入权限：0010</li>
+<li>修改权限：0100</li>
+<li>删除权限：1000</li>
+</ul>
+<p>每个角色的权限如下：</p>
+<ul>
+<li>读者只能读，所以权限是0001</li>
+<li>作者能读也能写，所以是0011</li>
+<li>编辑能读能写能修改，所以是0111</li>
+<li>管理员能读能写能修改能删除，所以是1111</li>
+</ul>
+<p>要判断一个角色有哪些权限，人眼可以直接看对应的位置上面是0还是1，是0就是没有权限，是1就是有权限。在程序里面可以通过和对应权限的四位二进制数取位与操作。例如，0111编辑是否有写权限？因为0111 &amp; 0010 = 0010 所以有写权限。只要角色的四位二进制数和权限的四位二进制数取位与，得到的结果还是权限的四位二进制数，那么就有这个权限。</p>
+<hr>
+<p>正常情况下人有十根手指，所以一共可以计数1024个，但是一般在计数到第4个数的时候你就会挨打。明白二进制的自然知道我说的是什么意思。不明白二进制的，请看下面的动图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/count.gif" alt="手指使用二进制计数"></p>
+<hr>
+<p>Markdown在写作方面有非常好的优势，可以让写作的人不用关心格式，从而专注于要写的内容。但是Markdown不能进行缩进，这导致在一些大纲类的文本信息的显示上不太友好。<a href="https://workflowy.com/invite/4b7e29eb.lnx" target="_blank" rel="external">Workflowy</a>的出现可以解决这个问题。Workflowy只支持文本，界面极其简洁：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-01-28-16-59-48.png" alt=""><br>通过它来创建一个大纲，有助于理清思路。</p>
+<hr>
+<p>在HTML的<code>&lt;form&gt;&lt;/form&gt;</code>表单中，有一个属性叫做<code>action</code>,它的值是空或者是一个URL的相对路径或绝对路径。如果为空，表单将会被提交到现在这个页面的URL；如果不为空，表单将会被提交到action的值对应的页面来处理。</p>
+<p>理解这一点，那些喜欢在Flask中，把GET和POST写到一个Route，同时又要为GET带参数的人，需要特别注意。因为当你POST的时候，如果action不为空，参数可能会被丢失。</p>
+<hr>
+<p>如果你想在局域网中共享一个文件，你可以通过Python 3快速完成：</p>
+<ol>
+<li>打开终端或者CMD</li>
+<li><code>cd</code> 进入你需要分享的文件所在的文件夹</li>
+<li>输入<code>python3 -m http.server</code>回车</li>
+<li>在另一台电脑上打开浏览器，输入上一台电脑的<code>ip地址:8000</code>例如：<code>192.168.2.13:8000</code></li>
+<li>下载文件</li>
+</ol>
+<hr>
+<p>在Python中，使用<code>yield</code>实现生成器。生成器的性质是只有在被迭代的时候才运行其内部的代码。这样可以大大降低内存的占用。除此之外，<code>yield</code>还可以接收参数供生成器内部使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(top)</span>:</span></div><div class="line">       index = <span class="number">0</span></div><div class="line">       <span class="keyword">while</span> index &lt;= top:</div><div class="line">              value_from_out = <span class="keyword">yield</span> index ** <span class="number">2</span></div><div class="line">              print(<span class="string">'来自外面的值为：&#123;&#125;'</span>.format(value_from_out))</div><div class="line">              index += <span class="number">1</span></div><div class="line"></div><div class="line">power_2 = generator(<span class="number">10</span>)</div><div class="line">print(next(power_2))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">"next(power_2) 相当于power_2.send(None)"</span>))</div><div class="line">print(next(power_2))</div><div class="line">print(power_2.send(<span class="string">'代码在函数和这里来回跳。'</span>))</div></pre></td></tr></table></figure></p>
+<p>输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">0</div><div class="line">来自外面的值为：None</div><div class="line">1</div><div class="line">来自外面的值为：next(power_2) 相当于power_2.send(None)</div><div class="line">4</div><div class="line">来自外面的值为：None</div><div class="line">9</div><div class="line">来自外面的值为：代码在函数和这里来回跳。</div><div class="line">16</div></pre></td></tr></table></figure></p>
+<p>以上的运行方式，和协程非常的相似。</p>
+<hr>
+<p><a href="https://zh.wikipedia.org/wiki/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E7%A4%BA%E6%B3%95" target="_blank" rel="external">逆波兰式</a>通过栈来实现对表达式的运算。例如：</p>
+<blockquote>
+<p>中缀表达式: 5 + ((1 + 2) <em> 4) − 3<br>逆波兰式：5 1 2 + 4 </em> + 3 −</p>
+</blockquote>
+<hr>
+<p>使用<a href="https://zh.wikipedia.org/wiki/%E8%B0%83%E5%BA%A6%E5%9C%BA%E7%AE%97%E6%B3%95" target="_blank" rel="external">调度场算法</a>可以将中缀表达式转换为逆波兰式。调度场算法是通过栈来实现的。操作数直接输出，符号需要判断优先级来判断应该直接压栈还是直接输出或者应该先将栈顶元素输出再压栈。</p>
+<blockquote>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/170122.png" alt="调度场算法示意图"></p>
+</blockquote>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">106</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-09"><span class="nav-number">1.</span> <span class="nav-text">2018.09</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-08"><span class="nav-number">2.</span> <span class="nav-text">2018.08</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-07"><span class="nav-number">3.</span> <span class="nav-text">2018.07</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-05"><span class="nav-number">4.</span> <span class="nav-text">2018.05</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-04"><span class="nav-number">5.</span> <span class="nav-text">2018.04</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-03"><span class="nav-number">6.</span> <span class="nav-text">2018.03</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-02"><span class="nav-number">7.</span> <span class="nav-text">2018.02</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-01"><span class="nav-number">8.</span> <span class="nav-text">2018.01</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-12"><span class="nav-number">9.</span> <span class="nav-text">2017.12</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-11"><span class="nav-number">10.</span> <span class="nav-text">2017.11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-10"><span class="nav-number">11.</span> <span class="nav-text">2017.10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-09"><span class="nav-number">12.</span> <span class="nav-text">2017.09</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-08"><span class="nav-number">13.</span> <span class="nav-text">2017.08</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-07"><span class="nav-number">14.</span> <span class="nav-text">2017.07</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-06"><span class="nav-number">15.</span> <span class="nav-text">2017.06</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-05"><span class="nav-number">16.</span> <span class="nav-text">2017.05</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-04"><span class="nav-number">17.</span> <span class="nav-text">2017.04</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-02"><span class="nav-number">18.</span> <span class="nav-text">2017.02</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2017-01"><span class="nav-number">19.</span> <span class="nav-text">2017.01</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这篇文章没有代码，请放心阅读。
+程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。
+P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据工程师妹子养成手记——数据库篇">
+<meta property="og:url" content="https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="这篇文章没有代码，请放心阅读。
+程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。
+P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-22-22-33-30.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-19.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-45.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-23-29.png">
+<meta property="og:updated_time" content="2019-02-23T05:46:25.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据工程师妹子养成手记——数据库篇">
+<meta name="twitter:description" content="这篇文章没有代码，请放心阅读。
+程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。
+P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-22-22-33-30.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>数据工程师妹子养成手记——数据库篇 | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/02/23/do-not-waste-time-in-setup-env/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据工程师妹子养成手记——数据库篇
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-23 13:25:32 / 修改时间：13:46:25" itemprop="dateCreated datePublished" datetime="2019-02-23T13:25:32+08:00">2019-02-23</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MongoDB/" itemprop="url" rel="index"><span itemprop="name">MongoDB</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MongoDB/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/02/23/do-not-waste-time-in-setup-env/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/23/do-not-waste-time-in-setup-env/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章没有代码，请放心阅读。</p>
+<p>程序员最宝贵的东西是生命，生命属于程序员只有一次。一个程序员的一生应该这样度过：当她回首往事的时候，她不会因为搭建环境浪费时间而悔恨，也不会因为集群无法运行而羞耻。这样，在她开发的时候，她能够说：“我的整个生命和全部精力，都已经献给了开发中最重要的事情——设计程序，实现程序和调Bug。” ——P酱。</p>
+<p>P酱是公司新来的实习生妹子。听说是一个文科生。文科生应该会去文案组或者策划组吧。什么？来数据组？让我来带？</p>
+<p>于是我和P酱<del>生活</del>工作在了一起。</p>
+<a id="more"></a>
+<h2 id="P酱你会些什么？"><a href="#P酱你会些什么？" class="headerlink" title="P酱你会些什么？"></a>P酱你会些什么？</h2><p>“我叫P酱，在XX大学读研二，爱好是拍照和被拍，大家可以在B站找到我跳舞的视频，比如av170001。我的另外一个爱好是写代码……”</p>
+<p>当一个文科妹子说自己喜欢写代码的时候，整个办公室热闹了起来。</p>
+<p>“P酱，听说你喜欢写代码，那你写过什么东西吗？”新人介绍会议结束以后，我问P酱。</p>
+<p>“一般都是各种分析程序，我们的专业要做很多调查报告，他们都是用Excel来计算的。我喜欢用Python来把这些统计过程自动化。后来也写过自动写诗的程序、鬼畜视频生成器等等。”</p>
+<p>“真不敢相信你是文科生。这么说你的兴趣是数据分析方向咯？”</p>
+<p>“其实我对师父你做的爬虫很有兴趣。但是听说会经常和网站发生对抗？女孩子还是不要打打杀杀的好~”</p>
+<p>于是我让P酱负责对爬虫的原始数据进行清洗、整理并做简单的分析。</p>
+<h2 id="一种船新的数据储存方式"><a href="#一种船新的数据储存方式" class="headerlink" title="一种船新的数据储存方式"></a>一种船新的数据储存方式</h2><p>“P酱，爬虫抓到的原始数据是存放在MongoDB里面的，你的Python还不错吧，你试一试用Python来读写MongoDB看看。”</p>
+<p>“MongoDB是什么呀？”</p>
+<p>“是一个和MySQL不太一样的数据库。”</p>
+<p>“MySQL我知道，MongoDB和MySQL有什么不一样呢？”</p>
+<p>“我举个例子，当你要插入数据的时候，你需要做的，就是‘插入’。咳咳，你不要脸红，我是指你不需要写SQL语句、不需要建表、不需要提前定义字段。仅仅只需要一行代码就能够实现了。我这里给你写了一篇文档，讲到了MongoDB的增删改查，你试一试。数据库已经给你搭建好了，你直接连上去用吧”</p>
+<p>半天以后。</p>
+<p>“师父，我已经会使用MongoDB啦。”</p>
+<p>“你读爬虫的原始数据，主要涉及到的就是查询操作，为了巩固插入、修改和删除的操作，再给你一个小任务吧。试一试写一个人员管理系统吧。”</p>
+<h2 id="既然有关系，就整整齐齐放在一起看吧"><a href="#既然有关系，就整整齐齐放在一起看吧" class="headerlink" title="既然有关系，就整整齐齐放在一起看吧"></a>既然有关系，就整整齐齐放在一起看吧</h2><p>“P酱，你看起来很高兴的样子啊。”</p>
+<p>“因为我觉得MongoDB比起MySQL太简单了啊~”</p>
+<p>“你确定？那我看看你怎么对整行数据去重的？”</p>
+<p>“师父，我知道distinct关键字可以对一个字段去重。但是整行数据我是读出来用Python来去重的。”</p>
+<p>“这个时候你就要用到MongoDB的聚合查询了。文档已经给你写好了，拿去看吧。”</p>
+<p>“还有还有，这里你把店铺信息和菜单信息放在了两个集合里面，我怎么样才能把他们联表查询出来呢？”</p>
+<p>“联表查询是MySQL里面的操作，在MongoDB里面，没有<code>表</code>，只有<code>集合</code>，所以叫做<code>联集合查询</code>更恰当一些。这也是要用到聚合查询，也在这个文档里面了。”</p>
+<h2 id="再给你一个玩具吧。"><a href="#再给你一个玩具吧。" class="headerlink" title="再给你一个玩具吧。"></a>再给你一个玩具吧。</h2><p>“P酱，之前让你做的爬虫数据监控系统怎么样了？”</p>
+<p>“功能已经做好了，但是有一个地方查询起来特别慢。我已经加过索引了，但还是很慢。怀疑是同时联了四个集合的数据造成的。”</p>
+<p>“这边的数据实际上每小时才更新一次，你没有必要每次刷新页面都去查询MongoDB的。我觉得是时候让你用一下Redis做缓存了。”</p>
+<p>“Redis就是那个内存数据库吗？我知道我知道。”</p>
+<p>“给你写了一份文档，包含Redis里面的各种数据类型和使用方式。你试一试把Redis和MongoDB结合起来看看能不能提高速度。”</p>
+<h2 id="你怎么擅自加功能啊！"><a href="#你怎么擅自加功能啊！" class="headerlink" title="你怎么擅自加功能啊！"></a>你怎么擅自加功能啊！</h2><p>“P酱，你怎么在爬虫监控系统的网页上加了一个广播窗口？”</p>
+<p>“呀，被师父发现了。因为我想到同一个爬虫可能会被几个人监控，所以就用Redis的发布订阅功能做出来了这个广播的功能。一旦爬虫状态发生改变，所有人都能收到推送。”</p>
+<p>“既然你这么闲，那不如加上账号登录功能，把权限验证也做上去？不同的人只能看到自己负责的爬虫。顺便你可以试一试用Redis实现……”</p>
+<p>“实现布隆过滤器和Session管理是吗？”</p>
+<p>“你怎么知道我要说什么？”</p>
+<p>“因为我早上看到你在文档上面更新了布隆过滤器和Session管理相关的内容啊~”</p>
+<h2 id="红色的锁？"><a href="#红色的锁？" class="headerlink" title="红色的锁？"></a>红色的锁？</h2><p>“师父师父，你知道什么是RedLock吗？”</p>
+<p>“你学得这么快？都知道RedLock了？RedLock是Redis官方给出的分布式锁的算法。已经有很多编程语言实现它了。”</p>
+<p>“原来RedLock只是一个算法啊……”</p>
+<h2 id="为什么我学的这么快呢？"><a href="#为什么我学的这么快呢？" class="headerlink" title="为什么我学的这么快呢？"></a>为什么我学的这么快呢？</h2><p>“师父师父，我觉得很奇怪啊，为什么MongoDB和Redis我学得这么快呢？难道是因为他们本来就简单？还是因为我太聪明了？”</p>
+<p>“为什么你不说是因为你师父教的好呢？“</p>
+<p>“因为这是事实啊~不用我说出来~”</p>
+<p>“咳咳，实际上是因为两个原因。一是你一直通过项目驱动来学习，先有需求，然后再去学习实现这个需求所要涉及到的技能。所以你知道你学的东西能用来干什么，自然就能学得快……”</p>
+<p>“那第二个原因是什么呢？”</p>
+<p>“第二个原因，我先问你一个问题，你会搭建Redis集群吗？会搭建MongoDB集群吗？知道什么叫做哨兵吗？你知道如何优化MongoDB的启动参数吗？”</p>
+<p>“这…………好像都不知道额…………”</p>
+<p>“因为你的角色是数据工程师，不是数据库工程师，所以数据库搭建、底层优化这些内容我都给你跳过了。”</p>
+<p>“这些听起来都很重要啊，师父你会教我吗？”</p>
+<p>“你想经常值夜班吗？想半夜3点被人打电话叫起来修数据库吗？认清自己的定位啊，数据库工程师的技能当然很重要，但你是要成为数据工程师的人，技能树应该点在合适的方向。”</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>后来，P酱成了别人的女朋友。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-22-22-33-30.png" alt=""></p>
+<p>幸好我还有左手和右手，于是我把我给P酱总结的文档编撰成了《左手MongoDB，右手Redis——从入门到商业实战》这本书。本书现在已经在京东、亚马逊、淘宝上架。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-19.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-22-45.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-02-23-13-23-29.png" alt=""></p>
+<p>这本书的定位是MongoDB和Redis的应用，所以有意弱化了数据库的搭建、维护和底层优化。所以本书可能不适合数据库工程师。</p>
+<p>希望本书能够给那些一直想掌握MongoDB、Redis，但是又不知道从何处下手的读者，提供一个学习的方向。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+            <a href="/tags/MongoDB/" rel="tag"># MongoDB</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/12/hide-webdriver/" rel="next" title="一行js代码识别Selenium+Webdriver及其应对方案">
+                <i class="fa fa-chevron-left"></i> 一行js代码识别Selenium+Webdriver及其应对方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/02/inverted-index/" rel="prev" title="使用倒排索引极速提高字符串搜索效率">
+                使用倒排索引极速提高字符串搜索效率 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">106</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#P酱你会些什么？"><span class="nav-number">1.</span> <span class="nav-text">P酱你会些什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一种船新的数据储存方式"><span class="nav-number">2.</span> <span class="nav-text">一种船新的数据储存方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#既然有关系，就整整齐齐放在一起看吧"><span class="nav-number">3.</span> <span class="nav-text">既然有关系，就整整齐齐放在一起看吧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再给你一个玩具吧。"><span class="nav-number">4.</span> <span class="nav-text">再给你一个玩具吧。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#你怎么擅自加功能啊！"><span class="nav-number">5.</span> <span class="nav-text">你怎么擅自加功能啊！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#红色的锁？"><span class="nav-number">6.</span> <span class="nav-text">红色的锁？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么我学的这么快呢？"><span class="nav-number">7.</span> <span class="nav-text">为什么我学的这么快呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">8.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

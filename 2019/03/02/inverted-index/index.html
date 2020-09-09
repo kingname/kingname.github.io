@@ -15,11 +15,11 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
-<meta name="theme-color" content="#222"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
@@ -46,9 +46,9 @@
 
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
@@ -96,35 +96,31 @@
 
 
 
-  <meta name="description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
-12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
-如果有多个句子">
+  <meta name="description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如： 12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面 如果有多个句子">
+<meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用倒排索引极速提高字符串搜索效率">
 <meta property="og:url" content="https://www.kingname.info/2019/03/02/inverted-index/index.html">
 <meta property="og:site_name" content="谢乾坤 | Kingname">
-<meta property="og:description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
-12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
-如果有多个句子">
+<meta property="og:description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如： 12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面 如果有多个句子">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-13-50-58.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png">
 <meta property="og:updated_time" content="2019-03-02T06:30:52.173Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用倒排索引极速提高字符串搜索效率">
-<meta name="twitter:description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如：
-12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面
-如果有多个句子">
+<meta name="twitter:description" content="在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用in关键字，例如： 12345&amp;gt;&amp;gt;&amp;gt; a = &amp;apos;你说我是买苹果电脑，还是买windows电脑呢？&amp;apos;&amp;gt;&amp;gt;&amp;gt; if &amp;apos;苹果&amp;apos; in a:...  print(&amp;apos;苹果这个词在a字符串里面&amp;apos;)...苹果这个词在a字符串里面 如果有多个句子">
 <meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png">
 
 
 
-  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="https://www.kingname.info/2019/03/02/inverted-index/"/>
+  <link rel="canonical" href="https://www.kingname.info/2019/03/02/inverted-index/">
 
 
 
@@ -234,7 +230,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -251,7 +247,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -268,7 +264,7 @@
 
     
 
-    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -285,7 +281,7 @@
 
     
 
-    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
 
   </li>
         
@@ -302,7 +298,7 @@
 
     
 
-    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
 
   </li>
 
@@ -336,7 +332,7 @@
 
   
 
-  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
 
 
 
@@ -363,16 +359,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/03/02/inverted-index/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/03/02/inverted-index/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
     </span>
 
     
@@ -417,7 +413,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -473,17 +469,17 @@
 
       
         <p>在Python中，如果要判断一个字符串是否在另一个字符串里面，我们可以使用<code>in</code>关键字，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</div><div class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</div><div class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</div><div class="line">...</div><div class="line">苹果这个词在a字符串里面</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a = &apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;</span><br><span class="line">&gt;&gt;&gt; if &apos;苹果&apos; in a:</span><br><span class="line">...  print(&apos;苹果这个词在a字符串里面&apos;)</span><br><span class="line">...</span><br><span class="line">苹果这个词在a字符串里面</span><br></pre></td></tr></table></figure>
 <p>如果有多个句子和多个关键字，那么可以使用<code>for</code>循环来实现：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span></div><div class="line">             <span class="string">'我CNM你个大SB'</span></div><div class="line">            ]</div><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentences:</div><div class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> keywords:</div><div class="line">        <span class="keyword">if</span> keyword <span class="keyword">in</span> sentence:</div><div class="line">            print(f<span class="string">'句子: 【&#123;sentence&#125;】包含脏话：【&#123;keyword&#125;】'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </span><br><span class="line">             <span class="string">'人生苦短我用Python'</span>, </span><br><span class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</span><br><span class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span></span><br><span class="line">             <span class="string">'我CNM你个大SB'</span></span><br><span class="line">            ]</span><br><span class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</span><br><span class="line"><span class="keyword">for</span> sentence <span class="keyword">in</span> sentences:</span><br><span class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> keywords:</span><br><span class="line">        <span class="keyword">if</span> keyword <span class="keyword">in</span> sentence:</span><br><span class="line">            print(<span class="string">f'句子: 【<span class="subst">&#123;sentence&#125;</span>】包含脏话：【<span class="subst">&#123;keyword&#125;</span>】'</span>)</span><br></pre></td></tr></table></figure>
 <p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-12-18-39.png" alt></p>
 <p>现在如果有100000000个句子，有1000个关键字，那么你需要对比1000亿次才能全部查询完成。这个时间代价太大了，如果Python一秒钟能运行500万次查询（实际上没有这么快），那么1000亿次查询需要20000秒，接近6小时。而且，由于<code>in</code>关键字的时间复杂度为<code>O(n)</code>，如果有大量长句子，查询时间会更长。</p>
 <a id="more"></a>
 <p>例如，我们要从下面的句子里面寻找<code>CNM</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sentences = [&apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;, </div><div class="line">             &apos;人生苦短我用Python&apos;, </div><div class="line">             &apos;你TM一天到晚只知道得瑟&apos;,</div><div class="line">             &apos;不不不，我不是说你，我是说在座的各位都是垃圾。&apos;,</div><div class="line">             &apos;我CNM你个大SB&apos;,</div><div class="line">             &apos;各位同学，Good Morning！&apos;,</div><div class="line">             &apos;网络这个单词，它的英文为Network&apos;,</div><div class="line">             &apos;我不想听到有人说CNM！&apos;</div><div class="line">            ]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sentences = [&apos;你说我是买苹果电脑，还是买windows电脑呢？&apos;, </span><br><span class="line">             &apos;人生苦短我用Python&apos;, </span><br><span class="line">             &apos;你TM一天到晚只知道得瑟&apos;,</span><br><span class="line">             &apos;不不不，我不是说你，我是说在座的各位都是垃圾。&apos;,</span><br><span class="line">             &apos;我CNM你个大SB&apos;,</span><br><span class="line">             &apos;各位同学，Good Morning！&apos;,</span><br><span class="line">             &apos;网络这个单词，它的英文为Network&apos;,</span><br><span class="line">             &apos;我不想听到有人说CNM！&apos;</span><br><span class="line">            ]</span><br></pre></td></tr></table></figure>
 <p>如果使用常规方法，那么我们的做法是：</p>
-<ol>
+<ol start="0">
 <li><code>CNM</code>在<code>你说我是买苹果电脑，还是买windows电脑呢？</code>中吗？不在！</li>
 <li><code>CNM</code>在<code>人生苦短我用Python</code>吗？不在！</li>
 <li>……</li>
@@ -507,24 +503,24 @@
 <p>回答这个问题之前，我们再来看另一个问题。</p>
 <p>Python里面，当我要判断字母<code>C</code>是不是在句子<code>我不想听到有人说CNM！</code>里面时，Python是如何工作的？</p>
 <p>实际上，它的工作原理可以写成：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sentence = <span class="string">'我不想听到有人说CNM！'</span></div><div class="line"><span class="keyword">for</span> char <span class="keyword">in</span> sentence:</div><div class="line">    <span class="keyword">if</span> char == <span class="string">'C'</span>:</div><div class="line">        print(<span class="string">'C在这个字符串中'</span>)</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sentence = <span class="string">'我不想听到有人说CNM！'</span></span><br><span class="line"><span class="keyword">for</span> char <span class="keyword">in</span> sentence:</span><br><span class="line">    <span class="keyword">if</span> char == <span class="string">'C'</span>:</span><br><span class="line">        print(<span class="string">'C在这个字符串中'</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
 <p>如果要判断<code>C</code>、<code>N</code>、<code>M</code>是不是都在这个字符串<code>我不想听到有人说CNM！</code>中，同一个字符串会被遍历3次。有没有办法减少这种看起来多余的遍历操作呢？</p>
 <p>如果我们把<code>我不想听到有人说CNM！</code>这个句子转成字典会怎么样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sentence = &apos;我不想听到有人说CNM！&apos;</div><div class="line">sentence_dict = &#123;char: 1 for char in sentence&#125;</div><div class="line">for letter in &apos;CNM&apos;:</div><div class="line">    if letter in sentence_dict:</div><div class="line">        print(f&apos;字母&#123;letter&#125;在句子中！&apos;)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sentence = &apos;我不想听到有人说CNM！&apos;</span><br><span class="line">sentence_dict = &#123;char: 1 for char in sentence&#125;</span><br><span class="line">for letter in &apos;CNM&apos;:</span><br><span class="line">    if letter in sentence_dict:</span><br><span class="line">        print(f&apos;字母&#123;letter&#125;在句子中！&apos;)</span><br></pre></td></tr></table></figure>
 <p>这样一来，只需要在生成字典的时候遍历句子一次，减少了2次冗余遍历。并且，判断一个元素是否在字典里面，时间复杂度为<code>O(1)</code>，速度非常快。</p>
 <p><code>我不想听到有人说CNM！</code>生成的字典为<code>{&#39;我&#39;: 1, &#39;不&#39;: 1, &#39;想&#39;: 1, &#39;听&#39;: 1, &#39;到&#39;: 1, &#39;有&#39;: 1, &#39;人&#39;: 1, &#39;说&#39;: 1, &#39;C&#39;: 1, &#39;N&#39;: 1, &#39;M&#39;: 1, &#39;！&#39;: 1}</code>。那么如果要把列表里面的所有句子都这样处理，又怎么存放呢？此时，字典的Key就是每一个字符，而Value可以是每一句话在原来列表中的索引：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </div><div class="line">             <span class="string">'人生苦短我用Python'</span>, </div><div class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</div><div class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span>,</div><div class="line">             <span class="string">'我CNM你个大SB'</span>,</div><div class="line">             <span class="string">'各位同学，Good Morning！'</span>,</div><div class="line">             <span class="string">'网络这个单词，它的英文为Network'</span>,</div><div class="line">             <span class="string">'我不想听到有人说CNM！'</span>]</div><div class="line">index_dict = &#123;&#125;</div><div class="line"><span class="keyword">for</span> index, line <span class="keyword">in</span> enumerate(sentences):</div><div class="line">    print(index, line)</div><div class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> line:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> char.strip():</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        <span class="keyword">if</span> char <span class="keyword">in</span> index_dict:</div><div class="line">            index_dict[char].add(index)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            index_dict[char] = &#123;index&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sentences = [<span class="string">'你说我是买苹果电脑，还是买windows电脑呢？'</span>, </span><br><span class="line">             <span class="string">'人生苦短我用Python'</span>, </span><br><span class="line">             <span class="string">'你TM一天到晚只知道得瑟'</span>,</span><br><span class="line">             <span class="string">'不不不，我不是说你，我是说在座的各位都是垃圾。'</span>,</span><br><span class="line">             <span class="string">'我CNM你个大SB'</span>,</span><br><span class="line">             <span class="string">'各位同学，Good Morning！'</span>,</span><br><span class="line">             <span class="string">'网络这个单词，它的英文为Network'</span>,</span><br><span class="line">             <span class="string">'我不想听到有人说CNM！'</span>]</span><br><span class="line">index_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> index, line <span class="keyword">in</span> enumerate(sentences):</span><br><span class="line">    print(index, line)</span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> line:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> char.strip():</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> char <span class="keyword">in</span> index_dict:</span><br><span class="line">            index_dict[char].add(index)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            index_dict[char] = &#123;index&#125;</span><br></pre></td></tr></table></figure>
 <p>生成的字典为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">&#123;&apos;B&apos;: &#123;4&#125;,</div><div class="line"> &apos;C&apos;: &#123;4, 7&#125;,</div><div class="line"> &apos;G&apos;: &#123;5&#125;,</div><div class="line"> &apos;M&apos;: &#123;2, 4, 5, 7&#125;,</div><div class="line"> &apos;N&apos;: &#123;4, 6, 7&#125;,</div><div class="line"> &apos;P&apos;: &#123;1&#125;,</div><div class="line"> &apos;S&apos;: &#123;4&#125;,</div><div class="line"> &apos;T&apos;: &#123;2&#125;,</div><div class="line"> &apos;d&apos;: &#123;0, 5&#125;,</div><div class="line"> &apos;e&apos;: &#123;6&#125;,</div><div class="line"> &apos;g&apos;: &#123;5&#125;,</div><div class="line"> &apos;h&apos;: &#123;1&#125;,</div><div class="line"> &apos;i&apos;: &#123;0, 5&#125;,</div><div class="line"> &apos;k&apos;: &#123;6&#125;,</div><div class="line"> &apos;n&apos;: &#123;0, 1, 5&#125;,</div><div class="line"> &apos;o&apos;: &#123;0, 1, 5, 6&#125;,</div><div class="line"> &apos;r&apos;: &#123;5, 6&#125;,</div><div class="line"> &apos;s&apos;: &#123;0&#125;,</div><div class="line"> &apos;t&apos;: &#123;1, 6&#125;,</div><div class="line"> &apos;w&apos;: &#123;0, 6&#125;,</div><div class="line"> &apos;y&apos;: &#123;1&#125;,</div><div class="line"> &apos;。&apos;: &#123;3&#125;,</div><div class="line"> &apos;一&apos;: &#123;2&#125;,</div><div class="line"> &apos;不&apos;: &#123;3, 7&#125;,</div><div class="line"> &apos;个&apos;: &#123;4, 6&#125;,</div><div class="line"> &apos;为&apos;: &#123;6&#125;,</div><div class="line"> &apos;买&apos;: &#123;0&#125;,</div><div class="line"> &apos;人&apos;: &#123;1, 7&#125;,</div><div class="line"> &apos;位&apos;: &#123;3, 5&#125;,</div><div class="line"> &apos;你&apos;: &#123;0, 2, 3, 4&#125;,</div><div class="line"> &apos;到&apos;: &#123;2, 7&#125;,</div><div class="line"> &apos;单&apos;: &#123;6&#125;,</div><div class="line"> &apos;只&apos;: &#123;2&#125;,</div><div class="line"> &apos;各&apos;: &#123;3, 5&#125;,</div><div class="line"> &apos;同&apos;: &#123;5&#125;,</div><div class="line"> &apos;听&apos;: &#123;7&#125;,</div><div class="line"> &apos;呢&apos;: &#123;0&#125;,</div><div class="line"> &apos;在&apos;: &#123;3&#125;,</div><div class="line"> &apos;圾&apos;: &#123;3&#125;,</div><div class="line"> &apos;垃&apos;: &#123;3&#125;,</div><div class="line"> &apos;大&apos;: &#123;4&#125;,</div><div class="line"> &apos;天&apos;: &#123;2&#125;,</div><div class="line"> &apos;学&apos;: &#123;5&#125;,</div><div class="line"> &apos;它&apos;: &#123;6&#125;,</div><div class="line"> &apos;座&apos;: &#123;3&#125;,</div><div class="line"> &apos;得&apos;: &#123;2&#125;,</div><div class="line"> &apos;想&apos;: &#123;7&#125;,</div><div class="line"> &apos;我&apos;: &#123;0, 1, 3, 4, 7&#125;,</div><div class="line"> &apos;文&apos;: &#123;6&#125;,</div><div class="line"> &apos;是&apos;: &#123;0, 3&#125;,</div><div class="line"> &apos;晚&apos;: &#123;2&#125;,</div><div class="line"> &apos;有&apos;: &#123;7&#125;,</div><div class="line"> &apos;果&apos;: &#123;0&#125;,</div><div class="line"> &apos;瑟&apos;: &#123;2&#125;,</div><div class="line"> &apos;生&apos;: &#123;1&#125;,</div><div class="line"> &apos;用&apos;: &#123;1&#125;,</div><div class="line"> &apos;电&apos;: &#123;0&#125;,</div><div class="line"> &apos;的&apos;: &#123;3, 6&#125;,</div><div class="line"> &apos;知&apos;: &#123;2&#125;,</div><div class="line"> &apos;短&apos;: &#123;1&#125;,</div><div class="line"> &apos;络&apos;: &#123;6&#125;,</div><div class="line"> &apos;网&apos;: &#123;6&#125;,</div><div class="line"> &apos;脑&apos;: &#123;0&#125;,</div><div class="line"> &apos;苦&apos;: &#123;1&#125;,</div><div class="line"> &apos;英&apos;: &#123;6&#125;,</div><div class="line"> &apos;苹&apos;: &#123;0&#125;,</div><div class="line"> &apos;词&apos;: &#123;6&#125;,</div><div class="line"> &apos;说&apos;: &#123;0, 3, 7&#125;,</div><div class="line"> &apos;还&apos;: &#123;0&#125;,</div><div class="line"> &apos;这&apos;: &#123;6&#125;,</div><div class="line"> &apos;道&apos;: &#123;2&#125;,</div><div class="line"> &apos;都&apos;: &#123;3&#125;,</div><div class="line"> &apos;！&apos;: &#123;5, 7&#125;,</div><div class="line"> &apos;，&apos;: &#123;0, 3, 5, 6&#125;,</div><div class="line"> &apos;？&apos;: &#123;0&#125;&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">&#123;&apos;B&apos;: &#123;4&#125;,</span><br><span class="line"> &apos;C&apos;: &#123;4, 7&#125;,</span><br><span class="line"> &apos;G&apos;: &#123;5&#125;,</span><br><span class="line"> &apos;M&apos;: &#123;2, 4, 5, 7&#125;,</span><br><span class="line"> &apos;N&apos;: &#123;4, 6, 7&#125;,</span><br><span class="line"> &apos;P&apos;: &#123;1&#125;,</span><br><span class="line"> &apos;S&apos;: &#123;4&#125;,</span><br><span class="line"> &apos;T&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;d&apos;: &#123;0, 5&#125;,</span><br><span class="line"> &apos;e&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;g&apos;: &#123;5&#125;,</span><br><span class="line"> &apos;h&apos;: &#123;1&#125;,</span><br><span class="line"> &apos;i&apos;: &#123;0, 5&#125;,</span><br><span class="line"> &apos;k&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;n&apos;: &#123;0, 1, 5&#125;,</span><br><span class="line"> &apos;o&apos;: &#123;0, 1, 5, 6&#125;,</span><br><span class="line"> &apos;r&apos;: &#123;5, 6&#125;,</span><br><span class="line"> &apos;s&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;t&apos;: &#123;1, 6&#125;,</span><br><span class="line"> &apos;w&apos;: &#123;0, 6&#125;,</span><br><span class="line"> &apos;y&apos;: &#123;1&#125;,</span><br><span class="line"> &apos;。&apos;: &#123;3&#125;,</span><br><span class="line"> &apos;一&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;不&apos;: &#123;3, 7&#125;,</span><br><span class="line"> &apos;个&apos;: &#123;4, 6&#125;,</span><br><span class="line"> &apos;为&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;买&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;人&apos;: &#123;1, 7&#125;,</span><br><span class="line"> &apos;位&apos;: &#123;3, 5&#125;,</span><br><span class="line"> &apos;你&apos;: &#123;0, 2, 3, 4&#125;,</span><br><span class="line"> &apos;到&apos;: &#123;2, 7&#125;,</span><br><span class="line"> &apos;单&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;只&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;各&apos;: &#123;3, 5&#125;,</span><br><span class="line"> &apos;同&apos;: &#123;5&#125;,</span><br><span class="line"> &apos;听&apos;: &#123;7&#125;,</span><br><span class="line"> &apos;呢&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;在&apos;: &#123;3&#125;,</span><br><span class="line"> &apos;圾&apos;: &#123;3&#125;,</span><br><span class="line"> &apos;垃&apos;: &#123;3&#125;,</span><br><span class="line"> &apos;大&apos;: &#123;4&#125;,</span><br><span class="line"> &apos;天&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;学&apos;: &#123;5&#125;,</span><br><span class="line"> &apos;它&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;座&apos;: &#123;3&#125;,</span><br><span class="line"> &apos;得&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;想&apos;: &#123;7&#125;,</span><br><span class="line"> &apos;我&apos;: &#123;0, 1, 3, 4, 7&#125;,</span><br><span class="line"> &apos;文&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;是&apos;: &#123;0, 3&#125;,</span><br><span class="line"> &apos;晚&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;有&apos;: &#123;7&#125;,</span><br><span class="line"> &apos;果&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;瑟&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;生&apos;: &#123;1&#125;,</span><br><span class="line"> &apos;用&apos;: &#123;1&#125;,</span><br><span class="line"> &apos;电&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;的&apos;: &#123;3, 6&#125;,</span><br><span class="line"> &apos;知&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;短&apos;: &#123;1&#125;,</span><br><span class="line"> &apos;络&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;网&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;脑&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;苦&apos;: &#123;1&#125;,</span><br><span class="line"> &apos;英&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;苹&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;词&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;说&apos;: &#123;0, 3, 7&#125;,</span><br><span class="line"> &apos;还&apos;: &#123;0&#125;,</span><br><span class="line"> &apos;这&apos;: &#123;6&#125;,</span><br><span class="line"> &apos;道&apos;: &#123;2&#125;,</span><br><span class="line"> &apos;都&apos;: &#123;3&#125;,</span><br><span class="line"> &apos;！&apos;: &#123;5, 7&#125;,</span><br><span class="line"> &apos;，&apos;: &#123;0, 3, 5, 6&#125;,</span><br><span class="line"> &apos;？&apos;: &#123;0&#125;&#125;</span><br></pre></td></tr></table></figure>
 <p>生成的字典这么长，看起来非常可怕。但是别慌，毕竟不是你人肉寻找。对Python来说，字典里面无论有多少个Key，它的查询时间都是一样的。</p>
 <p>现在，我们要寻找<code>C</code>、<code>N</code>、<code>M</code>，于是代码可以写为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">index_list = []</div><div class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> <span class="string">'CNM'</span>:</div><div class="line">    index_list.append(index_dict.get(letter, &#123;&#125;))</div><div class="line"></div><div class="line">common_index = set.intersection(*index_list)  <span class="comment"># 对包含各个字母的索引做交集，得到同时包含3个字母的句子</span></div><div class="line">print(f<span class="string">'这几个句子里面同时含有`C`、`N`、`M`：&#123;common_index&#125;'</span>)</div><div class="line"><span class="keyword">for</span> index <span class="keyword">in</span> common_index:</div><div class="line">    print(sentences[index])</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">index_list = []</span><br><span class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> <span class="string">'CNM'</span>:</span><br><span class="line">    index_list.append(index_dict.get(letter, &#123;&#125;))</span><br><span class="line"></span><br><span class="line">common_index = set.intersection(*index_list)  <span class="comment"># 对包含各个字母的索引做交集，得到同时包含3个字母的句子</span></span><br><span class="line">print(<span class="string">f'这几个句子里面同时含有`C`、`N`、`M`：<span class="subst">&#123;common_index&#125;</span>'</span>)</span><br><span class="line"><span class="keyword">for</span> index <span class="keyword">in</span> common_index:</span><br><span class="line">    print(sentences[index])</span><br></pre></td></tr></table></figure>
 <p>运行结果如下：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-13-50-58.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-13-50-58.png" alt></p>
 <p>所以，对于一组需要被查询的关键字，也可以这样搜索：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</div><div class="line"><span class="keyword">for</span> word <span class="keyword">in</span> keywords:</div><div class="line">    index_list = []</div><div class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> word:</div><div class="line">        index_list.append(index_dict.get(letter, &#123;&#125;))</div><div class="line"></div><div class="line">    common_index = set.intersection(*index_list)</div><div class="line">    print(f<span class="string">'&gt;&gt;这几个句子里面同时含有：&#123;word&#125;'</span>)</div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> common_index:</div><div class="line">        print(sentences[index])</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">keywords = [<span class="string">'垃圾'</span>, <span class="string">'CNM'</span>, <span class="string">'SB'</span>, <span class="string">'TM'</span>]</span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> keywords:</span><br><span class="line">    index_list = []</span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> word:</span><br><span class="line">        index_list.append(index_dict.get(letter, &#123;&#125;))</span><br><span class="line"></span><br><span class="line">    common_index = set.intersection(*index_list)</span><br><span class="line">    print(<span class="string">f'&gt;&gt;这几个句子里面同时含有：<span class="subst">&#123;word&#125;</span>'</span>)</span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> common_index:</span><br><span class="line">        print(sentences[index])</span><br></pre></td></tr></table></figure>
 <p>运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-03-02-14-05-33.png" alt></p>
 <p>看完这篇文章以后，你已经学会了倒排索引（Inverted-index）。这是Google搜索的核心算法之一。</p>
 <p>可以看出，对于少量数据的搜索，倒排索引并不会比常规方法节约多少时间。但是当你有100000000条句子，1000个关键词的时候，用倒排索引实现搜索，所需要的时间只有常规方法的1/10甚至更少。</p>
 <p>最后回到前面遇到的一个问题，当句子里面同时含有字母<code>C</code>、<code>N</code>、<code>M</code>，虽然这三个字母并不是组合在一起的，也会被搜索出来。这就涉及到搜索引擎的另一个核心技术——<code>分词</code>了。对于英文而言，使用空格来切分单词就好了。但是对于中文来说，不同的汉字组合在一起构成的词语，字数是不一样的。甚至有些专有名词，可能七八个字，但是也要作为整体来搜索。</p>
@@ -542,7 +538,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
   <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
 </div>
 
@@ -1048,7 +1044,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 

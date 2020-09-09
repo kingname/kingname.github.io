@@ -15,11 +15,11 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
-<meta name="theme-color" content="#222"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
@@ -46,9 +46,9 @@
 
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
@@ -96,30 +96,29 @@
 
 
 
-  <meta name="description" content="当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用lpop或者rpop:
-123456789import redisclient = redis.Redis()while True:    data = client.lpop(&apos;key&apos;)    if not data:        break    print(f&apos;弹出一条数据：&amp;#123;data.decode()&amp;#125">
+  <meta name="description" content="当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用lpop或者rpop: 123456789import redisclient = redis.Redis()while True:    data = client.lpop(&apos;key&apos;)    if not data:        break    print(f&apos;弹出一条数据：&amp;#123;data.decode()&amp;#125">
+<meta name="keywords" content="Python,Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何从 Redis 的列表中一次性 pop 多条数据？">
 <meta property="og:url" content="https://www.kingname.info/2019/12/04/batch-pop-in-redis/index.html">
 <meta property="og:site_name" content="谢乾坤 | Kingname">
-<meta property="og:description" content="当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用lpop或者rpop:
-123456789import redisclient = redis.Redis()while True:    data = client.lpop(&apos;key&apos;)    if not data:        break    print(f&apos;弹出一条数据：&amp;#123;data.decode()&amp;#125">
+<meta property="og:description" content="当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用lpop或者rpop: 123456789import redisclient = redis.Redis()while True:    data = client.lpop(&apos;key&apos;)    if not data:        break    print(f&apos;弹出一条数据：&amp;#123;data.decode()&amp;#125">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-04-22-42-04.png">
 <meta property="og:updated_time" content="2019-12-11T14:59:55.144Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何从 Redis 的列表中一次性 pop 多条数据？">
-<meta name="twitter:description" content="当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用lpop或者rpop:
-123456789import redisclient = redis.Redis()while True:    data = client.lpop(&apos;key&apos;)    if not data:        break    print(f&apos;弹出一条数据：&amp;#123;data.decode()&amp;#125">
+<meta name="twitter:description" content="当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用lpop或者rpop: 123456789import redisclient = redis.Redis()while True:    data = client.lpop(&apos;key&apos;)    if not data:        break    print(f&apos;弹出一条数据：&amp;#123;data.decode()&amp;#125">
 <meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-04-22-42-04.png">
 
 
 
-  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="https://www.kingname.info/2019/12/04/batch-pop-in-redis/"/>
+  <link rel="canonical" href="https://www.kingname.info/2019/12/04/batch-pop-in-redis/">
 
 
 
@@ -229,7 +228,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -246,7 +245,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -263,7 +262,7 @@
 
     
 
-    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -280,7 +279,7 @@
 
     
 
-    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
 
   </li>
         
@@ -297,7 +296,7 @@
 
     
 
-    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
 
   </li>
 
@@ -331,7 +330,7 @@
 
   
 
-  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
 
 
 
@@ -358,16 +357,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/12/04/batch-pop-in-redis/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/12/04/batch-pop-in-redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
     </span>
 
     
@@ -424,7 +423,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -480,27 +479,27 @@
 
       
         <p>当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用<code>lpop</code>或者<code>rpop</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line"></div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    data = client.lpop(<span class="string">'key'</span>)</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> data:</div><div class="line">        <span class="keyword">break</span></div><div class="line">    print(f<span class="string">'弹出一条数据：&#123;data.decode()&#125;'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    data = client.lpop(<span class="string">'key'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    print(<span class="string">f'弹出一条数据：<span class="subst">&#123;data.decode()&#125;</span>'</span>)</span><br></pre></td></tr></table></figure>
 <p>但这种写法有一个问题，就是每弹出1条数据都要连接一次 Redis 服务器，当你要把1000万条数据从列表里面弹出来的时候，实际上超过一半的时间都消耗在了网络请求上面。</p>
 <a id="more"></a>
 <p>但是<code>lpop</code>与<code>rpop</code>都只接收一个参数，就是<code>key</code><br>。因此没有办法通过传入参数的方式让它一次弹出多条数据。</p>
 <p>要获取多条数据，我们还有另一种方案，就是<code>lrange</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">client = client.lrange(<span class="string">'key'</span>, <span class="number">0</span>, <span class="number">5000</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client = client.lrange(<span class="string">'key'</span>, <span class="number">0</span>, <span class="number">5000</span>)</span><br></pre></td></tr></table></figure>
 <p>这一行的意思是从列表中，获取前5001条数据（包含首尾）。但<code>lrange</code>只能获取数据，却不能删除数据。这就会导致在多个进程获取到重复的数据。</p>
 <p>我们还知道Redis 的<code>ltrim</code>来删除数据：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">client.ltrim(<span class="string">'key'</span>, <span class="number">5000</span>, <span class="number">-1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client.ltrim(<span class="string">'key'</span>, <span class="number">5000</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
 <p>这样就能删除前5000条数据了。这里第三个参数之所以要用负数，是因为<code>ltrim(key, start, end)</code>的意思是说，保留列表 Key 的第start项到第end 项，其它项删除。那么如果 end为负数，表示倒数第几项，例如-1表示倒数第1项，-2表示倒数第2项。假设列表里面有10000项，那么 start 为5000，end 为-1，表示删除前5000条数据（0-4999），保留后面的。</p>
 <p>于是有人问，能不能这样写代码呢：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line">data = client.lrange(<span class="string">'key'</span>, <span class="number">0</span>, <span class="number">4999</span>)</div><div class="line">client.ltrim(<span class="string">'key'</span>, <span class="number">5000</span>, <span class="number">-1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line">data = client.lrange(<span class="string">'key'</span>, <span class="number">0</span>, <span class="number">4999</span>)</span><br><span class="line">client.ltrim(<span class="string">'key'</span>, <span class="number">5000</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
 <p>这样不就看起来像是弹出了5000条数据吗？</p>
 <p>想法很好，但是由于获取数据与删除数据是两条命令，中间有时间差。这就导致在多个线程或者进程同时执行这两条代码的时候，出现竞争。也就是进程1刚刚获取了前5000条数据，然后进程2同样获取这5000条数据，然后进程1删除前5000条数据，然后进程2再删除5000条数据。</p>
 <p>这样一来，两个进程获取了相同的5000条数据，但是却删了10000条数据。</p>
 <p>为了解决这个问题，必需让获取数据与删除数据这两个操作变成一个“原子操作”。所谓的原子操作就是只一个最小的操作单位，它不会被中途打断。</p>
 <p>要解决这个问题，我们就需要使用 Redis 的<code>pipeline</code>功能。它可以把多条命令放在一个网络请求中发送到服务器，并默认在一个事务中执行这些命令。一个事务是不会被打断的，从事务开始然后执行里面的多个命令到结束的整个过程，可以看做一个原子操作。</p>
 <p><code>pipeline</code>的使用方法如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis</div><div class="line"></div><div class="line"></div><div class="line">client = redis.Redis()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">batch_lpop</span><span class="params">(key, n)</span>:</span></div><div class="line">    p = client.pipeline()</div><div class="line">    p.lrange(key, <span class="number">0</span>, n - <span class="number">1</span>)</div><div class="line">    p.ltrim(key, n, <span class="number">-1</span>)</div><div class="line">    data = p.execute()</div><div class="line">    <span class="keyword">return</span> data</div><div class="line"></div><div class="line">batch_lpop(<span class="string">'test_pipeline'</span>, <span class="number">20</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batch_lpop</span><span class="params">(key, n)</span>:</span></span><br><span class="line">    p = client.pipeline()</span><br><span class="line">    p.lrange(key, <span class="number">0</span>, n - <span class="number">1</span>)</span><br><span class="line">    p.ltrim(key, n, <span class="number">-1</span>)</span><br><span class="line">    data = p.execute()</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">batch_lpop(<span class="string">'test_pipeline'</span>, <span class="number">20</span>)</span><br></pre></td></tr></table></figure>
 <p>当代码执行到<code>p.execute()</code>的时候，它才会真正去连接服务器，然后把待执行的命令在一个事务中一次性执行完成。并返回一个列表。返回的列表有两项，第0项是包含结果的列表，第1项为ltrim 的返回结果。如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-04-22-42-04.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-04-22-42-04.png" alt></p>
 <p>我们只需要使用第0项的结果即可。</p>
 
       
@@ -515,7 +514,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
   <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
 </div>
 
@@ -1023,7 +1022,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 

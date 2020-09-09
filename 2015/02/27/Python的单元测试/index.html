@@ -15,11 +15,11 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
-<meta name="theme-color" content="#222"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
@@ -46,9 +46,9 @@
 
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
@@ -96,28 +96,27 @@
 
 
 
-  <meta name="description" content="测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。
-说一个函数高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面">
+  <meta name="description" content="测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。 说一个函数高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面">
+<meta name="keywords" content="Python,单元测试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python的单元测试（一）">
 <meta property="og:url" content="https://www.kingname.info/2015/02/27/Python的单元测试/index.html">
 <meta property="og:site_name" content="谢乾坤 | Kingname">
-<meta property="og:description" content="测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。
-说一个函数高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面">
+<meta property="og:description" content="测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。 说一个函数高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-09-25T13:33:27.468Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python的单元测试（一）">
-<meta name="twitter:description" content="测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。
-说一个函数高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面">
+<meta name="twitter:description" content="测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。 说一个函数高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面">
 
 
 
-  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="https://www.kingname.info/2015/02/27/Python的单元测试/"/>
+  <link rel="canonical" href="https://www.kingname.info/2015/02/27/Python的单元测试/">
 
 
 
@@ -227,7 +226,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -244,7 +243,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -261,7 +260,7 @@
 
     
 
-    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -278,7 +277,7 @@
 
     
 
-    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
 
   </li>
         
@@ -295,7 +294,7 @@
 
     
 
-    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
 
   </li>
 
@@ -329,7 +328,7 @@
 
   
 
-  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
 
 
 
@@ -356,16 +355,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/02/27/Python的单元测试/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/02/27/Python的单元测试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
     </span>
 
     
@@ -422,7 +421,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -482,15 +481,15 @@
 <p>说<strong>几个函数</strong>是低耦合的，就是指他们的依赖性小。他们就像是葫芦娃，每个都有自己独特的能力，可以自己单干，在关键的时候还可以合体，变成小金刚。他们就像积木一样，各有各的功能，需要使用的时候直接组合在一起就可以了。</p>
 <p>使用测试驱动开发，每一个测试只测试一个功能，这样就可以迫使函数把自己独立出来，尽量减少和其他函数的依赖。</p>
 <p>例如，有一个文件1.txt，他的内容是两个数字，使用逗号隔开。形如“2,4”（不包括外侧双引号，下同）。我要写一个程序readandadd.py，读取硬盘上的1.txt文件，然后把这个文件的内容打印到屏幕上。</p>
-<p>不规范的写法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">f= open(&apos;1.txt&apos;,&apos;r&apos;)</div><div class="line">b = f.read().split(&apos;,&apos;)</div><div class="line">f.close()</div><div class="line">print int(b[0])+int(b[1])</div></pre></td></tr></table></figure></p>
-<p>不规范写法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def A():</div><div class="line">	f= open(&apos;1.txt&apos;,&apos;r&apos;)</div><div class="line">	b = f.read().split(&apos;,&apos;)</div><div class="line">	f.close()</div><div class="line">	print int(b[0])+int(b[1])</div><div class="line">A()</div></pre></td></tr></table></figure></p>
-<p>比较规范的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">def read(filename):</div><div class="line">    f= open(filename,&apos;r&apos;)</div><div class="line">    info = f.read()</div><div class="line">    f.close()</div><div class="line">    return info</div><div class="line"></div><div class="line">def getnum(info):</div><div class="line">    twonum = info.split(&apos;,&apos;)</div><div class="line">    return twonum</div><div class="line"></div><div class="line">def addnum(twonum):</div><div class="line">    return int(twonum[0])+int(twonum[1])</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">        info = read(&apos;1.txt&apos;)</div><div class="line">        twonum = getnum(info)</div><div class="line">        result = addnum(twonum)</div><div class="line">		print result</div></pre></td></tr></table></figure></p>
+<p>不规范的写法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">b = f.read().split(&apos;,&apos;)</span><br><span class="line">f.close()</span><br><span class="line">print int(b[0])+int(b[1])</span><br></pre></td></tr></table></figure></p>
+<p>不规范写法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def A():</span><br><span class="line">	f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">	b = f.read().split(&apos;,&apos;)</span><br><span class="line">	f.close()</span><br><span class="line">	print int(b[0])+int(b[1])</span><br><span class="line">A()</span><br></pre></td></tr></table></figure></p>
+<p>比较规范的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">def getnum(info):</span><br><span class="line">    twonum = info.split(&apos;,&apos;)</span><br><span class="line">    return twonum</span><br><span class="line"></span><br><span class="line">def addnum(twonum):</span><br><span class="line">    return int(twonum[0])+int(twonum[1])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">        info = read(&apos;1.txt&apos;)</span><br><span class="line">        twonum = getnum(info)</span><br><span class="line">        result = addnum(twonum)</span><br><span class="line">		print result</span><br></pre></td></tr></table></figure></p>
 <p>这样写的好处是，如果想测试读文件的功能，就只需要测试read()函数，如果想测试把两个数分开的功能，就只需要测试getnum()函数。而相反，在不规范写法二中，虽然只想测试两个数字相加的功能，可是却不得不首先打开文件并读取文件然后把数字分开。</p>
-<p>继续回到比较规范的写法当中，我相信很多人写完read()函数以后，肯定会输入如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">def read(filename):</div><div class="line">    f= open(filename,&apos;r&apos;)</div><div class="line">    info = f.read()</div><div class="line">    f.close()</div><div class="line">    return info</div><div class="line"></div><div class="line">print read(&apos;1.txt&apos;)</div></pre></td></tr></table></figure></p>
+<p>继续回到比较规范的写法当中，我相信很多人写完read()函数以后，肯定会输入如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">print read(&apos;1.txt&apos;)</span><br></pre></td></tr></table></figure></p>
 <p>然后运行程序，发现正常打印出’2,3’以后，再开始写getnum()函数。写完getnum以后，测试getnum()函数没问题以后再开始写然后测试addnum()函数。最后测试整个程序的功能。</p>
 <p>其实这个过程，已经就是在做单元测试了。然而这样操作的弊端是什么？如果整体程序已经写好了，之前做测试点代码也就删除了。那么如果突然把程序做了修改。例如1.txt里面数字的分隔从1个逗号变成了空格，或者变成了3个数字，那必然要修改getnum()，但是又如何测试修改的部分呢？还要把不相干的代码给注释掉。不仅麻烦，而且容易出错。</p>
-<p>现在，把测试的代码单独独立出来。会有什么效果呢？尝试创建一个test.py程序，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import readandadd</div><div class="line"></div><div class="line">def testread():</div><div class="line">    print &apos;read:&apos;,readandadd.read(&apos;1.txt&apos;)</div><div class="line"></div><div class="line">def testgetnum():</div><div class="line">    print &apos;getnum:&apos;,readandadd.getnum(&apos;2,3&apos;)</div><div class="line"></div><div class="line">def testaddnum():</div><div class="line">    print &apos;addnum:&apos;,readandadd.addnum([2,3])</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    testread()</div><div class="line">    testgetnum()</div><div class="line">    testaddnum()</div></pre></td></tr></table></figure></p>
-<p>运行test.py以后输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">read: 2,3</div><div class="line">getnum: [&apos;2&apos;, &apos;3&apos;]</div><div class="line">addnum: 5</div></pre></td></tr></table></figure></p>
+<p>现在，把测试的代码单独独立出来。会有什么效果呢？尝试创建一个test.py程序，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import readandadd</span><br><span class="line"></span><br><span class="line">def testread():</span><br><span class="line">    print &apos;read:&apos;,readandadd.read(&apos;1.txt&apos;)</span><br><span class="line"></span><br><span class="line">def testgetnum():</span><br><span class="line">    print &apos;getnum:&apos;,readandadd.getnum(&apos;2,3&apos;)</span><br><span class="line"></span><br><span class="line">def testaddnum():</span><br><span class="line">    print &apos;addnum:&apos;,readandadd.addnum([2,3])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    testread()</span><br><span class="line">    testgetnum()</span><br><span class="line">    testaddnum()</span><br></pre></td></tr></table></figure></p>
+<p>运行test.py以后输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">read: 2,3</span><br><span class="line">getnum: [&apos;2&apos;, &apos;3&apos;]</span><br><span class="line">addnum: 5</span><br></pre></td></tr></table></figure></p>
 <p>每一个函数的输出结果一目了然，而且在修改了readandadd.py的函数以后，重新运行test.py就可以知道输出结果有没有符合预期。</p>
 <p>当然，这里这个例子非常的简单，因此可以人工通过观察test.py的输出结果来确定是否符合预期，那对于大量的函数的测试，难道也要让肉眼来看吗？当然不是。于是，下一篇文章将会介绍Python的单元测试unittest。</p>
 
@@ -506,7 +505,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
   <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
 </div>
 
@@ -1014,7 +1013,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 

@@ -15,11 +15,11 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
-<meta name="theme-color" content="#222"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
@@ -46,9 +46,9 @@
 
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
@@ -96,20 +96,14 @@
 
 
 
-  <meta name="description" content="少数派（https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。
-
-这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。
-作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。
-从网页上删除这些">
+  <meta name="description" content="少数派（https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。  这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。 作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。 从网页上删除这些">
+<meta name="keywords" content="JavaScript,少数派">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一日一技：如何使用JavaScript移除少数派的付费内容">
 <meta property="og:url" content="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/index.html">
 <meta property="og:site_name" content="谢乾坤 | Kingname">
-<meta property="og:description" content="少数派（https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。
-
-这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。
-作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。
-从网页上删除这些">
+<meta property="og:description" content="少数派（https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。  这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。 作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。 从网页上删除这些">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-32-55.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-36-21.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-37-28.png">
@@ -120,21 +114,17 @@
 <meta property="og:updated_time" content="2019-07-21T11:02:24.875Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一日一技：如何使用JavaScript移除少数派的付费内容">
-<meta name="twitter:description" content="少数派（https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。
-
-这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。
-作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。
-从网页上删除这些">
+<meta name="twitter:description" content="少数派（https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。  这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。 作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。 从网页上删除这些">
 <meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-32-55.png">
 
 
 
-  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/"/>
+  <link rel="canonical" href="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/">
 
 
 
@@ -244,7 +234,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -261,7 +251,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -278,7 +268,7 @@
 
     
 
-    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -295,7 +285,7 @@
 
     
 
-    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
 
   </li>
         
@@ -312,7 +302,7 @@
 
     
 
-    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
 
   </li>
 
@@ -346,7 +336,7 @@
 
   
 
-  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
 
 
 
@@ -373,16 +363,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2019/07/21/delete-pay-content-by-js/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
     </span>
 
     
@@ -427,7 +417,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -482,25 +472,25 @@
       
 
       
-        <p>少数派（<a href="https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。" target="_blank" rel="external">https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。</a></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-32-55.png" alt=""></p>
+        <p>少数派（<a href="https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。" target="_blank" rel="noopener">https://sspai.com/）是一个以生产力、效率工具为主要内容的数字消费指南平台。由于网站需要盈利，所以他们在网站上有所克制地增加了一些付费内容。如下图所示。</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-32-55.png" alt></p>
 <p>这种付费文章点进去以后，只能看到前几段，然后就需要购买会员才能正常阅读。</p>
 <p>作为一个网站需要盈利，因此开设付费内容无可厚非。奈何少数派的付费内容对我毫无吸引力，因此我不希望每次都在首页上看到这些付费文章。</p>
 <p>从网页上删除这些付费内容的原理非常简单，在网页上右键，点击“检查”，打开Chrome的开发者工具，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-36-21.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-36-21.png" alt></p>
 <p>点击箭头所指向的图标，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-37-28.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-37-28.png" alt></p>
 <p>然后在网页上任意选中一个付费内容，此时开发者工具里面将会自动变成下图所示的样子：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-38-53.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-38-53.png" alt></p>
 <p>其中方框框住的这个<code>img</code>标签对应了<code>付费内容</code>这个小图标，因此我们可以使用这个标签来进行定位。</p>
 <p>现在视线在HTML代码区域往上走，可以看到<code>dl</code>标签</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-40-31.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-40-31.png" alt></p>
 <p>每一个文章块就对应一个<code>dl</code>标签。如果我们在上面右键删除这个标签，就会发现对应的付费条目不见了，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-41-45.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-17-41-45.png" alt></p>
 <p>但这种做法每次只能删除一条付费内容，有没有办法把所有付费内容全部删除呢？答案就是使用JavaScript：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line"></div><div class="line"><span class="keyword">while</span>(pay_tag_list.length &gt; <span class="number">0</span>)&#123;</div><div class="line">	pay_tag = pay_tag_list[<span class="number">0</span>]</div><div class="line">    dl_tag = pay_tag.parentNode.parentNode.parentNode</div><div class="line">	div_tag = dl_tag.parentNode</div><div class="line">	div_tag.removeChild(dl_tag)</div><div class="line">    pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(pay_tag_list.length &gt; <span class="number">0</span>)&#123;</span><br><span class="line">	pay_tag = pay_tag_list[<span class="number">0</span>]</span><br><span class="line">    dl_tag = pay_tag.parentNode.parentNode.parentNode</span><br><span class="line">	div_tag = dl_tag.parentNode</span><br><span class="line">	div_tag.removeChild(dl_tag)</span><br><span class="line">    pay_tag_list = <span class="built_in">document</span>.getElementsByClassName(<span class="string">'series-logo'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>复制上面这一段代码到开发者工具的Console标签页并粘贴，敲下回车键，付费内容就消失了，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-18-02-31.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-07-21-18-02-31.png" alt></p>
 
       
     </div>
@@ -514,7 +504,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
   <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
 </div>
 
@@ -1022,7 +1012,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 

@@ -15,11 +15,11 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
-<meta name="theme-color" content="#222"/>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
 
 
 
@@ -46,9 +46,9 @@
 
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
@@ -97,11 +97,13 @@
 
 
   <meta name="description" content="在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。">
+<meta name="keywords" content="Python,爬虫,Scrapy">
 <meta property="og:type" content="article">
 <meta property="og:title" content="彻底搞懂Scrapy的中间件（三）">
 <meta property="og:url" content="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/index.html">
 <meta property="og:site_name" content="谢乾坤 | Kingname">
 <meta property="og:description" content="在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-51-03.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png">
@@ -118,12 +120,12 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml"/>
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
 
 
 
 
-  <link rel="canonical" href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/"/>
+  <link rel="canonical" href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/">
 
 
 
@@ -233,7 +235,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -250,7 +252,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -267,7 +269,7 @@
 
     
 
-    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -284,7 +286,7 @@
 
     
 
-    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br/>公众号</a>
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
 
   </li>
         
@@ -301,7 +303,7 @@
 
     
 
-    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于我</a>
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
 
   </li>
 
@@ -335,7 +337,7 @@
 
   
 
-  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
 
 
 
@@ -362,16 +364,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/"/>
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2018/11/20/know-middleware-of-scrapy-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
-      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。"/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname"/>
+      <meta itemprop="name" content="谢乾坤 | Kingname">
     </span>
 
     
@@ -416,7 +418,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -474,7 +476,7 @@
         <p>在前面两篇文章介绍了下载器中间件的使用，这篇文章将会介绍爬虫中间件（Spider Middleware）的使用。</p>
 <a id="more"></a>
 <h2 id="爬虫中间件"><a href="#爬虫中间件" class="headerlink" title="爬虫中间件"></a>爬虫中间件</h2><p>爬虫中间件的用法与下载器中间件非常相似，只是它们的作用对象不同。下载器中间件的作用对象是请求request和返回response；爬虫中间件的作用对象是爬虫，更具体地来说，就是写在spiders文件夹下面的各个文件。它们的关系，在Scrapy的数据流图上可以很好地区分开来，如下图所示。</p>
-<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png" alt=""></p>
+<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-49-17.png" alt></p>
 <p>其中，4、5表示下载器中间件，6、7表示爬虫中间件。爬虫中间件会在以下几种情况被调用。</p>
 <ol>
 <li>当运行到<code>yield scrapy.Request()</code>或者<code>yield item</code>的时候，爬虫中间件的<code>process_spider_output()</code>方法被调用。</li>
@@ -482,33 +484,33 @@
 <li>当爬虫里面的某一个回调函数<code>parse_xxx()</code>被调用之前，爬虫中间件的<code>process_spider_input()</code>方法被调用。</li>
 <li>当运行到<code>start_requests()</code>的时候，爬虫中间件的<code>process_start_requests()</code>方法被调用。</li>
 </ol>
-<h3 id="在中间件处理爬虫本身的异常"><a href="#在中间件处理爬虫本身的异常" class="headerlink" title="在中间件处理爬虫本身的异常"></a>在中间件处理爬虫本身的异常</h3><p>在爬虫中间件里面可以处理爬虫本身的异常。例如编写一个爬虫，爬取UA练习页面<a href="http://exercise.kingname.info/exercise_middleware_ua" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_ua</a> ，故意在爬虫中制造一个异常，如图12-26所示。</p>
-<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-51-03.png" alt=""></p>
+<h3 id="在中间件处理爬虫本身的异常"><a href="#在中间件处理爬虫本身的异常" class="headerlink" title="在中间件处理爬虫本身的异常"></a>在中间件处理爬虫本身的异常</h3><p>在爬虫中间件里面可以处理爬虫本身的异常。例如编写一个爬虫，爬取UA练习页面<a href="http://exercise.kingname.info/exercise_middleware_ua" target="_blank" rel="noopener">http://exercise.kingname.info/exercise_middleware_ua</a> ，故意在爬虫中制造一个异常，如图12-26所示。</p>
+<p> <img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-51-03.png" alt></p>
 <p>由于网站返回的只是一段普通的字符串，并不是JSON格式的字符串，因此使用JSON去解析，就一定会导致报错。这种报错和下载器中间件里面遇到的报错不一样。下载器中间件里面的报错一般是由于外部原因引起的，和代码层面无关。而现在的这种报错是由于代码本身的问题导致的，是代码写得不够周全引起的。</p>
 <p>为了解决这个问题，除了仔细检查代码、考虑各种情况外，还可以通过开发爬虫中间件来跳过或者处理这种报错。在middlewares.py中编写一个类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExceptionCheckSpider</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_spider_exception</span><span class="params">(self, response, exception, spider)</span>:</span></div><div class="line">        print(f<span class="string">'返回的内容是：&#123;response.body.decode()&#125;\n报错原因：&#123;type(exception)&#125;'</span>)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExceptionCheckSpider</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_spider_exception</span><span class="params">(self, response, exception, spider)</span>:</span></span><br><span class="line">        print(<span class="string">f'返回的内容是：<span class="subst">&#123;response.body.decode()&#125;</span>\n报错原因：<span class="subst">&#123;type(exception)&#125;</span>'</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
 <p>这个类仅仅起到记录Log的作用。在使用JSON解析网站返回内容出错的时候，将网站返回的内容打印出来。</p>
 <p><code>process_spider_exception()</code>这个方法，它可以返回<code>None</code>，也可以运行<code>yield item</code>语句或者像爬虫的代码一样，使用<code>yield scrapy.Request()</code>发起新的请求。如果运行了<code>yield item</code>或者<code>yield scrapy.Request()</code>，程序就会绕过爬虫里面原有的代码。</p>
-<p>例如，对于有异常的请求，不需要进行重试，但是需要记录是哪一个请求出现了异常，此时就可以在爬虫中间件里面检测异常，然后生成一个只包含标记的item。还是以抓取<a href="http://exercise.kingname.info/exercise_middleware_retry.html" target="_blank" rel="external">http://exercise.kingname.info/exercise_middleware_retry.html</a>这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png" alt=""></p>
+<p>例如，对于有异常的请求，不需要进行重试，但是需要记录是哪一个请求出现了异常，此时就可以在爬虫中间件里面检测异常，然后生成一个只包含标记的item。还是以抓取<a href="http://exercise.kingname.info/exercise_middleware_retry.html" target="_blank" rel="noopener">http://exercise.kingname.info/exercise_middleware_retry.html</a>这个练习页的内容为例，但是这一次不进行重试，只记录哪一页出现了问题。先看爬虫的代码，这一次在meta中把页数带上，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-02.png" alt></p>
 <p>爬虫里面如果发现了参数错误，就使用raise这个关键字人工抛出一个自定义的异常。在实际爬虫开发中，读者也可以在某些地方故意不使用try … except捕获异常，而是让异常直接抛出。例如XPath匹配处理的结果，直接读里面的值，不用先判断列表是否为空。这样如果列表为空，就会被抛出一个IndexError，于是就能让爬虫的流程进入到爬虫中间件的<code>process_spider_exception()</code>中。</p>
 <p>在items.py里面创建了一个ErrorItem来记录哪一页出现了问题，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-45.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-53-45.png" alt></p>
 <p>接下来，在爬虫中间件中将出错的页面和当前时间存放到ErrorItem里面，并提交给pipeline，保存到MongoDB中，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-54-41.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-54-41.png" alt></p>
 <p>这样就实现了记录错误页数的功能，方便在后面对错误原因进行分析。由于这里会把item提交给pipeline，所以不要忘记在settings.py里面打开pipeline，并配置好MongoDB。储存错误页数到MongoDB的代码如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-55-43.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-55-43.png" alt></p>
 <h3 id="激活爬虫中间件"><a href="#激活爬虫中间件" class="headerlink" title="激活爬虫中间件"></a>激活爬虫中间件</h3><p>爬虫中间件的激活方式与下载器中间件非常相似，在settings.py中，在下载器中间件配置项的上面就是爬虫中间件的配置项，它默认也是被注释了的，解除注释，并把自定义的爬虫中间件添加进去即可，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-56-15.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-56-15.png" alt></p>
 <p>Scrapy也有几个自带的爬虫中间件，它们的名字和顺序如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-57-03.png" alt=""></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2018-11-20-22-57-03.png" alt></p>
 <p>下载器中间件的数字越小越接近Scrapy引擎，数字越大越接近爬虫。如果不能确定自己的自定义中间件应该靠近哪个方向，那么就在500～700之间选择最为妥当。</p>
 <h3 id="爬虫中间件输入-输出"><a href="#爬虫中间件输入-输出" class="headerlink" title="爬虫中间件输入/输出"></a>爬虫中间件输入/输出</h3><p>在爬虫中间件里面还有两个不太常用的方法，分别为<code>process_spider_input(response, spider)</code>和<code>process_spider_output(response, result, spider)</code>。其中，<code>process_spider_input(response, spider)</code>在下载器中间件处理完成后，马上要进入某个回调函数parse_xxx()前调用。<code>process_spider_output(response, result, output)</code>是在爬虫运行<code>yield item</code>或者<code>yield scrapy.Request()</code>的时候调用。在这个方法处理完成以后，数据如果是item，就会被交给pipeline；如果是请求，就会被交给调度器，然后下载器中间件才会开始运行。所以在这个方法里面可以进一步对item或者请求做一些修改。这个方法的参数result就是爬虫爬出来的item或者<code>scrapy.Request()</code>。由于yield得到的是一个生成器，生成器是可以迭代的，所以result也是可以迭代的，可以使用for循环来把它展开。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> isinstance(item, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对即将被提交给pipeline的item进行各种操作</span></div><div class="line">            print(f<span class="string">'item将会被提交给pipeline'</span>)</div><div class="line">        <span class="keyword">yield</span> item</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> result:</span><br><span class="line">        <span class="keyword">if</span> isinstance(item, scrapy.Item):</span><br><span class="line">            <span class="comment"># 这里可以对即将被提交给pipeline的item进行各种操作</span></span><br><span class="line">            print(<span class="string">f'item将会被提交给pipeline'</span>)</span><br><span class="line">        <span class="keyword">yield</span> item</span><br></pre></td></tr></table></figure>
 <p>或者对请求进行监控和修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></div><div class="line">    <span class="keyword">for</span> request <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(request, scrapy.Item):</div><div class="line">            <span class="comment"># 这里可以对请求进行各种修改</span></div><div class="line">            print(<span class="string">'现在还可以对请求对象进行修改。。。。'</span>)</div><div class="line">        request.meta[<span class="string">'request_start_time'</span>] = time.time()</div><div class="line">        <span class="keyword">yield</span> request</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_spider_output</span><span class="params">(response, result, spider)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> request <span class="keyword">in</span> result:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(request, scrapy.Item):</span><br><span class="line">            <span class="comment"># 这里可以对请求进行各种修改</span></span><br><span class="line">            print(<span class="string">'现在还可以对请求对象进行修改。。。。'</span>)</span><br><span class="line">        request.meta[<span class="string">'request_start_time'</span>] = time.time()</span><br><span class="line">        <span class="keyword">yield</span> request</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="external">https://item.jd.com/12436581.html</a></p>
+<p>本文节选自我的新书《Python爬虫开发  从入门到实战》完整目录可以在京东查询到 <a href="https://item.jd.com/12436581.html" target="_blank" rel="noopener">https://item.jd.com/12436581.html</a></p>
 </blockquote>
 
       
@@ -523,7 +525,7 @@
     
       <div>
         <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;"/>
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
   <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
 </div>
 
@@ -1059,7 +1061,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.2.2</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
 
 
 

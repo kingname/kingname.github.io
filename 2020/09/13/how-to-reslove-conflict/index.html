@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Git 是现在使用最广泛的源代码管理程序。一个合格的程序员必须要熟练掌握 Git。在使用 Git 的时候，最让人头疼的问题是什么？肯定是解冲突了。如果两个人修改了同一个文件的相同位置，那么当一个人提交代码并合并到主分支以后，第二个人尝试合并时就会触发冲突。大多数情况下，Git 自己知道如何把两份代码合并起来。但有时候当 Git 不知道应该怎么合并，就会提示你需要手动解决冲突。 我以前学习 Git">
+<meta name="keywords" content="Git,Github">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手把手教学，如何解决 git 冲突？">
+<meta property="og:url" content="https://www.kingname.info/2020/09/13/how-to-reslove-conflict/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="Git 是现在使用最广泛的源代码管理程序。一个合格的程序员必须要熟练掌握 Git。在使用 Git 的时候，最让人头疼的问题是什么？肯定是解冲突了。如果两个人修改了同一个文件的相同位置，那么当一个人提交代码并合并到主分支以后，第二个人尝试合并时就会触发冲突。大多数情况下，Git 自己知道如何把两份代码合并起来。但有时候当 Git 不知道应该怎么合并，就会提示你需要手动解决冲突。 我以前学习 Git">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-09-57.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-11-49.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-15-22.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-17-27.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/author.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-43-54.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-45-09.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-24-14.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-50-47.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-54-22.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-55-47.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-58-22.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-16-42.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-23-44.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-25-19.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-26-28.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-45-20.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-44-40.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-47-37.png">
+<meta property="og:updated_time" content="2020-09-13T16:21:07.111Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手把手教学，如何解决 git 冲突？">
+<meta name="twitter:description" content="Git 是现在使用最广泛的源代码管理程序。一个合格的程序员必须要熟练掌握 Git。在使用 Git 的时候，最让人头疼的问题是什么？肯定是解冲突了。如果两个人修改了同一个文件的相同位置，那么当一个人提交代码并合并到主分支以后，第二个人尝试合并时就会触发冲突。大多数情况下，Git 自己知道如何把两份代码合并起来。但有时候当 Git 不知道应该怎么合并，就会提示你需要手动解决冲突。 我以前学习 Git">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-09-57.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2020/09/13/how-to-reslove-conflict/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>手把手教学，如何解决 git 冲突？ | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2020/09/13/how-to-reslove-conflict/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">手把手教学，如何解决 git 冲突？
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-13 22:52:37" itemprop="dateCreated datePublished" datetime="2020-09-13T22:52:37+08:00">2020-09-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-14 00:21:07" itemprop="dateModified" datetime="2020-09-14T00:21:07+08:00">2020-09-14</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/13/how-to-reslove-conflict/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/09/13/how-to-reslove-conflict/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Git 是现在使用最广泛的源代码管理程序。一个合格的程序员必须要熟练掌握 Git。在使用 Git 的时候，最让人头疼的问题是什么？肯定是解冲突了。如果两个人修改了同一个文件的相同位置，那么当一个人提交代码并合并到主分支以后，第二个人尝试合并时就会触发冲突。大多数情况下，Git 自己知道如何把两份代码合并起来。但有时候当 Git 不知道应该怎么合并，就会提示你需要手动解决冲突。</p>
+<p>我以前学习 Git 的时候，由于没有人跟我一起提交代码，所以我为了模拟两人提交的情况，会把代码 clone 到两个文件夹里面，然后把相同的位置分别做不同的修改，再分别提交。过程非常繁琐。</p>
+<a id="more"></a>
+<p>最近因为评上了微软 MVP 的关系，会主动关注一下微软的在线课程，结果发现微软悄无声息地出了一整套的 Github 课程。而这其中，有一套交互式的课程手把手指导如何解决 Git 的冲突：<a href="https://docs.microsoft.com/zh-cn/learn/modules/resolve-merge-conflicts-github/?WT.mc_id=DT-MVP-5003916" target="_blank" rel="noopener">在 GitHub 上使用合并冲突解决来解决竞争提交</a>，由于 Github 是基于 Git 的，所以只要稍作设置，这个课程就能变成通用的 Git 操作指导教程。</p>
+<p>一开始我以为这个课程只有 MVP 能看，后来发现，课程不仅完全免费，而且不需要注册，所有人都能随时学习。只要你有一个 Github 账号就能参加。大家点击公众号下方的<code>阅读原文</code>就可以打开这个课程页面。</p>
+<p>打开课程以后，页面如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-09-57.png" alt></p>
+<p>点击其中的“开始”按钮，就可以开始学习。课程一共有5个单元，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-11-49.png" alt></p>
+<p>其中，第1，2单元是知识性介绍，大家可以看一下。今天我们重点说一下第3单元《练习-管理合并冲突》。这一单元，会基于 Github Lab(Github 学习实验室)来一步一步手把手指导。我们点击<code>在 Github 上启动学习实验室</code>按钮。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-15-22.png" alt></p>
+<p>此时，浏览器会新开一个选项卡，如下图所示。点击<code>Start free course</code>，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-17-27.png" alt></p>
+<p>此时，会让你登录 Github，并授权 Github Lab 创建一个练习源，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/author.png" alt></p>
+<p>大家可以创建公共源，也可以创建私有源。如果是创建私有源的话，之后每次从远程推拉代码时，会让你输入 Github 账号密码。需要注意的是<code>Additional Options</code>这一项一定要选择<code>Use the command line</code>，这样我们才能学习通用的 Git 操作。另外两项都是 Github 专用的操作。对我们帮助不大。</p>
+<p>授权完成以后，你的 Github 上会自动创建一个源，并且有很多的冲突，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-43-54.png" alt></p>
+<p>回到刚才的课程页面，可以看到下面出现了几个课程阶段，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-45-09.png" alt></p>
+<p>我们点击第一课的<code>Start</code>按钮，开始第一课。浏览器弹出了新的页面（实际上就是 Github 的 PR 页面），在这里，我们可以根据它的提示和说明进行操作。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-24-14.png" alt></p>
+<p>大家不要担心全是英文看不懂，真正需要你进行的操作，都是灰色背景的代码片段，这些代码是很容易看懂的。</p>
+<p>根据提示，首先 clone 代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/kingname/merge-conflicts.git</span><br><span class="line"><span class="built_in">cd</span> merge-conflicts</span><br></pre></td></tr></table></figure>
+<p>接下来，切换到<code>update-config</code>分支，然后拉取远程最新代码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout update-config</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+<p>然后，我们把远程的<code>master</code>分支代码合并到<code>update-config</code>分支中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge origin/master</span><br></pre></td></tr></table></figure>
+<p>发现了冲突，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-50-47.png" alt></p>
+<p>它已经提示了<code>_config.yml</code>文件有冲突。所以我们可以直接打开<code>_config.yml</code>文件。你可以使用自己喜欢的编辑器打开。我这里使用 Vim。打开以后的代码如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-54-22.png" alt></p>
+<p>注意，这里的实际代码可能跟教程不一样。教程里面说冲突内容是被<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; update-config</code>和<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; master</code>包起来的，但实际上代码里面的冲突内容是被<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>和<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/master</code>包起来的。</p>
+<p>大家可以看到，在<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>与<code>=======</code>中间的内容，与<code>=======</code>到<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/master</code>中间的内容，他们的字段名是一样的，但是值不一样，所以 Git 不知道应该以哪个为准，需要我们人工决断。</p>
+<p>假设我想以上面这一段为准（在实际开发过程中，可能上下要各取一部分合并），如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-55-47.png" alt></p>
+<p>保存修改，根据它的提示，执行以下代码进行提交：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">"merge master into update-config"</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+<p>提交成功以后，网页上会立刻给出反馈：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-58-22.png" alt></p>
+<p>我们继续往下看，根据它的提示，首先切换回<code>master</code>分支，然后拉取最新代码，然后把<code>update-config</code>分支的内容合并进入master：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line">git pull</span><br><span class="line">git merge update-config</span><br></pre></td></tr></table></figure>
+<p>合并成功，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-16-42.png" alt></p>
+<p>最后把本地已经合并的代码使用<code>git push</code>推到远程即可。</p>
+<p>第二个问题更复杂一些，这次有两个冲突文件，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-23-44.png" alt></p>
+<p>并且冲突的内容有好几个，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-25-19.png" alt></p>
+<p>但解决方法还是一样的，人来决定要保留哪些内容，把不要的地方删掉：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-26-28.png" alt></p>
+<p>保存修改，然后检查第二个文件。第二个文件也解决以后，根据页面上的提示输入代码，合并提交就可以了。</p>
+<p>前两个问题，是别人创建了冲突，需要我们来改。第三个问题，是我们自己导致了冲突，我们自己来解决。方法跟之前是一样的，就不多说了。</p>
+<p>最后这一步，让你完善这个源里面的内容。因为这个模拟冲突的源本质上是一个在线简历页面，你可以把里面的内容改成你自己的。当然，这是选做题，可做可不做。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-45-20.png" alt></p>
+<p>所有任务都做完了，是不是很有成就感：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-44-40.png" alt></p>
+<p>最后还能解锁成就：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-47-37.png" alt></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>根据上面的学习过程，我总结了一个解决冲突的常规流程：</p>
+<ol>
+<li><strong>前提条件：不能在 master 分支上修改任何文件。master 分支的变更只能通过 git pull 和 git merge 获得。在 master 分支下面，不能手动修改任何文件。</strong></li>
+<li>我们自己有一个分支用来修改代码，例如我的分支叫做<code>dev</code>分支。我把代码修改完成了，现在不知道有没有冲突。</li>
+<li>在 dev 分支里面，执行命令<code>git merge origin/master</code>，把远程的<code>master</code>分支合并到当前<code>dev</code>分支中。如果没有任何报错，那么直接转到第5步。</li>
+<li>如果有冲突，根据提示，把冲突解决，保存文件。然后执行命令<code>git add xxx</code>把你修改的文件添加到缓存区。然后执行命令<code>git commit -m &quot;xxx&quot;</code>添加 commit 信息。</li>
+<li>执行如下命令，切换到 master 分支：<code>git checkout master</code>。</li>
+<li>执行命令<code>git pull</code>确保当前 master 分支是最新代码。</li>
+<li>把<code>dev</code>分支的代码合并回 master 分支：<code>git merge dev</code>。</li>
+<li>提交代码：<code>git push</code>。</li>
+</ol>
+<p>只要所有开发者都遵守这个规则，那么解决冲突是一件非常容易的事情。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Git/" rel="tag"># Git</a>
+          
+            <a href="/tags/Github/" rel="tag"># Github</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/09/upload-multiple-file-by-selenium/" rel="next" title="现场打脸：如何使用Selenium批量上传文件？">
+                <i class="fa fa-chevron-left"></i> 现场打脸：如何使用Selenium批量上传文件？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">网易游戏高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。前极客学院讲师，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">127</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

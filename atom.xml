@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2020-09-09T04:59:08.824Z</updated>
+  <updated>2020-09-13T16:21:07.111Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>手把手教学，如何解决 git 冲突？</title>
+    <link href="https://www.kingname.info/2020/09/13/how-to-reslove-conflict/"/>
+    <id>https://www.kingname.info/2020/09/13/how-to-reslove-conflict/</id>
+    <published>2020-09-13T14:52:37.000Z</published>
+    <updated>2020-09-13T16:21:07.111Z</updated>
+    
+    <content type="html"><![CDATA[<p>Git 是现在使用最广泛的源代码管理程序。一个合格的程序员必须要熟练掌握 Git。在使用 Git 的时候，最让人头疼的问题是什么？肯定是解冲突了。如果两个人修改了同一个文件的相同位置，那么当一个人提交代码并合并到主分支以后，第二个人尝试合并时就会触发冲突。大多数情况下，Git 自己知道如何把两份代码合并起来。但有时候当 Git 不知道应该怎么合并，就会提示你需要手动解决冲突。</p><p>我以前学习 Git 的时候，由于没有人跟我一起提交代码，所以我为了模拟两人提交的情况，会把代码 clone 到两个文件夹里面，然后把相同的位置分别做不同的修改，再分别提交。过程非常繁琐。</p><a id="more"></a><p>最近因为评上了微软 MVP 的关系，会主动关注一下微软的在线课程，结果发现微软悄无声息地出了一整套的 Github 课程。而这其中，有一套交互式的课程手把手指导如何解决 Git 的冲突：<a href="https://docs.microsoft.com/zh-cn/learn/modules/resolve-merge-conflicts-github/?WT.mc_id=DT-MVP-5003916" target="_blank" rel="noopener">在 GitHub 上使用合并冲突解决来解决竞争提交</a>，由于 Github 是基于 Git 的，所以只要稍作设置，这个课程就能变成通用的 Git 操作指导教程。</p><p>一开始我以为这个课程只有 MVP 能看，后来发现，课程不仅完全免费，而且不需要注册，所有人都能随时学习。只要你有一个 Github 账号就能参加。大家点击公众号下方的<code>阅读原文</code>就可以打开这个课程页面。</p><p>打开课程以后，页面如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-09-57.png" alt></p><p>点击其中的“开始”按钮，就可以开始学习。课程一共有5个单元，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-11-49.png" alt></p><p>其中，第1，2单元是知识性介绍，大家可以看一下。今天我们重点说一下第3单元《练习-管理合并冲突》。这一单元，会基于 Github Lab(Github 学习实验室)来一步一步手把手指导。我们点击<code>在 Github 上启动学习实验室</code>按钮。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-15-22.png" alt></p><p>此时，浏览器会新开一个选项卡，如下图所示。点击<code>Start free course</code>，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-17-27.png" alt></p><p>此时，会让你登录 Github，并授权 Github Lab 创建一个练习源，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/author.png" alt></p><p>大家可以创建公共源，也可以创建私有源。如果是创建私有源的话，之后每次从远程推拉代码时，会让你输入 Github 账号密码。需要注意的是<code>Additional Options</code>这一项一定要选择<code>Use the command line</code>，这样我们才能学习通用的 Git 操作。另外两项都是 Github 专用的操作。对我们帮助不大。</p><p>授权完成以后，你的 Github 上会自动创建一个源，并且有很多的冲突，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-43-54.png" alt></p><p>回到刚才的课程页面，可以看到下面出现了几个课程阶段，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-45-09.png" alt></p><p>我们点击第一课的<code>Start</code>按钮，开始第一课。浏览器弹出了新的页面（实际上就是 Github 的 PR 页面），在这里，我们可以根据它的提示和说明进行操作。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-23-24-14.png" alt></p><p>大家不要担心全是英文看不懂，真正需要你进行的操作，都是灰色背景的代码片段，这些代码是很容易看懂的。</p><p>根据提示，首先 clone 代码：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/kingname/merge-conflicts.git</span><br><span class="line"><span class="built_in">cd</span> merge-conflicts</span><br></pre></td></tr></table></figure><p>接下来，切换到<code>update-config</code>分支，然后拉取远程最新代码。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout update-config</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure><p>然后，我们把远程的<code>master</code>分支代码合并到<code>update-config</code>分支中：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge origin/master</span><br></pre></td></tr></table></figure><p>发现了冲突，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-50-47.png" alt></p><p>它已经提示了<code>_config.yml</code>文件有冲突。所以我们可以直接打开<code>_config.yml</code>文件。你可以使用自己喜欢的编辑器打开。我这里使用 Vim。打开以后的代码如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-54-22.png" alt></p><p>注意，这里的实际代码可能跟教程不一样。教程里面说冲突内容是被<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; update-config</code>和<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; master</code>包起来的，但实际上代码里面的冲突内容是被<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>和<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/master</code>包起来的。</p><p>大家可以看到，在<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>与<code>=======</code>中间的内容，与<code>=======</code>到<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/master</code>中间的内容，他们的字段名是一样的，但是值不一样，所以 Git 不知道应该以哪个为准，需要我们人工决断。</p><p>假设我想以上面这一段为准（在实际开发过程中，可能上下要各取一部分合并），如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-55-47.png" alt></p><p>保存修改，根据它的提示，执行以下代码进行提交：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">"merge master into update-config"</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure><p>提交成功以后，网页上会立刻给出反馈：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-10-58-22.png" alt></p><p>我们继续往下看，根据它的提示，首先切换回<code>master</code>分支，然后拉取最新代码，然后把<code>update-config</code>分支的内容合并进入master：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line">git pull</span><br><span class="line">git merge update-config</span><br></pre></td></tr></table></figure><p>合并成功，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-16-42.png" alt></p><p>最后把本地已经合并的代码使用<code>git push</code>推到远程即可。</p><p>第二个问题更复杂一些，这次有两个冲突文件，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-23-44.png" alt></p><p>并且冲突的内容有好几个，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-25-19.png" alt></p><p>但解决方法还是一样的，人来决定要保留哪些内容，把不要的地方删掉：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-26-28.png" alt></p><p>保存修改，然后检查第二个文件。第二个文件也解决以后，根据页面上的提示输入代码，合并提交就可以了。</p><p>前两个问题，是别人创建了冲突，需要我们来改。第三个问题，是我们自己导致了冲突，我们自己来解决。方法跟之前是一样的，就不多说了。</p><p>最后这一步，让你完善这个源里面的内容。因为这个模拟冲突的源本质上是一个在线简历页面，你可以把里面的内容改成你自己的。当然，这是选做题，可做可不做。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-45-20.png" alt></p><p>所有任务都做完了，是不是很有成就感：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-44-40.png" alt></p><p>最后还能解锁成就：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-09-13-11-47-37.png" alt></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>根据上面的学习过程，我总结了一个解决冲突的常规流程：</p><ol><li><strong>前提条件：不能在 master 分支上修改任何文件。master 分支的变更只能通过 git pull 和 git merge 获得。在 master 分支下面，不能手动修改任何文件。</strong></li><li>我们自己有一个分支用来修改代码，例如我的分支叫做<code>dev</code>分支。我把代码修改完成了，现在不知道有没有冲突。</li><li>在 dev 分支里面，执行命令<code>git merge origin/master</code>，把远程的<code>master</code>分支合并到当前<code>dev</code>分支中。如果没有任何报错，那么直接转到第5步。</li><li>如果有冲突，根据提示，把冲突解决，保存文件。然后执行命令<code>git add xxx</code>把你修改的文件添加到缓存区。然后执行命令<code>git commit -m &quot;xxx&quot;</code>添加 commit 信息。</li><li>执行如下命令，切换到 master 分支：<code>git checkout master</code>。</li><li>执行命令<code>git pull</code>确保当前 master 分支是最新代码。</li><li>把<code>dev</code>分支的代码合并回 master 分支：<code>git merge dev</code>。</li><li>提交代码：<code>git push</code>。</li></ol><p>只要所有开发者都遵守这个规则，那么解决冲突是一件非常容易的事情。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Git 是现在使用最广泛的源代码管理程序。一个合格的程序员必须要熟练掌握 Git。在使用 Git 的时候，最让人头疼的问题是什么？肯定是解冲突了。如果两个人修改了同一个文件的相同位置，那么当一个人提交代码并合并到主分支以后，第二个人尝试合并时就会触发冲突。大多数情况下，Git 自己知道如何把两份代码合并起来。但有时候当 Git 不知道应该怎么合并，就会提示你需要手动解决冲突。&lt;/p&gt;
+&lt;p&gt;我以前学习 Git 的时候，由于没有人跟我一起提交代码，所以我为了模拟两人提交的情况，会把代码 clone 到两个文件夹里面，然后把相同的位置分别做不同的修改，再分别提交。过程非常繁琐。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Git" scheme="https://www.kingname.info/categories/Git/"/>
+    
+    
+      <category term="Git" scheme="https://www.kingname.info/tags/Git/"/>
+    
+      <category term="Github" scheme="https://www.kingname.info/tags/Github/"/>
+    
+  </entry>
   
   <entry>
     <title>现场打脸：如何使用Selenium批量上传文件？</title>
@@ -475,29 +500,6 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="Redis" scheme="https://www.kingname.info/tags/Redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在 Python 正则表达式模块中逃跑（escape</title>
-    <link href="https://www.kingname.info/2019/12/02/escape-in-python/"/>
-    <id>https://www.kingname.info/2019/12/02/escape-in-python/</id>
-    <published>2019-12-02T14:57:34.000Z</published>
-    <updated>2019-12-11T14:58:09.202Z</updated>
-    
-    <content type="html"><![CDATA[<p>在编程语言中，有常见的符号被赋予了特殊的意义，例如小数点<code>.</code>，在正则表达式里面表示任意一个非换行符的字符；小于号<code>&lt;</code>在 html 中表示标签。</p><p>但有时候，我们只想让这些符号表示它本来的意思，不想让它的特殊意义表露出来，应该怎么办？</p><a id="more"></a><p>我们知道，在正则表达式中可以使用反斜杠来让一个特殊符号变成普通符号，例如<code>\.</code>表示普通的小数点，<code>\$</code>表示普通的美元符号。</p><p>现在我有一个列表<code>keywords_list</code>，里面是100个字符串，我想判断是否有任意一个字符串在某个给定的句子中。如果用 for 循环一个一个去检查，效率非常低。于是可以考虑使用正则表达式：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">pattern = re.compile(<span class="string">'|'</span>.join(keywords_list))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> pattern.search(<span class="string">'目标句子'</span>):</span><br><span class="line">    print(<span class="string">'目标句子中包含某个关键词'</span>)</span><br></pre></td></tr></table></figure><p>但假设 <code>keywords_list</code>列表中有如下的字符串：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keywords_list = [<span class="string">'4.5'</span>, <span class="string">'+&#123;d'</span>, <span class="string">'***'</span>]</span><br></pre></td></tr></table></figure><p>那么我们使用正则表达式就会导致报错，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-02-22-11-20.png" alt></p><p>这是因为这些字符串里面存在特殊的符号，这些符号在正则表达式里面有特殊的意义，有使用的规范，不能随意使用。</p><p>但是，<code>keywords_list</code>里面有各种各样的特殊符号，难道要一个一个取出来，逐一<code>x.replace(&#39;+&#39;, &#39;\+&#39;).replace(&#39;.&#39;, &#39;\.&#39;).replace(&#39;*&#39;, &#39;\*&#39;)...</code>?</p><p>当然不用，Python 的正则表达式模块已经帮你想好了解决办法，使用<code>re.escape</code>就能自动处理所有的特殊符号了！</p><p>它的用法如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> re</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>keywords_list = [<span class="string">'4.5'</span>, <span class="string">'+&#123;d'</span>, <span class="string">'***'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pattern_str = <span class="string">'|'</span>.join(keywords_list)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>safe_pattern_str = re.escape(pattern_str)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(safe_pattern_str)</span><br><span class="line"><span class="number">4</span>\<span class="number">.5</span>\|\+\&#123;d\|\*\*\*</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.compile(safe_pattern_str)</span><br><span class="line">re.compile(<span class="string">'4\\.5\\|\\+\\&#123;d\\|\\*\\*\\*'</span>)</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-02-22-16-08.png" alt></p><p>解决问题。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在编程语言中，有常见的符号被赋予了特殊的意义，例如小数点&lt;code&gt;.&lt;/code&gt;，在正则表达式里面表示任意一个非换行符的字符；小于号&lt;code&gt;&amp;lt;&lt;/code&gt;在 html 中表示标签。&lt;/p&gt;
-&lt;p&gt;但有时候，我们只想让这些符号表示它本来的意思，不想让它的特殊意义表露出来，应该怎么办？&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

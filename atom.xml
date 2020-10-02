@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2020-09-13T16:21:07.111Z</updated>
+  <updated>2020-10-02T03:27:41.293Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>奇技淫巧：在 ssh 里面把服务器的文本复制到本地电脑</title>
+    <link href="https://www.kingname.info/2020/10/02/copy-from-ssh/"/>
+    <id>https://www.kingname.info/2020/10/02/copy-from-ssh/</id>
+    <published>2020-10-02T03:18:58.000Z</published>
+    <updated>2020-10-02T03:27:41.293Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用 macOS 的同学，应该熟悉一个命令<code>pbcopy</code>，它可以在命令行中把一段内容写入到剪贴板，例如：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"kingname"</span> | pbcopy</span><br></pre></td></tr></table></figure><p>就能把字符串<code>kingname</code>复制到剪贴板里面。我们也可以使用这个方法把一个文件中的内容写入到剪贴板：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat xxx.txt | pbcopy</span><br></pre></td></tr></table></figure><p>这样我们就不需要把文件打开再手动复制的。</p><p>有时候，我要把服务器上面的日志复制下来。原来都是进入服务器以后，用 vim 打开日志文件，用鼠标选中再复制。且不说服务器是 Linux，没有<code>pbcopy</code>这个命令，即使有这个命令，服务器上又怎么能访问本地的剪贴板呢？</p><a id="more"></a><p>在网上一搜，竟然还真有办法。<a href="https://www.laruence.com/2020/05/21/5880.html" target="_blank" rel="noopener">使用OSC52实现iTerm2远程pbcopy - 风雪之隅</a>这篇文章借助 iterms 的一个功能和几个特殊的字符，通过 php 实现了这个功能。我们来把它改写成 Python 版本。</p><p>首先打开 iterms 的设置，把方框框住的这一项勾上：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-10-01-21-29-25.png" alt></p><p>然后，在 iterms 里面，通过 ssh 连上服务器。</p><p>然后，我们来写一段 Python 代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">print(<span class="string">'\033]52;c;'</span> + base64.b64encode(<span class="string">'青南'</span>.encode()).decode() + <span class="string">'\007'</span>)</span><br></pre></td></tr></table></figure><p>然后在服务器上运行这段代码，运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-10-01-21-40-11.png" alt></p><p>什么都没有打印出来？但不要担心，现在，你随便找一个可以打字的输入框，按下键盘上面的<code>Command +V</code>键。你会发现，<code>青南</code>两个字竟然被粘贴出来了！</p><p>有了这个机制，我们就来人工写一个<code>pbcopy.py</code>，接收管道的输入：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-10-01-22-08-35.png" alt="在公众号后台回复 pbcopy 获得代码文本"></p><p>其中，<code>#! /usr/bin/python3</code>是远程服务器上面 Python 的地址。你可以通过命令<code>which python3</code>找到这个地址。</p><p>保存完成以后，给他添加可执行权限：<code>chmod +x pbcopy.py</code>。</p><p>现在，我们试一试把远程的多行文本复制到本地的剪贴板中：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-10-01-21-51-22.png" alt></p><p>我这里复制的就是这个代码自身。大家也可以使用其他文件来测试。复制完成以后，我们随便找个地方粘贴，发现复制成功！</p><p>现在，我们使用软连接，把这个可执行文件变得更像命令一些：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s /home/ubuntu/pbcopy.py /usr/bin/pbcopy</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-10-01-21-53-54.png" alt></p><p>完美满足要求。</p><p>需要注意的是，这个程序会把管道输入的所有内容全部接收完成以后才会复制，所以，如果你输入的文本内容太大，可能会撑爆内存。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;使用 macOS 的同学，应该熟悉一个命令&lt;code&gt;pbcopy&lt;/code&gt;，它可以在命令行中把一段内容写入到剪贴板，例如：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;kingname&quot;&lt;/span&gt; | pbcopy&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;就能把字符串&lt;code&gt;kingname&lt;/code&gt;复制到剪贴板里面。我们也可以使用这个方法把一个文件中的内容写入到剪贴板：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;cat xxx.txt | pbcopy&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这样我们就不需要把文件打开再手动复制的。&lt;/p&gt;
+&lt;p&gt;有时候，我要把服务器上面的日志复制下来。原来都是进入服务器以后，用 vim 打开日志文件，用鼠标选中再复制。且不说服务器是 Linux，没有&lt;code&gt;pbcopy&lt;/code&gt;这个命令，即使有这个命令，服务器上又怎么能访问本地的剪贴板呢？&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
   
   <entry>
     <title>手把手教学，如何解决 git 冲突？</title>
@@ -474,32 +501,6 @@
     
     
       <category term="思维" scheme="https://www.kingname.info/tags/%E6%80%9D%E7%BB%B4/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>如何从 Redis 的列表中一次性 pop 多条数据？</title>
-    <link href="https://www.kingname.info/2019/12/04/batch-pop-in-redis/"/>
-    <id>https://www.kingname.info/2019/12/04/batch-pop-in-redis/</id>
-    <published>2019-12-04T14:58:33.000Z</published>
-    <updated>2019-12-11T14:59:55.144Z</updated>
-    
-    <content type="html"><![CDATA[<p>当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用<code>lpop</code>或者<code>rpop</code>:</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    data = client.lpop(<span class="string">'key'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    print(<span class="string">f'弹出一条数据：<span class="subst">&#123;data.decode()&#125;</span>'</span>)</span><br></pre></td></tr></table></figure><p>但这种写法有一个问题，就是每弹出1条数据都要连接一次 Redis 服务器，当你要把1000万条数据从列表里面弹出来的时候，实际上超过一半的时间都消耗在了网络请求上面。</p><a id="more"></a><p>但是<code>lpop</code>与<code>rpop</code>都只接收一个参数，就是<code>key</code><br>。因此没有办法通过传入参数的方式让它一次弹出多条数据。</p><p>要获取多条数据，我们还有另一种方案，就是<code>lrange</code>：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client = client.lrange(<span class="string">'key'</span>, <span class="number">0</span>, <span class="number">5000</span>)</span><br></pre></td></tr></table></figure><p>这一行的意思是从列表中，获取前5001条数据（包含首尾）。但<code>lrange</code>只能获取数据，却不能删除数据。这就会导致在多个进程获取到重复的数据。</p><p>我们还知道Redis 的<code>ltrim</code>来删除数据：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client.ltrim(<span class="string">'key'</span>, <span class="number">5000</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure><p>这样就能删除前5000条数据了。这里第三个参数之所以要用负数，是因为<code>ltrim(key, start, end)</code>的意思是说，保留列表 Key 的第start项到第end 项，其它项删除。那么如果 end为负数，表示倒数第几项，例如-1表示倒数第1项，-2表示倒数第2项。假设列表里面有10000项，那么 start 为5000，end 为-1，表示删除前5000条数据（0-4999），保留后面的。</p><p>于是有人问，能不能这样写代码呢：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line">data = client.lrange(<span class="string">'key'</span>, <span class="number">0</span>, <span class="number">4999</span>)</span><br><span class="line">client.ltrim(<span class="string">'key'</span>, <span class="number">5000</span>, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure><p>这样不就看起来像是弹出了5000条数据吗？</p><p>想法很好，但是由于获取数据与删除数据是两条命令，中间有时间差。这就导致在多个线程或者进程同时执行这两条代码的时候，出现竞争。也就是进程1刚刚获取了前5000条数据，然后进程2同样获取这5000条数据，然后进程1删除前5000条数据，然后进程2再删除5000条数据。</p><p>这样一来，两个进程获取了相同的5000条数据，但是却删了10000条数据。</p><p>为了解决这个问题，必需让获取数据与删除数据这两个操作变成一个“原子操作”。所谓的原子操作就是只一个最小的操作单位，它不会被中途打断。</p><p>要解决这个问题，我们就需要使用 Redis 的<code>pipeline</code>功能。它可以把多条命令放在一个网络请求中发送到服务器，并默认在一个事务中执行这些命令。一个事务是不会被打断的，从事务开始然后执行里面的多个命令到结束的整个过程，可以看做一个原子操作。</p><p><code>pipeline</code>的使用方法如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batch_lpop</span><span class="params">(key, n)</span>:</span></span><br><span class="line">    p = client.pipeline()</span><br><span class="line">    p.lrange(key, <span class="number">0</span>, n - <span class="number">1</span>)</span><br><span class="line">    p.ltrim(key, n, <span class="number">-1</span>)</span><br><span class="line">    data = p.execute()</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">batch_lpop(<span class="string">'test_pipeline'</span>, <span class="number">20</span>)</span><br></pre></td></tr></table></figure><p>当代码执行到<code>p.execute()</code>的时候，它才会真正去连接服务器，然后把待执行的命令在一个事务中一次性执行完成。并返回一个列表。返回的列表有两项，第0项是包含结果的列表，第1项为ltrim 的返回结果。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-04-22-42-04.png" alt></p><p>我们只需要使用第0项的结果即可。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;当我们想从 Redis 的列表里面持续弹出数据的时候，我们一般使用&lt;code&gt;lpop&lt;/code&gt;或者&lt;code&gt;rpop&lt;/code&gt;:&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; redis&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;client = redis.Redis()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;True&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    data = client.lpop(&lt;span class=&quot;string&quot;&gt;&#39;key&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;not&lt;/span&gt; data:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;break&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    print(&lt;span class=&quot;string&quot;&gt;f&#39;弹出一条数据：&lt;span class=&quot;subst&quot;&gt;&amp;#123;data.decode()&amp;#125;&lt;/span&gt;&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;但这种写法有一个问题，就是每弹出1条数据都要连接一次 Redis 服务器，当你要把1000万条数据从列表里面弹出来的时候，实际上超过一半的时间都消耗在了网络请求上面。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="Redis" scheme="https://www.kingname.info/tags/Redis/"/>
     
   </entry>
   

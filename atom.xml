@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2020-10-02T03:27:41.293Z</updated>
+  <updated>2021-02-16T06:29:10.587Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在 Linux 服务器中创建假桌面运行模拟浏览器有头模式</title>
+    <link href="https://www.kingname.info/2021/02/16/use-selenium-head-in-linux/"/>
+    <id>https://www.kingname.info/2021/02/16/use-selenium-head-in-linux/</id>
+    <published>2021-02-16T06:27:49.000Z</published>
+    <updated>2021-02-16T06:29:10.587Z</updated>
+    
+    <content type="html"><![CDATA[<p>经常使用 Selenium 或者 Puppeteer 的同学都知道，他们启动的 Chrome 浏览器分为有头模式和无头模式。在自己电脑上操作时，如果是有头模式，会弹出一个 Chrome 浏览器窗口，然后你能看到这个浏览器里面在自动操作。而无头模式则不会弹出任何窗口，只有进程。</p><p><a href="https://mp.weixin.qq.com/s/yS8juVNb2kyb15H9wwm8sg" target="_blank" rel="noopener">别去送死了。Selenium 与 Puppeteer 能被网站探测的几十个特征</a>这篇文章中，我们介绍了一个探测模拟浏览器特征的网站。通过他我们可以发现，在不做任何设置的情况下，Selenium 或者 Puppeteer 启动的浏览器有几十个特征能够被目标网站识别为爬虫。并且，无头模式的特征比有头模式的特征多得多。</p><p>也就是说，即使你不使用任何隐藏特征的技术，仅仅使用有头模式，你都会安全很多。如果网站不是非常严格的反爬虫，很多情况下，使用无头模式更容易被发现，但使用有头模式，更难被发现。</p><p>下图为<strong>有头模式</strong>，不使用任何隐藏特征的技术访问检测网站：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2020-11-26-20-09-46.png" alt></p><p>下图为<strong>无头模式</strong>，不使用任何隐藏特征的技术访问检测网站：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/headless_screenshot.png" alt="万里河山一片红"></p><p>所以，一般情况下，你应该多使用有头模式。</p><p>但问题在于，当我们要在 Linux 服务器上面使用 Selenium 或者 Puppeteer 运行爬虫的时候，就会发现有头模式始终会报错。这是因为，有头模式需要系统提供图形界面支持，才能绘制浏览器窗口，但是 Linux 服务器一般来说是没有图形界面的，所以有头模式一定会失败。</p><p>在这种情况下，为了能够使用模拟浏览器的有头模式，我们需要搞一个假的图形界面出来，从而欺骗浏览器，让它的有头模式能够正常使用。</p><p>为了达到这个目的，我们可以使用一个叫做 <code>Xvfb</code>的东西。这个东西在<a href="https://en.wikipedia.org/wiki/Xvfb" target="_blank" rel="noopener">维基百科上面的介绍</a>如下：</p><blockquote><p>Xvfb or X virtual framebuffer is a display server implementing the X11 display server protocol. In contrast to other display servers, Xvfb performs all graphical operations in virtual memory without showing any screen output.</p></blockquote><p>Xvfb 在一个没有图像设备的机器上实现了 X11显示服务的协议。它实现了其他图形界面都有的各种接口，但并没有真正的图形界面。所以当一个程序在 Xvfb 中调用图形界面相关的操作时，这些操作都会在虚拟内存里面运行，只不过你什么都看不到而已。</p><p>使用 Xvfb，我们就可以欺骗 Selenium 或者 Puppeteer，让它以为自己运行在一个有图形界面的系统里面，这样一来就能够正常使用有头模式了。</p><p>要安装 Xvfb 非常简单，在 Ubuntu 中，只需要执行下面两行命令就可以了：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install xvfb</span><br></pre></td></tr></table></figure><p>现在，我们来写一段非常简单的 Selenium 操作 Chrome 的代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> Chrome</span><br><span class="line">driver = Chrome(<span class="string">'./chromedriver'</span>)</span><br><span class="line">driver.get(<span class="string">'https://bot.sannysoft.com/'</span>)</span><br><span class="line">time.sleep(<span class="number">5</span>)</span><br><span class="line">driver.save_screenshot(<span class="string">'screenshot.png'</span>)</span><br><span class="line">driver.close()</span><br><span class="line">print(<span class="string">'运行完成'</span>)</span><br></pre></td></tr></table></figure><p>如果直接在服务器上运行，效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-02-16-11-46-39.png" alt></p><p>因为没有图形界面，所以程序必定报错。</p><p>现在，我们只需要在运行这段代码的命令前面加上<code>xvfb-run</code>，再来看看运行效果：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-02-16-11-50-40.png" alt></p><p>代码成功运行，没有报错。现在我们从服务器上把这个生成的<code>screenshot.png</code>文件拉下来，打开以后可以看到内容如下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/xvfb-screenshot.png" alt></p><p>可以看到，虽然窗口比较小，但确实是有头模式下面的检测结果。当然，我们也可以调整一下窗口大小，增加参数：<code>xvfb-run python3 test.py -s -screen 0 1920x1080x16</code>就能假装在一个分辨率为1920x1280的显示器上运行程序了。然后修改 Selenium 的代码，设置浏览器窗口的大小：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-02-16-12-02-45.png" alt></p><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/xvfb-screenshot-2.png" alt></p><p>本文演示使用的是 Python操作 Selenium，你也可以试一试使用 Puppeteer，只需要把启动命令改为<code>xvfb-run node index.js</code>就可以了。</p><p>有了本文以后，再结合我之前的两篇文章：</p><ul><li><a href="https://mp.weixin.qq.com/s/Bge-_yiatSq4CQq7fRvjdQ" target="_blank" rel="noopener">最完美方案！模拟浏览器如何正确隐藏特征</a></li><li><a href="https://mp.weixin.qq.com/s/XOXb_XvsHqgv0MUICahjJw" target="_blank" rel="noopener">Chome 88如何正确隐藏 webdriver？</a></li></ul><p>相信你的模拟浏览器能够绕过更多的网站。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;经常使用 Selenium 或者 Puppeteer 的同学都知道，他们启动的 Chrome 浏览器分为有头模式和无头模式。在自己电脑上操作时，如果是有头模式，会弹出一个 Chrome 浏览器窗口，然后你能看到这个浏览器里面在自动操作。而无头模式则不会弹出任何窗口，只有进程
+      
+    
+    </summary>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/categories/%E7%88%AC%E8%99%AB/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="Selenium" scheme="https://www.kingname.info/tags/Selenium/"/>
+    
+      <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
+    
+      <category term="Xvfb" scheme="https://www.kingname.info/tags/Xvfb/"/>
+    
+  </entry>
   
   <entry>
     <title>奇技淫巧：在 ssh 里面把服务器的文本复制到本地电脑</title>
@@ -476,31 +507,6 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="算法" scheme="https://www.kingname.info/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>闲聊：语言决定思维方法</title>
-    <link href="https://www.kingname.info/2019/12/10/languate-define-your-brain/"/>
-    <id>https://www.kingname.info/2019/12/10/languate-define-your-brain/</id>
-    <published>2019-12-10T15:00:27.000Z</published>
-    <updated>2019-12-11T15:01:09.315Z</updated>
-    
-    <content type="html"><![CDATA[<p>在知乎上有这样一个问题：《如果当年汉字真的拼音化了会怎么样？》，下面有一个高赞回答写道：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-10-22-40-42.png" alt></p><p>这个答主的逻辑非常简单，因为《施氏食狮史》这个小故事，全篇只有<code>shi</code>与<code>si</code>两种发音，如果用汉语拼音，那么完全无法读懂。只有通过不同的中文汉字，才能正确读懂故事的意思。因此中文汉字比汉语拼音强，信息量比汉语拼音大。</p><p>然而这个答主忽略了一个问题，这个小故事实际上只有生活在汉字环境中的人才能想出来。对于完全生活在拼音环境中的人来说，他们的思维方式决定了根本不可能有这个故事产生。</p><a id="more"></a><p>类似的例子还有英文句子：Can you can a can as a caner can can a can.</p><p>这个句子只有英文语境下面的人能想出来，中文语境下面的人，在思维方式上就想不到这样的句子。难道这就能说明英文比中文好？</p><p>如果当年真的推行了拼音而完全放弃了汉字，那么基于拼音自然会产生它对应的文化、思维方式和表达方式。而绝不是现在这些人所嘲笑和想当然的样子。</p><p>还有下面这种非常扯淡的文章：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-10-22-53-43.png" alt></p><p>如果计算机是中国人发明的，那么编程语言绝对不会是他这样的写法。他这个写法仅仅是把英文编程语言里面的关键词换成了中文而已。但里面的行文逻辑与思维方式，完全还是英语编程语言的思维方式。在纯粹中文原生的编程语言，绝对不会这样表达。</p><p>他的这种逻辑，就像是以为仅仅把五线谱里面的蝌蚪音符转化为宫商角徵羽，就变成了中国古代乐谱。然而中国古代的乐谱长下面这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-10-22-56-30.png" alt></p><p>语言塑造了你的思维。当你只会一门语言时，你几乎无法跳脱这门语言所创造出来的思考方式。不是你不愿意从更多的角度来思考问题，而是在你的意识里面，根本不知道还能有更多的思考角度。</p><p>所以无论是现实中交流的语言，还是编程语言，多学几门，你的见识就不一样了。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在知乎上有这样一个问题：《如果当年汉字真的拼音化了会怎么样？》，下面有一个高赞回答写道：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-10-22-40-42.png&quot; alt&gt;&lt;/p&gt;
-&lt;p&gt;这个答主的逻辑非常简单，因为《施氏食狮史》这个小故事，全篇只有&lt;code&gt;shi&lt;/code&gt;与&lt;code&gt;si&lt;/code&gt;两种发音，如果用汉语拼音，那么完全无法读懂。只有通过不同的中文汉字，才能正确读懂故事的意思。因此中文汉字比汉语拼音强，信息量比汉语拼音大。&lt;/p&gt;
-&lt;p&gt;然而这个答主忽略了一个问题，这个小故事实际上只有生活在汉字环境中的人才能想出来。对于完全生活在拼音环境中的人来说，他们的思维方式决定了根本不可能有这个故事产生。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="思维方式" scheme="https://www.kingname.info/categories/%E6%80%9D%E7%BB%B4%E6%96%B9%E5%BC%8F/"/>
-    
-    
-      <category term="思维" scheme="https://www.kingname.info/tags/%E6%80%9D%E7%BB%B4/"/>
     
   </entry>
   

@@ -354,6 +354,586 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/02/27/Python的单元测试/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/02/27/Python的单元测试/" class="post-title-link" itemprop="url">Python的单元测试（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-02-27 22:50:47" itemprop="dateCreated datePublished" datetime="2015-02-27T22:50:47+08:00">2015-02-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/02/27/Python的单元测试/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/02/27/Python的单元测试/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。</p>
+<p>说<strong>一个函数</strong>高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面送出来（return），他不会说，我要生产一个轮子，但是我首先需要一个女人进来，他不会说，这是计划的一部分。</p>
+<p>说<strong>几个函数</strong>是低耦合的，就是指他们的依赖性小。他们就像是葫芦娃，每个都有自己独特的能力，可以自己单干，在关键的时候还可以合体，变成小金刚。他们就像积木一样，各有各的功能，需要使用的时候直接组合在一起就可以了。</p>
+<p>使用测试驱动开发，每一个测试只测试一个功能，这样就可以迫使函数把自己独立出来，尽量减少和其他函数的依赖。</p>
+<p>例如，有一个文件1.txt，他的内容是两个数字，使用逗号隔开。形如“2,4”（不包括外侧双引号，下同）。我要写一个程序readandadd.py，读取硬盘上的1.txt文件，然后把这个文件的内容打印到屏幕上。</p>
+<p>不规范的写法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">b = f.read().split(&apos;,&apos;)</span><br><span class="line">f.close()</span><br><span class="line">print int(b[0])+int(b[1])</span><br></pre></td></tr></table></figure></p>
+<p>不规范写法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def A():</span><br><span class="line">	f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">	b = f.read().split(&apos;,&apos;)</span><br><span class="line">	f.close()</span><br><span class="line">	print int(b[0])+int(b[1])</span><br><span class="line">A()</span><br></pre></td></tr></table></figure></p>
+<p>比较规范的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">def getnum(info):</span><br><span class="line">    twonum = info.split(&apos;,&apos;)</span><br><span class="line">    return twonum</span><br><span class="line"></span><br><span class="line">def addnum(twonum):</span><br><span class="line">    return int(twonum[0])+int(twonum[1])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">        info = read(&apos;1.txt&apos;)</span><br><span class="line">        twonum = getnum(info)</span><br><span class="line">        result = addnum(twonum)</span><br><span class="line">		print result</span><br></pre></td></tr></table></figure></p>
+<p>这样写的好处是，如果想测试读文件的功能，就只需要测试read()函数，如果想测试把两个数分开的功能，就只需要测试getnum()函数。而相反，在不规范写法二中，虽然只想测试两个数字相加的功能，可是却不得不首先打开文件并读取文件然后把数字分开。</p>
+<p>继续回到比较规范的写法当中，我相信很多人写完read()函数以后，肯定会输入如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">print read(&apos;1.txt&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>然后运行程序，发现正常打印出’2,3’以后，再开始写getnum()函数。写完getnum以后，测试getnum()函数没问题以后再开始写然后测试addnum()函数。最后测试整个程序的功能。</p>
+<p>其实这个过程，已经就是在做单元测试了。然而这样操作的弊端是什么？如果整体程序已经写好了，之前做测试点代码也就删除了。那么如果突然把程序做了修改。例如1.txt里面数字的分隔从1个逗号变成了空格，或者变成了3个数字，那必然要修改getnum()，但是又如何测试修改的部分呢？还要把不相干的代码给注释掉。不仅麻烦，而且容易出错。</p>
+<p>现在，把测试的代码单独独立出来。会有什么效果呢？尝试创建一个test.py程序，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import readandadd</span><br><span class="line"></span><br><span class="line">def testread():</span><br><span class="line">    print &apos;read:&apos;,readandadd.read(&apos;1.txt&apos;)</span><br><span class="line"></span><br><span class="line">def testgetnum():</span><br><span class="line">    print &apos;getnum:&apos;,readandadd.getnum(&apos;2,3&apos;)</span><br><span class="line"></span><br><span class="line">def testaddnum():</span><br><span class="line">    print &apos;addnum:&apos;,readandadd.addnum([2,3])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    testread()</span><br><span class="line">    testgetnum()</span><br><span class="line">    testaddnum()</span><br></pre></td></tr></table></figure></p>
+<p>运行test.py以后输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">read: 2,3</span><br><span class="line">getnum: [&apos;2&apos;, &apos;3&apos;]</span><br><span class="line">addnum: 5</span><br></pre></td></tr></table></figure></p>
+<p>每一个函数的输出结果一目了然，而且在修改了readandadd.py的函数以后，重新运行test.py就可以知道输出结果有没有符合预期。</p>
+<p>当然，这里这个例子非常的简单，因此可以人工通过观察test.py的输出结果来确定是否符合预期，那对于大量的函数的测试，难道也要让肉眼来看吗？当然不是。于是，下一篇文章将会介绍Python的单元测试unittest。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/30/未知道——广场式的真匿名交流网站/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/30/未知道——广场式的真匿名交流网站/" class="post-title-link" itemprop="url">未知道——广场式的真匿名交流网站（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-30 15:24:35" itemprop="dateCreated datePublished" datetime="2015-01-30T15:24:35+08:00">2015-01-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/未知道/" itemprop="url" rel="index"><span itemprop="name">未知道</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/30/未知道——广场式的真匿名交流网站/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/30/未知道——广场式的真匿名交流网站/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近在学习Flask，本着学以致用的原则，开发了“未知道”这个网站。未知道的宗旨是，不注册，不审核，不删帖，无私聊，不记录任何信息。是一个派对式的或者说广场式的真·匿名聊天环境。</p>
+<p>网站地址请戳-&gt;<a href="http://unknown.kingname.info/" target="_blank" rel="noopener">http://unknown.kingname.info/</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/unknown/QQ截图20150130152847.jpg" alt></p>
+<p>网站上线首日访问量突破2000，上线第二日访问量突破10000。</p>
+<p>现在到处都在要求实名制，请珍惜这少有的一片匿名的净土。</p>
+<p>这个网站目前仍然在每天增加新的功能，我会开一个系列文章，用以记录在这个网站的开发过程中遇到的问题以及解决方案。请大家保持关注。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/17/xpath提取多个标签下的text/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/17/xpath提取多个标签下的text/" class="post-title-link" itemprop="url">xpath提取多个标签下的text</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-17 16:01:07" itemprop="dateCreated datePublished" datetime="2015-01-17T16:01:07+08:00">2015-01-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/17/xpath提取多个标签下的text/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/17/xpath提取多个标签下的text/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在写爬虫的时候，经常会使用xpath进行数据的提取，对于如下的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;test1&quot;&gt;大家好！&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>使用xpath提取是非常方便的。假设网页的源代码在selector中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test1&quot;]/text()&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
+<p>就可以把“大家好！”提取到data变量中去。</p>
+<p>然而如果遇到下面这段代码呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;test2&quot;&gt;美女，&lt;font color=red&gt;你的微信是多少？&lt;/font&gt;&lt;div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/text()&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
+<p>只能提取到“美女，”；</p>
+<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/font/text()&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
+<p>又只能提取到“你的微信是多少？”</p>
+<p>可是我本意是想把“美女，你的微信是多少？”这一整个句子提取出来。</p>
+<p>这还不是最糟糕的，还有第三段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;test3&quot;&gt;我左青龙，&lt;span id=&quot;tiger&quot;&gt;右白虎，&lt;ul&gt;上朱雀，&lt;li&gt;下玄武。&lt;/li&gt;&lt;/ul&gt;老牛在当中，&lt;/span&gt;龙头在胸口。&lt;div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>而且内部的标签还不固定，如果我有一百段这样类似的html代码，又如何使用xpath表达式，以最快最方便的方式提取出来？</p>
+<p>我差一点就去用正则表达式替换了。还好我去Stack Overflow上面提了问。于是很快就有人给我解答了。</p>
+<p><strong>使用xpath的string(.)</strong></p>
+<p>以第三段代码为例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test3&quot;]&apos;)</span><br><span class="line">info = data.xpath(&apos;string(.)&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
+<p>这样，就可以把“我左青龙，右白虎，上朱雀，下玄武。老牛在当中，龙头在胸口”整个句子提取出来，赋值给info变量。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/08/清空Github上某个文件的历史/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1882,643 +2462,6 @@ llo
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/23/A-Totally-Amazing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/23/A-Totally-Amazing/" class="post-title-link" itemprop="url">使用微信控制你的电脑</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-23 22:44:20" itemprop="dateCreated datePublished" datetime="2014-12-23T22:44:20+08:00">2014-12-23</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/23/A-Totally-Amazing/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/23/A-Totally-Amazing/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>A totally amazing!!!</p>
-<p>源代码请戳-&gt;<a href="https://github.com/kingname/MCC" target="_blank" rel="noopener">https://github.com/kingname/MCC</a></p>
-<p>实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~</p>
-<h2 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h2><p>程序由两部分构成:</p>
-<ul>
-<li>_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令</li>
-<li>auto.py为程序的主体文件，相关的实现代码均在里面</li>
-</ul>
-<h2 id="软件原理"><a href="#软件原理" class="headerlink" title="软件原理"></a>软件原理</h2><p>本程序需要使用两个邮箱，我给他们取名字为【主人邮箱】和【奴隶邮箱】。建议奴隶邮箱使用小号。主人邮箱使用大号，我是使用的我的QQ邮箱作为主人邮箱，临时申请的一个新浪邮箱作为奴隶邮箱。目前奴隶邮箱使用新浪邮箱测试通过，其他邮箱未做测试。各位有兴趣的朋友可以测试一下并反馈给我，非常感谢~</p>
-<p>本程序使用Python的poplib提供的函数，周期性读取奴隶邮箱最新的一封邮件，如果这封邮件是主人邮箱发送的，并且标题在_config.ini文件中有定义，则执行本标题定义的操作。</p>
-<p>例如，_config.ini文件中有如下定义：</p>
-<pre><code>music=D:\backup\Music\Intro.mp3
-</code></pre><p>主人邮箱发送一份邮件，标题为music，电脑就会调用默认播放器，播放D盘中的这个名叫Intro.mp3的音乐。如果这个Intro.mp3本身只有1秒钟，且没有内容，而音乐播放器设置为随机播放，就间接地实现了打开播放器随机播放音乐的目的。</p>
-<p>目前程序可以实现两类功能：<br>运行命令与打开文件。</p>
-<h3 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h3><p>其中运行命令的原理是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.system(command)</span><br></pre></td></tr></table></figure>
-<p>理论上任何在CMD命令提示符下可以执行的命令，在这里都可以执行。_config.ini中默认提供了两个样例，一个关闭计算机：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown=shutdown -f -s -t 10 -c closing...</span><br></pre></td></tr></table></figure>
-<p>另一个是列出当前目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir=dir</span><br></pre></td></tr></table></figure></p>
-<p>等号左侧为此命令的名字，也就是在邮件中可以发送的标题内容，等号右侧为命令本身。注意等号左右均不能有空格。</p>
-<h3 id="打开文件"><a href="#打开文件" class="headerlink" title="打开文件"></a>打开文件</h3><p>打开文件的原理是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</span><br></pre></td></tr></table></figure></p>
-<p>其中，open_file为文件在电脑中的位置。函数调用Windows的API来运行程序，效果和用鼠标双击相同。</p>
-<h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p>程序运行以后，先加载_config.ini，配置主人邮箱和奴隶邮箱，并确定扫描频率（time_limit）为多少秒检查一次邮箱。同时使用字典将命令的名称和命令本身添加到内存中。接下来的操作如下：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/MCCliuchen.png" alt></p>
-<p>使用主人邮箱发送相应的命令名称以后，就能触发电脑的相关操作。</p>
-<h2 id="程序配置"><a href="#程序配置" class="headerlink" title="程序配置"></a>程序配置</h2><p>打开_config.ini文件:</p>
-<ul>
-<li><p>host填写奴隶邮箱的pop3服务器，例如新浪的pop3服务器为</p>
-<pre><code>pop.sina.com
-</code></pre></li>
-<li><p>username为奴隶邮箱的邮箱号</p>
-</li>
-<li>password为奴隶邮箱的密码</li>
-<li>boss_email为主人邮箱号</li>
-<li>time_limit控制程序检查邮箱的评论，默认为300秒，也就是5分钟</li>
-<li><p>＜command＞与＜/command＞之间为命令区，此处可以使用任何能在CMD命令提示符中执行的命令格式为：</p>
-<pre><code>名字=命令
-</code></pre><p>注意=左右不能出现空格</p>
-</li>
-<li><p>＜open_file＞＜/open_file＞之间为可以打开的文件。任何在电脑上可以使用鼠标双击打开的程序、文件均可把其地址写在此处。格式为：</p>
-<pre><code>名字=地址
-</code></pre><p>注意=左右不能出现空格</p>
-</li>
-</ul>
-<h2 id="编译程序"><a href="#编译程序" class="headerlink" title="编译程序"></a>编译程序</h2><p>使用py2exe编译。进入代码目测，执行以下代码：</p>
-<pre><code>python mysetup.py py2exe
-</code></pre><h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>接下来的版本升级中</p>
-<ul>
-<li>会添加更多的操作进去</li>
-<li>开发图像界面，使配置更方便</li>
-<li>动态调整检查频率</li>
-<li>通过邮件的内容返回命令的执行状态</li>
-<li>通过邮件内容返回文件列表</li>
-<li>解决打开的文件功能在文件名和路径不能有汉字的bug</li>
-</ul>
-<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>感谢知乎用户 <a href="http://www.zhihu.com/people/yin-fitz" title="@印如意fitz" target="_blank" rel="noopener">@印如意fitz</a>的启发与思路提供。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/21/Python正则表达式中的re-S/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/21/Python正则表达式中的re-S/" class="post-title-link" itemprop="url">Python正则表达式中的re.S</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-21 09:55:54" itemprop="dateCreated datePublished" datetime="2014-12-21T09:55:54+08:00">2014-12-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/21/Python正则表达式中的re-S/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/21/Python正则表达式中的re-S/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在Python的正则表达式中，有一个参数为re.S。它表示“.”（不包含外侧双引号，下同）的作用扩展到整个字符串，包括“\n”。看如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a = &apos;&apos;&apos;asdfsafhellopass:</span><br><span class="line">	234455</span><br><span class="line">	worldafdsf</span><br><span class="line">	&apos;&apos;&apos;</span><br><span class="line">b = re.findall(&apos;hello(.*?)world&apos;,a)</span><br><span class="line">c = re.findall(&apos;hello(.*?)world&apos;,a,re.S)</span><br><span class="line">print &apos;b is &apos; , b</span><br><span class="line">print &apos;c is &apos; , c</span><br></pre></td></tr></table></figure></p>
-<p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b is  []</span><br><span class="line">c is  [&apos;pass:\n\t234455\n\t&apos;]</span><br></pre></td></tr></table></figure></p>
-<p>正则表达式中，“.”的作用是匹配除“\n”以外的任何字符，也就是说，它是在一行中进行匹配。这里的“行”是以“\n”进行区分的。a字符串有每行的末尾有一个“\n”，不过它不可见。</p>
-<p>如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始，不会跨行。而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，将“\n”当做一个普通的字符加入到这个字符串中，在整体中进行匹配。</p>
-<p>在re.py库的介绍中有以下语句：</p>
-<blockquote>
-<p>“.”      Matches any character except a newline.</p>
-</blockquote>
-<blockquote>
-<p>S  DOTALL      “.” matches any character at all, including the newline.</p>
-</blockquote>
-<p>这里特别感谢评论中叫做Style的朋友指出了我的错误。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/18/从E-E到S-E/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/18/从E-E到S-E/" class="post-title-link" itemprop="url">从E.E到S.E</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-18 16:49:19" itemprop="dateCreated datePublished" datetime="2014-12-18T16:49:19+08:00">2014-12-18</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂念/" itemprop="url" rel="index"><span itemprop="name">杂念</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/18/从E-E到S-E/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/18/从E-E到S-E/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我在本科学的是Electric Engineering，大四找工作却当了软件工程师。这可以说是各种机缘巧合吧。</p>
-<p>我接触编程是在初中，那个时候有同学在看《黑客X档案》，当时看到一篇文章说的一个万能密码：</p>
-<pre><code>&apos;or&apos;&apos;=&apos;
-</code></pre><p>有一天在学校的网站论坛上测试了一下，发现真的登录了，而且是管理员的身份。虽然不知道是什么原理，但是觉得有点意思。</p>
-<p>后来开始不间断的买《黑客X档案》，接触到了编程，VB，C语言，Perl还有汇编。我发现VB特别好懂，于是安装了一个Visual Basic 6.0开始写小程序。我写的最大的小程序就是一个网页浏览器了，当然是跟着书上写的。这些经历现在想想也挺丰富的，入侵网站，抓取肉鸡。不过这不是今天的重点，以后单独写一篇文章吧。</p>
-<p>开始上大学了，第一学期就是C语言。周围无数的传言说C语言难得跟一坨屎一样，挂科一大半。直到现在，这四年间，每一年都能听到无数这样的话语。然而当年的C语言考试，我提前40分钟做完，不小心拿了一个满分。</p>
-<p>那个时候用的是谭浩强的C语言，被人吐槽无数的版本。里面有些东西确实脑残：</p>
-<pre><code>b = a+++++a;
-</code></pre><p>这样的问题确实没有什么意义，考试的题里面，概念题就能让你及格。剩下的改错题和编程题稍稍考一点水平，然而题目大多也是课程设计做过的。这一门课程，我的课程设计所有程序都是我自己凭脑袋想出来的，即便书上有现成代码的算法，我也是自己根据对算法的理解写出来的。而其他人有些照着书写代码，有些直接copy。这应该就是原因吧。</p>
-<p>大学前三年，断断续续的搞了一些php, Java，LaTex 但是都坚持不长时间。这也和我三分钟的热情有关。一次偶然的机会，听到了一个语言，Python，网上搜索了一下，看到很多人说用它写爬虫很方便。那个时候我学到了一个词，爬虫。</p>
-<p>今年三月份，Coursera上面开了一门课程，是Python入门。课程持续到5月份，每周课程都会有miniProject，一般来说是做小游戏。在完成每一个小项目的过程中，我发现我越来越喜欢Python。</p>
-<p>5月份Python课程结束没多久，我收到教务处的通知，周五要提交创新项目的结题报告。我才反应我过来，我去年申请的一个创新训练项目还没有做。</p>
-<p>这个项目是做一个选课辅助软件。当时申请表中，我表示准备用MFC与MSSQL制作这个软件和对应的数据库。可是，MSSQL安装好以后，我的电脑开机要5分钟。而MFC，倒腾了半个月，一点进展都没有，遂从此荒废。</p>
-<p>时间只有一个星期，现学MFC是来不及了。这个时候我想到我是会Python的人，于是果断决定使用Python + MySQL来开发这个选课辅助软件。</p>
-<p>一天半以后，软件连同图形界面全部做好了。那个时候，我觉得Python必定是神派来拯救我的天使。</p>
-<p>后来辅导员做微信公众号，我提议我可以做一个爬虫，把教务处的通知扒取下来。那天以后，我正式开始做爬虫。</p>
-<p>一开始是用Python的一个库urllib2的一个方法获取一个网页的全部代码，然互写入本地保存。这就是一个最简单的爬虫了。</p>
-<p>接下来接触了正则表达式。于是一个真正意义的爬虫诞生了。那个时候我室友过生日，我给他写了一个扒取儿（cheng）童(ren)网站里面卖肉漫画的爬虫。他高兴得不得了。关于这个爬虫，有机会我应该会放出来吧。不过担心被查水表。</p>
-<p>然后我觉得我有点了不起了，于是去淘宝开了一个店铺，专业定做Python爬虫。一个月都没有生意，直到有一天来了一个买家。他让我做百度贴吧的爬虫，于是我写了一个原始爬虫的demo给他，然后正式接手这个工作。他让他的一个下属教我Scrapy，这个爬虫框架让我的生产效率提升了一个数量级。接下来扒取各大视频网站，又指导我使用Scrapy配合Redis制作分布式爬虫，然后把数据存入MongoDB中，这样我的生产效率再一次提升了几个数量级。</p>
-<p>这样我赚取到了给自己买iPad的钱。这也奠定了我学习软件方面技术的基本方法，项目驱动，现学现用。在后面接到的项目中，无论是爬虫的模拟登陆，打码，多代理，甚至是自然语言处理，多次证实了我这个方法的正确性。</p>
-<p>从大学入学开始，我就决定要出国。可是最后TOEFL只差2分让我与资本主义国家失之交臂。一气之下决定考研。</p>
-<p>大三下期和整个暑假都在准备考研，但是考研课程老师那种卖狗皮膏药十全大补丸的样子确实让我厌烦，考研数学题做起来也甚是恶心。后来因为一些私事，我放弃了考研，中秋节过后开始准备找工作。</p>
-<p>那个时候，BAT和华为的提前批招聘都结束了。而我想都不敢想华为，因为印象中，华为是招硬件的，而且基本上都是研究生。我是学E.E的，但是我的项目经历只有学校的各种实验课做的东西。于是我抱着试一试的心态去应聘华为的软件工程师。</p>
-<p>我不得不感谢Python，他让我几乎是毫无阻力的通过了大多数公司的面试，我的所有拿得出手的项目经历，全部都有Python的身影。最后我去了MTK而拒了华为，毕竟华为太累了。在两个月之前，我都不敢想我竟然有机会拒绝华为。</p>
-<p>这样我就成了一个程序员。本科学的东西我想我还是有点用的，作为一个终身爱好也不错。毕竟搞硬件的要表白，场面炫目到秒杀码农几条街。</p>
-<p>如果没有Python，我想我现在不知道在干嘛。他让我的人生从此不同。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2566,7 +2509,7 @@ llo
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-count">136</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2641,7 +2584,9 @@ llo
                     
                       
                     
-                    <span class="site-state-item-count">31</span>
+                      
+                    
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2876,7 +2821,9 @@ llo
                     
                       
                     
-                    <span class="site-state-item-count">111</span>
+                      
+                    
+                    <span class="site-state-item-count">112</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

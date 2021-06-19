@@ -354,6 +354,200 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/04/29/lxmloldbug/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/04/29/lxmloldbug/" class="post-title-link" itemprop="url">requests的content与text导致lxml的解析问题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-04-29 22:49:31" itemprop="dateCreated datePublished" datetime="2015-04-29T22:49:31+08:00">2015-04-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/经验/" itemprop="url" rel="index"><span itemprop="name">经验</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/04/29/lxmloldbug/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/04/29/lxmloldbug/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近实习工作任务比较重，又在做数据挖掘的教学工作，同时还在做毕设，所以博客更新比较慢。不过最近肯定会有大动作。</p>
+<p>闲话毕，转正题。在制作新浪微博模拟登录的部分时，遇到了一些问题。</p>
+<p>我使用requests获取了新浪微博的源代码，通过lxml库的etree.HTML来处理一段网页源代码，从而生成一个可以被xpath解析的对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector = etree.HTML(html)</span><br></pre></td></tr></table></figure></p>
+<p>遇到报错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">selector = etree.HTML(html)</span><br><span class="line">  File &quot;lxml.etree.pyx&quot;, line 2953, in lxml.etree.HTML (src\lxml\lxml.etree.c:66734)</span><br><span class="line">  File &quot;parser.pxi&quot;, line 1780, in lxml.etree._parseMemoryDocument (src\lxml\lxml.etree.c:101591)</span><br><span class="line">ValueError: Unicode strings with encoding declaration are not supported. Please use bytes input or XML fragments without declaration.</span><br></pre></td></tr></table></figure></p>
+<p>根据报错信息推测，可能是因为不支持编码声明的Unicode字符串。Google发现这个问题在2012年就已经有人提交给作者了，但是一直没有被修复。地址在-&gt;<a href="https://gist.github.com/karlcow/3258330" target="_blank" rel="noopener">https://gist.github.com/karlcow/3258330</a></p>
+<p>不过下面的人也给出了解决办法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">html = bytes(bytearray(html, encoding=&apos;utf-8&apos;))</span><br><span class="line">selector = etree.HTML(html)</span><br></pre></td></tr></table></figure></p>
+<p>首先将源代码转化成比特数组，然后再将比特数组转化成一个比特对象。这样就可以绕过这个bug。</p>
+<p>然而，又有人认为这不是一个bug, 所以一直没有被修复。这是由于，我获取源代码是使用r.text<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = requests.get(&apos;xxxxxx&apos;,cookies=cookies).text</span><br></pre></td></tr></table></figure></p>
+<p>而如果使用r.content：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = requests.get(&apos;xxxxxx&apos;,cookies=cookies).content</span><br></pre></td></tr></table></figure></p>
+<p>就不会报错。</p>
+<p>那r.text与r.content有什么区别呢？分析requests的源代码发现，r.text返回的是Unicode型的数据，而使用r.content返回的是bytes型的数据。也就是说，在使用r.content的时候，他已经只带了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = bytes(bytearray(html, encoding=&apos;utf-8&apos;))</span><br></pre></td></tr></table></figure></p>
+<p>这样一个转化了。</p>
+<p>最近CentOS都声明放弃Python2了，编码问题确实浪费了很多时间，等空下来转Python3吧~</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/03/04/pythonunittest2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2128,333 +2322,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（一）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-30 15:41:35" itemprop="dateCreated datePublished" datetime="2014-12-30T15:41:35+08:00">2014-12-30</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h2><p>2014年12月28号开始，Gmail被伟大的墙从协议上封禁，POP3、SMTP、IAMP全部阵亡。于是不仅网页不能打开Gmail，连邮件客服端都不能使用Gmail收发邮件了。</p>
-<p>Gmail在国内的用户相当的广泛，难道就真的不用了吗？当然不是。虽然使用VPN可以翻出长城，但是开着VPN做其他事情又不太方便。于是，一种Gmail的转发服务变得重要起来。</p>
-<p>这篇文章将详细介绍如何使用亚马逊云AWS的免费主机EC2，配合Gmail的API来编写一个Gmail的转发程序。程序在设定时间内访问Gmail收件箱，发现新邮件以后，就通过另一个邮箱转发到国内邮箱中。每一次转发记录到一个日志文件中，并使用Flask搭建网站来，从而直观的检查接收发送记录。</p>
-<p>AWS的免费主机EC2的申请不是本文的重点，网上有很多教程，故略去不讲。<br>Flask环境的搭建不是本文重点，网上有很多教程，故略去不讲。</p>
-<p>本篇先讲解Gmail API的使用，下一篇讲解如何制作转发程序。</p>
-<h2 id="授权之路"><a href="#授权之路" class="headerlink" title="授权之路"></a>授权之路</h2><p>既然要是用Gmail的API，那就要开通Gmail的授权。Google的官方英文教程请戳-&gt;<a href="https://developers.google.com/gmail/api/quickstart/quickstart-python" target="_blank" rel="noopener">Run a Gmail App in Python</a></p>
-<h3 id="打开Gmail-API"><a href="#打开Gmail-API" class="headerlink" title="打开Gmail API"></a>打开Gmail API</h3><p>访问<a href="https://console.developers.google.com/project" target="_blank" rel="noopener">https://console.developers.google.com/project</a>，单击“建立档案”选项，新建一个项目。我这里新建的项目叫做“gmail”，如下图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/1.jpg" alt></p>
-<p>单击新建的档案“gmail”，在左侧点击“API和验证”，选择“API”，然后再右侧中间搜索框中输入Gmail，找到后打开。如下图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/开启gmailapi.jpg" alt></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/openapi.jpg" alt></p>
-<p>然后点击左侧“凭证”，选择“建立新的用户端ID”</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/凭证.jpg" alt></p>
-<p>这个时候注意一定要选择第三项，才能正确生成json文件。选择第三项，并填写完一些信息后，做如下选择，并点击“建立用户端ID”</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/id.jpg" alt></p>
-<p>接下来，下载json文件。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/oau.jpg" alt></p>
-<h3 id="验证机器"><a href="#验证机器" class="headerlink" title="验证机器"></a>验证机器</h3><p>在服务器上新建ghelper文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir ghelper</span><br><span class="line">cd ghelper</span><br></pre></td></tr></table></figure></p>
-<p>然后安装Google API Python Client库。建议使用pip安装而不是easy_install，因为pip安装的库文件可以卸载，而easy_install安装的库文件不能卸载。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install --upgrade google-api-python-client</span><br></pre></td></tr></table></figure></p>
-<p>为了使代码中的run.tools()能够正常执行，还需要安装gflags:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install python-gflags</span><br></pre></td></tr></table></figure></p>
-<p>将json文件上传到AWS服务器上，我放在了~/wwwproject/ghelper目录下面,并且重命名为client_secret.json,这样代码就不需要进行修改了。同时在本目录下面新建ghelper_api.py文件，文件内容为官方指南中的验证机器的代码，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">import httplib2</span><br><span class="line"></span><br><span class="line">from apiclient.discovery import build</span><br><span class="line">from oauth2client.client import flow_from_clientsecrets</span><br><span class="line">from oauth2client.file import Storage</span><br><span class="line">from oauth2client.tools import run</span><br><span class="line"></span><br><span class="line"># Path to the client_secret.json file downloaded from the Developer Console</span><br><span class="line">CLIENT_SECRET_FILE = &apos;client_secret.json&apos;</span><br><span class="line"></span><br><span class="line"># Check https://developers.google.com/gmail/api/auth/scopes for all available scopes</span><br><span class="line">OAUTH_SCOPE = &apos;https://www.googleapis.com/auth/gmail.readonly&apos;</span><br><span class="line"></span><br><span class="line"># Location of the credentials storage file</span><br><span class="line">STORAGE = Storage(&apos;gmail.storage&apos;)</span><br><span class="line"></span><br><span class="line"># Start the OAuth flow to retrieve credentials</span><br><span class="line">flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=OAUTH_SCOPE)</span><br><span class="line">http = httplib2.Http()</span><br><span class="line"></span><br><span class="line"># Try to retrieve credentials from storage or run the flow to generate them</span><br><span class="line">credentials = STORAGE.get()</span><br><span class="line">if credentials is None or credentials.invalid:</span><br><span class="line">  credentials = run(flow, STORAGE, http=http)</span><br><span class="line"></span><br><span class="line"># Authorize the httplib2.Http object with our credentials</span><br><span class="line">http = credentials.authorize(http)</span><br><span class="line"></span><br><span class="line"># Build the Gmail service from discovery</span><br><span class="line">gmail_service = build(&apos;gmail&apos;, &apos;v1&apos;, http=http)</span><br><span class="line"></span><br><span class="line"># Retrieve a page of threads</span><br><span class="line">threads = gmail_service.users().threads().list(userId=&apos;me&apos;).execute()</span><br><span class="line"></span><br><span class="line"># Print ID for each thread</span><br><span class="line">if threads[&apos;threads&apos;]:</span><br><span class="line">  for thread in threads[&apos;threads&apos;]:</span><br><span class="line">    print &apos;Thread ID: %s&apos; % (thread[&apos;id&apos;])</span><br></pre></td></tr></table></figure></p>
-<p>运行ghelper_api.py，进入Google验证阶段。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python ghelper_api.py</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sigin.jpg" alt></p>
-<p>在红线处按回车键就可以进入输入模式。输入gmail和密码以后，移动光标到“Sign in”回车，然后进入如下页面：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sign2.jpg" alt></p>
-<p>输入你的信息，验证通过以后会让你进入开启浏览器的javascript功能。可是Linux服务器哪来的浏览器？这个时候按键盘的Ctrl + Z来取消。</p>
-<p>继续输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python ghelper_api.py --noauth_local_webserver</span><br></pre></td></tr></table></figure></p>
-<p>会提示离线验证，如果仍然失败的话，就继续Ctrl+Z然后再输入上面的代码，很快就会让你离线验证：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sign3.jpg" alt></p>
-<p>复制他给出的网址，并在自己电脑上登录后，复制他给出的代码并粘贴回服务器上。验证通过。</p>
-<h3 id="使用API"><a href="#使用API" class="headerlink" title="使用API"></a>使用API</h3><p>打开<a href="https://developers.google.com/gmail/api/v1/reference/" target="_blank" rel="noopener">API Reference</a>，查看Gmail API的用法。</p>
-<p>这里用Users.messages的list和get方法来演示API的使用。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/listget.jpg" alt></p>
-<p>先查看list的说明:</p>
-<blockquote>
-<p>Lists the messages in the user’s mailbox.</p>
-</blockquote>
-<p>列出邮箱里的信息。这里实际上列出来的是每一封邮件的id,于是，使用这个id，通过get就能获得邮件的内容。</p>
-<p>通过查看list和get的使用范例：</p>
-<p>list:<br><a href="https://developers.google.com/gmail/api/v1/reference/users/messages/list" target="_blank" rel="noopener">https://developers.google.com/gmail/api/v1/reference/users/messages/list</a><br>get:<br><a href="https://developers.google.com/gmail/api/v1/reference/users/messages/get" target="_blank" rel="noopener">https://developers.google.com/gmail/api/v1/reference/users/messages/get</a></p>
-<p>构造出以下的完整代码：</p>
-<pre><code>#-*-coding:utf-8 -*-
-import httplib2
-
-from apiclient.discovery import build
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.file import Storage
-from oauth2client.tools import run
-from apiclient import errors
-import base64
-import email
-
-
-# Path to the client_secret.json file downloaded from the Developer Console
-CLIENT_SECRET_FILE = &apos;client_secret.json&apos;
-
-# Check https://developers.google.com/gmail/api/auth/scopes for all available scopes
-OAUTH_SCOPE = &apos;https://www.googleapis.com/auth/gmail.readonly&apos;
-
-# Location of the credentials storage file
-STORAGE = Storage(&apos;gmail.storage&apos;)
-
-# Start the OAuth flow to retrieve credentials
-flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=OAUTH_SCOPE)
-http = httplib2.Http()
-
-# Try to retrieve credentials from storage or run the flow to generate them
-credentials = STORAGE.get()
-if credentials is None or credentials.invalid:
-  credentials = run(flow, STORAGE, http=http)
-
-# Authorize the httplib2.Http object with our credentials
-http = credentials.authorize(http)
-
-# Build the Gmail service from discovery
-gmail_service = build(&apos;gmail&apos;, &apos;v1&apos;, http=http)
-
-# Retrieve a page of threads
-# threads = gmail_service.users().threads().list(userId=&apos;me&apos;).execute()
-
-# # Print ID for each thread
-# if threads[&apos;threads&apos;]:
-#   for thread in threads[&apos;threads&apos;]:
-#     print &apos;Thread ID: %s&apos; % (thread[&apos;id&apos;])
-
-def ListMessagesWithLabels(service, user_id, label_ids=[]):
-  &quot;&quot;&quot;List all Messages of the user&apos;s mailbox with label_ids applied.
-
-  Args:
-    service: Authorized Gmail API service instance.
-    user_id: User&apos;s email address. The special value &quot;me&quot;
-    can be used to indicate the authenticated user.
-    label_ids: Only return Messages with these labelIds applied.
-
-  Returns:
-    List of Messages that have all required Labels applied. Note that the
-    returned list contains Message IDs, you must use get with the
-    appropriate id to get the details of a Message.
-  &quot;&quot;&quot;
-  try:
-    response = service.users().messages().list(userId=user_id,
-                                               labelIds=label_ids).execute()
-    messages = []
-    if &apos;messages&apos; in response:
-      messages.extend(response[&apos;messages&apos;])
-
-    while &apos;nextPageToken&apos; in response:
-      page_token = response[&apos;nextPageToken&apos;]
-      response = service.users().messages().list(userId=user_id,
-                                                 labelIds=label_ids,
-                                                 pageToken=page_token).execute()
-      messages.extend(response[&apos;messages&apos;])
-
-    return messages
-  except errors.HttpError, error:
-    print &apos;An error occurred: %s&apos; % error
-
-def GetMessage(service, user_id, msg_id):
-  &quot;&quot;&quot;Get a Message with given ID.
-
-  Args:
-    service: Authorized Gmail API service instance.
-    user_id: User&apos;s email address. The special value &quot;me&quot;
-    can be used to indicate the authenticated user.
-    msg_id: The ID of the Message required.
-
-  Returns:
-    A Message.
-  &quot;&quot;&quot;
-  try:
-    message = service.users().messages().get(userId=user_id, id=msg_id).execute()
-
-    print &apos;Message snippet: %s&apos; % message[&apos;snippet&apos;]
-
-    return message
-  except errors.HttpError, error:
-    print &apos;An error occurred: %s&apos; % error
-
-a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]
-b = GetMessage(gmail_service,&apos;me&apos;,a)
-print b[&apos;snippet&apos;]
-print b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]
-</code></pre><p>通过观察GetMessage返回的数据，可以看到，返回的是一个字典dict,邮件的内容在key为snippet的里面。发件人在[‘payload’][‘headers’][3][‘value’]里面，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/data1.jpg" alt><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/data2.jpg" alt></p>
-<p>代码在服务器上运行效果如图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/show.jpg" alt></p>
-<p>至此，Gmail API在AWS服务器上的部署完成。下一篇文章将会介绍如何使用Python轮询Gmail的收件箱，并在有新邮件的时候转发到国内邮箱。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2502,7 +2369,7 @@ print b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">137</span>
+                    <span class="site-state-item-count">138</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2579,7 +2446,9 @@ print b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]
                     
                       
                     
-                    <span class="site-state-item-count">32</span>
+                      
+                    
+                    <span class="site-state-item-count">33</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2816,7 +2685,9 @@ print b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]
                     
                       
                     
-                    <span class="site-state-item-count">112</span>
+                      
+                    
+                    <span class="site-state-item-count">113</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

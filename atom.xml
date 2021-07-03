@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2021-06-19T08:51:46.804Z</updated>
+  <updated>2021-07-03T14:18:30.006Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：使用 Git 在错误的分支上修改了代码怎么办？</title>
+    <link href="https://www.kingname.info/2021/07/03/use-git-stash/"/>
+    <id>https://www.kingname.info/2021/07/03/use-git-stash/</id>
+    <published>2021-07-03T14:17:13.000Z</published>
+    <updated>2021-07-03T14:18:30.006Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？</p><p>我们用一个简单的例子来说明这种情况。</p><p>首先创建一个文件夹：<code>test_git</code>，并且在里面创建一个1.txt 文件，这个文件的内容如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">11111</span><br><span class="line">22222</span><br><span class="line">33333</span><br><span class="line">44444</span><br><span class="line">aaaaa</span><br><span class="line">bbbbb</span><br><span class="line">ccccc</span><br></pre></td></tr></table></figure><p>如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-03-26.png" alt></p><p>接下来，我执行命令<code>git init</code>，把当前文件夹作为一个git 源，并把1.txt 提交到源里面，让 git 进行管理。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-04-45.png" alt></p><p>现在，我基于当前分支，创建一个<code>dev</code>分支。并对新分支里面的1.txt 文件进行修改：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b dev</span><br><span class="line">vim 1.txt</span><br><span class="line">git add 1.txt</span><br><span class="line">git commit -m <span class="string">'change 1.txt'</span></span><br></pre></td></tr></table></figure><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-06-15.png" alt></p><p>好了，现在准备工作做完了。我现在有两个分支<code>master</code>和<code>dev</code>。每个分支里面都有一个叫做<code>1.txt</code>的文件。并且这两个<code>1.txt</code>文件的内容前半截相同，后半截不同。</p><p>大家可以看到，我现在在 dev 分支上。这个时候，我想修改 master 分支上面的1.txt。但是我忘记切换分支了。于是直接修改了dev 分支上的1.txt：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-08-23.png" alt="红框中的内容，原本是想在 master 分支修改的"></p><p>这个时候，如果我直接使用命令<code>git checkout master</code>试图切换分支，git 会报错，没有办法切过去：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-09-24.png" alt></p><p>很多人可能会这样做：打开一个记事本，把1.txt 里面修改的内容记录下来。然后使用命令<code>git checkout -- 1.txt</code>恢复1.txt 到修改之前的内容。然后切换到 master 分支。再根据记事本里面记录的修改内容，把代码粘贴到1.txt 文件中。如果只有1个文件修改那还好。但是在软件开发中，可能你修改了很多个文件。所以这种方法会变得非常笨拙。</p><p>但实际上，git 早就预料到了你有这个需求，所以它已经有了应对方案。我们现在回到刚刚在 dev 分支修改了1.txt 的时候：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-12-08.png" alt></p><p>这个时候，<strong>千万不要</strong>执行<code>git add</code>命令。</p><p>你只需要按顺序执行如下三条命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br><span class="line">git checkout master</span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-13-52.png" alt></p><p>然后，我们打开1.txt 文件：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-15-00.png" alt></p><p>可以看到，刚才的修改已经自动应用到了master 分支的1.txt 上面了。</p><p><code>git stash</code>会把当前修改的内容缓存起来，并恢复当前工作区到你修改之前的状态。然后切换回 master 分支，执行命令<code>git stash pop</code>，把刚才的修改应用到 master 分支的1.txt 文件中。如果不出现冲突，那么它会自动修改1.txt 文件。如果出现了冲突，那么需要你打开1.txt 文件以后，手动解除冲突。</p><p>可以看到，使用<code>git stash</code>命令，比你单独手动记录修改的内容，切换分支再重新改一遍要方便很多。</p><p>更多 Git 相关的小技巧，大家可以在微软提供的学习网站进行学习：<a href="https://docs.microsoft.com/en-us/learn/modules/intro-to-git/?WT.mc_id=DT-MVP-5003916" target="_blank" rel="noopener">Introduction to Git - Learn | Microsoft Docs</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？&lt;/
+      
+    
+    </summary>
+    
+      <category term="Git" scheme="https://www.kingname.info/categories/Git/"/>
+    
+    
+      <category term="Git" scheme="https://www.kingname.info/tags/Git/"/>
+    
+  </entry>
   
   <entry>
     <title>为什么爬虫工程师应该有一些基本的后端常识？</title>
@@ -497,30 +522,6 @@
     
       &lt;p&gt;对不少 Python 初学者来说，Python 导入其他模块的方式让他们很难理解。什么时候用&lt;code&gt;import xxx&lt;/code&gt;？什么时候用&lt;code&gt;from xxx import yyy&lt;/code&gt;？什么时候用&lt;code&gt;from xxx.yyy import zzz&lt;/code&gt;？什么时候用&lt;code&gt;from xxx import *&lt;/code&gt;？&lt;/p&gt;
 &lt;p&gt;这篇文章，我们来彻底搞懂这个问题。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：推特时间的格式化方案</title>
-    <link href="https://www.kingname.info/2020/03/23/twitter-time-format/"/>
-    <id>https://www.kingname.info/2020/03/23/twitter-time-format/</id>
-    <published>2020-03-23T15:39:12.000Z</published>
-    <updated>2020-03-23T15:39:39.967Z</updated>
-    
-    <content type="html"><![CDATA[<p>在使用推特开放API获取推文的时候，会发现推文的发布时间是下面这样的：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">"created_at"</span>: <span class="string">"Tue Dec 24 10:51:15 +0000 2019"</span>,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>现在我想把它转换为<code>2019-12-24 18:51:15</code>的形式，应该如何操作呢？</p><a id="more"></a><p>可能有同学会按照下面这个逻辑来处理：</p><ol><li>首先，使用空格把这个时间字符串切分开变成<code>[&#39;Tue&#39;, &#39;Dec&#39;, &#39;24&#39;, &#39;10:51:15&#39;, &#39;+0000&#39;, &#39;2019&#39;]</code></li><li>第0项是星期，不需要，直接丢弃</li><li>第1项是月份，通过一个英文月份简称到月份数字的字典，把<code>Dec</code>映射为<code>12</code></li><li>第2项是日期，不做修改</li><li>第3项是时分秒，不做修改</li><li>第4项是时区，说明这个时间是采用的0时区，比北京时间晚8小时</li><li>第5项是年份，不做修改</li><li>把修改过的第1项、第2项、第3项、第5项调整顺序，拼接成一个符合要求的时间：<code>2019-12-24 10:51:15</code>。把使用<code>datetime.datetime.strptime</code>转成<code>datetime.datetime</code>对象。</li><li>把这个<code>datetime.datetime</code>对象加上<code>datetime.timedelta(hours=8)</code></li><li>使用<code>strftime</code>方法再把<code>datetime.datetime</code>对象转回字符串</li></ol><p>整个过程看起来非常麻烦。</p><p>实际上，我们有更简单的办法来处理。<code>Tue Dec 24 10:51:15 +0000 2019</code>对应的时间格式为<code>%a %b %d %H:%M:%S %z %Y</code>；对于一个<code>datetime.datetime</code>对象，我们可以调用它的<code>astimezone</code>方法把时区移除，移除以后就会变成当地时间。</p><p>完整代码如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dt = <span class="string">'Wed Dec 25 09:09:25 +0000 2019'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dt_obj = datetime.datetime.strptime(dt, <span class="string">'%a %b %d %H:%M:%S %z %Y'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dt_obj.astimezone(tz=<span class="literal">None</span>).strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)</span><br><span class="line"><span class="string">'2019-12-25 17:09:25'</span></span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2019-12-25-21-38-09.png" alt></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在使用推特开放API获取推文的时候，会发现推文的发布时间是下面这样的：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&quot;created_at&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;Tue Dec 24 10:51:15 +0000 2019&quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;现在我想把它转换为&lt;code&gt;2019-12-24 18:51:15&lt;/code&gt;的形式，应该如何操作呢？&lt;/p&gt;
     
     </summary>
     

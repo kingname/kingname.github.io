@@ -96,13 +96,13 @@
 
 
 
-  <meta name="description" content="我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？ 我们用一个简单的例子来说明这种情况。 首先创建一个文件夹：test_git，并且在里面创建一个1.txt 文件，这个文件的内容如">
+  <meta name="description" content="我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？">
 <meta name="keywords" content="Git">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一日一技：使用 Git 在错误的分支上修改了代码怎么办？">
 <meta property="og:url" content="https://www.kingname.info/2021/07/03/use-git-stash/index.html">
 <meta property="og:site_name" content="谢乾坤 | Kingname">
-<meta property="og:description" content="我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？ 我们用一个简单的例子来说明这种情况。 首先创建一个文件夹：test_git，并且在里面创建一个1.txt 文件，这个文件的内容如">
+<meta property="og:description" content="我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-03-26.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-04-45.png">
@@ -112,10 +112,10 @@
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-12-08.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-13-52.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-15-00.png">
-<meta property="og:updated_time" content="2021-07-03T14:18:30.006Z">
+<meta property="og:updated_time" content="2021-07-03T14:27:25.551Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一日一技：使用 Git 在错误的分支上修改了代码怎么办？">
-<meta name="twitter:description" content="我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？ 我们用一个简单的例子来说明这种情况。 首先创建一个文件夹：test_git，并且在里面创建一个1.txt 文件，这个文件的内容如">
+<meta name="twitter:description" content="我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？">
 <meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-02-20-03-26.png">
 
 
@@ -407,7 +407,7 @@
                 
               
 
-              <time title="创建时间：2021-07-03 22:17:13 / 修改时间：22:18:30" itemprop="dateCreated datePublished" datetime="2021-07-03T22:17:13+08:00">2021-07-03</time>
+              <time title="创建时间：2021-07-03 22:17:13 / 修改时间：22:27:25" itemprop="dateCreated datePublished" datetime="2021-07-03T22:17:13+08:00">2021-07-03</time>
             
 
             
@@ -474,6 +474,7 @@
 
       
         <p>我们知道，在使用 Git 的时候，应该要正确使用它的分支（Branch）功能。不同的功能使用不同的分支开发，最后合并进入主分支。但有时候会出现这样一种情况——我代码都已经写完了，才发现我写错分支了。这个时候，怎么把我的修改迁移到目标分支上，并且不修改现在正在使用的分支？</p>
+<a id="more"></a>
 <p>我们用一个简单的例子来说明这种情况。</p>
 <p>首先创建一个文件夹：<code>test_git</code>，并且在里面创建一个1.txt 文件，这个文件的内容如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">11111</span><br><span class="line">22222</span><br><span class="line">33333</span><br><span class="line">44444</span><br><span class="line">aaaaa</span><br><span class="line">bbbbb</span><br><span class="line">ccccc</span><br></pre></td></tr></table></figure>
@@ -624,7 +625,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">140</span>
+                    <span class="site-state-item-count">141</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -946,7 +947,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">114</span>
+                      
+                    
+                    <span class="site-state-item-count">115</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

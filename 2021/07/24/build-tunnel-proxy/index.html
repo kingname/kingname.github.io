@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="什么是隧道代理？我们来看下面这张截图：  所谓隧道代理，就是一个能帮你自动更换代理 IP 的代理服务。在你的代码里面，你只需要把一个入口代理地址写死，然后正常发起请求，而目标服务器接收到的请求，每一次都是不同的代理地址。 在某代理网站上，隧道代理50并发每秒的价格是4000元/月：  而常规的，先请求接口拿到一批代理 IP，再选一个发起请求的原始代理服务器，一个月价格才600多元：  所以，如果我">
+<meta name="keywords" content="爬虫,隧道代理,OpenResty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="只要5分钟，创建一个隧道代理">
+<meta property="og:url" content="https://www.kingname.info/2021/07/24/build-tunnel-proxy/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="什么是隧道代理？我们来看下面这张截图：  所谓隧道代理，就是一个能帮你自动更换代理 IP 的代理服务。在你的代码里面，你只需要把一个入口代理地址写死，然后正常发起请求，而目标服务器接收到的请求，每一次都是不同的代理地址。 在某代理网站上，隧道代理50并发每秒的价格是4000元/月：  而常规的，先请求接口拿到一批代理 IP，再选一个发起请求的原始代理服务器，一个月价格才600多元：  所以，如果我">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-41-21.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-47-07.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-49-41.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-08-36.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-11-06.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20210723163643.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-13-08.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-18-54.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-19-36.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-41-21.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/51122141524284T2.JPG">
+<meta property="og:updated_time" content="2021-07-24T00:56:46.528Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="只要5分钟，创建一个隧道代理">
+<meta name="twitter:description" content="什么是隧道代理？我们来看下面这张截图：  所谓隧道代理，就是一个能帮你自动更换代理 IP 的代理服务。在你的代码里面，你只需要把一个入口代理地址写死，然后正常发起请求，而目标服务器接收到的请求，每一次都是不同的代理地址。 在某代理网站上，隧道代理50并发每秒的价格是4000元/月：  而常规的，先请求接口拿到一批代理 IP，再选一个发起请求的原始代理服务器，一个月价格才600多元：  所以，如果我">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-41-21.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2021/07/24/build-tunnel-proxy/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>只要5分钟，创建一个隧道代理 | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2021/07/24/build-tunnel-proxy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">只要5分钟，创建一个隧道代理
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-07-24 08:54:53 / 修改时间：08:56:46" itemprop="dateCreated datePublished" datetime="2021-07-24T08:54:53+08:00">2021-07-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/爬虫/" itemprop="url" rel="index"><span itemprop="name">爬虫</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/07/24/build-tunnel-proxy/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021/07/24/build-tunnel-proxy/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>什么是隧道代理？我们来看下面这张截图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-41-21.png" alt></p>
+<p>所谓隧道代理，就是一个能帮你自动更换代理 IP 的代理服务。在你的代码里面，你只需要把一个入口代理地址写死，然后正常发起请求，而目标服务器接收到的请求，每一次都是不同的代理地址。</p>
+<p>在某代理网站上，隧道代理50并发每秒的价格是4000元/月：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-47-07.png" alt></p>
+<p>而常规的，先请求接口拿到一批代理 IP，再选一个发起请求的原始代理服务器，一个月价格才600多元：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-49-41.png" alt></p>
+<p>所以，如果我们能自己做一个隧道代理，将会省下很多钱！</p>
+<a id="more"></a>
+<p>隧道代理的原理，跟常规代理的不同之处，用下面这两张图就能说清楚：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-08-36.png" alt="传统代理服务"></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-11-06.png" alt="隧道代理"></p>
+<p>要自己开发一个这样的隧道代理，我们需要做两步：</p>
+<ol>
+<li>构建一个代理池</li>
+<li>实现代理自动转发</li>
+</ol>
+<h2 id="构建代理池"><a href="#构建代理池" class="headerlink" title="构建代理池"></a>构建代理池</h2><p>假设你从代理供应商手上买到的便宜代理地址为：<code>http://xxx.com/ips</code>，直接在浏览器上面请求，页面效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20210723163643.png" alt></p>
+<p>现在，你需要做的就是写一个程序，周期性访问这个url，拉取当前最新可用的IP地址，然后把它放到Redis中。</p>
+<p>这里，我们使用Redis的Hash这个数据结构，其中Hash的字段名就是<code>IP:端口</code>，里面的值就是跟每个IP相关的一些信息。</p>
+<p>你这个程序需要确保，当前在Redis里面的代理地址，全部都是可用的。这里，我给出了一个示例程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">ProxyManager.py</span></span><br><span class="line"><span class="string">~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">简易代理池管理工具，直接从URL中读取所有</span></span><br><span class="line"><span class="string">最新的代理，并写入Redis。</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProxyManager</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.config = self.read_config()</span><br><span class="line">        self.redis_config = self.config[<span class="string">'redis'</span>]</span><br><span class="line">        self.client = redis.Redis(host=self.redis_config[<span class="string">'host'</span>],</span><br><span class="line">                                  password=self.redis_config[<span class="string">'password'</span>],</span><br><span class="line">                                  port=self.redis_config[<span class="string">'port'</span>])</span><br><span class="line">        self.instance_dict = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">read_config</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">'config.yaml'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            config = yaml.safe_load(f.read())</span><br><span class="line">            <span class="keyword">return</span> config</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">read_ip</span><span class="params">(self)</span>:</span></span><br><span class="line">        resp = requests.get(self.config[<span class="string">'proxy'</span>]).text</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'&#123;'</span> <span class="keyword">in</span> resp:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        proxy_list = resp.split()</span><br><span class="line">        <span class="keyword">return</span> proxy_list</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete_ip</span><span class="params">(self, live_ips, pool_ips)</span>:</span></span><br><span class="line">        ip_to_removed = set(pool_ips) - set(live_ips)</span><br><span class="line">        <span class="keyword">if</span> ip_to_removed:</span><br><span class="line">            print(<span class="string">'ip to be removed:'</span>, ip_to_removed)</span><br><span class="line">            self.client.hdel(self.redis_config[<span class="string">'key'</span>], *list(ip_to_removed))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_new_ips</span><span class="params">(self, live_ips, pool_ips)</span>:</span></span><br><span class="line">        ip_to_add = set(live_ips) - set(pool_ips)</span><br><span class="line">        <span class="keyword">if</span> ip_to_add:</span><br><span class="line">            print(<span class="string">'ip to add:'</span>, ip_to_add)</span><br><span class="line">            ips = &#123;&#125;</span><br><span class="line">            <span class="keyword">for</span> ip <span class="keyword">in</span> ip_to_add:</span><br><span class="line">                ips[ip] = json.dumps(&#123;<span class="string">'private_ip'</span>: ip,</span><br><span class="line">                                      <span class="string">'ts'</span>: datetime.datetime.now().strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)&#125;)</span><br><span class="line">            self.client.hset(self.redis_config[<span class="string">'key'</span>], mapping=ips)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            live_ips = self.read_ip()</span><br><span class="line">            pool_ips = [x.decode() <span class="keyword">for</span> x <span class="keyword">in</span> self.client.hgetall(self.redis_config[<span class="string">'key'</span>])]</span><br><span class="line">            self.delete_ip(live_ips, pool_ips)</span><br><span class="line">            self.add_new_ips(live_ips, pool_ips)</span><br><span class="line">            time.sleep(<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    manager = ProxyManager()</span><br><span class="line">    manager.run()</span><br></pre></td></tr></table></figure>
+<p>其中，我把Redis相关的配置、代理供应商的URL写到了一个yaml配置文件中，防止被你们看到。配置文件的格式如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-13-08.png" alt></p>
+<p>由于我这个代理供应商提供的IP，有效期是1-5分钟，所以保险起见，我每40秒更换一次IP。更换的时候，采用了增量更换的方式。把当前拉取的IP和Redis里面的已有IP进行对比。不在这次拉取的IP全部从Redis移除，然后把新增的IP加到Redis中。</p>
+<p>大家在实际过程中，还可以加一些代理校验的逻辑，确保从URL拉下来的代理也进行有效性检查，发现无效的立刻移除。</p>
+<h2 id="实现自动转发"><a href="#实现自动转发" class="headerlink" title="实现自动转发"></a>实现自动转发</h2><p>要实现自动转发，我们可以使用<a href="https://openresty.org/cn/" target="_blank" rel="noopener">OpenResty</a>。这是一个基于Nginx和Lua实现的高性能Web平台。通过它，我们可以使用Lua语言实现一些逻辑，例如从Redis读取数据，把来源请求转发到上游代理服务器……</p>
+<p>因此，我们使用OpenResty搭建一个转发服务。并把这个转发服务所在服务器的IP地址作为我们的入口IP地址。在使用Requests等等网络请求客户端发送请求的时候，只需要把这个入口IP地址设置为代理。那么，当客户端发送请求的时候，请求首先到了OpenResty。然后它从Redis中随机选一个代理IP来作为上游代理，并把刚刚发来的请求转发到上游代理。从而实现隧道代理的效果。</p>
+<p>Lua是一门非常老的语言，它的语法不少地方跟Python不太一样。不过你不用担心，这个配置文件我已经写好了。大家拿过来改一改就能用。</p>
+<p>对应的配置文件如下图所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  16;        #nginx worker 数量</span><br><span class="line">error_log /usr/local/openresty/nginx/logs/error.log;   #指定错误日志文件路径</span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections 1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">stream &#123;</span><br><span class="line">    ## TCP 代理日志格式定义</span><br><span class="line">    log_format tcp_proxy &apos;$remote_addr [$time_local] &apos;</span><br><span class="line">                         &apos;$protocol $status $bytes_sent $bytes_received &apos;</span><br><span class="line">                         &apos;$session_time &quot;$upstream_addr&quot; &apos;</span><br><span class="line">                         &apos;&quot;$upstream_bytes_sent&quot; &quot;$upstream_bytes_received&quot; &quot;$upstream_connect_time&quot;&apos;;</span><br><span class="line">    ## TCP 代理日志配置</span><br><span class="line">    access_log /usr/local/openresty/nginx/logs/access.log tcp_proxy;</span><br><span class="line">    open_log_file_cache off;</span><br><span class="line"></span><br><span class="line">    ## TCP 代理配置</span><br><span class="line">    upstream backend&#123;</span><br><span class="line">        server 127.0.0.2:1101;# 爱写啥写啥  反正下面的代码也给你改了</span><br><span class="line">        balancer_by_lua_block &#123;</span><br><span class="line">            -- 初始化balancer</span><br><span class="line">            local balancer = require &quot;ngx.balancer&quot;</span><br><span class="line">            local host = &quot;&quot;</span><br><span class="line">            local port = 0</span><br><span class="line">            host = ngx.ctx.proxy_host</span><br><span class="line">            port = ngx.ctx.proxy_port</span><br><span class="line">            -- 设置 balancer</span><br><span class="line">            local ok, err = balancer.set_current_peer(host, port)</span><br><span class="line">            if not ok then</span><br><span class="line">                ngx.log(ngx.ERR, &quot;failed to set the peer: &quot;, err)</span><br><span class="line">            end</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        preread_by_lua_block&#123;</span><br><span class="line"></span><br><span class="line">            local redis = require(&quot;resty.redis&quot;)</span><br><span class="line">            --创建实例</span><br><span class="line">            local redis_instance = redis:new()</span><br><span class="line">            --设置超时（毫秒）</span><br><span class="line">            redis_instance:set_timeout(3000)</span><br><span class="line">            --建立连接，请在这里配置Redis 的 IP 地址、端口号、密码和用到的 Key</span><br><span class="line">            local rhost = &quot;123.45.67.89&quot;</span><br><span class="line">            local rport = 6739</span><br><span class="line">            local rpass = &quot;abcdefg&quot;</span><br><span class="line">            local rkey = &quot;proxy:pool&quot;</span><br><span class="line">            local ok, err = redis_instance:connect(rhost, rport)</span><br><span class="line">            ngx.log(ngx.ERR, &quot;1111111 &quot;, ok, &quot; &quot;, err)</span><br><span class="line"></span><br><span class="line">            -- 如果没有密码，移除下面这一行</span><br><span class="line">            local res, err = redis_instance:auth(rpass)</span><br><span class="line">            local res, err = redis_instance:hkeys(rkey)</span><br><span class="line">            if not res then</span><br><span class="line">                ngx.log(ngx.ERR,&quot;res num error : &quot;, err)</span><br><span class="line">                return redis_instance:close()</span><br><span class="line">            end</span><br><span class="line">            math.randomseed(tostring(ngx.now()):reverse():sub(1, 6))</span><br><span class="line">            local proxy = res[math.random(#res)]</span><br><span class="line">            local colon_index = string.find(proxy, &quot;:&quot;)</span><br><span class="line">            local proxy_ip = string.sub(proxy, 1, colon_index - 1)</span><br><span class="line">            local proxy_port = string.sub(proxy, colon_index + 1)</span><br><span class="line">            ngx.log(ngx.ERR,&quot;redis data = &quot;, proxy_ip, &quot;:&quot;, proxy_port);</span><br><span class="line">            ngx.ctx.proxy_host = proxy_ip</span><br><span class="line">            ngx.ctx.proxy_port = proxy_port</span><br><span class="line">            redis_instance:close()</span><br><span class="line">        &#125;</span><br><span class="line">        #  下面是本机的端口，也就是爬虫固定写死的端口</span><br><span class="line">       listen 0.0.0.0:9976; #监听本机地址和端口，当使用keeplived的情况下使用keeplived VIP</span><br><span class="line">       proxy_connect_timeout 3s;</span><br><span class="line">       proxy_timeout 10s;</span><br><span class="line">       proxy_pass backend; #这里填写对端的地址</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要修改的地方，我在配置文件里面已经做好的注释。具体而言，需要修改地方包含：</p>
+<ul>
+<li>Redis的地址、端口、密码和 Key。如果你的Redis没有密码，可以把设置密码的这一行删掉</li>
+</ul>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-18-54.png" alt></p>
+<ul>
+<li>入口代理的端口<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-21-19-36.png" alt></li>
+</ul>
+<p>设置好了这些配置以后，我们就可以使用Docker来启动它。Docker的配置文件极其简单：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> openresty/openresty:centos</span><br><span class="line"></span><br><span class="line"><span class="keyword">copy</span><span class="bash"> nginx_redis.conf /usr/<span class="built_in">local</span>/openresty/nginx/conf/nginx.conf</span></span><br></pre></td></tr></table></figure>
+<p>然后，执行命令构建和运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build --network host -t tunnel_proxy:0.01 .</span><br><span class="line">docker run --name tunnel_proxy --network host -it tunnel_proxy:0.01</span><br></pre></td></tr></table></figure>
+<p>运行以后，你会看到Docker的命令行似乎卡住了。这是正常请求。因为需要你有了请求，它才会输出内容。</p>
+<p>现在，你可以用Requests赶快写一段代码来进行验证：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">proxies = &#123;<span class="string">'http'</span>: <span class="string">'http://13.88.220.207:9976'</span>&#125;</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    resp = requests.get(<span class="string">'http://httpbin.org/ip'</span>, proxies=proxies).text</span><br><span class="line">    print(resp)</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>运行效果如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-07-23-08-41-21.png" alt></p>
+<p>说明隧道代理搭建成功。目前隧道代理我已经稳定运行了半年，从来没有出过问题，大家可以放心使用。</p>
+<p>最后，本文受到 @萌木盖 的文章：<a href="https://www.jianshu.com/p/7808ee6395ab" target="_blank" rel="noopener">openresty正向代理搭建 - 简书</a>的启发，并在该文章基础上进行改进。特别感谢原作者。</p>
+<hr>
+<p>如果本文讲到的方法，能帮你节省下不少购买隧道代理的钱，那么请考虑拿出其中的一小部分，加入我的知识星球，成为<code>未闻Code·Pro会员</code>。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/51122141524284T2.JPG" alt></p>
+<p>加入星球，你除了能获得在微信群中已有的全部福利外，还会额外获得：</p>
+<ol>
+<li>问题的优先解答和一对一答疑</li>
+<li>职业生涯规划咨询</li>
+<li>面试技巧和经验</li>
+<li>定期开展的专属直播分享</li>
+<li>定期抽奖活动</li>
+<li>……</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+          
+            <a href="/tags/隧道代理/" rel="tag"># 隧道代理</a>
+          
+            <a href="/tags/OpenResty/" rel="tag"># OpenResty</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/03/compress-without-zip/" rel="next" title="一日一技：Linux 中，没有 zip命令，怎么生成 zip 文件？">
+                <i class="fa fa-chevron-left"></i> 一日一技：Linux 中，没有 zip命令，怎么生成 zip 文件？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">142</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">34</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.weishidong.com/" title="http://www.weishidong.com/" rel="noopener" target="_blank">韦世东的技术日志</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#构建代理池"><span class="nav-number">1.</span> <span class="nav-text">构建代理池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现自动转发"><span class="nav-number">2.</span> <span class="nav-text">实现自动转发</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

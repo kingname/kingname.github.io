@@ -354,6 +354,391 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2021/10/07/gne-0-3-0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2021/10/07/gne-0-3-0/" class="post-title-link" itemprop="url">GNE 版本升级，基于可视化信号自动化识别并提取新闻正文</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-10-07 16:18:23 / 修改时间：16:19:45" itemprop="dateCreated datePublished" datetime="2021-10-07T16:18:23+08:00">2021-10-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/GNE/" itemprop="url" rel="index"><span itemprop="name">GNE</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/10/07/gne-0-3-0/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021/10/07/gne-0-3-0/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-16-05-00.png" alt></p>
+<p>GNE 是一个通用的新闻正文抽取器，自从开源以来，已经被很多人用来作为新闻正文通用爬虫的重要组件。</p>
+<p>GNE 的 Github 地址：<a href="https://github.com/GeneralNewsExtractor/GeneralNewsExtractor" target="_blank" rel="noopener">https://github.com/GeneralNewsExtractor/GeneralNewsExtractor</a>。算法来自于<a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFDLAST2019&amp;filename=GWDZ201908029&amp;v=MDY4MTRxVHJXTTFGckNVUkxPZmJ1Wm5GQ2poVXJyQklqclBkTEc0SDlqTXA0OUhiWVI4ZVgxTHV4WVM3RGgxVDM=" target="_blank" rel="noopener">《基于文本及符号密度的网页正文提取方法》</a>，这个算法是完全基于 HTML 里面的信息来寻找正文。因此，它有一些先天性缺陷：</p>
+<ol>
+<li>如果正文只有三五句话，但评论是长篇大论，提取就会失败</li>
+<li>如果正文里面 html 标签太多，也会导致正文找错位置</li>
+<li>经常提取到版权信息</li>
+</ol>
+<p>但如果让人来看网页，就不会搞错。因为正文的位置和评论的位置肯定不一样，版权信息一般在最下面……这些可视化信号，是通过 CSS 来确定的，单纯从 HTML 中是看不到的。</p>
+<p>GNE 输入的HTML，原本就是使用模拟浏览器输出的 HTML，并不是真正的网页源代码。既然如此，在使用模拟浏览器的时候，为什么不直接把每个节点的坐标信息都记录下来呢？在使用模拟浏览器的时候，只需要执行一段 JavaScript 代码，就可以把每个节点是否可见，每个可见节点的长宽高、左上角、右下角的坐标记录下来。这样，GNE 在解析正文的时候，可以参考这些信息，直接移除不可见的节点，并移除尺寸显然不合理、位置显然不正确的节点。从而大大提高正文识别的准确率。</p>
+<p>基于可视化信号的提取效果如何呢？我们用一篇新闻来作为例子：<a href="https://www.163.com/dy/article/G33O1QTA05372UZS.html" target="_blank" rel="noopener">广西省发生了一起事件，位置在来宾市，画面曝光</a>。</p>
+<p>首先在浏览器的开发者工具里面，直接复制经过js 渲染后的源代码：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-44-28.png" alt></p>
+<p>当我们直接使用 GNE识别正文的时候，运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-46-34.png" alt></p>
+<p>可以看到，提取到的信息是版权信息。</p>
+<p>现在，如果使用经过修改的 HTML 代码，就能成功提取到正文，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-47-43.png" alt></p>
+<p>那么，这个经过修改的 HTML 有什么特别呢？我们来看看它长什么样：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-48-39.png" alt></p>
+<p>在<code>body</code> 标签下面的所有节点，都有一个属性叫做 <code>is_visiable</code> ，它的值是字符串的 <code>true</code> 或者 <code>false</code> 。如果值为 <code>true</code> ,<br>那么，还有一个属性叫做 <code>coordinate</code> 。它的值是一个 JSON 字符串，包含了这个节点的尺寸，坐标等信息。</p>
+<p>那么，这些特殊的 HTML 是怎么生成的呢？如果你只是想做一个临时测试，那么其实只需要在Chrome 的开发者工具的<code>Console(控制台)</code>标签页执行这样一段 js 代码就可以了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insert_visiability_info</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">get_body</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> body = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> body</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">insert_info</span>(<span class="params">element</span>) </span>&#123;</span><br><span class="line">        is_visiable = element.offsetParent !== <span class="literal">null</span></span><br><span class="line">        element.setAttribute(<span class="string">'is_visiable'</span>, is_visiable)</span><br><span class="line">        <span class="keyword">if</span> (is_visiable) &#123;</span><br><span class="line">            react = element.getBoundingClientRect()</span><br><span class="line">            coordinate = <span class="built_in">JSON</span>.stringify(react)</span><br><span class="line">            element.setAttribute(<span class="string">'coordinate'</span>, coordinate)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">iter_node</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">        children = node.children</span><br><span class="line">        insert_info(node)</span><br><span class="line">        <span class="keyword">if</span> (children.length !== <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">const</span> element <span class="keyword">of</span> children) &#123;</span><br><span class="line">                iter_node(element)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">sizes</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> contentWidth = [...document.body.children].reduce( </span><br><span class="line">          (a, el) =&gt; <span class="built_in">Math</span>.max(a, el.getBoundingClientRect().right), <span class="number">0</span>) </span><br><span class="line">          - <span class="built_in">document</span>.body.getBoundingClientRect().x;</span><br><span class="line">      </span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          windowWidth:  <span class="built_in">document</span>.documentElement.clientWidth,</span><br><span class="line">          windowHeight: <span class="built_in">document</span>.documentElement.clientHeight,</span><br><span class="line">          pageWidth:    <span class="built_in">Math</span>.min(<span class="built_in">document</span>.body.scrollWidth, contentWidth),</span><br><span class="line">          pageHeight:   <span class="built_in">document</span>.body.scrollHeight,</span><br><span class="line">          screenWidth:  <span class="built_in">window</span>.screen.width,</span><br><span class="line">          screenHeight: <span class="built_in">window</span>.screen.height,</span><br><span class="line">          pageX:        <span class="built_in">document</span>.body.getBoundingClientRect().x,</span><br><span class="line">          pageY:        <span class="built_in">document</span>.body.getBoundingClientRect().y,</span><br><span class="line">          screenX:     -<span class="built_in">window</span>.screenX,</span><br><span class="line">          screenY:     -<span class="built_in">window</span>.screenY - (<span class="built_in">window</span>.outerHeight-<span class="built_in">window</span>.innerHeight),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">insert_page_info</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        page_info = sizes()</span><br><span class="line">        node = <span class="built_in">document</span>.createElement(<span class="string">'meta'</span>)</span><br><span class="line">        node.setAttribute(<span class="string">'name'</span>, <span class="string">'page_visiability_info'</span>)</span><br><span class="line">        node.setAttribute(<span class="string">'page_info'</span>, <span class="built_in">JSON</span>.stringify(page_info))</span><br><span class="line">        <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>].appendChild(node)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    insert_page_info()</span><br><span class="line">    body = get_body()</span><br><span class="line">    iter_node(body)</span><br><span class="line">&#125;</span><br><span class="line">insert_visiability_info()</span><br></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-53-51.png" alt></p>
+<p>执行完成以后，重新打开<code>Elements(元素)</code>标签页，就可以看到我们需要的属性已经添加到了各个节点里面。</p>
+<p>如果你想要使用 Puppeteer 或者 Selenium 来实现同样爬虫，想批量自动化执行 JavaScript，我给出一个 Demo，大家可以参考：<a href="https://github.com/GeneralNewsExtractor/GneRender" target="_blank" rel="noopener">GitHub - GeneralNewsExtractor/GneRender: Render web page to add necessary info on every dom element.</a>.</p>
+<p>只需要执行如下几个命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yarn install</span><br><span class="line">node render.js</span><br></pre></td></tr></table></figure>
+<p>就可以在当前文件夹下面生成一个<code>test.html</code>，就这是经过修改的特殊 HTML 了。</p>
+<p>最新版本的 GNE 已经提交到了 Pypi，大家现在可以直接试用 pip 安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install gne</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2021/09/07/2021-09-07/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2021/09/07/2021-09-07/" class="post-title-link" itemprop="url">未命名</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-09-07 22:54:34 / 修改时间：22:54:51" itemprop="dateCreated datePublished" datetime="2021-09-07T22:54:34+08:00">2021-09-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/09/07/2021-09-07/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021/09/07/2021-09-07/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="如何使用-go-mod-来管理-Go-语言项目的依赖包？"><a href="#如何使用-go-mod-来管理-Go-语言项目的依赖包？" class="headerlink" title="如何使用 go mod 来管理 Go 语言项目的依赖包？"></a>如何使用 go mod 来管理 Go 语言项目的依赖包？</h1><p>Go Mod 是目前Golang 官方自带的，最简单方便的管理第三方依赖包的方法。</p>
+<h2 id="激活-Go-Mod-环境"><a href="#激活-Go-Mod-环境" class="headerlink" title="激活 Go Mod 环境"></a>激活 Go Mod 环境</h2><p>首先，创建一个全新的文件夹，并进入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir example</span><br><span class="line"><span class="built_in">cd</span> example</span><br></pre></td></tr></table></figure>
+<p>执行如下命令，激活 Go Mod 环境：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go mod init 当前文件夹名字</span><br></pre></td></tr></table></figure>
+<p>这个时候，你会发现当前文件夹里面自动生成了一个名字叫做<code>go.mod</code>的文件。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-34-00.png" alt></p>
+<p>这个文件一开始默认只有2行代码，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-35-47.png" alt></p>
+<h2 id="安装你需要的第三方包"><a href="#安装你需要的第三方包" class="headerlink" title="安装你需要的第三方包"></a>安装你需要的第三方包</h2><p>现在，使用<code>go get</code>安装你需要的第三方包，这里我以：<code>github.com/CUCyber/ja3transport</code>为例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/CUCyber/ja3transport</span><br></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-37-58.png" alt></p>
+<p>这个时候，如果你再打开 go.mod 文件，你会发现里面的内容发生了变化，如下图所示。说明它正在记录你这个项目所依赖的各个包：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-39-04.png" alt></p>
+<p>现在，你就可以正常写 Golang 代码了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-40-06.png" alt></p>
+<p>但这个时候，这个第三方包是安装到 Go的安装环境里面的， 一般是<code>/go/src/github.com/xxxx</code>。这是一个很深的环境，如果你要修改这个第三方包，就非常不方便，也没有办法把你修改的代码拿给其他人。</p>
+<h2 id="让-go-mod-使用本地的包代码"><a href="#让-go-mod-使用本地的包代码" class="headerlink" title="让 go mod 使用本地的包代码"></a>让 go mod 使用本地的包代码</h2><p>如果你想修改第三方包的代码，然后让自己的项目使用修改以后的代码，那么，你可以先把这个第三方包的代码放到当前项目的文件夹下面。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-47-17.png" alt></p>
+<p>你可以从原来的安装路径复制过来，也可以直接 git clone 从 github 上面拉下来重新修改。</p>
+<p>改好第三方包的代码以后，你怎么让项目使用修改以后的代码呢？这个时候，打开 go.mod 文件，增加一行代码：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-49-53.png" alt></p>
+<p>如果你要替换多个包，那么可以使用括号抱起来，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-09-07-22-50-22.png" alt></p>
+<p>改好以后，保存 go.mod 文件。</p>
+<p>现在，当你再次使用 go run xxx.go 的时候，就会使用当前文件夹里面的包代码了。</p>
+<h2 id="在服务器上部署"><a href="#在服务器上部署" class="headerlink" title="在服务器上部署"></a>在服务器上部署</h2><p>现在，你开发完成了代码，想把代码部署到服务器上面。只需要如下两步操作：</p>
+<ol>
+<li>把当前项目的所有文件全部复制到服务器上面。注意，肯定有两个文件：go.mod 和 go.sum，如果没有，那肯定有问题。</li>
+<li>首先执行 go build，这个时候，go mod 会自动安装依赖的包。你什么额外的操作都不需要做。</li>
+<li>go run xxx.go 运行你想要的代码。完成。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2021/07/24/build-tunnel-proxy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1772,393 +2157,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2021/04/05/thread-event/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2021/04/05/thread-event/" class="post-title-link" itemprop="url">前天才讲的知识点，不听讲的人今天就跑来问</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2021-04-05 23:02:11" itemprop="dateCreated datePublished" datetime="2021-04-05T23:02:11+08:00">2021-04-05</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2021-05-14 23:06:58" itemprop="dateModified" datetime="2021-05-14T23:06:58+08:00">2021-05-14</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/04/05/thread-event/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021/04/05/thread-event/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p> 今天在读者交流群里面，有同学提到这样一个问题：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-04-06-20-32-34.png" alt></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-04-06-20-32-51.png" alt></p>
-<p>这个同学想实现，在代码第35行，如果进入了 <code>if</code> 判断，那么就退出第40-43行对应的 ac 函数。</p>
-<p>能问出这个问题，说明这个同学显然没有认真看我的微信公众号。就在几天前我才发了一篇文章：<a href="https://mp.weixin.qq.com/s/po6wGCF_Ww8xDJKgEywZ0g" target="_blank" rel="noopener">一日一技：Python多线程的事件监控</a>。使用这篇文章里面讲到的方法，就可以轻易实现他的需求。</p>
-<p>在那篇文章中，我们讲到了<code>threading.Event</code>，这个东西不仅可以在线程之间使用，也可以在主线程和子线程之间使用。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2021/04/05/thread-event/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2021/04/05/why-wrap-oos/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2021/04/05/why-wrap-oos/" class="post-title-link" itemprop="url">开发经验：已经有对象储存，为什么我们还要开发一个图片接口？</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2021-04-05 23:02:11" itemprop="dateCreated datePublished" datetime="2021-04-05T23:02:11+08:00">2021-04-05</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2021-05-14 23:03:31" itemprop="dateModified" datetime="2021-05-14T23:03:31+08:00">2021-05-14</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/开发经验/" itemprop="url" rel="index"><span itemprop="name">开发经验</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/04/05/why-wrap-oos/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021/04/05/why-wrap-oos/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>现在阿里云，腾讯云等等云服务商都已经提供对象储存服务，我们可以使用对象储存来存放文件或者图片。通过云服务商提供的 SDK，一行代码就可以把文件或者图片上传到对象储存，并获得文件的地址。</p>
-<p>我的博客图片就使用腾讯云的对象储存作为图床，所以如果你查看图片的地址，会发现他们的网址是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_5551.JPEG</span><br></pre></td></tr></table></figure>
-<p>其中的<code>https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/</code>就是我的对象储存的域名。</p>
-<p>然而，在公司的项目中，虽然我们也是用云服务商提供的对象储存来存放图片，但是我们会额外开发一个图片服务接口。所以，公司项目网站的图片，使用的地址类似于：<code>https://img.kingname.info/xxx.png</code>。当你访问这个地址的时候，这个图片服务会从域名拿到图片的名字<code>xxx.png</code>，然后访问对象储存拿到这张图片，最后再把这种图片以数据流的形式返回给你。</p>
-<p>你可能会觉得，这不是多此一举吗？为什么不能让用户直接访问对象储存获得图片呢？单独做一个图片接口不仅增加了开发时间，而且还需要服务器单独再发一次请求到对象储存拿数据，白白增加了访问延迟，怎么看都是得不偿失啊。</p>
-<p>这是因为，工程上的问题，有时候不仅仅是一个行与不行的问题。它需要考虑很多额外的因素。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2021/04/05/why-wrap-oos/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2206,7 +2204,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">142</span>
+                    <span class="site-state-item-count">144</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

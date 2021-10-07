@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-47-43.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-48-39.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-53-51.png">
-<meta property="og:updated_time" content="2021-10-07T08:19:45.469Z">
+<meta property="og:updated_time" content="2021-10-07T08:22:29.717Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GNE 版本升级，基于可视化信号自动化识别并提取新闻正文">
 <meta name="twitter:description" content="GNE 是一个通用的新闻正文抽取器，自从开源以来，已经被很多人用来作为新闻正文通用爬虫的重要组件。 GNE 的 Github 地址：https://github.com/GeneralNewsExtractor/GeneralNewsExtractor。算法来自于《基于文本及符号密度的网页正文提取方法》，这个算法是完全基于 HTML 里面的信息来寻找正文。因此，它有一些先天性缺陷：  如果正文只">
@@ -405,7 +405,7 @@
                 
               
 
-              <time title="创建时间：2021-10-07 16:18:23 / 修改时间：16:19:45" itemprop="dateCreated datePublished" datetime="2021-10-07T16:18:23+08:00">2021-10-07</time>
+              <time title="创建时间：2021-10-07 16:18:23 / 修改时间：16:22:29" itemprop="dateCreated datePublished" datetime="2021-10-07T16:18:23+08:00">2021-10-07</time>
             
 
             
@@ -481,6 +481,7 @@
 </ol>
 <p>但如果让人来看网页，就不会搞错。因为正文的位置和评论的位置肯定不一样，版权信息一般在最下面……这些可视化信号，是通过 CSS 来确定的，单纯从 HTML 中是看不到的。</p>
 <p>GNE 输入的HTML，原本就是使用模拟浏览器输出的 HTML，并不是真正的网页源代码。既然如此，在使用模拟浏览器的时候，为什么不直接把每个节点的坐标信息都记录下来呢？在使用模拟浏览器的时候，只需要执行一段 JavaScript 代码，就可以把每个节点是否可见，每个可见节点的长宽高、左上角、右下角的坐标记录下来。这样，GNE 在解析正文的时候，可以参考这些信息，直接移除不可见的节点，并移除尺寸显然不合理、位置显然不正确的节点。从而大大提高正文识别的准确率。</p>
+<a id="more"></a>
 <p>基于可视化信号的提取效果如何呢？我们用一篇新闻来作为例子：<a href="https://www.163.com/dy/article/G33O1QTA05372UZS.html" target="_blank" rel="noopener">广西省发生了一起事件，位置在来宾市，画面曝光</a>。</p>
 <p>首先在浏览器的开发者工具里面，直接复制经过js 渲染后的源代码：</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-07-15-44-28.png" alt></p>
@@ -549,8 +550,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/09/07/2021-09-07/" rel="next" title>
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2021/07/24/build-tunnel-proxy/" rel="next" title="只要5分钟，创建一个隧道代理">
+                <i class="fa fa-chevron-left"></i> 只要5分钟，创建一个隧道代理
               </a>
             
           </div>
@@ -622,7 +623,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">144</span>
+                    <span class="site-state-item-count">143</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

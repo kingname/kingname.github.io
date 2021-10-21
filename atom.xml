@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2021-10-08T15:10:12.767Z</updated>
+  <updated>2021-10-21T13:28:38.070Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：谁说 Scrapy 不能爬 HTTP/2?</title>
+    <link href="https://www.kingname.info/2021/10/21/scrapy-http2/"/>
+    <id>https://www.kingname.info/2021/10/21/scrapy-http2/</id>
+    <published>2021-10-21T13:27:02.000Z</published>
+    <updated>2021-10-21T13:28:38.070Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-15-04-09.png" alt></p><p>之前有一位爬虫大佬写了一篇文章，说 HTTP/2协议天然就能防大部分的爬虫。Python 无论是 requests 还是 Scrapy 都不支持 HTTP/2协议。</p><p><a href="https://http2.golang.org/" target="_blank" rel="noopener">Go + HTTP/2</a>这个网站可以检测你是否使用 HTTP/2协议进行请求。当我们直接使用浏览器访问的时候，页面长这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-51-13.png" alt="注意红框中的文字"></p><p>但如果我们直接使用 Scrapy 访问这个页面，并打印源代码，返回的 HTML 长这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-52-26.png" alt="注意红框中的文字"></p><p>这样看起来，似乎Scrapy 确实不支持HTTP/2协议？</p><a id="more"></a><p>但我为什么总是一直强调要读官方文档，不要去搜索一些垃圾博客呢。因为官方文档里面，已经明确告诉你Scrapy 不仅原生支持 HTTP/2，而且只需要改一个配置就可以了：<a href="https://docs.scrapy.org/en/latest/topics/settings.html#download-handlers-base" target="_blank" rel="noopener">Settings — Scrapy 2.5.0 documentation</a>。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-55-17.png" alt="更换下载器句柄就可以了"></p><p>请大家注意上图中标红色方框的地方。根据它的描述，我只需要在<code>settings.py</code>文件中，更新下载器句柄（handlers）就可以了。我们来测试一下。把下面这段代码直接复制到 Scrapy 爬虫中：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DOWNLOAD_HANDLERS = &#123;</span><br><span class="line">    <span class="string">'https'</span>: <span class="string">'scrapy.core.downloader.handlers.http2.H2DownloadHandler'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-57-55.png" alt></p><p>改好以后，重新运行爬虫，打印出来的源代码如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-59-26.png" alt></p><p>可以看到，不需要安装任何额外的库。Scrapy 原生就支持 HTTP/2了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-15-04-09.png&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;之前有一位爬虫大佬写了一篇文章，说 HTTP/2协议天然就能防大部分的爬虫。Python 无论是 requests 还是 Scrapy 都不支持 HTTP/2协议。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://http2.golang.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Go + HTTP/2&lt;/a&gt;这个网站可以检测你是否使用 HTTP/2协议进行请求。当我们直接使用浏览器访问的时候，页面长这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-51-13.png&quot; alt=&quot;注意红框中的文字&quot;&gt;&lt;/p&gt;
+&lt;p&gt;但如果我们直接使用 Scrapy 访问这个页面，并打印源代码，返回的 HTML 长这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-52-26.png&quot; alt=&quot;注意红框中的文字&quot;&gt;&lt;/p&gt;
+&lt;p&gt;这样看起来，似乎Scrapy 确实不支持HTTP/2协议？&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="爬虫" scheme="https://www.kingname.info/categories/%E7%88%AC%E8%99%AB/"/>
+    
+    
+      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
+    
+      <category term="HTTP/2" scheme="https://www.kingname.info/tags/HTTP-2/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：什么情况使用静态方法和类方法？</title>
@@ -531,30 +563,6 @@
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
       <category term="Selenium" scheme="https://www.kingname.info/tags/Selenium/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：实现有过期时间的LRU缓存</title>
-    <link href="https://www.kingname.info/2020/03/23/lru-with-expire-time/"/>
-    <id>https://www.kingname.info/2020/03/23/lru-with-expire-time/</id>
-    <published>2020-03-23T15:46:52.000Z</published>
-    <updated>2020-03-23T15:47:20.191Z</updated>
-    
-    <content type="html"><![CDATA[<p>在<a href="https://mp.weixin.qq.com/s/F7D9MjGypRj5J1EZVvPv0Q" target="_blank" rel="noopener">一日一技：实现函数调用结果的 LRU 缓存</a>一文中，我们提到Python自带的LRU缓存<code>lru_cache</code>。通过这个装饰器可以非常轻松地实现缓存。</p><a id="more"></a><p>现在我们考虑下面这个应用场景：MongoDB中有100对id-用户名的对应关系，我从Redis中持续不断读取id，如果id能在MongoDB中找到对应关系，那么就把对应的用户名打印出来。如果找不到对应关系，那么就把这个id丢弃。</p><p>为了防止频繁读取MongoDB，我在程序开始的时候直接读取这一百对对应关系，并存为字典：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymongo</span><br><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line">handler = pymongo.MongoClient().weibo.id_name_map</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_id_name_map</span><span class="params">()</span>:</span></span><br><span class="line">    id_name = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> handler.find():</span><br><span class="line">        id_name[row[<span class="string">'id'</span>]] = row[<span class="string">'name'</span>]</span><br><span class="line">    <span class="keyword">return</span> id_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">id_name_map = read_id_name_map()</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    data = client.blpop(<span class="string">'weibo_id'</span>)</span><br><span class="line">    user_id = data[<span class="number">1</span>].decode()</span><br><span class="line">    <span class="keyword">if</span> user_id <span class="keyword">in</span> id_name_map:</span><br><span class="line">        print(id_name_map[user_id])</span><br></pre></td></tr></table></figure><p>大家可以思考一下，上面这段代码有没有什么问题。然后继续看后面。</p><p>如果我现在需要再增加100个id-用户名的对应关系怎么办？</p><p>由于这个程序运行以后就一直阻塞式地读取Redis，不会停止，所以整个过程只会读取一次MongoDB。后面即使我向MongoDB中添加了新的对应关系，只要程序不重启，就无法读取到新的对应关系。</p><p>肯定有同学想到，在while循环里面增加一个计时器，每x分钟就重新调用一下read_id_name_map()函数，更新对应关系。</p><p>不过今天我们要讲的是另一个更有创意的办法，使用<code>lru_cache</code>来实现。</p><p>对于这个例子来说，lru_cache的<code>maxsize</code>参数只需要设置为1，因为只需要存放1份对应关系即可。那么我们如何做到，比如每10分钟更新一次呢？我们知道，在使用lru_cache时，如果调用同一个函数，并且传入的参数相同，那么从第二次开始就会使用缓存。现在我们如何让时间在每10分钟内相同呢？</p><p>我们来看现在的时间戳：1578399211.30042</p><p>它除以600，值是<code>1578399211.30042 // 600 = 2630665.0</code>。然后我让这个时间戳加5分钟，也就是增加300秒，变成<code>1578399511.30042</code>。这个新的时间戳再除以600，发现结果还是<code>2630665.0</code>。但如果原来的时间戳增加超过10分钟，例如增加了601秒，我们再来看看效果<code>(1578399211.30042 + 601) // 600 = 2630666.0</code>，此时的结果也发生了变化。</p><p>利用这个特点，修改一下我们的代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymongo</span><br><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> lru_cache</span><br><span class="line"></span><br><span class="line">client = redis.Redis()</span><br><span class="line">handler = pymongo.MongoClient().weibo.id_name_map</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@lru_cache(maxsize=1)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_id_name_map</span><span class="params">(_)</span>:</span></span><br><span class="line">    id_name = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> handler.find():</span><br><span class="line">        id_name[row[<span class="string">'id'</span>]] = row[<span class="string">'name'</span>]</span><br><span class="line">    <span class="keyword">return</span> id_name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    data = client.blpop(<span class="string">'weibo_id'</span>)</span><br><span class="line">    id_name_map = read_id_name_map(time.time() // <span class="number">600</span>)</span><br><span class="line">    user_id = data[<span class="number">1</span>].decode()</span><br><span class="line">    <span class="keyword">if</span> user_id <span class="keyword">in</span> id_name_map:</span><br><span class="line">        print(id_name_map[user_id])</span><br></pre></td></tr></table></figure><p>现在，我们直接在while循环内部调用<code>read_id_name_map</code>，如果两次调用的时间间隔小于600秒，那么<code>time.time() // 600</code>的值是相同的，第二次直接使用缓存，也就不会查询MongoDB了。当时间超过10分钟后，时间戳除以600的值增加了，于是缓存没有命中，进入查询MongoDB的过程，更新id_name_map。实现了有过期时间的LRU缓存。</p><p>补充：可能有同学注意到定义<code>read_id_name_map</code>函数的时候，参数我写的是下划线。这是Python 编码规范中建议的一种写法。当一个变量不会被使用，但又需要保留时，就可以用下划线表示。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在&lt;a href=&quot;https://mp.weixin.qq.com/s/F7D9MjGypRj5J1EZVvPv0Q&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;一日一技：实现函数调用结果的 LRU 缓存&lt;/a&gt;一文中，我们提到Python自带的LRU缓存&lt;code&gt;lru_cache&lt;/code&gt;。通过这个装饰器可以非常轻松地实现缓存。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-      <category term="LRU" scheme="https://www.kingname.info/tags/LRU/"/>
     
   </entry>
   

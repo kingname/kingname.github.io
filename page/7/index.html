@@ -2658,7 +2658,7 @@ axios.get('https://ja3er.com/json').then((response) => {
     ja3_info = response.data
     ts = Math.floor(Date.now()/ 1000)
     body = {ja3: ja3_info.ja3, ja3_hash: ja3_info.ja3_hash, ua: ja3_info['User-Agent'], ts: ts}
-    axios.post('http://antispider.kingname.info/detect_spider', body).then((resp) => {
+    axios.post('https://antispider.kingname.info/detect_spider', body).then((resp) => {
         // TODO: 根据 score 的值判断该用户是否为爬虫
     })
 })

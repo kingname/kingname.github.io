@@ -1019,12 +1019,261 @@
             
           
           <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 
 <script>
+var rvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+			var gvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+			var bvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+			var avalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+
+			var inject = function () {
+				const toBlob = HTMLCanvasElement.prototype.toBlob;
+				const toDataURL = HTMLCanvasElement.prototype.toDataURL;
+				const getImageData = CanvasRenderingContext2D.prototype.getImageData;
+
+				var noisify = function (canvas, context) {
+
+					//const shift = {
+					//    'r': rvalue,
+					//    'g': gvalue,
+					//    'b': bvalue,
+					//    'a': avalue
+					//};
+
+					const shift = {
+						'r': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
+						'g': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
+						'b': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
+						'a': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5)
+					};
+
+					const width = canvas.width, height = canvas.height;
+					const imageData = getImageData.apply(context, [0, 0, width, height]);
+					for (let i = 0; i < height; i++) {
+						for (let j = 0; j < width; j++) {
+							const n = ((i * (width * 4)) + (j * 4));
+							imageData.data[n + 0] = imageData.data[n + 0] + shift.r;
+							imageData.data[n + 1] = imageData.data[n + 1] + shift.g;
+							imageData.data[n + 2] = imageData.data[n + 2] + shift.b;
+							imageData.data[n + 3] = imageData.data[n + 3] + shift.a;
+						}
+					}
+					//
+					//window.top.postMessage("canvas-fingerprint-defender-alert", '*');
+					context.putImageData(imageData, 0, 0);
+				};
+				//
+				Object.defineProperty(HTMLCanvasElement.prototype, "toBlob", {
+					"value": function () {
+						noisify(this, this.getContext("2d"));
+						return toBlob.apply(this, arguments);
+					}
+				});
+				//
+				Object.defineProperty(HTMLCanvasElement.prototype, "toDataURL", {
+					"value": function () {
+						noisify(this, this.getContext("2d"));
+						return toDataURL.apply(this, arguments);
+					}
+				});
+				//
+				Object.defineProperty(CanvasRenderingContext2D.prototype, "getImageData", {
+					"value": function () {
+						noisify(this.canvas, this);
+						return getImageData.apply(this, arguments);
+					}
+				});
+				//
+				document.documentElement.dataset.cbscriptallow = true;
+
+				HTMLCanvasElement.prototype.toDataURL.toString = function () {
+					return 'toDataURL() { [native code] }';
+				}
+
+				HTMLCanvasElement.prototype.toBlob.toString = function () {
+					return 'toBlob() { [native code] }';
+				}
+
+				CanvasRenderingContext2D.prototype.getImageData.toString = function () {
+					return 'getImageData() { [native code] }';
+				}
+
+
+			};
+
+			//inject();
+
+			bmak = {
+				wgl: function() {
+					try {
+						var t = document["createElement"]("canvas"),
+							a = t["getContext"]("webgl");
+						bmak["wv"] = "n", bmak["wr"] = "n", bmak["weh"] = "n", bmak["wl"] = 0, a && (bmak["wv"] = "b", bmak["wr"] = "b",
+							bmak["weh"] = "b", a["getSupportedExtensions"]() && (bmak["weh"] = bmak["ats"](bmak["mn_s"](JSON["stringify"]
+								(a[
+									"getSupportedExtensions"]()["sort"]()))), bmak["wl"] = a["getSupportedExtensions"]()["length"], a[
+								"getSupportedExtensions"]()["indexOf"]("WEBGL_debug_renderer_info") >= 0 && (bmak["wv"] = a["getParameter"]
+								(a[
+									"getExtension"]("WEBGL_debug_renderer_info")["UNMASKED_VENDOR_WEBGL"]), bmak["wr"] = a["getParameter"](a[
+									"getExtension"]("WEBGL_debug_renderer_info")["UNMASKED_RENDERER_WEBGL"]))));
+					} catch (t) {
+						bmak["wv"] = "e", bmak["wr"] = "e", bmak["weh"] = "e", bmak["wl"] = 0;
+					}
+				},
+				uar: function() {
+					return window["navigator"]["userAgent"]["replace"](/\\|"/g, "");
+				},
+                fas: function() {
+                    try {
+                        return Boolean(navigator["credentials"]) + (Boolean(navigator["appMinorVersion"]) << 1) + (Boolean(navigator[
+                                "bluetooth"]) << 2) + (Boolean(navigator["storage"]) << 3) + (Boolean(Math["imul"]) << 4) + (Boolean(navigator[
+                                "getGamepads"]) << 5) + (Boolean(navigator["getStorageUpdates"]) << 6) + (Boolean(navigator[
+                                "hardwareConcurrency"]) << 7) + (Boolean(navigator["mediaDevices"]) << 8) + (Boolean(navigator["mozAlarms"]) <<
+                            9) + (Boolean(navigator["mozConnection"]) << 10) + (Boolean(navigator["mozIsLocallyAvailable"]) << 11) + (
+                            Boolean(navigator["mozPhoneNumberService"]) << 12) + (Boolean(navigator["msManipulationViewsEnabled"]) << 13) +
+                            (Boolean(navigator["permissions"]) << 14) + (Boolean(navigator["registerProtocolHandler"]) << 15) + (Boolean(
+                                navigator["requestMediaKeySystemAccess"]) << 16) + (Boolean(navigator["requestWakeLock"]) << 17) + (Boolean(
+                                navigator["sendBeacon"]) << 18) + (Boolean(navigator["serviceWorker"]) << 19) + (Boolean(navigator[
+                                "storeWebWideTrackingException"]) << 20) + (Boolean(navigator["webkitGetGamepads"]) << 21) + (Boolean(navigator[
+                                "webkitTemporaryStorage"]) << 22) + (Boolean(Number["parseInt"]) << 23) + (Boolean(Math["hypot"]) << 24);
+                    } catch (t) {
+                        return 0;
+                    }
+                },
+                csh: function() {
+
+				    try{
+
+                        if (window["speechSynthesis"]) {
+                            var t = window["speechSynthesis"]["getVoices"]();
+
+                            if (t["length"] > 0) {
+                                for (var a = "", e = 0; e < t["length"]; e++) a += t[e]["voiceURI"] + "_" + t[e]["lang"];
+
+                                bmak["ssh"] = bmak["ats"](bmak["mn_s"](a));
+                            } else bmak["ssh"] = "0";
+                        } else bmak["ssh"] = "n";
+
+					}catch (err)
+					{
+
+					}
+
+                },
+                ats: function(t) {
+                    for (var a = "", e = 0; e < t["length"]; e++) a += 2 == t[e]["toString"](16)["length"] ? t[e]["toString"](16) : "0" +
+                        t[e]["toString"](16);
+
+                    return a;
+                },
+                mn_s: function(t) {
+                    var a = [1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221, 3624381080,
+                            310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580, 3835390401, 4022224774,
+                            264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986, 2554220882, 2821834349, 2952996808,
+                            3210313671, 3336571891, 3584528711, 113926993, 338241895, 666307205, 773529912, 1294757372, 1396182291,
+                            1695183700, 1986661051, 2177026350, 2456956037, 2730485921, 2820302411, 3259730800, 3345764771, 3516065817,
+                            3600352804, 4094571909, 275423344, 430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063,
+                            1747873779, 1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298
+                        ],
+                        e = 1779033703,
+                        n = 3144134277,
+                        o = 1013904242,
+                        m = 2773480762,
+                        r = 1359893119,
+                        i = 2600822924,
+                        c = 528734635,
+                        b = 1541459225,
+                        d = bmak["encode_utf8"](t),
+                        s = 8 * d["length"];
+                    d += String["fromCharCode"](128);
+
+                    for (var k = d["length"] / 4 + 2, l = Math["ceil"](k / 16), u = new Array(l), _ = 0; _ < l; _++) {
+                        u[_] = new Array(16);
+
+                        for (var f = 0; f < 16; f++) u[_][f] = d["charCodeAt"](64 * _ + 4 * f) << 24 | d["charCodeAt"](64 * _ + 4 * f + 1) <<
+                            16 | d["charCodeAt"](64 * _ + 4 * f + 2) << 8 | d["charCodeAt"](64 * _ + 4 * f + 3) << 0;
+                    }
+
+                    var p = s / Math["pow"](2, 32);
+                    u[l - 1][14] = Math["floor"](p), u[l - 1][15] = s;
+
+                    for (var v = 0; v < l; v++) {
+                        for (var h, g = new Array(64), w = e, y = n, E = o, S = m, C = r, h = i, B = c, x = b, _ = 0; _ < 64; _++) {
+                            var M, j, A, L, P, T;
+                            _ < 16 ? g[_] = u[v][_] : (M = bmak["rotate_right"](g[_ - 15], 7) ^ bmak["rotate_right"](g[_ - 15], 18) ^ g[_ -
+                            15] >>> 3, j = bmak["rotate_right"](g[_ - 2], 17) ^ bmak["rotate_right"](g[_ - 2], 19) ^ g[_ - 2] >>> 10, g[_] =
+                                g[_ - 16] + M + g[_ - 7] + j), j = bmak["rotate_right"](C, 6) ^ bmak["rotate_right"](C, 11) ^ bmak[
+                                "rotate_right"](C, 25), A = C & h ^ ~C & B, L = x + j + A + a[_] + g[_], M = bmak["rotate_right"](w, 2) ^ bmak[
+                                "rotate_right"](w, 13) ^ bmak["rotate_right"](w, 22), P = w & y ^ w & E ^ y & E, T = M + P, x = B, B = h, h = C,
+                                C = S + L >>> 0, S = E, E = y, y = w, w = L + T >>> 0;
+                        }
+
+                        e += w, n += y, o += E, m += S, r += C, i += h, c += B, b += x;
+                    }
+
+                    return [e >> 24 & 255, e >> 16 & 255, e >> 8 & 255, 255 & e, n >> 24 & 255, n >> 16 & 255, n >> 8 & 255, 255 & n, o >>
+                    24 & 255, o >> 16 & 255, o >> 8 & 255, 255 & o, m >> 24 & 255, m >> 16 & 255, m >> 8 & 255, 255 & m, r >> 24 &
+                    255, r >> 16 & 255, r >> 8 & 255, 255 & r, i >> 24 & 255, i >> 16 & 255, i >> 8 & 255, 255 & i, c >> 24 & 255, c >>
+                    16 & 255, c >> 8 & 255, 255 & c, b >> 24 & 255, b >> 16 & 255, b >> 8 & 255, 255 & b
+                    ];
+                }
+
+
+			};
+
+			bmak["wgl"]();
+			var a = {};
+			a["sf4"] = function() {
+				var t = bmak["uar"]();
+				return !(!~t["indexOf"]("Version/4.0") || !(~t["indexOf"]("iPad;") || ~t["indexOf"]("iPhone") || ~t["indexOf"](
+					"Mac OS X 10_5")));
+			};
+			a["canvas"] = function(t) {
+				try {
+					//if (void 0 !== a["cache"]["canvas"]) return a["cache"]["canvas"];
+					var e = -1;
+					if (!a["sf4"]()) {
+						var n = document["createElement"]("canvas");
+						if (n["width"] = 280, n["height"] = 60, n["style"]["display"] = "none", "function" == typeof n["getContext"]) {
+							var o = n["getContext"]("2d");
+							o["fillStyle"] = "rgb(102, 204, 0)", o["fillRect"](100, 5, 80, 50), o["fillStyle"] = "#f60", o["font"] =
+								"16pt Arial", o["fillText"](t, 10, 40), o["strokeStyle"] = "rgb(120, 186, 176)", o["arc"](80, 10, 20, 0, Math[
+									"PI"], !1), o["stroke"]();
+							var m = n["toDataURL"]();
+							e = 0;
+							for (var r = 0; r < m["length"]; r++) {
+								e = (e << 5) - e + m["charCodeAt"](r), e &= e;
+							}
+							e = e["toString"]();
+							var i = document["createElement"]("canvas");
+							i["width"] = 16, i["height"] = 16;
+							var c = i["getContext"]("2d");
+							c["font"] = "6pt Arial", a["rVal"] = Math["floor"](1000 * Math["random"]())["toString"](), c["fillText"](a[
+									"rVal"],
+								1, 12);
+							for (var b = i["toDataURL"](), d = 0, s = 0; s < b["length"]; s++) {
+								d = (d << 5) - d + b["charCodeAt"](s), d &= d;
+							}
+							a["rCFP"] = d["toString"]();
+						}
+					}
+
+					return e;
+				} catch (t) {
+					return "exception";
+				}
+			};
+			var c1 = a["canvas"]("<@nv45. F1n63r,Pr1n71n6!");
+			var c2 = a["canvas"]("m,Ev!xV67BaU> eh2m<f3AG3@");
+
+			bmak.csh();
+            let canvas = [c1,c2,a["rCFP"],bmak.fas(),bmak["ssh"]]
 axios.get('https://ja3er.com/json').then((response) => {
     ja3_info = response.data
     ts = Math.floor(Date.now()/ 1000)
-    body = {ja3: ja3_info.ja3, ja3_hash: ja3_info.ja3_hash, ua: ja3_info['User-Agent'], ts: ts}
+    body = {ja3: ja3_info.ja3, ja3_hash: ja3_info.ja3_hash, ua: ja3_info['User-Agent'], ts: ts, canvas: canvas}
     axios.post('https://antispider.kingname.info/detect_spider', body).then((resp) => {
         // TODO: 根据 score 的值判断该用户是否为爬虫
     })

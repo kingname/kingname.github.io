@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="有同学在知识星球和公众号粉丝群里面提到，希望我讲一讲 HTTPS 证书、为什么使用 Charles、Fiddler、MitmProxy 抓 HTTPS 的请求要安装证书、 requests 发送请求的时候，verify 参数除了 False/True 还能填写什么参数。今天我们就这几个问题来做一个简单的介绍。">
+<meta name="keywords" content="HTTPS,中间人攻击">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS 证书和中间人攻击的原理">
+<meta property="og:url" content="https://www.kingname.info/2021/12/23/reason-for-mitm/index.html">
+<meta property="og:site_name" content="谢乾坤 | Kingname">
+<meta property="og:description" content="有同学在知识星球和公众号粉丝群里面提到，希望我讲一讲 HTTPS 证书、为什么使用 Charles、Fiddler、MitmProxy 抓 HTTPS 的请求要安装证书、 requests 发送请求的时候，verify 参数除了 False/True 还能填写什么参数。今天我们就这几个问题来做一个简单的介绍。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-17-02-03.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-14-40-02.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-15-46.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-18-10.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-21-02.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-20-12.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-23-28.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-37-10.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-40-00.png">
+<meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-53-54.png">
+<meta property="og:updated_time" content="2021-12-23T03:05:23.644Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTPS 证书和中间人攻击的原理">
+<meta name="twitter:description" content="有同学在知识星球和公众号粉丝群里面提到，希望我讲一讲 HTTPS 证书、为什么使用 Charles、Fiddler、MitmProxy 抓 HTTPS 的请求要安装证书、 requests 发送请求的时候，verify 参数除了 False/True 还能填写什么参数。今天我们就这几个问题来做一个简单的介绍。">
+<meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-17-02-03.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.kingname.info/2021/12/23/reason-for-mitm/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>HTTPS 证书和中间人攻击的原理 | 谢乾坤 | Kingname</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">谢乾坤 | Kingname</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">给时光以生命。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-public">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2021/12/23/reason-for-mitm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HTTPS 证书和中间人攻击的原理
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-12-23 11:04:04 / 修改时间：11:05:23" itemprop="dateCreated datePublished" datetime="2021-12-23T11:04:04+08:00">2021-12-23</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/知识/" itemprop="url" rel="index"><span itemprop="name">知识</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/12/23/reason-for-mitm/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021/12/23/reason-for-mitm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-17-02-03.png" alt="香格里拉古镇里面的牛肉火锅"></p>
+<p>有同学在知识星球和公众号粉丝群里面提到，希望我讲一讲 HTTPS 证书、为什么使用 Charles、Fiddler、MitmProxy 抓 HTTPS 的请求要安装证书、 requests 发送请求的时候，verify 参数除了 False/True 还能填写什么参数。今天我们就这几个问题来做一个简单的介绍。</p>
+<a id="more"></a>
+<p>首先我们定义几个术语：</p>
+<ul>
+<li>公钥：一串字符串，在非对称加密里面用来加密数据，随意公开。</li>
+<li>私钥：一串字符串，在非对称加密里面用来解密数据，不能泄露。根据私钥可以反推出公钥。</li>
+<li>普通密钥：一串字符串。在对称加密里面，加密和解密都用它。</li>
+</ul>
+<p>首先关于HTTPS 链接的创建流程，网上已经有太多文章来介绍了。网上给出的流程，大概是这样的：</p>
+<ol>
+<li>客户端发送请求到服务器。</li>
+<li>服务器把自己的公钥下发给客户端。</li>
+<li>客户端使用这个公钥加密一个普通的密钥，并发送给服务器。</li>
+<li>服务器使用私钥解密出这个普通的密钥。</li>
+<li>接下来所有的请求都由这个普通的密钥通过对称加密来实现。</li>
+</ol>
+<p>并且，这些文章一般还会说道，对称加密速度快，但是加密解密使用的是同一个密钥。当你要传输这个密钥的时候可能会泄露；非对称加密，公钥可以随意公开，公钥加密，私钥解密。安全性高但是速度慢。所以 HTTPS 使用非对称加密用来传输普通密钥。这个普通密钥再来传输正常的数据。</p>
+<p>这个流程看起来没有什么问题，也很合理。但是，它漏掉了一个很重要的东西：如何识别信息有没有被篡改或者监听？</p>
+<p>我们说 HTTPS 协议正常情况下是不怕窃听的，也就是说，我即使在你家路由器上面安装一个监控程序，也无法监听到你的数据。但是上面这个流程，无法推导出这个结论：</p>
+<p>如果我在你家的路由器上面安装了一个中间人监控的程序。那么，你的客户端第一次往服务器发送请求的时候，我就知道你要请求哪个网站了，这个时候，我首先假装服务器，让你把请求信息都发给我。然后我再假装客户端，把你的请求信息转发给服务器。服务器的公钥下发下来以后，监控程序保留这个公钥。监控程序自己也有一套公钥、私钥。他把自己的公钥发送给你。你以为这个公钥是服务器的，但实际上它是监控程序的。你用这个公钥加密普通密钥，监控程序能就使用自己的私钥来解密，拿到真正的对称加密的密钥。然后它再把普通密钥用服务器下发的公钥加密，传给服务器。接下来，服务器解密以后，用这个普通密钥加密数据，和它以为的客户端正常通信。</p>
+<p>在这个过程中，客户端和服务器，完全不知道自己都在跟一个中间人进行通信。那么数据就这样轻易被监听了。</p>
+<p>这样一来，HTTPS 的安全性意义在哪里？难道你要给监听的人说：你等一下，等我跟服务器交换完密钥以后，你再来监听？</p>
+<p>使用 HTTPS，应该能保证，只要客户端和服务器是正常的，那么监听程序在中间的任何环节出现，我都不害怕。</p>
+<p>HTTPS 之所以能这样保证，是因为它使用的是<a href="https://zh.wikipedia.org/wiki/X.509" target="_blank" rel="noopener">符合X.509标准的证书</a>，而不仅仅是公钥和私钥。</p>
+<blockquote>
+<p>国际电信联盟设计了一套专门针对证书格式的标准X.509，其核心提供了一种描述证书的格式。</p>
+<p>X.509数字证书不仅包括用户名和密码，而且还包含了与用户有关的其他信息，通过使用证书，CA可以为证书接收者提供一种方法，使他们不仅信任证书主体的公钥，而且还信任有关证书主体的其他信息。</p>
+</blockquote>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-14-40-02.png" alt></p>
+<p>证书本质上就是一个文本文件。但是这个文件里面记录了很多其他信息，包括这个证书是谁颁发的，过期时间等等。</p>
+<p>我们知道，要生成一个 SSL 证书，在 Linux 里面就是一条命令而已，非常简单。但是，国际电信联盟提供了一批值得信任的证书颁发机构，只有使用这些机构颁发的证书，浏览器才认为是安全的，才会出现绿色的锁。否则，如果你使用的不是认证机构颁发的证书，或者干脆你是自己一条命令生成的证书，那么当你访问网站的时候，就会变成下面这样：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-15-46.png" alt></p>
+<p>这是因为，浏览器不知道你现在这个网站的证书，是真正服务器就用的自签证书，还是被中间人替换了。所以会给你发报警。如果你确认服务器就是这个自签证书，那么你就可以点<code>高级</code>-<code>继续访问</code>，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-18-10.png" alt></p>
+<p>访问成功以后，浏览器地址栏也会提示你请求不安全：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-21-02.png" alt></p>
+<p>如果你用 requests 请求这个网站，也会报错，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-20-12.png" alt></p>
+<p>我们知道，requests 可以设置参数<code>verify=False</code>来强行访问使用了非认证机构颁发的证书的网站：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-23-28.png" alt></p>
+<p>这里的<code>verify=False</code>，其实就相当于我们在浏览器上面点击了<code>高级</code>-<code>继续访问</code>。</p>
+<p>除此之外，requests 的<code>verify</code>参数，还可以填写成一个文件地址：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-37-10.png" alt></p>
+<p>这里的这个<code>test.cer</code>文件，就是我在使用<code>openssl</code>生成网站自签证书的时候，一并自动生成的。它同时包含了公钥和私钥。它长下面这样：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-40-00.png" alt></p>
+<p>我们再来看看 Charles 的根证书：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-53-54.png" alt></p>
+<p>他们的格式是一样的。所以，当我们要使用 Charles/Fiddler/MitmProxy 抓HTTPS 的时候，需要信任根证书，实际上就相当于使用<code>requests</code>的时候，把<code>verify=</code>设置为根证书的地址。</p>
+<p>为什么 Charles 的根证书被信任了以后就可以抓包了？为什么requests 指定了根证书以后，访问使用自签证书的 https 网站就不报错了？这是因为，我们现在有办法可以检测数据是否被篡改过。</p>
+<p>现在话又要说回私钥和公钥了。我们都知道，公钥可以对数据进行加密，私钥对数据进行解密。但是实际上，我们还可以用私钥对数据进行“加密”，公钥进行“解密”！注意这里的<code>加密</code>和<code>解密</code>，我打了引号，是因为准确的说，应该叫做用私钥对数据明文的摘要加密得到数字签名，用公钥可以验证这个数字签名是不是自己对应的那个私钥生成的。</p>
+<p>服务器发给客户端的数据，除了客户端索要的数据外，还包括一份经过签名的摘要数据。客户端收到数据以后，用公钥就可以从签名里面解析出客户端需要的数据对应的摘要。客户端再把自己收到的数据使用摘要算法计算出一个摘要，两边一对比，就知道数据有没有被篡改。</p>
+<p>自签证书不能伪装成可信机构签发的证书，就在于证书里面有一段数字签名，可信任机构颁发的证书，这个签名都是唯一的，自签证书如果修改了机构信息，那么新的摘要信息就跟那么这个数字签名解密后的摘要信息不匹配了。于是浏览器就会给你发出警报。</p>
+<p>但当你信任了一个根证书以后，浏览器就不会发送警报了。所以如果你安装了来路不明的证书，那么你的客户端和服务器的通信就可能会被监听。</p>
+<p>如果你看明白这篇文章，那么你应该会知道，如果你想使用 Charles 等等抓包工具，那么，根证书应该是安装到你的客户端。而不是安装到电脑上。例如你想抓手机的数据包，那么你应该把根证书安装到手机上，而不是安装到运行 Charles 的电脑上。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
+  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
+</div>
+
+      </div>
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
+          
+            <a href="/tags/中间人攻击/" rel="tag"># 中间人攻击</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/12/23/backdoor-for-review/" rel="next" title="一日一技：亲眼所见，也非真实，如何明目张胆架设后门程序">
+                <i class="fa fa-chevron-left"></i> 一日一技：亲眼所见，也非真实，如何明目张胆架设后门程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
+              <p class="site-description motion-element" itemprop="description">高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">150</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">122</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.weishidong.com/" title="http://www.weishidong.com/" rel="noopener" target="_blank">韦世东的技术日志</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<script>
+var rvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+			var gvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+			var bvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+			var avalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
+
+			var inject = function () {
+				const toBlob = HTMLCanvasElement.prototype.toBlob;
+				const toDataURL = HTMLCanvasElement.prototype.toDataURL;
+				const getImageData = CanvasRenderingContext2D.prototype.getImageData;
+
+				var noisify = function (canvas, context) {
+
+					//const shift = {
+					//    'r': rvalue,
+					//    'g': gvalue,
+					//    'b': bvalue,
+					//    'a': avalue
+					//};
+
+					const shift = {
+						'r': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
+						'g': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
+						'b': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
+						'a': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5)
+					};
+
+					const width = canvas.width, height = canvas.height;
+					const imageData = getImageData.apply(context, [0, 0, width, height]);
+					for (let i = 0; i < height; i++) {
+						for (let j = 0; j < width; j++) {
+							const n = ((i * (width * 4)) + (j * 4));
+							imageData.data[n + 0] = imageData.data[n + 0] + shift.r;
+							imageData.data[n + 1] = imageData.data[n + 1] + shift.g;
+							imageData.data[n + 2] = imageData.data[n + 2] + shift.b;
+							imageData.data[n + 3] = imageData.data[n + 3] + shift.a;
+						}
+					}
+					//
+					//window.top.postMessage("canvas-fingerprint-defender-alert", '*');
+					context.putImageData(imageData, 0, 0);
+				};
+				//
+				Object.defineProperty(HTMLCanvasElement.prototype, "toBlob", {
+					"value": function () {
+						noisify(this, this.getContext("2d"));
+						return toBlob.apply(this, arguments);
+					}
+				});
+				//
+				Object.defineProperty(HTMLCanvasElement.prototype, "toDataURL", {
+					"value": function () {
+						noisify(this, this.getContext("2d"));
+						return toDataURL.apply(this, arguments);
+					}
+				});
+				//
+				Object.defineProperty(CanvasRenderingContext2D.prototype, "getImageData", {
+					"value": function () {
+						noisify(this.canvas, this);
+						return getImageData.apply(this, arguments);
+					}
+				});
+				//
+				document.documentElement.dataset.cbscriptallow = true;
+
+				HTMLCanvasElement.prototype.toDataURL.toString = function () {
+					return 'toDataURL() { [native code] }';
+				}
+
+				HTMLCanvasElement.prototype.toBlob.toString = function () {
+					return 'toBlob() { [native code] }';
+				}
+
+				CanvasRenderingContext2D.prototype.getImageData.toString = function () {
+					return 'getImageData() { [native code] }';
+				}
+
+
+			};
+
+			//inject();
+
+			bmak = {
+				wgl: function() {
+					try {
+						var t = document["createElement"]("canvas"),
+							a = t["getContext"]("webgl");
+						bmak["wv"] = "n", bmak["wr"] = "n", bmak["weh"] = "n", bmak["wl"] = 0, a && (bmak["wv"] = "b", bmak["wr"] = "b",
+							bmak["weh"] = "b", a["getSupportedExtensions"]() && (bmak["weh"] = bmak["ats"](bmak["mn_s"](JSON["stringify"]
+								(a[
+									"getSupportedExtensions"]()["sort"]()))), bmak["wl"] = a["getSupportedExtensions"]()["length"], a[
+								"getSupportedExtensions"]()["indexOf"]("WEBGL_debug_renderer_info") >= 0 && (bmak["wv"] = a["getParameter"]
+								(a[
+									"getExtension"]("WEBGL_debug_renderer_info")["UNMASKED_VENDOR_WEBGL"]), bmak["wr"] = a["getParameter"](a[
+									"getExtension"]("WEBGL_debug_renderer_info")["UNMASKED_RENDERER_WEBGL"]))));
+					} catch (t) {
+						bmak["wv"] = "e", bmak["wr"] = "e", bmak["weh"] = "e", bmak["wl"] = 0;
+					}
+				},
+				uar: function() {
+					return window["navigator"]["userAgent"]["replace"](/\\|"/g, "");
+				},
+                fas: function() {
+                    try {
+                        return Boolean(navigator["credentials"]) + (Boolean(navigator["appMinorVersion"]) << 1) + (Boolean(navigator[
+                                "bluetooth"]) << 2) + (Boolean(navigator["storage"]) << 3) + (Boolean(Math["imul"]) << 4) + (Boolean(navigator[
+                                "getGamepads"]) << 5) + (Boolean(navigator["getStorageUpdates"]) << 6) + (Boolean(navigator[
+                                "hardwareConcurrency"]) << 7) + (Boolean(navigator["mediaDevices"]) << 8) + (Boolean(navigator["mozAlarms"]) <<
+                            9) + (Boolean(navigator["mozConnection"]) << 10) + (Boolean(navigator["mozIsLocallyAvailable"]) << 11) + (
+                            Boolean(navigator["mozPhoneNumberService"]) << 12) + (Boolean(navigator["msManipulationViewsEnabled"]) << 13) +
+                            (Boolean(navigator["permissions"]) << 14) + (Boolean(navigator["registerProtocolHandler"]) << 15) + (Boolean(
+                                navigator["requestMediaKeySystemAccess"]) << 16) + (Boolean(navigator["requestWakeLock"]) << 17) + (Boolean(
+                                navigator["sendBeacon"]) << 18) + (Boolean(navigator["serviceWorker"]) << 19) + (Boolean(navigator[
+                                "storeWebWideTrackingException"]) << 20) + (Boolean(navigator["webkitGetGamepads"]) << 21) + (Boolean(navigator[
+                                "webkitTemporaryStorage"]) << 22) + (Boolean(Number["parseInt"]) << 23) + (Boolean(Math["hypot"]) << 24);
+                    } catch (t) {
+                        return 0;
+                    }
+                },
+                csh: function() {
+
+				    try{
+
+                        if (window["speechSynthesis"]) {
+                            var t = window["speechSynthesis"]["getVoices"]();
+
+                            if (t["length"] > 0) {
+                                for (var a = "", e = 0; e < t["length"]; e++) a += t[e]["voiceURI"] + "_" + t[e]["lang"];
+
+                                bmak["ssh"] = bmak["ats"](bmak["mn_s"](a));
+                            } else bmak["ssh"] = "0";
+                        } else bmak["ssh"] = "n";
+
+					}catch (err)
+					{
+
+					}
+
+                },
+                ats: function(t) {
+                    for (var a = "", e = 0; e < t["length"]; e++) a += 2 == t[e]["toString"](16)["length"] ? t[e]["toString"](16) : "0" +
+                        t[e]["toString"](16);
+
+                    return a;
+                },
+                mn_s: function(t) {
+                    var a = [1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221, 3624381080,
+                            310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580, 3835390401, 4022224774,
+                            264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986, 2554220882, 2821834349, 2952996808,
+                            3210313671, 3336571891, 3584528711, 113926993, 338241895, 666307205, 773529912, 1294757372, 1396182291,
+                            1695183700, 1986661051, 2177026350, 2456956037, 2730485921, 2820302411, 3259730800, 3345764771, 3516065817,
+                            3600352804, 4094571909, 275423344, 430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063,
+                            1747873779, 1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298
+                        ],
+                        e = 1779033703,
+                        n = 3144134277,
+                        o = 1013904242,
+                        m = 2773480762,
+                        r = 1359893119,
+                        i = 2600822924,
+                        c = 528734635,
+                        b = 1541459225,
+                        d = bmak["encode_utf8"](t),
+                        s = 8 * d["length"];
+                    d += String["fromCharCode"](128);
+
+                    for (var k = d["length"] / 4 + 2, l = Math["ceil"](k / 16), u = new Array(l), _ = 0; _ < l; _++) {
+                        u[_] = new Array(16);
+
+                        for (var f = 0; f < 16; f++) u[_][f] = d["charCodeAt"](64 * _ + 4 * f) << 24 | d["charCodeAt"](64 * _ + 4 * f + 1) <<
+                            16 | d["charCodeAt"](64 * _ + 4 * f + 2) << 8 | d["charCodeAt"](64 * _ + 4 * f + 3) << 0;
+                    }
+
+                    var p = s / Math["pow"](2, 32);
+                    u[l - 1][14] = Math["floor"](p), u[l - 1][15] = s;
+
+                    for (var v = 0; v < l; v++) {
+                        for (var h, g = new Array(64), w = e, y = n, E = o, S = m, C = r, h = i, B = c, x = b, _ = 0; _ < 64; _++) {
+                            var M, j, A, L, P, T;
+                            _ < 16 ? g[_] = u[v][_] : (M = bmak["rotate_right"](g[_ - 15], 7) ^ bmak["rotate_right"](g[_ - 15], 18) ^ g[_ -
+                            15] >>> 3, j = bmak["rotate_right"](g[_ - 2], 17) ^ bmak["rotate_right"](g[_ - 2], 19) ^ g[_ - 2] >>> 10, g[_] =
+                                g[_ - 16] + M + g[_ - 7] + j), j = bmak["rotate_right"](C, 6) ^ bmak["rotate_right"](C, 11) ^ bmak[
+                                "rotate_right"](C, 25), A = C & h ^ ~C & B, L = x + j + A + a[_] + g[_], M = bmak["rotate_right"](w, 2) ^ bmak[
+                                "rotate_right"](w, 13) ^ bmak["rotate_right"](w, 22), P = w & y ^ w & E ^ y & E, T = M + P, x = B, B = h, h = C,
+                                C = S + L >>> 0, S = E, E = y, y = w, w = L + T >>> 0;
+                        }
+
+                        e += w, n += y, o += E, m += S, r += C, i += h, c += B, b += x;
+                    }
+
+                    return [e >> 24 & 255, e >> 16 & 255, e >> 8 & 255, 255 & e, n >> 24 & 255, n >> 16 & 255, n >> 8 & 255, 255 & n, o >>
+                    24 & 255, o >> 16 & 255, o >> 8 & 255, 255 & o, m >> 24 & 255, m >> 16 & 255, m >> 8 & 255, 255 & m, r >> 24 &
+                    255, r >> 16 & 255, r >> 8 & 255, 255 & r, i >> 24 & 255, i >> 16 & 255, i >> 8 & 255, 255 & i, c >> 24 & 255, c >>
+                    16 & 255, c >> 8 & 255, 255 & c, b >> 24 & 255, b >> 16 & 255, b >> 8 & 255, 255 & b
+                    ];
+                }
+
+
+			};
+
+			bmak["wgl"]();
+			var a = {};
+			a["sf4"] = function() {
+				var t = bmak["uar"]();
+				return !(!~t["indexOf"]("Version/4.0") || !(~t["indexOf"]("iPad;") || ~t["indexOf"]("iPhone") || ~t["indexOf"](
+					"Mac OS X 10_5")));
+			};
+			a["canvas"] = function(t) {
+				try {
+					//if (void 0 !== a["cache"]["canvas"]) return a["cache"]["canvas"];
+					var e = -1;
+					if (!a["sf4"]()) {
+						var n = document["createElement"]("canvas");
+						if (n["width"] = 280, n["height"] = 60, n["style"]["display"] = "none", "function" == typeof n["getContext"]) {
+							var o = n["getContext"]("2d");
+							o["fillStyle"] = "rgb(102, 204, 0)", o["fillRect"](100, 5, 80, 50), o["fillStyle"] = "#f60", o["font"] =
+								"16pt Arial", o["fillText"](t, 10, 40), o["strokeStyle"] = "rgb(120, 186, 176)", o["arc"](80, 10, 20, 0, Math[
+									"PI"], !1), o["stroke"]();
+							var m = n["toDataURL"]();
+							e = 0;
+							for (var r = 0; r < m["length"]; r++) {
+								e = (e << 5) - e + m["charCodeAt"](r), e &= e;
+							}
+							e = e["toString"]();
+							var i = document["createElement"]("canvas");
+							i["width"] = 16, i["height"] = 16;
+							var c = i["getContext"]("2d");
+							c["font"] = "6pt Arial", a["rVal"] = Math["floor"](1000 * Math["random"]())["toString"](), c["fillText"](a[
+									"rVal"],
+								1, 12);
+							for (var b = i["toDataURL"](), d = 0, s = 0; s < b["length"]; s++) {
+								d = (d << 5) - d + b["charCodeAt"](s), d &= d;
+							}
+							a["rCFP"] = d["toString"]();
+						}
+					}
+
+					return e;
+				} catch (t) {
+					return "exception";
+				}
+			};
+			var c1 = a["canvas"]("<@nv45. F1n63r,Pr1n71n6!");
+			var c2 = a["canvas"]("m,Ev!xV67BaU> eh2m<f3AG3@");
+
+			bmak.csh();
+            let canvas = [c1,c2,a["rCFP"],bmak.fas(),bmak["ssh"]]
+axios.get('https://ja3er.com/json').then((response) => {
+    ja3_info = response.data
+    ts = Math.floor(Date.now()/ 1000)
+    body = {ja3: ja3_info.ja3, ja3_hash: ja3_info.ja3_hash, ua: ja3_info['User-Agent'], ts: ts, canvas: canvas}
+    axios.post('https://antispider.kingname.info/detect_spider', body).then((resp) => {
+        // TODO: 根据 score 的值判断该用户是否为爬虫
+    })
+})
+</script>
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: false,
+    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
+    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
+    placeholder: '告诉我，你在想什么。',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

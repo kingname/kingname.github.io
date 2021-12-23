@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2021-12-23T02:59:23.907Z</updated>
+  <updated>2021-12-23T03:05:23.644Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HTTPS 证书和中间人攻击的原理</title>
+    <link href="https://www.kingname.info/2021/12/23/reason-for-mitm/"/>
+    <id>https://www.kingname.info/2021/12/23/reason-for-mitm/</id>
+    <published>2021-12-23T03:04:04.000Z</published>
+    <updated>2021-12-23T03:05:23.644Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-17-02-03.png" alt="香格里拉古镇里面的牛肉火锅"></p><p>有同学在知识星球和公众号粉丝群里面提到，希望我讲一讲 HTTPS 证书、为什么使用 Charles、Fiddler、MitmProxy 抓 HTTPS 的请求要安装证书、 requests 发送请求的时候，verify 参数除了 False/True 还能填写什么参数。今天我们就这几个问题来做一个简单的介绍。</p><a id="more"></a><p>首先我们定义几个术语：</p><ul><li>公钥：一串字符串，在非对称加密里面用来加密数据，随意公开。</li><li>私钥：一串字符串，在非对称加密里面用来解密数据，不能泄露。根据私钥可以反推出公钥。</li><li>普通密钥：一串字符串。在对称加密里面，加密和解密都用它。</li></ul><p>首先关于HTTPS 链接的创建流程，网上已经有太多文章来介绍了。网上给出的流程，大概是这样的：</p><ol><li>客户端发送请求到服务器。</li><li>服务器把自己的公钥下发给客户端。</li><li>客户端使用这个公钥加密一个普通的密钥，并发送给服务器。</li><li>服务器使用私钥解密出这个普通的密钥。</li><li>接下来所有的请求都由这个普通的密钥通过对称加密来实现。</li></ol><p>并且，这些文章一般还会说道，对称加密速度快，但是加密解密使用的是同一个密钥。当你要传输这个密钥的时候可能会泄露；非对称加密，公钥可以随意公开，公钥加密，私钥解密。安全性高但是速度慢。所以 HTTPS 使用非对称加密用来传输普通密钥。这个普通密钥再来传输正常的数据。</p><p>这个流程看起来没有什么问题，也很合理。但是，它漏掉了一个很重要的东西：如何识别信息有没有被篡改或者监听？</p><p>我们说 HTTPS 协议正常情况下是不怕窃听的，也就是说，我即使在你家路由器上面安装一个监控程序，也无法监听到你的数据。但是上面这个流程，无法推导出这个结论：</p><p>如果我在你家的路由器上面安装了一个中间人监控的程序。那么，你的客户端第一次往服务器发送请求的时候，我就知道你要请求哪个网站了，这个时候，我首先假装服务器，让你把请求信息都发给我。然后我再假装客户端，把你的请求信息转发给服务器。服务器的公钥下发下来以后，监控程序保留这个公钥。监控程序自己也有一套公钥、私钥。他把自己的公钥发送给你。你以为这个公钥是服务器的，但实际上它是监控程序的。你用这个公钥加密普通密钥，监控程序能就使用自己的私钥来解密，拿到真正的对称加密的密钥。然后它再把普通密钥用服务器下发的公钥加密，传给服务器。接下来，服务器解密以后，用这个普通密钥加密数据，和它以为的客户端正常通信。</p><p>在这个过程中，客户端和服务器，完全不知道自己都在跟一个中间人进行通信。那么数据就这样轻易被监听了。</p><p>这样一来，HTTPS 的安全性意义在哪里？难道你要给监听的人说：你等一下，等我跟服务器交换完密钥以后，你再来监听？</p><p>使用 HTTPS，应该能保证，只要客户端和服务器是正常的，那么监听程序在中间的任何环节出现，我都不害怕。</p><p>HTTPS 之所以能这样保证，是因为它使用的是<a href="https://zh.wikipedia.org/wiki/X.509" target="_blank" rel="noopener">符合X.509标准的证书</a>，而不仅仅是公钥和私钥。</p><blockquote><p>国际电信联盟设计了一套专门针对证书格式的标准X.509，其核心提供了一种描述证书的格式。</p><p>X.509数字证书不仅包括用户名和密码，而且还包含了与用户有关的其他信息，通过使用证书，CA可以为证书接收者提供一种方法，使他们不仅信任证书主体的公钥，而且还信任有关证书主体的其他信息。</p></blockquote><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-14-40-02.png" alt></p><p>证书本质上就是一个文本文件。但是这个文件里面记录了很多其他信息，包括这个证书是谁颁发的，过期时间等等。</p><p>我们知道，要生成一个 SSL 证书，在 Linux 里面就是一条命令而已，非常简单。但是，国际电信联盟提供了一批值得信任的证书颁发机构，只有使用这些机构颁发的证书，浏览器才认为是安全的，才会出现绿色的锁。否则，如果你使用的不是认证机构颁发的证书，或者干脆你是自己一条命令生成的证书，那么当你访问网站的时候，就会变成下面这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-15-46.png" alt></p><p>这是因为，浏览器不知道你现在这个网站的证书，是真正服务器就用的自签证书，还是被中间人替换了。所以会给你发报警。如果你确认服务器就是这个自签证书，那么你就可以点<code>高级</code>-<code>继续访问</code>，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-18-10.png" alt></p><p>访问成功以后，浏览器地址栏也会提示你请求不安全：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-21-02.png" alt></p><p>如果你用 requests 请求这个网站，也会报错，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-20-12.png" alt></p><p>我们知道，requests 可以设置参数<code>verify=False</code>来强行访问使用了非认证机构颁发的证书的网站：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-23-28.png" alt></p><p>这里的<code>verify=False</code>，其实就相当于我们在浏览器上面点击了<code>高级</code>-<code>继续访问</code>。</p><p>除此之外，requests 的<code>verify</code>参数，还可以填写成一个文件地址：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-37-10.png" alt></p><p>这里的这个<code>test.cer</code>文件，就是我在使用<code>openssl</code>生成网站自签证书的时候，一并自动生成的。它同时包含了公钥和私钥。它长下面这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-40-00.png" alt></p><p>我们再来看看 Charles 的根证书：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-15-53-54.png" alt></p><p>他们的格式是一样的。所以，当我们要使用 Charles/Fiddler/MitmProxy 抓HTTPS 的时候，需要信任根证书，实际上就相当于使用<code>requests</code>的时候，把<code>verify=</code>设置为根证书的地址。</p><p>为什么 Charles 的根证书被信任了以后就可以抓包了？为什么requests 指定了根证书以后，访问使用自签证书的 https 网站就不报错了？这是因为，我们现在有办法可以检测数据是否被篡改过。</p><p>现在话又要说回私钥和公钥了。我们都知道，公钥可以对数据进行加密，私钥对数据进行解密。但是实际上，我们还可以用私钥对数据进行“加密”，公钥进行“解密”！注意这里的<code>加密</code>和<code>解密</code>，我打了引号，是因为准确的说，应该叫做用私钥对数据明文的摘要加密得到数字签名，用公钥可以验证这个数字签名是不是自己对应的那个私钥生成的。</p><p>服务器发给客户端的数据，除了客户端索要的数据外，还包括一份经过签名的摘要数据。客户端收到数据以后，用公钥就可以从签名里面解析出客户端需要的数据对应的摘要。客户端再把自己收到的数据使用摘要算法计算出一个摘要，两边一对比，就知道数据有没有被篡改。</p><p>自签证书不能伪装成可信机构签发的证书，就在于证书里面有一段数字签名，可信任机构颁发的证书，这个签名都是唯一的，自签证书如果修改了机构信息，那么新的摘要信息就跟那么这个数字签名解密后的摘要信息不匹配了。于是浏览器就会给你发出警报。</p><p>但当你信任了一个根证书以后，浏览器就不会发送警报了。所以如果你安装了来路不明的证书，那么你的客户端和服务器的通信就可能会被监听。</p><p>如果你看明白这篇文章，那么你应该会知道，如果你想使用 Charles 等等抓包工具，那么，根证书应该是安装到你的客户端。而不是安装到电脑上。例如你想抓手机的数据包，那么你应该把根证书安装到手机上，而不是安装到运行 Charles 的电脑上。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-11-07-17-02-03.png&quot; alt=&quot;香格里拉古镇里面的牛肉火锅&quot;&gt;&lt;/p&gt;
+&lt;p&gt;有同学在知识星球和公众号粉丝群里面提到，希望我讲一讲 HTTPS 证书、为什么使用 Charles、Fiddler、MitmProxy 抓 HTTPS 的请求要安装证书、 requests 发送请求的时候，verify 参数除了 False/True 还能填写什么参数。今天我们就这几个问题来做一个简单的介绍。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="知识" scheme="https://www.kingname.info/categories/%E7%9F%A5%E8%AF%86/"/>
+    
+    
+      <category term="HTTPS" scheme="https://www.kingname.info/tags/HTTPS/"/>
+    
+      <category term="中间人攻击" scheme="https://www.kingname.info/tags/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：亲眼所见，也非真实，如何明目张胆架设后门程序</title>
@@ -253,9 +278,9 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
-    
       <category term="一日一技" scheme="https://www.kingname.info/tags/%E4%B8%80%E6%97%A5%E4%B8%80%E6%8A%80/"/>
+    
+      <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
     
   </entry>
   
@@ -387,9 +412,9 @@
     
       <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
-      <category term="环境变量" scheme="https://www.kingname.info/tags/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"/>
-    
       <category term="Linux" scheme="https://www.kingname.info/tags/Linux/"/>
+    
+      <category term="环境变量" scheme="https://www.kingname.info/tags/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"/>
     
   </entry>
   
@@ -524,33 +549,6 @@
     
     
       <category term="Redis" scheme="https://www.kingname.info/tags/Redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>小问题大隐患：如何正确设置 Python 项目的入口文件？</title>
-    <link href="https://www.kingname.info/2021/02/18/entry-file/"/>
-    <id>https://www.kingname.info/2021/02/18/entry-file/</id>
-    <published>2021-02-18T14:41:10.000Z</published>
-    <updated>2021-02-18T14:42:43.371Z</updated>
-    
-    <content type="html"><![CDATA[<p>今天在公众号粉丝群里面，有一位同学提到了 Python 找不到模块的问题：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-02-18-20-42-01.png" alt></p><p>问题涉及到的代码结构和代码截图如下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_5551.JPEG" alt></p><p>这个问题的解决方法非常简单，就是把<code>start.py</code>文件从<code>bin</code>文件夹移出来就好了。</p><p>但如果对这个问题进一步分析，可以看到更多问题。</p><a id="more"></a><p>在我以前的文章：<a href="https://mp.weixin.qq.com/s/lTisktaIiC0QZMWzEgFWzw" target="_blank" rel="noopener">为什么Python代码能运行但是PyCharm给我画红线？</a>中，我讲到了工作区（Workdir）对代码的影响。PyCharm、VSCode 识别的工作区，可能并不等于你直接在终端窗口运行<code>.py</code>文件时候的工作区。</p><p>今天这个问题本质上也是工作区导致的问题。 这个同学的项目根目录是<code>MY_API</code>，所以他使用的编辑器VSCode 就会默认把<code>MY_API</code>当做工作区。所以，当他在<code>start.py</code>文件中写上<code>from lib.interface import server</code>时，VScode 并不会给他标记红色波浪线。因为从 VSCode 的视角看，<code>lib</code>文件夹确实就是在工作区下面的。</p><p>但是，当他在 VSCode 里面运行这个<code>start.py</code>文件时，Python 是从<code>bin</code>文件夹下面运行的。此时，Python 会把<code>bin</code>文件夹当做工作区。在工作区里面就只有这一个<code>start.py</code>文件，所以当然找不到<code>lib</code>文件夹。</p><p>如果仅仅从技术上来说，你非要导入 <code>bin</code> 文件夹的父文件夹下面的其他模块，也并不困难，我在<a href="https://mp.weixin.qq.com/s/cNKr1uhDy47pOVjFznoBwA" target="_blank" rel="noopener">一日一技：导入父文件夹中的模块并读取当前文件夹内的资源</a>一文中讲到了具体的做法。</p><p>但问题在于，你不应该这样做。<strong>你不应该把项目的入口文件，放到项目内部很深的文件夹中。</strong></p><p>所谓入口文件，就是要首先经过它，才能到达其他的文件。当你拿到一个 Python 项目，你只需要首先从入口文件开始阅读代码，根据入口文件调用的模块，一路看下去，你就能读到它的所有实现逻辑。</p><p>但如果大家经常逛 Github，就会发现，有些人可能是被其他垃圾语言污染了思想，他的 Python 项目，根目录有五六个文件夹和七八个<code>.py</code>文件。你拿到这个项目的时候，你甚至不知道，当你想运行这个代码的时候，<code>python3 xxx.py</code>应该运行哪个文件。你多方打听，或者看了半天文档，才知道，哦，原来入口文件在<code>com/xx/yy/zz/script/run.py</code>。</p><p>当你打开这个<code>run.py</code>文件，你发现它的顶部，文件导入的代码写的是<code>from ../../../../aaa import bbb</code>。</p><p>简直是神经病写法。我知道有些垃圾语言流行这样写。但现在你用的是 Python，学聪明一点，别那样写。</p><p>对于一个 Python 项目来说，入口文件应该始终在最外层。例如：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-02-18-21-12-59.png" alt></p><p>当你要启动这个项目的时候，直接在最外层<code>python3 main.py</code>，就能把它启动起来。在<code>main.py</code>里面，你可以导入其他模块，然后调用其他模块里面的类或者函数。</p><p>这样做的好处是什么？这样做，你是在项目的根目录启动的这个项目，所以你的工作区就是项目的根目录。那么你在任何一个<code>.py</code>文件里面都可以很容易地基于工作区导入任意其他文件。例如，你现在在<code>models/mongo-util/mongob_helper.py</code>文件中，你想导入<code>utils/abc.py</code>中的<code>time_format()</code>函数，那么，你只需要这样写就可以了。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> utils.abc <span class="keyword">import</span> time_format</span><br></pre></td></tr></table></figure><p>你根本不可能出现需要导入父文件夹中的某个模块的情况。</p><p>只有工具脚本，才需要单独使用一个文件夹来存放，然后调用父文件夹中的其他文件。例如，我现在有一个工具脚本，它每天晚上0点会读写 MongoDB，清理无效数据，那么此时，我可以在根目录单独创建一个<code>script</code>或<code>tools</code>或者<code>bin</code>文件夹，然后把工具脚本放进去，例如：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-02-18-21-22-43.png" alt></p><p>在这个工具脚本里面，你可能会调用<code>models/mongo-util/mongob_helper.py</code>文件中的某个函数。这种情况下，你调用父文件夹中的内容是可以接受的。但这毕竟只是工具脚本。</p><p>可能还有同学要问，那如果我的项目是一个 Python 的包，它本身没有入口文件怎么办呢？这个时候，你可以把这个包的<code>__init__.py</code>当做它的入口文件。大家可以参考我在 <a href="https://github.com/kingname/GeneralNewsExtractor" target="_blank" rel="noopener">GitHub - kingname/GeneralNewsExtractor: 新闻网页正文通用抽取器 Beta 版.</a>的代码组织结构。在项目根目录留下一个<code>example.py</code>文件，用来演示如何调用这个包。而这个包本身的代码，是在一个叫做<code>gne</code>的文件夹中的。这个<code>gne</code>文件夹是一个包，它的入口文件在<code>__init__.py</code>中。</p><p>各位，当你写代码的时候，你先想一想，如果别人拿到了你的代码，想要梳理一下这个项目的逻辑，在不询问你的情况下，怎么让他知道应该从哪个文件开始读？应该按什么顺序读？他能不能轻易地看到数据在你的代码中是怎么运转的？</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;今天在公众号粉丝群里面，有一位同学提到了 Python 找不到模块的问题：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-02-18-20-42-01.png&quot; alt&gt;&lt;/p&gt;
-&lt;p&gt;问题涉及到的代码结构和代码截图如下：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_5551.JPEG&quot; alt&gt;&lt;/p&gt;
-&lt;p&gt;这个问题的解决方法非常简单，就是把&lt;code&gt;start.py&lt;/code&gt;文件从&lt;code&gt;bin&lt;/code&gt;文件夹移出来就好了。&lt;/p&gt;
-&lt;p&gt;但如果对这个问题进一步分析，可以看到更多问题。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

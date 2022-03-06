@@ -354,6 +354,1750 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2016/06/04/markdownPicPicker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2016/06/04/markdownPicPicker/" class="post-title-link" itemprop="url">MarkdownPicPicker - Markdown 图片上传助手</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-06-04 16:40:06" itemprop="dateCreated datePublished" datetime="2016-06-04T16:40:06+08:00">2016-06-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Markdown/" itemprop="url" rel="index"><span itemprop="name">Markdown</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/06/04/markdownPicPicker/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/06/04/markdownPicPicker/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><p>MarkdownPicPicker 是基于Python3 的Markdown写作辅助工具， 作者是我。它能将剪贴板中的图片上传到网络图床中，并将markdown格式的图片链接(![](&lt;图片地址&gt;))复制到剪贴板中。</p>
+<p>项目地址：<a href="https://github.com/kingname/MarkdownPicPicker" target="_blank" rel="noopener">https://github.com/kingname/MarkdownPicPicker</a></p>
+<h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p>第0.2版有以下功能：</p>
+<ol>
+<li>使用七牛云作为图床。</li>
+<li>将图片保存在本地</li>
+<li>图片上传成功后将Markdown格式的图片地址保存到剪贴板中</li>
+<li>全局监听键盘(默认不开启)</li>
+<li>独立配置文件</li>
+</ol>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置文件保存在<code>config.ini</code>文件中，其意义分别如下：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[basic]</span></span><br><span class="line"><span class="attr">run_method</span> = bat <span class="comment"># 设定程序的运行方式，bat为使用bat文件触发，global_listen为全局键盘监听方式</span></span><br><span class="line"><span class="attr">picture_folder</span> = pic <span class="comment">#设定程序的运行方式，bat为使用bat文件触发，pyHook为全局键盘监听方式</span></span><br><span class="line"><span class="attr">picture_suffix</span> = png <span class="comment">#截图的保存格式，可以选择bmp或者png</span></span><br><span class="line"><span class="comment"># now support qiniu only</span></span><br><span class="line"><span class="attr">picture_bed</span> = qiniu</span><br><span class="line"></span><br><span class="line"><span class="section">[global_listen]</span></span><br><span class="line"><span class="attr">short_key_one</span> = Lwin <span class="comment">#快捷键第一个按键</span></span><br><span class="line"><span class="attr">short_key_two</span> = C <span class="comment">#快捷键第二个按键</span></span><br><span class="line"></span><br><span class="line"><span class="section">[qiniu]</span></span><br><span class="line"><span class="comment">#七牛云的相关配置</span></span><br><span class="line"><span class="attr">access_key</span> = Q6sS422O05AwYD5aVqM3FqCcCpF36tqvyQ75Zvzw</span><br><span class="line"><span class="attr">secret_key</span> = <span class="number">6</span>QtAqqTxoSxZP-<span class="number">2</span>uoXROehxPLX2CCmoOaB2aLObM</span><br><span class="line"><span class="attr">container_name</span> = picturebed  <span class="comment">#七牛云的图片储存位置</span></span><br><span class="line"><span class="attr">url</span> = https://kingname-<span class="number">1257411235</span>.cos.ap-chengdu.myqcloud.com/&#123;&#125; <span class="comment">#七牛云分配的默认域名</span></span><br></pre></td></tr></table></figure></p>
+<p>其中<code>access_key</code> 和 <code>secret_key</code> 可以在七牛云的控制面板中看到，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20160605083025.png" alt><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-20-22-43.png" alt> </p>
+<p><code>container_name</code> 为下图所示内容：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-20-24-40.png" alt> </p>
+<p><code>short_key_one</code> 和 <code>short_key_two</code> 为快捷键的两个按键，默认为左侧windows徽标键(<code>Lwin</code>) 和 字母 <code>C</code>。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>将程序配置好以后运行，创建一个批处理文件markdownpicpicker.bat, 其内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">cmd /k &quot;G:\github\MarkdownPicPicker\venv\Scripts\activate &amp; cd /d G:\github\MarkdownPicPicker &amp; python MarkdownPicPicker.py &amp; deactivate &amp; exit&quot;</span><br></pre></td></tr></table></figure></p>
+<p>路径请根据实际情况修改。</p>
+<p>由于我使用了virtualenv, 所以需要在批处理中进入virtualenv的环境才能正常运行程序。对于将requirements.txt里面包含的库直接安装在全局的情况，bat 可以简化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">cmd /k &quot;cd /d &lt;MarkdownPicPicker.py脚本所在文件夹路径&gt; &amp; python MarkdownPicPicker.py &amp; exit&quot;</span><br></pre></td></tr></table></figure>
+<p>不论哪种方式，均不要在任何相关的路径上出现中文，否则会导致不可预知的问题。</p>
+<p>然后右键选择批处理，发送到桌面快捷方式。接着右键快捷方式，属性，在“快捷键” 这一栏按下字母Q，它将自动填充为 <code>Ctrl + Alt + Q</code>, 确定。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-05-00-45-03.png" alt> </p>
+<p>只需要首先使用QQ截图或者其他截图工具将图片保存到剪贴板中，然后按下设定好的快捷键即可。Markdown格式的图片链接就已经保存到剪贴板中了。在需要使用的地方直接粘贴。</p>
+<p>不过这样设定的快捷键，按下以后会有大概一秒钟的延迟。推荐大家使用AutoHotKey来触发这个bat文件。</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><h3 id="Pillow-bug修正"><a href="#Pillow-bug修正" class="headerlink" title="Pillow bug修正"></a>Pillow bug修正</h3><p>本程序使用了Pillow库中的 <code>ImageGrab.grabclipboard()</code> 方法来获取剪贴板中的数据，但是由于这个方法有一个bug, 导致可能会爆以下错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unsupported BMP bitfields layout</span><br></pre></td></tr></table></figure></p>
+<p>这个问题从Pillow 2.8.0开始，一直到3.2.0都没有被官方解决。目前有一个间接的解决办法。<br>请打开Python安装目录下的\Lib\site-packages\PIL\BmpImagePlugin.py文件，将以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</span><br><span class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</span><br><span class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</span><br><span class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</span><br><span class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</span><br><span class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</span><br><span class="line">    else:</span><br><span class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</span><br><span class="line">else:</span><br><span class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</span><br></pre></td></tr></table></figure>
+<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">if file_info[&apos;bits&apos;] in SUPPORTED:</span><br><span class="line">    if file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgba_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</span><br><span class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgba_mask&apos;])]</span><br><span class="line">        self.mode = &quot;RGBA&quot; if raw_mode in (&quot;BGRA&quot;,) else self.mode</span><br><span class="line">    elif file_info[&apos;bits&apos;] in (24, 16) and file_info[&apos;rgb_mask&apos;] in SUPPORTED[file_info[&apos;bits&apos;]]:</span><br><span class="line">        raw_mode = MASK_MODES[(file_info[&apos;bits&apos;], file_info[&apos;rgb_mask&apos;])]</span><br><span class="line">    &apos;&apos;&apos;新增内容开始&apos;&apos;&apos;</span><br><span class="line">    elif file_info[&apos;bits&apos;] == 32 and file_info[&apos;rgb_mask&apos;] == (0xff0000, 0xff00, 0xff):</span><br><span class="line">        pass</span><br><span class="line">    &apos;&apos;&apos;新增内容结束&apos;&apos;&apos;</span><br><span class="line">    else:</span><br><span class="line">        raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</span><br><span class="line">else:</span><br><span class="line">    raise IOError(&quot;Unsupported BMP bitfields layout&quot;)</span><br></pre></td></tr></table></figure></p>
+<p>就能解决本问题。</p>
+<h3 id="全局键盘监听"><a href="#全局键盘监听" class="headerlink" title="全局键盘监听"></a>全局键盘监听</h3><p>本程序还有一个功能是全局监听键盘，通过特殊的快捷键组合就可以直接触发读取图片上传图片的操作。但是由于这个功能使用到了pyHook这个库。但是这个库在设计上存在缺陷，如果当前窗体的标题包含Unicode字符时，会导致Python崩溃。因此这个功能默认不启动。</p>
+<h3 id="获取键盘按键"><a href="#获取键盘按键" class="headerlink" title="获取键盘按键"></a>获取键盘按键</h3><p>如果不清楚某个键盘按键对应的字符串是什么样子的，可以运行QueryKey.py这个文件，运行以后按下某个键，控制台上就会显示相应的信息。其中<code>Key</code>就是可以设置到<code>SHORT_KEY_ONE</code>和<code>SHORT_KEY_TWO</code>的内容。如图为按下键盘左Shift键以后显示的信息。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2016-06-04-23-14-30.png" alt> </p>
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ul>
+<li>支持更多的截图方式</li>
+<li>支持更多的图床</li>
+<li>窗口隐藏</li>
+<li>解决pyHook的问题</li>
+<li>适配Linux 和 Mac OS</li>
+</ul>
+<p><strong>本文首发地址-&gt; <a href="http://kingname.info/2016/06/04/markdownPicPicker/" target="_blank" rel="noopener">http://kingname.info/2016/06/04/markdownPicPicker/</a> 转载请注明出处</strong></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2016/05/29/raspberryCI-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2016/05/29/raspberryCI-1/" class="post-title-link" itemprop="url">搭建持续集成环境(一)</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-05-29 14:04:49" itemprop="dateCreated datePublished" datetime="2016-05-29T14:04:49+08:00">2016-05-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/持续集成/" itemprop="url" rel="index"><span itemprop="name">持续集成</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/29/raspberryCI-1/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/05/29/raspberryCI-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="开题说明"><a href="#开题说明" class="headerlink" title="开题说明"></a>开题说明</h2><p>软件开发的过程是一个从简单到复杂的过程。我们在开发的时候，会首先写出具有核心的功能的原型，满足基本的需求。但是这个原型使用非常的麻烦，有无数的配置，数据的格式也需要严格的规定，稍微一个不合法的输入输出就有可能导致程序的崩溃。</p>
+<p>接下来，在这个基本的原型上，我们逐渐进行完善，逐渐提高了程序的鲁棒性，用户体验逐渐的提高。新的需求出现了，于是又添加新的功能来满足新的需求。</p>
+<p>在这样一个逐渐搭建（迭代）起来的过程中，我们要进行不间断的测试来保证修改没有破坏代码的已有功能，也要防止引入新的bug.如果是团队开发，要保持代码风格的一致。如果多个人同时开发，又要防止代码修改的地方出现冲突。一个版本的代码开发完成了，测试也没有问题了，同时部署到几百台服务器上，完成新功能的上线。</p>
+<p>这样一个流程，如果手动来完成是相当痛苦的。于是，就需要持续集成来帮助我们完成这些琐碎的工作。开发者开发好了程序，本地测试没有问题了。使用Git提交到代码仓库，然后触发一系列的检查流程，如果出问题就给提交者发邮件提示问题，如果一切正常就开始代码审核(code review)，审核完成，合并代码。合并完成以后，会自动做好部署前面的集成测试，然后等待下一次部署周期到达以后自动将代码部署到各个服务器。</p>
+<p>持续集成这个系列的文章，就是要完成以上各个环节的搭建工作，从而让开发者把精力放在开发上，而不是一些无谓的体力劳动上。</p>
+<p>我会使用树莓派2 来搭建持续集成的环境，树莓派的系统为ArchLinux.</p>
+<h2 id="Jenkins"><a href="#Jenkins" class="headerlink" title="Jenkins"></a>Jenkins</h2><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Jenkins是一个用Java编写的开源的持续集成工具。它是持续集成的核心部分，扮演了一个总管的角色，统筹联系各个部分。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S jenkins</span><br></pre></td></tr></table></figure>
+<p>由于jenkins是Java写的，所以这个时候如果你的系统中没有Java的运行环境，他就会让你选择安装jre7-openjdk 或者是jre8-openjdk, 我选择的是安装jre8-openjdk. 这个时候我没有意识到，隐患已经埋下来了。</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>在ArchLinux中，什么东西都喜欢使用systemd来启动，所以执行以下命令来启动Jenkins：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start jenkins.service</span><br></pre></td></tr></table></figure></p>
+<p>理论上这样就能使用了。但是当我在浏览器打开<code>http://192.168.2.107:8090</code>的时候却发现网页无法打开。于是检查它的log:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">journalctl -u jenkins</span><br></pre></td></tr></table></figure></p>
+<p>发现原来报错了。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/openjdkerror.png" alt></p>
+<p>难道说Java环境有问题？于是我是用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></p>
+<p>来检查Java环境，果然, 连查看Java 的版本都报错了，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/javaversion.png" alt></p>
+<h3 id="重装"><a href="#重装" class="headerlink" title="重装"></a>重装</h3><p>对于这种情况，看起来不能使用openJDK了，于是去安装Oracle的JDK。</p>
+<p>首先要卸载openJdk:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Rdd jre8-openjdk</span><br></pre></td></tr></table></figure>
+<p>这里使用<code>-Rdd</code> 而不是<code>-R</code>就是为了忽略依赖性。如果直接使用<code>-R</code>的话，会报错，无法卸载。</p>
+<p>如何判断卸载是否完成呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+<p>提示找不到Java的时候，就说明卸载完成了。如果此时依然会爆出上面的core dumpd的错误, 就说明openJDK没有卸载干净。输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Rdd jre</span><br></pre></td></tr></table></figure></p>
+<p>然后按键盘上面的Tab键，让自动完成功能来探测到底是哪个部分还没有卸载。</p>
+<p>完全卸载干净openJDK以后，就可以安装Oracle的JDK了。</p>
+<p>由于Oracle的JDK不能直接使用pacman来安装，所以需要使用AUR。树莓派的CPU是ARM架构，所以使用使用<a href="https://aur.archlinux.org/packages/jdk-arm/" target="_blank" rel="noopener">arm版的JDK</a>。如果有朋友是在X86的电脑上面安装的话，可以使用<a href="https://aur.archlinux.org/packages/jdk" target="_blank" rel="noopener">x86版的JDK</a>。</p>
+<p>对于安装AUR的文件，首先从左侧<a href="https://aur.archlinux.org/cgit/aur.git/snapshot/jdk-arm.tar.gz" target="_blank" rel="noopener">Download snapshot</a>下载pkg文件，然后使用以下命令来安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf jdk-arm.tar.gz</span><br><span class="line">cd jdk-arm</span><br><span class="line">makepkg -sri</span><br></pre></td></tr></table></figure>
+<p>然后就等待下载安装文件然后完成安装。如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/aurinstall.png" alt></p>
+<p>完成以后，我们再执行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></p>
+<p>就可以正常看到Java的版本信息了。</p>
+<h3 id="再启动"><a href="#再启动" class="headerlink" title="再启动"></a>再启动</h3><p>再一次启动Jenkins:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start jenkins.service</span><br></pre></td></tr></table></figure></p>
+<p>也可以正常启动了。（输入命令以后等待1分钟左右，让服务完全启动起来。）如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/jenkins.png" alt></p>
+<p>根据它的提示读取密码，并填写到网页上，于是Jenkins就算是安装成功了。</p>
+<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>插件是Jenkins的精华，在第一次进入的时候，Jenkins就会让你选择插件。这里我选择<br><code>Select plugins to install</code>.<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/plugin.png" alt></p>
+<p>它默认已经勾选了一些插件，我增加了以下的插件：</p>
+<ul>
+<li>Source Code Management 下面的Github plugin</li>
+<li>Notifications and Publishing下面的 SSH plugin</li>
+<li>Pipelines and Continuous Delivery 下面的 Parameterized Trigger plugin</li>
+</ul>
+<p>选择好以后点击 install就可以等待它安装了。如果发现漏选了或者多选了也没有关系，因为之后还可以手动管理这些插件。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这一篇讲到了如何在树莓派上面搭建Jenkins并安装插件。下一篇将会讲到Jenkins Job的创建和配置和使用。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2016/05/19/screenshot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2016/05/19/screenshot/" class="post-title-link" itemprop="url">使用Python保存截图</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-05-19 22:47:29" itemprop="dateCreated datePublished" datetime="2016-05-19T22:47:29+08:00">2016-05-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/19/screenshot/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/05/19/screenshot/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>在<a href="http://jikexueyuan.com" target="_blank" rel="noopener">极客学院</a>讲授《使用Python编写远程控制程序》的课程中，涉及到查看被控制电脑屏幕截图的功能。</p>
+<p>如果使用PIL，这个需求只需要三行代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</span><br><span class="line">pic = ImageGrab.grab()</span><br><span class="line">pic.save(<span class="string">'1.jpg'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>但是考虑到被控端应该尽量的精简，对其他模块尽量少的依赖，这样才能比较方便的部署，因此我考虑能否有一种方法，不依赖PIL来实现截图的功能。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于被控端使用了win32api, 因此有一个方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">win32api.keybd_event</span><br></pre></td></tr></table></figure></p>
+<p>这个方法可以模拟键盘的按键动作。因此，解决方法就比较的明显了：</p>
+<ol>
+<li>模拟键盘上面的“Print Screen” 键按下</li>
+<li>从剪贴板中读取出截图</li>
+<li>将截图保存到本地 </li>
+</ol>
+<p>第一步非常的简单，实用win32api 和 win32con，两行代码就能实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import win32api</span><br><span class="line">import win32con</span><br><span class="line">win32api.keybd_event(win32con.VK_SNAPSHOT, 0)</span><br></pre></td></tr></table></figure></p>
+<p>其中win32con这个库里面包含了很多定义好的和Windows相关的常量，而VK_SNAPSHOT就是Print Screen键的键位码。后面的数字0表示截取整个屏幕。如果改成数字1，表示截取当前窗口。</p>
+<p>那么现在问题来了，在不实用PIL的情况下，如何将剪贴板你们的图片保存到本地？</p>
+<p>win32api有一个模块 win32clipboard 是负责剪贴板相关的操作。它有一个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">win32clipboard.GetClipboardData(formats)</span><br></pre></td></tr></table></figure></p>
+<p>这个方法可以从剪贴板里面读取数据。但是需要指定数据的格式。从<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff729168\(v=vs.85\" target="_blank" rel="noopener">这里</a>.aspx)可以查看到更多的标准剪贴板格式(<em>Standard Clipboard Formats</em>).</p>
+<p>一开始我使用的formats是<strong>CF_BITMAP</strong>，程序返回的是一串整数，怀疑应该是一个内存地址。这也和这个format的描述：</p>
+<blockquote>
+<p>A handle to a bitmap (<strong>HBITMAP</strong>).</p>
+</blockquote>
+<p>是一致的，它是一个handle。</p>
+<p>我也尝试过CF_TIFF, 不过程序直接报错了，可见我使用Print Screen截图以后，剪贴板里面的图片格式并不是TIFF。</p>
+<p>经过查阅其他资料，我最后确定使用了CF_DIB。</p>
+<blockquote>
+<p>A memory object containing a BITMAPINFO structure followed by the bitmap bits.</p>
+</blockquote>
+<p>这个描述说明，CF_DIB返回的是一个内存对象，包含了BIT格式图片的信息。经过测试使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">win32clipboard.GetClipboardData(win32con.CF_DIB)</span><br></pre></td></tr></table></figure></p>
+<p>以后，可以得到一个很大的字符串。显然这个字符串就是图片的内容了。但是当我把这个字符串写入到bmp格式的文件后，却发现图片无法打开。</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在StackOverflow上，我遇到了一个非常好的老先生： <a href="http://stackoverflow.com/users/355230/martineau" target="_blank" rel="noopener">Mr. martineau</a>他为了解答了问题，并给我提供了解决办法。以下内容翻译自martineau先生的回答，原文请戳-&gt;<a href="http://stackoverflow.com/a/35885108/3922976" target="_blank" rel="noopener">http://stackoverflow.com/a/35885108/3922976</a></p>
+<blockquote>
+<p>你的方法的主要问题在于，你写入文件的字符串缺少了.bmp 文件头，这个文件头是<code>BITMAPFILEHEADER</code>结构。</p>
+</blockquote>
+<blockquote>
+<p>为了创建这个文件头，使用<code>GetClipboardData()</code>返回的字符串必须要进行解码(<em>decoded</em>)。对于<code>CF_DIB</code>格式来说，返回的字符串的前面一部分就是<code>BOTMAPINFOHEADER</code>。</p>
+</blockquote>
+<blockquote>
+<p>对于各种各样有不同种类压缩的<code>DIB</code>来说，这种文件头结构是非常的普遍的。不过幸好对截图来说，只需要简单的无压缩的RGBA像素。</p>
+</blockquote>
+<blockquote>
+<p>由于<code>BOTMAPFILEHEADER</code>被放在了bf0ffBits的区域里，所以事情就变得很容易了。而其他的情况，例如大尺度的颜色表跟在<code>BITMAPINFOHEADER</code> 和像素数组的开头。</p>
+</blockquote>
+<blockquote>
+<p>（这一段我看不太懂，还请如果有能正确解释这段话的朋友指正。原文是：</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>That fact makes things much easier because otherwise determining the value to put in the bfOffBits field of the BITMAPFILEHEADER would be complicated by the fact that in most other cases there’s also a variably-sized color table following the BITMAPINFOHEADER and the start of the pixel array.）</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>下面的代码是一个简单的例子（仅仅针对这个需求）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">import ctypes</span><br><span class="line">from ctypes.wintypes import *</span><br><span class="line">import win32clipboard</span><br><span class="line">from win32con import *</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">class BITMAPFILEHEADER(ctypes.Structure):</span><br><span class="line">    _pack_ = 1  # structure field byte alignment</span><br><span class="line">    _fields_ = [</span><br><span class="line">        (&apos;bfType&apos;, WORD),  # file type (&quot;BM&quot;)</span><br><span class="line">        (&apos;bfSize&apos;, DWORD),  # file size in bytes</span><br><span class="line">        (&apos;bfReserved1&apos;, WORD),  # must be zero</span><br><span class="line">        (&apos;bfReserved2&apos;, WORD),  # must be zero</span><br><span class="line">        (&apos;bfOffBits&apos;, DWORD),  # byte offset to the pixel array</span><br><span class="line">    ]</span><br><span class="line">SIZEOF_BITMAPFILEHEADER = ctypes.sizeof(BITMAPFILEHEADER)</span><br><span class="line"></span><br><span class="line">class BITMAPINFOHEADER(ctypes.Structure):</span><br><span class="line">    _pack_ = 1  # structure field byte alignment</span><br><span class="line">    _fields_ = [</span><br><span class="line">        (&apos;biSize&apos;, DWORD),</span><br><span class="line">        (&apos;biWidth&apos;, LONG),</span><br><span class="line">        (&apos;biHeight&apos;, LONG),</span><br><span class="line">        (&apos;biPLanes&apos;, WORD),</span><br><span class="line">        (&apos;biBitCount&apos;, WORD),</span><br><span class="line">        (&apos;biCompression&apos;, DWORD),</span><br><span class="line">        (&apos;biSizeImage&apos;, DWORD),</span><br><span class="line">        (&apos;biXPelsPerMeter&apos;, LONG),</span><br><span class="line">        (&apos;biYPelsPerMeter&apos;, LONG),</span><br><span class="line">        (&apos;biClrUsed&apos;, DWORD),</span><br><span class="line">        (&apos;biClrImportant&apos;, DWORD)</span><br><span class="line">    ]</span><br><span class="line">SIZEOF_BITMAPINFOHEADER = ctypes.sizeof(BITMAPINFOHEADER)</span><br><span class="line"></span><br><span class="line">win32clipboard.OpenClipboard()</span><br><span class="line">try:</span><br><span class="line">    if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_DIB):</span><br><span class="line">        data = win32clipboard.GetClipboardData(win32clipboard.CF_DIB)</span><br><span class="line">    else:</span><br><span class="line">        print(&apos;clipboard does not contain an image in DIB format&apos;)</span><br><span class="line">        sys.exit(1)</span><br><span class="line">finally:</span><br><span class="line">    win32clipboard.CloseClipboard()</span><br><span class="line"></span><br><span class="line">bmih = BITMAPINFOHEADER()</span><br><span class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</span><br><span class="line"></span><br><span class="line">if bmih.biCompression != BI_BITFIELDS:  # RGBA?</span><br><span class="line">    print(&apos;insupported compression type &#123;&#125;&apos;.format(bmih.biCompression))</span><br><span class="line">    sys.exit(1)</span><br><span class="line"></span><br><span class="line">bmfh = BITMAPFILEHEADER()</span><br><span class="line">ctypes.memset(ctypes.pointer(bmfh), 0, SIZEOF_BITMAPFILEHEADER)  # zero structure</span><br><span class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</span><br><span class="line">bmfh.bfSize = SIZEOF_BITMAPFILEHEADER + len(data)  # file size</span><br><span class="line">SIZEOF_COLORTABLE = 0</span><br><span class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</span><br><span class="line"></span><br><span class="line">bmp_filename = &apos;clipboard.bmp&apos;</span><br><span class="line">with open(bmp_filename, &apos;wb&apos;) as bmp_file:</span><br><span class="line">    bmp_file.write(bmfh)</span><br><span class="line">    bmp_file.write(data)</span><br><span class="line"></span><br><span class="line">print(&apos;file &quot;&#123;&#125;&quot; created from clipboard image&apos;.format(bmp_filename))</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>经过测试，这一段代码成功的实现了读取剪贴板的图片并保存到本地。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这段代码使用ctypes库来实现指针的功能，从而在内存中操作数据。这里定义了两个结构体，<code>BITMAPFILEHEADER</code> 和<code>BITMAPINFOHEADER</code>，于是，使用sizeof获取到了他们的大小。那么使用指针，从使用<code>GetClipboardData()</code>获取到的数据的头部开始移动，分别移动这两个结构体的大小，也就获取到了这两个结构体在内存中的数据。</p>
+<p>代码中使用了<code>memmove</code>和<code>memset</code>两个内存操作的方法。从ctypes的官方文档上，我们可以看到这两个方法有如下的定义：</p>
+<blockquote>
+<p><code>ctypes.memmove(dst, src, count)</code></p>
+</blockquote>
+<blockquote>
+<p>Same as the standard C memmove library function: copies count bytes from src to dst. dst and src must be integers or ctypes instances that can be converted to pointers.</p>
+</blockquote>
+<blockquote>
+<p><code>ctypes.memset(dst, c, count)</code></p>
+</blockquote>
+<blockquote>
+<p>Same as the standard C memset library function: fills the memory block at address dst with count bytes of value c. dst must be an integer specifying an address, or a ctypes instance.</p>
+</blockquote>
+<p>所以可以看出，代码里面的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bmih = BITMAPINFOHEADER()</span><br><span class="line">ctypes.memmove(ctypes.pointer(bmih), data, SIZEOF_BITMAPINFOHEADER)</span><br></pre></td></tr></table></figure></p>
+<p>从内存中拷贝出来了<code>BITMAPINFOHEADER</code>这么大的一块的数据，并保存到了<code>bmih</code>这个变量中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bmfh = BITMAPFILEHEADER()</span><br><span class="line">ctypes.memset(ctypes.pointer(bmfh), 0,     SIZEOF_BITMAPFILEHEADER)</span><br></pre></td></tr></table></figure></p>
+<p>这一段在内存中开辟出了<code>BITMAPFILEHEADER</code>这么大一块区域，并全部填充为0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bmfh.bfType = ord(&apos;B&apos;) | (ord(&apos;M&apos;) &lt;&lt; 8)</span><br></pre></td></tr></table></figure></p>
+<p>这一行代码使用了位操作。首先<code>ord(&#39;B&#39;)</code>的值为66，换成二进制就是<code>1000010</code>；<code>ord(&#39;M&#39;)</code>的值为77，换成二进制就是<code>1001101</code>，然后向左移动8位，得到<code>100110100000000</code>，这个值再与<code>1000010</code>取位或，得到<code>100110101000010</code>。</p>
+<p>最后，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bmfh.bfOffBits = SIZEOF_BITMAPFILEHEADER + SIZEOF_BITMAPINFOHEADER + SIZEOF_COLORTABLE</span><br></pre></td></tr></table></figure></p>
+<p>拼装出头部的大小。然后以二进制方式，首先写文件头, 再写剪贴板获取到的字符串到本地的<code>.bmp</code>文件中，完成图片的生成。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Python一些轮子确实非常好的提高了开发效率，例如PIL，三行代码实现了我的需求。Python在快速开发方面确实非常的方便，但是涉及到底层的一些操作的时候，还是不得不使用C语言的一些接口来进行内存的操作。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/12/02/opinionchange/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/12/02/opinionchange/" class="post-title-link" itemprop="url">对Java与设计模式态度的转变</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-12-02 00:03:08" itemprop="dateCreated datePublished" datetime="2015-12-02T00:03:08+08:00">2015-12-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/态度/" itemprop="url" rel="index"><span itemprop="name">态度</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/12/02/opinionchange/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/12/02/opinionchange/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我一直自诩自己是Java一生黑。也从来不屑于设计模式这种东西，因为我一直认为，设计模式是为了解决Java的一些缺陷才存在的。对于Python来说，设计模式并不重要。不过最近在做一个新功能开发的时候对Java的态度有了一些改变。<more></more></p>
+<p>事情的起因是在一个大概有十万行代码的框架中重构他的写Log方式。这个框架原来的Log模块是原作者自己写的，通过打开关闭文件来写Log。现在需要更换成Python的logging模块。对于一个设计相当糟糕的系统来说，要重构是很麻烦的事情。</p>
+<p>在原来的Log方式中，文件的句柄通过参数的形式到处传，常常十多个文件句柄同时打开，还会互相影响，相当的混乱。最后由于需要一个地方来将所有模块的Log统一起来，还给系统的入口再加了一个入口，新的入口使用subprocess来执行</p>
+<pre><code>`python xxxx`
+</code></pre><p>调用原来的系统模块，并将控制台的输出重定向到文件。</p>
+<p>重构的过程相当的痛苦，花了我几乎整个Sprint的时间，细节我会在后续的文章中讲到。今天我要讲的是单例模式让我对设计模式看法的一些改变。</p>
+<p>对Python来说，是可以将一个类的实例通过参数的形式直接传递的，所以看起来似乎Python并不需要单例模式。对于新写的代码来说，这当然没有什么问题。但是对已有的代码添加新的功能的时候，这个方法就不太适用了。</p>
+<p>如果原来一个方法，它的参数已经有七八个了，这个时候你在加一个参数上去，并不确定会产生什么样的影响。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def foo(a, b, c):</span><br><span class="line">		do()</span><br><span class="line">		some()</span><br><span class="line">		thing()</span><br></pre></td></tr></table></figure>
+<p>如果想加一个新的参数，但是又不影响其他的已经在调用这个方法的地方，当然可以这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> def foo(a, b, c, d=None):</span><br><span class="line">do()</span><br><span class="line">some()</span><br><span class="line">thing()</span><br></pre></td></tr></table></figure>
+<p>如果代码量不大，当然没有问题，但是如果代码量大起来了，这样就会出问题。</p>
+<p>例如，现在有一个实例instanceA 在module1 中初始化了，而module3如果想使用instanceA，就必须想办法让instanceA 传递到module3去。但是原本module3和module1并没有什么关系，现在因为需要这个instanceA, 怎么办呢？这个时候发现instanceA 被传递到了module2, 然后又从module2传递到了module4, 最后在module4里面终于找到了一个地方，可以强行把instanceA和module3联系在一起。这样一来，这几个module他们被强制耦合在了一起。</p>
+<p>对于程序来说，耦合程度应该越低越好，所以这样的做法，非常不妥。</p>
+<p>于是，这个时候单例模式就出现了。</p>
+<p>对于module3来说，如果他想要instanceA, 他完全可以再重新new一个，由于是单例模式，于是新的instance 和instanceA是完全一样的。这样就并没有增加多余的耦合关系。</p>
+<p>另外，在极客学院录课的时候，最近有涉及到程序集之间通信。这个时候偶然发现设计模式里面的观察者模式可以对我的设计起到相当大的帮助。</p>
+<p>就像以前某人说的，你要讨厌一个东西，你必须要比喜欢这个东西的人更了解它。而我以前讨厌Java仅仅是因为Java看起来太罗嗦，太多冗余代码。而我不屑于设计模式，更是因为它是从Java来的。</p>
+<p>现在看起来，态度真的应该改变一下了。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/10/07/lxmlencoding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/10/07/lxmlencoding/" class="post-title-link" itemprop="url">使用etree.HTML的编码问题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-10-07 17:56:47" itemprop="dateCreated datePublished" datetime="2015-10-07T17:56:47+08:00">2015-10-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/10/07/lxmlencoding/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/10/07/lxmlencoding/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="出现问题"><a href="#出现问题" class="headerlink" title="出现问题"></a>出现问题</h2><p>今天指导一个学生爬取新浪体育手机版的时候，发现lxml.etree.HTML处理网页源代码会默认修改编码，导致打印出来的内容为乱码。爬取的网址为：<a href="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" title="http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10" target="_blank" rel="noopener">http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10</a></p>
+<p>首先导入我们需要用到的库文件，然后设置环境：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#-*_coding:utf8-*-</span><br><span class="line">import requests</span><br><span class="line">from lxml import etree</span><br><span class="line">import sys</span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&quot;utf-8&quot;)</span><br></pre></td></tr></table></figure>
+<p>然后获取网页的源代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">r = requests.get(url=&apos;http://sports.sina.cn/nba/rockets/2015-10-07/detail-ifximrxn8235561.d.html?vt=4&amp;pos=10&apos;)# 最基本的GET请求</span><br><span class="line">r.encoding = &apos;utf-8&apos;</span><br><span class="line">r = r.content</span><br><span class="line">print r</span><br></pre></td></tr></table></figure></p>
+<p>打印出网页源代码，发现中文是乱码，如图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding1.gif" alt></p>
+<p>这是小问题，使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="noopener">Python字符编码的一个相对万能的处理方法</a>这篇文章中讲解的方法，轻松解决。</p>
+<p>将：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r = r.content</span><br></pre></td></tr></table></figure></p>
+<p>修改为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r = r.content.decode(&apos;utf-8&apos;).encode(&apos;gbk&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>可以正常显示中文，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding2.png" alt></p>
+<p>接下来，使用etree.HTML处理源代码，然后使用Xpath提取内容，一切似乎看起来轻车熟路。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding3.png" alt></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">contentTree = etree.HTML(r)</span><br><span class="line">title = contentTree.xpath(<span class="string">'//h1[@class="art_title_h1"]/text()'</span>)</span><br><span class="line"><span class="keyword">print</span> title[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>但是当我打印出来，才发现问题没有这么简单。如图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding4.png" alt></p>
+<p>这个时候，我发现使用<a href="http://blog.kingname.info/2014/12/14/Python%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9B%B8%E5%AF%B9%E4%B8%87%E8%83%BD%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_blank" rel="noopener">Python字符编码的一个相对万能的处理方法</a>讲到的办法已经不能解决问题了。</p>
+<p>通过调试，我发现抓取到的内容是乱码：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding5.png" alt></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="使用Scrapy"><a href="#使用Scrapy" class="headerlink" title="使用Scrapy"></a>使用Scrapy</h3><p>使用Scrapy的Xpath，正常提取需要的内容：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding6.png" alt></p>
+<h3 id="继续用etree"><a href="#继续用etree" class="headerlink" title="继续用etree"></a>继续用etree</h3><p>实际上，Scrapy的Xpath底层还是调用的lxml,那为什么它可以，而我直接使用lxml的etree.HTML处理源代码然后Xpath提取内容就出乱码呢？</p>
+<p>显然这应该是编码的问题，在使用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">etree.HTML(r)</span><br></pre></td></tr></table></figure>
+<p>处理源文件的时候，由于没有指定编码，所以它使用了一个默认编码，从而导致和UTF-8冲突，产生乱码。</p>
+<p>经过查阅lxml.etree.HTML的文档，我发现etree.HTML有一个参数是parser,这个参数不是必须的，因此省略以后它就会自动使用一个默认的parser。既然如此，那我手动指定一个：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">contentTree = etree.HTML(r, parser=etree.HTMLParser(encoding=<span class="string">'utf-8'</span>))</span><br></pre></td></tr></table></figure>
+<p>这里我指定了etree.HTMLParser来作为一个parser,同时，etree.HTMLParser可以接受编码作为参数。于是我指定为UTF-8。</p>
+<p>运行看看效果：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding7.png" alt></p>
+<p>继续报错，但是出错信息改变了，提示utf8不能解码。请注意第11行，现在源代码是gbk编码，所以使用UTF-8不能解码。于是可以把第11行重新改回原来的样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r = r.content</span><br></pre></td></tr></table></figure>
+<p>再一次运行，发现正常抓取信息：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/lxmlencoding8.png" alt></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一次的问题提示我们：遇到问题，通过经验解决不了的时候，请回归文档。</p>
+<p><em>原文发表在：<a href="http://blog.kingname.info/2015/10/07/lxmlencoding/" target="_blank" rel="noopener">http://blog.kingname.info/2015/10/07/lxmlencoding/</a>转载请注明出处！</em></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/07/19/mycodestyle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/07/19/mycodestyle/" class="post-title-link" itemprop="url">我的编码规范</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-07-19 16:31:54" itemprop="dateCreated datePublished" datetime="2015-07-19T16:31:54+08:00">2015-07-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/07/19/mycodestyle/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/07/19/mycodestyle/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="开篇闲扯"><a href="#开篇闲扯" class="headerlink" title="开篇闲扯"></a>开篇闲扯</h2><p>距离上一次更新已经有快三个月了，这三个月我都在干什么呢？首先是继续实习，因为一些原因，本来计划的三个月实习变成了四个月。在实习的过程中逐步接手了一些维护的工作，并提交了不少代码。7月6号正式入职以后，我加入了一个Amazing的新项目的创建，目前我们做出来的Demo真是非常的Amazing。不过可惜的是，这样一个项目在最近几年是不会对外公布的。</p>
+<p>在6月之前，每晚回家就是做毕设了，这段时间休息的都比较晚，头发都白了很多。</p>
+<p>还有就是给极客学院录课，第一个系列课程《定向爬虫入门》已经全部录制完毕了，一共8课，大家可以在about me 里面找到前7课的链接，最后一课目前正在后期制作当中，上线以后会更新链接。接下来我会讲解远程控制软件的编写，欢迎大家在极客学院关注我，我的名字叫kingname~</p>
+<p>闲话完毕，那我们开始正题。</p>
+<p>##本题由来<br>其实以前我是不太注意编码风格的，觉得程序可以运行了就行。甚至网上还有一种说法：</p>
+<blockquote>
+<p>如果你急急忙忙写一个程序，都没有注重编码规范，程序可能一次就跑通了；但是如果你仔细编码，而且还把单元测试做的非常完善，很有可能程序会出现大bug,而且还难以找到原因。</p>
+</blockquote>
+<p>然而在我实习的过程中，读了公司的很多代码，才发现编码规范是如此的重要，以至于可以显著影响对代码的理解。而且由于在部门里面code review做的比较严格，因此代码的风格不统一的话，是不能merge的，于是在多次提交代码以后渐渐的总结出了一些规律。</p>
+<p>##变量命名<br>在我大一学编程的时候，老师告诉我们变量命名最后使用匈牙利命名法，例如，经常出现hszStr、istuNum之类的变量名，如果对代码不熟悉的话，都不知道是什么意思。</p>
+<p>现在我们并不使用匈牙利命名法，而是直接将变量的含义通过单纯完整拼写处理。例如：</p>
+<blockquote>
+<p>deviceSerialDict： 用于保存设备串号的字典<br>deviceSerialDictList： 用于保存设备串号字典的列表<br>unusedSerialNumList： 未使用的序列号列表</p>
+</blockquote>
+<p>我们约定：</p>
+<ul>
+<li>变量名首字母小写</li>
+<li>多个单词的构成的变量，从第二个开始首字母大写</li>
+<li>缩写词做单词处理，例如ACM在变量名中应该写为Acm而不是ACM</li>
+<li>常量大写，每个单词使用_下划线分割</li>
+<li>不允许出现Magic Number</li>
+<li>使用名词或者动宾结构</li>
+</ul>
+<p>##类与方法</p>
+<p>使用面向对象编程，这一点在我做毕业设计的程序时，帮了我大忙，大大减轻了我的工作压力。</p>
+<p>我们的风格其实有点像Java了，文件名和类名相同，如果一个文件里面有多个类，那文件名与主要的类名相同。</p>
+<p>我们约定：</p>
+<ul>
+<li>非私有的方法，首字母小写，动宾结构，例如getSerialNum</li>
+<li>对于和类本身没有什么大关系的方法，要使用@staticmethod</li>
+<li>只有类自己使用的方法需要设为私有，也就是名称前加两个下划线</li>
+</ul>
+<p>##代码细节</p>
+<ul>
+<li>逗号后面要有一个空格</li>
+<li>每一行代码后面不能有空格</li>
+<li>文件的最后要有一个空行</li>
+<li>等号左右都需要有空格，但是作为参数的时候不需要空格</li>
+<li>方法的参数大于6个，则使用列表或者字典来传递</li>
+</ul>
+<p>##总结</p>
+<p>挂一漏万，以上的规范使用Pylint都可以帮忙检查出来。没有说到的地方请大家补充，除了以上的规范以外，还有Python自己本身的编码规范，请戳-&gt;<a href="https://www.python.org/dev/peps/pep-0008/" target="_blank" rel="noopener">https://www.python.org/dev/peps/pep-0008/</a>。 </p>
+<p>最近重构了MCC,请大家对比</p>
+<p><a href="https://github.com/kingname/MCC" target="_blank" rel="noopener">https://github.com/kingname/MCC</a> </p>
+<p>与 重构之前 </p>
+<p><a href="https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb" target="_blank" rel="noopener">https://github.com/kingname/MCC/tree/c806c3ccfd0c0585d51caa9f85e6867e0f3ee8cb</a></p>
+<p>的区别。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/04/29/lxmloldbug/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/04/29/lxmloldbug/" class="post-title-link" itemprop="url">requests的content与text导致lxml的解析问题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-04-29 22:49:31" itemprop="dateCreated datePublished" datetime="2015-04-29T22:49:31+08:00">2015-04-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/经验/" itemprop="url" rel="index"><span itemprop="name">经验</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/04/29/lxmloldbug/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/04/29/lxmloldbug/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近实习工作任务比较重，又在做数据挖掘的教学工作，同时还在做毕设，所以博客更新比较慢。不过最近肯定会有大动作。</p>
+<p>闲话毕，转正题。在制作新浪微博模拟登录的部分时，遇到了一些问题。</p>
+<p>我使用requests获取了新浪微博的源代码，通过lxml库的etree.HTML来处理一段网页源代码，从而生成一个可以被xpath解析的对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector = etree.HTML(html)</span><br></pre></td></tr></table></figure></p>
+<p>遇到报错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">selector = etree.HTML(html)</span><br><span class="line">  File &quot;lxml.etree.pyx&quot;, line 2953, in lxml.etree.HTML (src\lxml\lxml.etree.c:66734)</span><br><span class="line">  File &quot;parser.pxi&quot;, line 1780, in lxml.etree._parseMemoryDocument (src\lxml\lxml.etree.c:101591)</span><br><span class="line">ValueError: Unicode strings with encoding declaration are not supported. Please use bytes input or XML fragments without declaration.</span><br></pre></td></tr></table></figure></p>
+<p>根据报错信息推测，可能是因为不支持编码声明的Unicode字符串。Google发现这个问题在2012年就已经有人提交给作者了，但是一直没有被修复。地址在-&gt;<a href="https://gist.github.com/karlcow/3258330" target="_blank" rel="noopener">https://gist.github.com/karlcow/3258330</a></p>
+<p>不过下面的人也给出了解决办法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">html = bytes(bytearray(html, encoding=&apos;utf-8&apos;))</span><br><span class="line">selector = etree.HTML(html)</span><br></pre></td></tr></table></figure></p>
+<p>首先将源代码转化成比特数组，然后再将比特数组转化成一个比特对象。这样就可以绕过这个bug。</p>
+<p>然而，又有人认为这不是一个bug, 所以一直没有被修复。这是由于，我获取源代码是使用r.text<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = requests.get(&apos;xxxxxx&apos;,cookies=cookies).text</span><br></pre></td></tr></table></figure></p>
+<p>而如果使用r.content：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = requests.get(&apos;xxxxxx&apos;,cookies=cookies).content</span><br></pre></td></tr></table></figure></p>
+<p>就不会报错。</p>
+<p>那r.text与r.content有什么区别呢？分析requests的源代码发现，r.text返回的是Unicode型的数据，而使用r.content返回的是bytes型的数据。也就是说，在使用r.content的时候，他已经只带了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = bytes(bytearray(html, encoding=&apos;utf-8&apos;))</span><br></pre></td></tr></table></figure></p>
+<p>这样一个转化了。</p>
+<p>最近CentOS都声明放弃Python2了，编码问题确实浪费了很多时间，等空下来转Python3吧~</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/03/04/pythonunittest2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/03/04/pythonunittest2/" class="post-title-link" itemprop="url">Python的单元测试（二）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-03-04 19:08:20" itemprop="dateCreated datePublished" datetime="2015-03-04T19:08:20+08:00">2015-03-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/03/04/pythonunittest2/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/03/04/pythonunittest2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在<a href="http://kingname.info/2015/02/27/Python%E7%9A%84%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" target="_blank" rel="noopener">Python的单元测试（一）</a>中，我们讲了单元测试的概念以及一个简单的单元测试例子。</p>
+<p>在这个例子中，只有三个函数，于是可以把每个函数的输出结果打印到屏幕上，再用肉眼去看结果是否符合预期。然而假设有一个程序，有二十个类，每个类又有几十个函数，有些函数的输出结果还多达几十行，在这种情况下，肉眼如何看得出？</p>
+<p>当然你可以使用if判断<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> 输出结果 == 预期结果:</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">	<span class="keyword">print</span> <span class="string">u'不相等'</span></span><br></pre></td></tr></table></figure></p>
+<p>这个时候，你发现，程序有几个函数，后三行就要重复几次，本着代码简洁的原则，你把这个判断的过程写到一个函数中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isequal</span><span class="params">(output,right_output)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> output == right_output:</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">print</span> <span class="string">u'不相等'</span></span><br></pre></td></tr></table></figure></p>
+<p>那么恭喜你，你步入正规了，然而，这一切已经有人为你做好了。欢迎unittest模块出场。</p>
+<blockquote>
+<p>unittest supports test automation, sharing of setup and shutdown code for tests, aggregation of tests into collections, and independence of the tests from the reporting framework. The unittest module provides classes that make it easy to support these qualities for a set of tests.</p>
+</blockquote>
+<p>Python的官方文档这样写到，unittest支持自动化测试，测试的安装分享和关闭代码……</p>
+<p>一句话说来，就是，unittest很好用。</p>
+<p>还是用上一次的readandadd.py来演示unittest的基本用法,首先介绍unittest的一个函数，assertEqual(first,second),这个函数的作用是检查变量first的值与second的值是否相等，如果不相等就抛出错误。 </p>
+<p>先创建utest.py文件，输入以下代码并运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#-*-coding:utf-8-*-</span><br><span class="line">import unittest</span><br><span class="line">import readandadd</span><br><span class="line"></span><br><span class="line">class basictest(unittest.TestCase): #类名可以随便取</span><br><span class="line">    def testread(self): #每个函数都要以test开头</span><br><span class="line">        output = readandadd.read(&apos;1.txt&apos;)</span><br><span class="line">        self.assertEqual(output,&apos;2,3&apos;)</span><br><span class="line"></span><br><span class="line">    def testgetnum(self):</span><br><span class="line">        output = readandadd.getnum(&apos;2,3&apos;)</span><br><span class="line">        self.assertEqual(output,[&apos;2&apos;, &apos;3&apos;])</span><br><span class="line"></span><br><span class="line">    def testaddnum(self):</span><br><span class="line">        output = readandadd.addnum([2,3])</span><br><span class="line">        self.assertEqual(output,5)</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    unittest.main()</span><br></pre></td></tr></table></figure></p>
+<p>运行结果如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests <span class="keyword">in</span> 0.001s</span><br><span class="line"></span><br><span class="line">OK</span><br></pre></td></tr></table></figure></p>
+<p>你也许会说，就一个ok，什么都没有啊。那我先把testread()函数下面的<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,<span class="string">'2,3'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,<span class="string">'2,4'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在运行utest.py看看输出结果如何：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">..F</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: testread (__main__.basictest)</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 8, <span class="keyword">in</span> testread</span><br><span class="line">    self.assertEqual(output,<span class="string">'2,4'</span>)</span><br><span class="line">AssertionError: <span class="string">'2,3'</span> != <span class="string">'2,4'</span></span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests <span class="keyword">in</span> 0.000s</span><br><span class="line"></span><br><span class="line">FAILED (failures=1)</span><br></pre></td></tr></table></figure></p>
+<p>这里准确的找出了错误的位置和错误的具体内容。注意看最上面，有个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">..F</span><br></pre></td></tr></table></figure></p>
+<p>猜测它可能是标示错误的位置。保持testread的错误不改，再把testgetnum()函数中的以下内容<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'3'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'6'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>再运行utest.py程序，输出结果如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">.FF</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: testgetnum (__main__.basictest)</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 12, <span class="keyword">in</span> testgetnum</span><br><span class="line">    self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'6'</span>])</span><br><span class="line">AssertionError: Lists differ: [<span class="string">'2'</span>, <span class="string">'3'</span>] != [<span class="string">'2'</span>, <span class="string">'6'</span>]</span><br><span class="line"></span><br><span class="line">First differing element 1:</span><br><span class="line">3</span><br><span class="line">6</span><br><span class="line"></span><br><span class="line">- [<span class="string">'2'</span>, <span class="string">'3'</span>]</span><br><span class="line">?        ^</span><br><span class="line"></span><br><span class="line">+ [<span class="string">'2'</span>, <span class="string">'6'</span>]</span><br><span class="line">?        ^</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">======================================================================</span><br><span class="line">FAIL: testread (__main__.basictest)</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 8, <span class="keyword">in</span> testread</span><br><span class="line">    self.assertEqual(output,<span class="string">'2,4'</span>)</span><br><span class="line">AssertionError: <span class="string">'2,3'</span> != <span class="string">'2,4'</span></span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests <span class="keyword">in</span> 0.001s</span><br><span class="line"></span><br><span class="line">FAILED (failures=2)</span><br></pre></td></tr></table></figure></p>
+<p>可以看出，这里分别把两个错误显示了出来。并且第一行变成了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.FF</span><br></pre></td></tr></table></figure></p>
+<p>所以，第一行的内容应该从右往左读，它标明错误函数在所有函数的相对位置。</p>
+<p>现在再把testread()和testgetnum()改回去，再看看全部正确的输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests in 0.000s</span><br><span class="line"></span><br><span class="line">OK</span><br></pre></td></tr></table></figure></p>
+<p>印证了那句话，没有消息就是最好的消息。</p>
+<p>这篇文章介绍了单元测试模块unittest的assertEqual的基本用法，下一篇文章将要更加全面的介绍unittest模块。</p>
+<hr>
+<p>本文首发地址:<a href="http://kingname.info/2015/03/04/pythonunittest2/" target="_blank" rel="noopener">http://kingname.info/2015/03/04/pythonunittest2/</a></p>
+<p>作者：青南　</p>
+<p>转载请注明出处。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/02/27/Python的单元测试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -723,1750 +2467,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/17/xpath提取多个标签下的text/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/01/17/xpath提取多个标签下的text/" class="post-title-link" itemprop="url">xpath提取多个标签下的text</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-01-17 16:01:07" itemprop="dateCreated datePublished" datetime="2015-01-17T16:01:07+08:00">2015-01-17</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/01/17/xpath提取多个标签下的text/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/17/xpath提取多个标签下的text/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在写爬虫的时候，经常会使用xpath进行数据的提取，对于如下的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;test1&quot;&gt;大家好！&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
-<p>使用xpath提取是非常方便的。假设网页的源代码在selector中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test1&quot;]/text()&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
-<p>就可以把“大家好！”提取到data变量中去。</p>
-<p>然而如果遇到下面这段代码呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;test2&quot;&gt;美女，&lt;font color=red&gt;你的微信是多少？&lt;/font&gt;&lt;div&gt;</span><br></pre></td></tr></table></figure></p>
-<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/text()&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
-<p>只能提取到“美女，”；</p>
-<p>如果使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test2&quot;]/font/text()&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
-<p>又只能提取到“你的微信是多少？”</p>
-<p>可是我本意是想把“美女，你的微信是多少？”这一整个句子提取出来。</p>
-<p>这还不是最糟糕的，还有第三段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;test3&quot;&gt;我左青龙，&lt;span id=&quot;tiger&quot;&gt;右白虎，&lt;ul&gt;上朱雀，&lt;li&gt;下玄武。&lt;/li&gt;&lt;/ul&gt;老牛在当中，&lt;/span&gt;龙头在胸口。&lt;div&gt;</span><br></pre></td></tr></table></figure></p>
-<p>而且内部的标签还不固定，如果我有一百段这样类似的html代码，又如何使用xpath表达式，以最快最方便的方式提取出来？</p>
-<p>我差一点就去用正则表达式替换了。还好我去Stack Overflow上面提了问。于是很快就有人给我解答了。</p>
-<p><strong>使用xpath的string(.)</strong></p>
-<p>以第三段代码为例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = selector.xpath(&apos;//div[@id=&quot;test3&quot;]&apos;)</span><br><span class="line">info = data.xpath(&apos;string(.)&apos;).extract()[0]</span><br></pre></td></tr></table></figure></p>
-<p>这样，就可以把“我左青龙，右白虎，上朱雀，下玄武。老牛在当中，龙头在胸口”整个句子提取出来，赋值给info变量。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/08/清空Github上某个文件的历史/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/01/08/清空Github上某个文件的历史/" class="post-title-link" itemprop="url">清空Github上某个文件的历史</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-01-08 16:04:53" itemprop="dateCreated datePublished" datetime="2015-01-08T16:04:53+08:00">2015-01-08</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/经验/" itemprop="url" rel="index"><span itemprop="name">经验</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/01/08/清空Github上某个文件的历史/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/08/清空Github上某个文件的历史/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>文章首发地址：<a href="http://kingname.info" target="_blank" rel="noopener">http://kingname.info</a></p>
-<p>今天在Github更新代码的时候，不小心把Gmail私钥文件更新上去了。即便我立刻删除了这个文件，可是在版本历史里面仍然可以看到这个文件的内容。这可把我吓坏了。</p>
-<p>Google一圈以后，终于找到了解决办法。把某个文件的历史版本全部清空。</p>
-<p>首先cd 进入项目文件夹下，然后执行以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git filter-branch --force --index-filter &apos;git rm --cached --ignore-unmatch 文件名&apos; --prune-empty --tag-name-filter cat -- --all</span><br><span class="line"></span><br><span class="line">git push origin master --force</span><br><span class="line"></span><br><span class="line">rm -rf .git/refs/original/</span><br><span class="line"></span><br><span class="line">git reflog expire --expire=now --all</span><br><span class="line"></span><br><span class="line">git gc --prune=now</span><br><span class="line"></span><br><span class="line">git gc --aggressive --prune=now</span><br></pre></td></tr></table></figure></p>
-<p>虽然不知道他们的作用是什么，不过真的解决了我的问题。看起来，以前我说我熟练掌握git，真是自不量力。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/08/如何正确使用日志log/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/01/08/如何正确使用日志log/" class="post-title-link" itemprop="url">如何正确使用日志Log</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-01-08 12:54:46" itemprop="dateCreated datePublished" datetime="2015-01-08T12:54:46+08:00">2015-01-08</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/01/08/如何正确使用日志log/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/08/如何正确使用日志log/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>文章首发地址：<a href="http://kingname.info" target="_blank" rel="noopener">http://kingname.info</a></p>
-<p>这篇文章不会教你在技术角度上使用log，而是告诉你为什么要使用log日志功能。</p>
-<h2 id="为什么要使用Log"><a href="#为什么要使用Log" class="headerlink" title="为什么要使用Log"></a>为什么要使用Log</h2><p>在<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="noopener">使用微信控制你的电脑</a>这篇文章中，我写好了电脑端的程序，使用py2exe生成可执行文件，并把它们发送给我的朋友让他们进行测试。但是他们把_config.ini设置好以后，运行程序就看到一个黑色窗口一闪而过。或者有些人一开始看到程序能正常登陆邮箱，但是准备执行命令的时候，窗口自动关闭。</p>
-<p>由于没有日志记录程序的运行状态，我根据他们的描述很难定位到错误在哪个地方。于是折腾了一个下午。</p>
-<p>这个时候，我觉得添加一个日志的功能迫在眉睫。</p>
-<h2 id="哪些地方应该用Log"><a href="#哪些地方应该用Log" class="headerlink" title="哪些地方应该用Log"></a>哪些地方应该用Log</h2><p>目前网上能找到的关于如何使用日志的文章，全部都是从技术角度讲怎么使用log：在XX地方应该先imort logging，然后basicconfig设定XX内容。可是我现在的问题是：</p>
-<ul>
-<li>应该在程序的哪些地方添加日志的输出？</li>
-<li>输出什么内容？</li>
-<li>如何输出才能以方便我的监控程序的运行情况？</li>
-</ul>
-<p>于是我只有自己摸索。因此，<strong>以下内容是我自己摸索出来的野路子，可能会有错漏。希望有经验的朋友能给我指正，非常感谢。</strong></p>
-<h3 id="这些地方应该用Log"><a href="#这些地方应该用Log" class="headerlink" title="这些地方应该用Log"></a>这些地方应该用Log</h3><p>使用<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="noopener">使用微信控制你的电脑</a>文章中涉及到的例子</p>
-<p>程序入口代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if __name__==&apos;__main__&apos;:</span><br><span class="line">        init()</span><br><span class="line">        print u&apos;等待接收命令&apos;</span><br><span class="line">        logging.info(u&apos;初始化完成。&apos;)</span><br><span class="line">        while 1:</span><br><span class="line">                time.sleep(int(time_limit)) #每5分钟检查一次邮箱</span><br><span class="line">                accp_mail()</span><br></pre></td></tr></table></figure>
-<p>以上代码表示程序运行以后，首先执行init()函数，于是如果init()初始化没有什么问题，成功执行完成以后，就应该在日志中输出“初始化完成”，然后进入接收邮件的循环。如果程序窗口运行以后一闪而过，而且生成的日志中没有初始化完成这样的字眼，那就说明问题出在初始化上面。</p>
-<p>然而初始化函数里面代码也有很多，又如何知道是初始化程序里面的什么地方出问题了呢？</p>
-<p>所以，再初始化函数里面，也应该有一定的日志记录。</p>
-<p>再看初始化函数的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">def init():</span><br><span class="line">        global username,password,host,boss_email,time_limit</span><br><span class="line">      	 </span><br><span class="line">		try:</span><br><span class="line">               f = open(&apos;_config.ini&apos;,&apos;r&apos;)</span><br><span class="line">       	except IOError,e:</span><br><span class="line">               logging.error(e)</span><br><span class="line">			exit()</span><br><span class="line"></span><br><span class="line">        info = f.readlines()</span><br><span class="line">		try:</span><br><span class="line">	        host = re.search(&apos;host:(.*?)\n&apos;,info[0],re.S).group(1)</span><br><span class="line">	        username = re.search(&apos;username:(.*?com)&apos;,info[1],re.S).group(1)</span><br><span class="line">	        password = re.search(&apos;password:(.*?)\n&apos;,info[2],re.S).group(1)</span><br><span class="line">	        boss_email = re.search(&apos;boss_email:(.*?com)&apos;,info[3],re.S).group(1)</span><br><span class="line">	        time_limit = re.search(&apos;time_limit:(.*?)\n&apos;,info[4],re.S).group(1)</span><br><span class="line">		except Exception,e:</span><br><span class="line">               logging.error(e)</span><br><span class="line"></span><br><span class="line">        logging.info(u&apos;打开配置文件成功。。。&apos;)</span><br><span class="line">		</span><br><span class="line"></span><br><span class="line">        #将命令生成字典，便于查询</span><br><span class="line">        command_start = info.index(&apos;&lt;command&gt;\n&apos;)</span><br><span class="line">        command_end = info.index(&apos;&lt;/command&gt;\n&apos;)</span><br><span class="line">        for each in info[command_start+1:command_end]:</span><br><span class="line">                command = each.split(&apos;=&apos;)</span><br><span class="line">                command_dict[command[0]] = command[1]</span><br><span class="line">		</span><br><span class="line">        logging.info(command_dict)</span><br><span class="line">		</span><br><span class="line">        open_start = info.index(&apos;&lt;open_file&gt;\n&apos;)</span><br><span class="line">        open_end = info.index(&apos;&lt;/open_file&gt;\n&apos;)</span><br><span class="line">        for each in info[open_start+1:open_end]:</span><br><span class="line">                open_file = each.split(&apos;=&apos;)</span><br><span class="line">                open_dict[open_file[0]] = open_file[1][:-1]</span><br><span class="line">		</span><br><span class="line">        logging.info(open_dict)</span><br><span class="line">		</span><br><span class="line">        f.close()</span><br></pre></td></tr></table></figure></p>
-<p>在这段代码中，我使用try except命令捕获异常，如果发生异常，就使用logging.error将错误写入日志中。例如当_config.ini被改名了或者被删除的时候，程序就会报错，而通过日志就能发现这个错误。</p>
-<p>经过上面的代码，如果在初始化的过程中出错，就可以很快确定问题出在什么地方。</p>
-<p>初始化完成以后，进入邮件接收阶段。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">def accp_mail():</span><br><span class="line">        logging.info(u&apos;开始检查邮箱&apos;)</span><br><span class="line">		try:</span><br><span class="line">	        pp = poplib.POP3_SSL(host)</span><br><span class="line">	        pp.set_debuglevel(1)</span><br><span class="line">	        pp.user(username)</span><br><span class="line">	        pp.pass_(password)</span><br><span class="line">	        ret = pp.list()</span><br><span class="line">	        logging.info(u&apos;登录邮箱成功。&apos;)</span><br><span class="line">		except Exception,e:</span><br><span class="line">			logging.error(e)</span><br><span class="line">			exit()</span><br><span class="line">		</span><br><span class="line">		logging.info(u&apos;开始抓取邮件。&apos;)</span><br><span class="line">		try:</span><br><span class="line">        	down = pp.retr(len(ret[1]))</span><br><span class="line">			logging.info(u抓取邮件成功。&apos;&apos;)</span><br><span class="line">		except Exception,e:</span><br><span class="line">			logging.error(e)</span><br><span class="line">			exit()</span><br><span class="line"></span><br><span class="line">		logging.info(u&apos;开始抓取subject和发件人&apos;)</span><br><span class="line">        try:</span><br><span class="line">               subject = re.search(&quot;Subject: (.*?)&apos;,&quot;,str(down[1]).decode(&apos;utf-8&apos;),re.S).group(1)</span><br><span class="line">               sender = re.search(&quot;&apos;X-Sender: (.*?)&apos;,&quot;,str(down[1]).decode(&apos;utf-8&apos;),re.S).group(1)</span><br><span class="line">               logging.info(u&apos;抓取subject和发件人成功&apos;)</span><br><span class="line">       	except Exception,e:</span><br><span class="line">               logging.error(e)</span><br><span class="line">               exit()</span><br><span class="line"></span><br><span class="line">        if subject != &apos;pass&apos;:</span><br><span class="line">                if sender == boss_email:</span><br><span class="line">                        DealCommand(subject)</span><br><span class="line">        pp.quit()</span><br></pre></td></tr></table></figure></p>
-<p>以上这段代码，对邮箱的登录与邮件的读取均作了监控，一旦有某个环节出了问题，就会体现在日志中。</p>
-<p>通过在登录环节的try except返回的错误日志，发现有很多朋友无法登录邮箱，而密码用户名都没有错，从而推断是没有在新浪邮箱的账户控制里面打开客服端接收POP3和SMTP的功能。</p>
-<p>再来看DealCommand()函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">def DealCommand(subject):</span><br><span class="line">        logging.info(u&apos;开始处理命令。&apos;)</span><br><span class="line">        send_mail(&apos;pass&apos;,&apos;slave&apos;)</span><br><span class="line">        if subject in command_dict:</span><br><span class="line">                logging.info(u&apos;执行命令&apos;)</span><br><span class="line">                try:</span><br><span class="line">                        command = command_dict[subject]</span><br><span class="line">                        os.system(command)</span><br><span class="line">                        send_mail(&apos;Success&apos;,&apos;boss&apos;)</span><br><span class="line">                        logging.info(u&apos;执行命令成功&apos;)</span><br><span class="line">                except Exception,e:</span><br><span class="line">                        logging.error(e)</span><br><span class="line">                        send_mail(&apos;error&apos;,&apos;boss&apos;,e)</span><br><span class="line">        elif subject in open_dict:</span><br><span class="line">                logging.info(u&apos;打开文件&apos;)</span><br><span class="line">                try:</span><br><span class="line">                        open_file = open_dict[subject]</span><br><span class="line">                        win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</span><br><span class="line">                        send_mail(&apos;Success&apos;,&apos;boss&apos;)</span><br><span class="line">                        logging.info(u&apos;打开文件成功&apos;)</span><br><span class="line">                except Exception,e:</span><br><span class="line">                        logging.error(e)</span><br><span class="line">                        send_mail(&apos;error&apos;,&apos;boss&apos;,e)</span><br><span class="line">        else:</span><br><span class="line">                send_mail(&apos;error&apos;,&apos;boss&apos;,&apos;no such command&apos;)</span><br></pre></td></tr></table></figure></p>
-<p>执行命令的地方可能会出错，于是果断使用try except捕获错误。并使用日志记录。</p>
-<p>最后是send_mail()函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">def send_mail(subject,flag,body=&apos;Success&apos;):</span><br><span class="line">        </span><br><span class="line">        msg = MIMEText(body,&apos;plain&apos;,&apos;utf-8&apos;)#中文需参数‘utf-8’，单字节字符不需要</span><br><span class="line">        msg[&apos;Subject&apos;] = subject</span><br><span class="line">        msg[&apos;from&apos;] = username</span><br><span class="line">        logging.info(&apos;开始配置发件箱。&apos;)</span><br><span class="line">        try:</span><br><span class="line">                handle = smtplib.SMTP(&apos;smtp.sina.com&apos;, 25)</span><br><span class="line">                handle.login(username,password)</span><br><span class="line">                logging.info(&apos;发件箱配置成功&apos;)</span><br><span class="line">        except Exception,e:</span><br><span class="line">                logging.error(e)</span><br><span class="line">                exit()</span><br><span class="line"></span><br><span class="line">        logging.info(u&apos;开始发送邮件&apos;+ &apos;to&apos; + flag)</span><br><span class="line">        if flag == &apos;slave&apos;:</span><br><span class="line">                try:</span><br><span class="line">                        handle.sendmail(username,username, msg.as_string())</span><br><span class="line">                        logging.info(u&apos;发送邮件成功&apos;)</span><br><span class="line">                except Exception,e:</span><br><span class="line">                        logging.error(e)</span><br><span class="line">                        exit()</span><br><span class="line">        elif flag == &apos;boss&apos;:</span><br><span class="line">                try:</span><br><span class="line">                        handle.sendmail(username,boss_email, msg.as_string())</span><br><span class="line">                        logging.info(u&apos;发送邮件成功&apos;)</span><br><span class="line">                except Exception,e:</span><br><span class="line">                        logging.error(e)</span><br><span class="line">                        exit()</span><br><span class="line">                </span><br><span class="line">        handle.close()</span><br><span class="line">        logging.info(u&apos;发送邮件结束&apos;+flag)</span><br></pre></td></tr></table></figure></p>
-<p>这里对邮件发件的部分需要特别仔细的错误捕获，然后记录进入日志中。</p>
-<p>完整的代码见：<a href="https://github.com/kingname/MCC.git" target="_blank" rel="noopener">https://github.com/kingname/MCC.git</a>中的auto.py</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>需要使用日志记录的地方大致有一下几处：</p>
-<ul>
-<li>所有输入输出处，无论是从文件输入还是从网络等其他地方输入</li>
-<li>执行命令处</li>
-<li>调用函数处</li>
-</ul>
-<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><p>这里我对一般信息的记录使用了info,实际上，一般用作调试的话，是使用debug更多。</p>
-<p>需要用户输入的地方，总会有想不到的错误，多小心都不为过。例如，用户可能会把time_limit设定为一个全角数字。而本文中就没有捕获这种问题到日志中。所以如果不放心的话，还可以更进一步的细化日志。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（三）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-01-02 15:42:22" itemprop="dateCreated datePublished" datetime="2015-01-02T15:42:22+08:00">2015-01-02</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/02/使用AWS亚马逊云搭建Gmail转发服务三/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在上一篇文章<a href="http://kingname.info/2014/12/31/%E4%BD%BF%E7%94%A8%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91AWS%E6%90%AD%E5%BB%BAGmail%E9%82%AE%E4%BB%B6%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1%E4%BA%8C/" target="_blank" rel="noopener">使用AWS亚马逊云搭建Gmail转发服务（二）</a>中，我们已经介绍了如何把邮件转发程序部署在服务器上。但是这样还不够。还需要实时监控程序的运行状态。于是，给程序增加日志记录功能是非常重要的。</p>
-<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>这里使用Python的logging库，实现日志记录功能。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import logging</span><br><span class="line"></span><br><span class="line">logging.basicConfig(level=logging.DEBUG,</span><br><span class="line">                format=&apos;%(asctime)s %(filename)s %(levelname)s %(message)s&apos;,</span><br><span class="line">                datefmt=&apos;%Y %m %d %H:%M:%S&apos;, #日期格式：年月日时分秒</span><br><span class="line">                filename=&apos;mail_note.log&apos;, #文件名</span><br><span class="line">                filemode=&apos;a&apos;) #以最佳的方式添加日志</span><br><span class="line">mail_log = logging.getLogger(&apos;maillog&apos;)</span><br></pre></td></tr></table></figure></p>
-<p>以上代码的作用是导入logging库功能。然后配置logging的输出格式。<br>各行代码的作用已经注释。</p>
-<p>要使用日志的时候，通过以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logging.info(&apos;日志内容&apos;)</span><br></pre></td></tr></table></figure></p>
-<p>同类的还有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mail_log.debug(&apos;内容&apos;)</span><br><span class="line">mail_log.warning(&apos;内容&apos;)</span><br><span class="line">mail_log.error(&apos;内容&apos;)</span><br><span class="line">……</span><br></pre></td></tr></table></figure></p>
-<p>logging库的功能还有很多，这里只是简单的介绍一下，更多的功能可以查阅相关的资料。</p>
-<h2 id="Flask"><a href="#Flask" class="headerlink" title="Flask"></a>Flask</h2><p>现在日志已经生成。又如何通过Flask查看呢？由于我的前端不行。因此这里就不使用精细的模板了。Flask的部署就不叙述了，各位可以参考Flask官方文档<a href="http://dormousehole.readthedocs.org/en/latest/" target="_blank" rel="noopener">http://dormousehole.readthedocs.org/en/latest/</a></p>
-<p>这里我只演示一个非常简单的日志输出功能。编写gmail_flask.py,请看代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#-*-coding:utf-8-*-</span><br><span class="line">from flask import Flask</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">@app.route(&apos;/&apos;)</span><br><span class="line">def index():</span><br><span class="line">    f = open(&apos;mail_note.log&apos;,&apos;rb&apos;) #以读文件的方式打开mail_note.log文件</span><br><span class="line">    content = f.readlines()#按行读取日志</span><br><span class="line">    s = &apos;&apos;</span><br><span class="line">    for each in content:</span><br><span class="line">        s += each</span><br><span class="line">        s += &apos;&lt;/p&gt;&apos;#输出日志</span><br><span class="line">    f.close()</span><br><span class="line">    return s</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    app.run(host=&apos;0.0.0.0&apos;) #开发外网访问</span><br></pre></td></tr></table></figure></p>
-<p>这个功能是把日志按行输出到网页上。<br>现在测试一下功能：<br>在终端窗口输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">screen</span><br><span class="line">python gmail_helper.py</span><br></pre></td></tr></table></figure></p>
-<p>然后Ctrl+A+D返回，再输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">screen</span><br><span class="line">python gmail_flask.py</span><br></pre></td></tr></table></figure></p>
-<p>然后访问服务器的5000端口查看效果。如图是我的服务器返回信息：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog.jpg" alt></p>
-<p>这里出现了Google的很多信息，这是由于Gmail的API库文件discovery.py里面也有用到日志功能。这个时候这里调用根logging，就会把discovery.py里面logging.info输出的信息写出来。这个时候怎么办呢？我对logging不是很熟悉，还请熟悉logging模块的朋友指点迷津。</p>
-<p>我使用了一个变通的办法：</p>
-<p>修改gmail_flask.py文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#-*-coding:utf-8-*-</span><br><span class="line">from flask import Flask</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">@app.route(&apos;/&apos;)</span><br><span class="line">def index():</span><br><span class="line">    f = open(&apos;mail_note.log&apos;,&apos;rb&apos;) #以读文件的方式打开mail_note.log文件</span><br><span class="line">    content = f.readlines()#按行读取日志</span><br><span class="line">    s = &apos;&apos;</span><br><span class="line">    for each in content:</span><br><span class="line">		if &apos;gmail_helper.py&apos; in each: #判定信息来自gmail_helper.py而不是discovery.py</span><br><span class="line">	        s += each</span><br><span class="line">	        s += &apos;&lt;/p&gt;&apos;#输出日志</span><br><span class="line">    f.close()</span><br><span class="line">    return s</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    app.run(host=&apos;0.0.0.0&apos;) #开发外网访问</span><br></pre></td></tr></table></figure></p>
-<p>效果如下图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmaillog2.jpg" alt></p>
-<p>源代码已更新到Github，请戳-&gt;<a href="https://github.com/kingname/MCC/blob/master/ghelper_with_log" target="_blank" rel="noopener">https://github.com/kingname/MCC/blob/master/ghelper_with_log</a></p>
-<p>我的日志会通过博客进行开放，地址请戳：</p>
-<p><a href="http://flask.kingname.info:5000" target="_blank" rel="noopener">http://flask.kingname.info:5000</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/01/Linux的screen/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/01/01/Linux的screen/" class="post-title-link" itemprop="url">断电不断网——Linux的screen</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-01-01 20:20:23" itemprop="dateCreated datePublished" datetime="2015-01-01T20:20:23+08:00">2015-01-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/01/01/Linux的screen/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/01/Linux的screen/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在<a href="http://kingname.info/2014/12/31/%E4%BD%BF%E7%94%A8%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91AWS%E6%90%AD%E5%BB%BAGmail%E9%82%AE%E4%BB%B6%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1%E4%BA%8C/" target="_blank" rel="noopener">使用AWS亚马逊云搭建Gmail转发服务（二）</a>中，我们最后运行了邮件转发程序。本以为程序就可以正常工作了，于是我关闭了Putty窗口。几个小时后回来，发现程序早就终止运行了。</p>
-<p>原来，在一般情况下，当一个session结束时，这个session里面运行的进程也会同时结束。这可不能达到我们要的效果。于是screen命令登场了。</p>
-<p>使用screen命令，可以让程序在断开session的时候继续运行。要打开screen，只需要在终端输入screen这个命令即可。请看下面演示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd wwwproject/ghelper</span><br><span class="line">screen</span><br><span class="line">python gmail_helper.py</span><br></pre></td></tr></table></figure>
-<p>这样就在一个screen里面运行了邮件转发程序。那么如何退出呢？</p>
-<p>键盘上Ctrl+A+D三个键一起按。这样就返回到了进入screen之前的终端界面。而邮件转发程序仍然在后台默默的运行。现在可以关闭putty，然后放心的去睡觉了。</p>
-<p>那重新SSH登录服务器以后，想关闭这个邮件转发程序怎么办？</p>
-<p>两个方法：</p>
-<p>方法一，直接结束Python进程。</p>
-<p>方法二，在终端窗口输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen -ls</span><br></pre></td></tr></table></figure></p>
-<p>终端窗口返回：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ubuntu@ip-172-31-15-35:~$ screen -ls</span><br><span class="line">There is a screen on:</span><br><span class="line">        7956.pts-0.ip-172-31-15-35      (01/01/2015 12:16:10 PM)        (Detached)</span><br><span class="line">1 Socket in /var/run/screen/S-ubuntu.</span><br></pre></td></tr></table></figure></p>
-<p>注意这里的7956就是pid，于是输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen -r 7956</span><br></pre></td></tr></table></figure></p>
-<p>就能回到Python的运行窗口了。于是，Ctrl+C结束程序运行。</p>
-<p>有了screen命令，再也不怕关闭session后程序结束运行了。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（二）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-31 14:44:27" itemprop="dateCreated datePublished" datetime="2014-12-31T14:44:27+08:00">2014-12-31</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在上一篇文章<a href="http://kingname.info/2014/12/30/%E4%BD%BF%E7%94%A8AWS%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91%E6%90%AD%E5%BB%BAGmail%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1/" target="_blank" rel="noopener">使用AWS亚马逊云搭建Gmail转发服务（一）</a>中，我们介绍了如何在亚马逊AWS的免费主机EC2中使用Gmai API从而接收邮件的操作。在这篇文章中，将要讲解如何制作一个邮件转发服务。</p>
-<p>我之前有写一篇文章，<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="noopener">使用微信控制你的电脑</a>其中有讲解如何使用Python的smtplib库实现发送邮件。于是Gmail邮件转发的思路就出来了：</p>
-<p>程序定期检查Gmail邮箱，如果发现有新的邮件，就将新邮件的标题，发送人，还有邮件正文提取出来，并使用 MIMEText构造一个邮件的object 然后再用国内邮箱发送给自己的主邮箱。</p>
-<p>这里涉及到三个邮箱：Gmail，国内邮箱一（发送），国内邮箱二（接收）。其中国内邮箱二是我的常用邮箱，我将它和微信绑定，因此一旦有新邮件，就会收到提醒。国内邮箱一是一个备胎邮箱，他的作用就是一个转发而已。</p>
-<p>可能有人会问为什么不用Gmail直接转发？因为我觉得很有可能不久以后，Gmail发送的邮件，国内邮箱收不到。</p>
-<p>那么我们将<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="noopener">使用微信控制你的电脑</a>这篇文章中涉及到的auto.py进行修改，编写一个ghelper_sender.py：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#-*-coding:utf-8 -*-</span><br><span class="line"></span><br><span class="line">import smtplib</span><br><span class="line">import sys</span><br><span class="line">from email.mime.text import MIMEText</span><br><span class="line"></span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&apos;utf-8&apos;)</span><br><span class="line"></span><br><span class="line">username = &quot;123@sina.com&quot;# 接收邮箱</span><br><span class="line">password = &quot;123abc&quot;# 接收邮箱密码</span><br><span class="line">mailbox = &quot;greensouth@foxmail.com&quot; #国内邮箱二</span><br><span class="line"></span><br><span class="line">def send_mail(subject,body=&apos;Success&apos;):</span><br><span class="line">        msg = MIMEText(body,&apos;plain&apos;,&apos;utf-8&apos;)#中文需参数‘utf-8’，单字节字符不需要</span><br><span class="line">        msg[&apos;Subject&apos;] = subject</span><br><span class="line">        msg[&apos;from&apos;] = username</span><br><span class="line">        handle = smtplib.SMTP(&apos;smtp.sina.com&apos;, 25)</span><br><span class="line">        handle.login(username,password)</span><br><span class="line">		handle.sendmail(username,mailbox, msg.as_string())</span><br><span class="line">        handle.close()</span><br></pre></td></tr></table></figure></p>
-<p>这里需要注意，msg[‘from’] 的值必须是国内邮箱一，而不是发邮件到Gmail邮箱的那个地址，否则会报错。</p>
-<p>现在打开上一篇文章中的ghelper_api.py，在最开头添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from ghelper_sender import send_mail</span><br></pre></td></tr></table></figure></p>
-<p>导入send_mail函数。</p>
-<p>由于ghelper_api.py 中，上一篇文章中通过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</span><br><span class="line">b = GetMessage(gmail_service,&apos;me&apos;,a)</span><br></pre></td></tr></table></figure></p>
-<p>获得你邮件的正文和发件人，现在再获取邮件的标题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</span><br></pre></td></tr></table></figure></p>
-<p>这里我把发件人和邮件正文添加到一起，于是得到以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</span><br><span class="line">b = GetMessage(gmail_service,&apos;me&apos;,a)</span><br><span class="line">content =  b[&apos;snippet&apos;]</span><br><span class="line">sender =  b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]</span><br><span class="line">subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</span><br><span class="line">body = sender + &apos;\n&apos; + content</span><br><span class="line">send_mail(subject,body)</span><br><span class="line">print subject</span><br><span class="line">print body</span><br><span class="line">print &apos;============================&apos;</span><br></pre></td></tr></table></figure></p>
-<p>这样就能发送一次邮件了。接收到的效果如图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmail.jpg" alt><br>但是这显然不是我们需要的效果。我们希望这个程序能够自动运行，自动查看邮箱。于是，编写一个函数isnew()来检测是否有新的邮件发送过来，如果有就获取新邮件并发送。</p>
-<p>设定一个全局变量last_email用于保存已读的最后一封邮件，令他的初始化为当前邮箱里面最新的一封邮件的id.接下来每过一段时间，程序就检查邮箱里面邮件的id，如果和last_email相同，就什么都不做；如果不相同，则程序就读取邮件，直到读取到某一封邮件的id和last_email相同为止。再令last_email的值为当前最新的id.代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">def init():</span><br><span class="line">  global last_email</span><br><span class="line">  last_email = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</span><br><span class="line"></span><br><span class="line">def isnew():</span><br><span class="line">  global last_email</span><br><span class="line">  themail = ListMessagesWithLabels(gmail_service,&apos;me&apos;)</span><br><span class="line">  for each in themail:</span><br><span class="line">    if each[&apos;id&apos;] != last_email:</span><br><span class="line">      tosend(each[&apos;id&apos;])</span><br><span class="line">    else:</span><br><span class="line">      break</span><br><span class="line">  last_email = themail[0][&apos;id&apos;]</span><br><span class="line"></span><br><span class="line">def tosend(id):</span><br><span class="line">  b = GetMessage(gmail_service,&apos;me&apos;,id)</span><br><span class="line">  content =  b[&apos;snippet&apos;]</span><br><span class="line">  sender =  b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]</span><br><span class="line">  subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</span><br><span class="line">  body = sender + &apos;\n&apos; + content</span><br><span class="line">  send_mail(subject,body)</span><br><span class="line">  print subject</span><br><span class="line">  print body</span><br><span class="line">  print &apos;============================&apos;</span><br></pre></td></tr></table></figure></p>
-<p>设定一个主函数，并把上面的代码放在主函数里面,并循环执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if __name__==&apos;__main__&apos;:</span><br><span class="line">    init()</span><br><span class="line">    while 1:</span><br><span class="line">        time.sleep(3600) #每一小时检查一次邮箱</span><br><span class="line">        isnew()</span><br></pre></td></tr></table></figure></p>
-<p>完整的代码我放在了Github上面，请戳-&gt;<a href="https://github.com/kingname/MCC/tree/master/ghelper" target="_blank" rel="noopener">https://github.com/kingname/MCC/tree/master/ghelper</a></p>
-<p>在下一篇文章中，将介绍Python的logging库，并将每次的发送记录通过日志记录下来。同时用Flask搭建一个网站，从而方便直观的检查这个程序的运行情况。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（一）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-30 15:41:35" itemprop="dateCreated datePublished" datetime="2014-12-30T15:41:35+08:00">2014-12-30</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h2><p>2014年12月28号开始，Gmail被伟大的墙从协议上封禁，POP3、SMTP、IAMP全部阵亡。于是不仅网页不能打开Gmail，连邮件客服端都不能使用Gmail收发邮件了。</p>
-<p>Gmail在国内的用户相当的广泛，难道就真的不用了吗？当然不是。虽然使用VPN可以翻出长城，但是开着VPN做其他事情又不太方便。于是，一种Gmail的转发服务变得重要起来。</p>
-<p>这篇文章将详细介绍如何使用亚马逊云AWS的免费主机EC2，配合Gmail的API来编写一个Gmail的转发程序。程序在设定时间内访问Gmail收件箱，发现新邮件以后，就通过另一个邮箱转发到国内邮箱中。每一次转发记录到一个日志文件中，并使用Flask搭建网站来，从而直观的检查接收发送记录。</p>
-<p>AWS的免费主机EC2的申请不是本文的重点，网上有很多教程，故略去不讲。<br>Flask环境的搭建不是本文重点，网上有很多教程，故略去不讲。</p>
-<p>本篇先讲解Gmail API的使用，下一篇讲解如何制作转发程序。</p>
-<h2 id="授权之路"><a href="#授权之路" class="headerlink" title="授权之路"></a>授权之路</h2><p>既然要是用Gmail的API，那就要开通Gmail的授权。Google的官方英文教程请戳-&gt;<a href="https://developers.google.com/gmail/api/quickstart/quickstart-python" target="_blank" rel="noopener">Run a Gmail App in Python</a></p>
-<h3 id="打开Gmail-API"><a href="#打开Gmail-API" class="headerlink" title="打开Gmail API"></a>打开Gmail API</h3><p>访问<a href="https://console.developers.google.com/project" target="_blank" rel="noopener">https://console.developers.google.com/project</a>，单击“建立档案”选项，新建一个项目。我这里新建的项目叫做“gmail”，如下图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/1.jpg" alt></p>
-<p>单击新建的档案“gmail”，在左侧点击“API和验证”，选择“API”，然后再右侧中间搜索框中输入Gmail，找到后打开。如下图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/开启gmailapi.jpg" alt></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/openapi.jpg" alt></p>
-<p>然后点击左侧“凭证”，选择“建立新的用户端ID”</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/凭证.jpg" alt></p>
-<p>这个时候注意一定要选择第三项，才能正确生成json文件。选择第三项，并填写完一些信息后，做如下选择，并点击“建立用户端ID”</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/id.jpg" alt></p>
-<p>接下来，下载json文件。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/oau.jpg" alt></p>
-<h3 id="验证机器"><a href="#验证机器" class="headerlink" title="验证机器"></a>验证机器</h3><p>在服务器上新建ghelper文件夹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir ghelper</span><br><span class="line">cd ghelper</span><br></pre></td></tr></table></figure></p>
-<p>然后安装Google API Python Client库。建议使用pip安装而不是easy_install，因为pip安装的库文件可以卸载，而easy_install安装的库文件不能卸载。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install --upgrade google-api-python-client</span><br></pre></td></tr></table></figure></p>
-<p>为了使代码中的run.tools()能够正常执行，还需要安装gflags:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install python-gflags</span><br></pre></td></tr></table></figure></p>
-<p>将json文件上传到AWS服务器上，我放在了~/wwwproject/ghelper目录下面,并且重命名为client_secret.json,这样代码就不需要进行修改了。同时在本目录下面新建ghelper_api.py文件，文件内容为官方指南中的验证机器的代码，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">import httplib2</span><br><span class="line"></span><br><span class="line">from apiclient.discovery import build</span><br><span class="line">from oauth2client.client import flow_from_clientsecrets</span><br><span class="line">from oauth2client.file import Storage</span><br><span class="line">from oauth2client.tools import run</span><br><span class="line"></span><br><span class="line"># Path to the client_secret.json file downloaded from the Developer Console</span><br><span class="line">CLIENT_SECRET_FILE = &apos;client_secret.json&apos;</span><br><span class="line"></span><br><span class="line"># Check https://developers.google.com/gmail/api/auth/scopes for all available scopes</span><br><span class="line">OAUTH_SCOPE = &apos;https://www.googleapis.com/auth/gmail.readonly&apos;</span><br><span class="line"></span><br><span class="line"># Location of the credentials storage file</span><br><span class="line">STORAGE = Storage(&apos;gmail.storage&apos;)</span><br><span class="line"></span><br><span class="line"># Start the OAuth flow to retrieve credentials</span><br><span class="line">flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=OAUTH_SCOPE)</span><br><span class="line">http = httplib2.Http()</span><br><span class="line"></span><br><span class="line"># Try to retrieve credentials from storage or run the flow to generate them</span><br><span class="line">credentials = STORAGE.get()</span><br><span class="line">if credentials is None or credentials.invalid:</span><br><span class="line">  credentials = run(flow, STORAGE, http=http)</span><br><span class="line"></span><br><span class="line"># Authorize the httplib2.Http object with our credentials</span><br><span class="line">http = credentials.authorize(http)</span><br><span class="line"></span><br><span class="line"># Build the Gmail service from discovery</span><br><span class="line">gmail_service = build(&apos;gmail&apos;, &apos;v1&apos;, http=http)</span><br><span class="line"></span><br><span class="line"># Retrieve a page of threads</span><br><span class="line">threads = gmail_service.users().threads().list(userId=&apos;me&apos;).execute()</span><br><span class="line"></span><br><span class="line"># Print ID for each thread</span><br><span class="line">if threads[&apos;threads&apos;]:</span><br><span class="line">  for thread in threads[&apos;threads&apos;]:</span><br><span class="line">    print &apos;Thread ID: %s&apos; % (thread[&apos;id&apos;])</span><br></pre></td></tr></table></figure></p>
-<p>运行ghelper_api.py，进入Google验证阶段。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python ghelper_api.py</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sigin.jpg" alt></p>
-<p>在红线处按回车键就可以进入输入模式。输入gmail和密码以后，移动光标到“Sign in”回车，然后进入如下页面：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sign2.jpg" alt></p>
-<p>输入你的信息，验证通过以后会让你进入开启浏览器的javascript功能。可是Linux服务器哪来的浏览器？这个时候按键盘的Ctrl + Z来取消。</p>
-<p>继续输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python ghelper_api.py --noauth_local_webserver</span><br></pre></td></tr></table></figure></p>
-<p>会提示离线验证，如果仍然失败的话，就继续Ctrl+Z然后再输入上面的代码，很快就会让你离线验证：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/sign3.jpg" alt></p>
-<p>复制他给出的网址，并在自己电脑上登录后，复制他给出的代码并粘贴回服务器上。验证通过。</p>
-<h3 id="使用API"><a href="#使用API" class="headerlink" title="使用API"></a>使用API</h3><p>打开<a href="https://developers.google.com/gmail/api/v1/reference/" target="_blank" rel="noopener">API Reference</a>，查看Gmail API的用法。</p>
-<p>这里用Users.messages的list和get方法来演示API的使用。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/listget.jpg" alt></p>
-<p>先查看list的说明:</p>
-<blockquote>
-<p>Lists the messages in the user’s mailbox.</p>
-</blockquote>
-<p>列出邮箱里的信息。这里实际上列出来的是每一封邮件的id,于是，使用这个id，通过get就能获得邮件的内容。</p>
-<p>通过查看list和get的使用范例：</p>
-<p>list:<br><a href="https://developers.google.com/gmail/api/v1/reference/users/messages/list" target="_blank" rel="noopener">https://developers.google.com/gmail/api/v1/reference/users/messages/list</a><br>get:<br><a href="https://developers.google.com/gmail/api/v1/reference/users/messages/get" target="_blank" rel="noopener">https://developers.google.com/gmail/api/v1/reference/users/messages/get</a></p>
-<p>构造出以下的完整代码：</p>
-<pre><code>#-*-coding:utf-8 -*-
-import httplib2
-
-from apiclient.discovery import build
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.file import Storage
-from oauth2client.tools import run
-from apiclient import errors
-import base64
-import email
-
-
-# Path to the client_secret.json file downloaded from the Developer Console
-CLIENT_SECRET_FILE = &apos;client_secret.json&apos;
-
-# Check https://developers.google.com/gmail/api/auth/scopes for all available scopes
-OAUTH_SCOPE = &apos;https://www.googleapis.com/auth/gmail.readonly&apos;
-
-# Location of the credentials storage file
-STORAGE = Storage(&apos;gmail.storage&apos;)
-
-# Start the OAuth flow to retrieve credentials
-flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=OAUTH_SCOPE)
-http = httplib2.Http()
-
-# Try to retrieve credentials from storage or run the flow to generate them
-credentials = STORAGE.get()
-if credentials is None or credentials.invalid:
-  credentials = run(flow, STORAGE, http=http)
-
-# Authorize the httplib2.Http object with our credentials
-http = credentials.authorize(http)
-
-# Build the Gmail service from discovery
-gmail_service = build(&apos;gmail&apos;, &apos;v1&apos;, http=http)
-
-# Retrieve a page of threads
-# threads = gmail_service.users().threads().list(userId=&apos;me&apos;).execute()
-
-# # Print ID for each thread
-# if threads[&apos;threads&apos;]:
-#   for thread in threads[&apos;threads&apos;]:
-#     print &apos;Thread ID: %s&apos; % (thread[&apos;id&apos;])
-
-def ListMessagesWithLabels(service, user_id, label_ids=[]):
-  &quot;&quot;&quot;List all Messages of the user&apos;s mailbox with label_ids applied.
-
-  Args:
-    service: Authorized Gmail API service instance.
-    user_id: User&apos;s email address. The special value &quot;me&quot;
-    can be used to indicate the authenticated user.
-    label_ids: Only return Messages with these labelIds applied.
-
-  Returns:
-    List of Messages that have all required Labels applied. Note that the
-    returned list contains Message IDs, you must use get with the
-    appropriate id to get the details of a Message.
-  &quot;&quot;&quot;
-  try:
-    response = service.users().messages().list(userId=user_id,
-                                               labelIds=label_ids).execute()
-    messages = []
-    if &apos;messages&apos; in response:
-      messages.extend(response[&apos;messages&apos;])
-
-    while &apos;nextPageToken&apos; in response:
-      page_token = response[&apos;nextPageToken&apos;]
-      response = service.users().messages().list(userId=user_id,
-                                                 labelIds=label_ids,
-                                                 pageToken=page_token).execute()
-      messages.extend(response[&apos;messages&apos;])
-
-    return messages
-  except errors.HttpError, error:
-    print &apos;An error occurred: %s&apos; % error
-
-def GetMessage(service, user_id, msg_id):
-  &quot;&quot;&quot;Get a Message with given ID.
-
-  Args:
-    service: Authorized Gmail API service instance.
-    user_id: User&apos;s email address. The special value &quot;me&quot;
-    can be used to indicate the authenticated user.
-    msg_id: The ID of the Message required.
-
-  Returns:
-    A Message.
-  &quot;&quot;&quot;
-  try:
-    message = service.users().messages().get(userId=user_id, id=msg_id).execute()
-
-    print &apos;Message snippet: %s&apos; % message[&apos;snippet&apos;]
-
-    return message
-  except errors.HttpError, error:
-    print &apos;An error occurred: %s&apos; % error
-
-a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]
-b = GetMessage(gmail_service,&apos;me&apos;,a)
-print b[&apos;snippet&apos;]
-print b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]
-</code></pre><p>通过观察GetMessage返回的数据，可以看到，返回的是一个字典dict,邮件的内容在key为snippet的里面。发件人在[‘payload’][‘headers’][3][‘value’]里面，如图：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/data1.jpg" alt><br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/data2.jpg" alt></p>
-<p>代码在服务器上运行效果如图：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmail/show.jpg" alt></p>
-<p>至此，Gmail API在AWS服务器上的部署完成。下一篇文章将会介绍如何使用Python轮询Gmail的收件箱，并在有新邮件的时候转发到国内邮箱。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" class="post-title-link" itemprop="url">对一个罗马数字与阿拉伯数字转换算法的分析</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-29 18:34:30" itemprop="dateCreated datePublished" datetime="2014-12-29T18:34:30+08:00">2014-12-29</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在看《Dive into Python》的单元测试时，发现用作例子的“阿拉伯数字-罗马数字”的转换算法非常的巧妙，现在发上来和大家分享一下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">romanNumeralMap = ((&apos;M&apos;,1000),</span><br><span class="line">		(&apos;CM&apos;,900),</span><br><span class="line">		(&apos;D&apos;,500),</span><br><span class="line">		(&apos;CD&apos;,400),</span><br><span class="line">		(&apos;C&apos;,100),</span><br><span class="line">		(&apos;XC&apos;,90),</span><br><span class="line">		(&apos;L&apos;,50),</span><br><span class="line">		(&apos;XL&apos;,40),</span><br><span class="line">		(&apos;X&apos;,10),</span><br><span class="line">		(&apos;IX&apos;,9),</span><br><span class="line">		(&apos;V&apos;,5),</span><br><span class="line">		(&apos;IV&apos;,4),</span><br><span class="line">		(&apos;I&apos;,1))</span><br><span class="line">def toRoman(n):</span><br><span class="line">	result = &quot;&quot;</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while n &gt;= integer:</span><br><span class="line">	 		result += numeral</span><br><span class="line">	 		n -= integer</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">def fromRoman(s):</span><br><span class="line">	result = 0</span><br><span class="line">	index = 0</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while s[index:index+len(numeral)] == numeral:</span><br><span class="line">	 		result += integer</span><br><span class="line">	 		index += len(numeral)</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">print toRoman(1356)</span><br><span class="line">print fromRoman(&apos;MCMLXXII&apos;)</span><br></pre></td></tr></table></figure>
-<p>这个算法的聪明之处，就在于他通过一个romanNumeralMap，把罗马数字与阿拉伯数字里面的“边界值”做出一一对应。这个边界刚刚好是罗马数字组合之间的转换。例如，I，II，III都可以通过第一个边界值组合获得；V，VI，VII，VIII可以通过V和I的组合获得。而对于一些特殊的值，则直接列出来。例如IV。通过这个边界值的组合，就能实现所需求的转换。这就类似于在一些机读卡上，需要填写1到100的数字，他会使用0,1,2,4,7这样以来:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3 = 1 + 2;</span><br><span class="line">5 = 4 + 1;</span><br><span class="line">6 = 4 + 2;</span><br><span class="line">8 = 7 + 1;</span><br><span class="line">9 = 7 + 2.</span><br></pre></td></tr></table></figure></p>
-<p>首先看一下toRoman()函数，把阿拉伯数字转换成罗马数字。它使用Python连接字符串的操作符号 + 来使“边界值”连接到一起。例如用作例子的n = 1356，程序遍历romanNumeralMap，寻找n对应的罗马数字，如果找不到，那就找刚刚比n小一点的数字对应的罗马字符。遍历在能使n 在romanNumeralMap有对应值时结束。</p>
-<pre><code>找到刚刚比1356小的那个值对应的罗马数字，也就是1000，M
-再继续找刚刚比n = 1356 - 1000 = 356小的数，也就是100，C;
-又继续找比n = 356 - 100 = 256小的数，还是100，也就是C;
-再找比n = 256 - 100 = 156小的数，仍然是100，C；
-继续找比n = 156 - 100 = 56 小的数，50，L；
-继续找比n = 56 - 50 = 6小的数，5，V；
-继续找n = 6 - 5 = 1对于的数，1，I。 结束。
-</code></pre><p>所以1356对应的值为MCCCLVI。 这样的操作很类似于在十进制里面，一个数字1356 = 1000 +　300 + 50 + 6，只是阿拉伯数字里面6是一个单独的符号，而罗马数字里面VI是个V + I的组合而已。</p>
-<p>下面再说说fromRoman()函数，把罗马数字转换成阿拉伯数字。这个函数在理解上面可能比toRoman()稍稍要困难一点。</p>
-<p>还是用例子来说明，MCMLXXII转换成阿拉伯数字。<br>其中如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s[index:index+len(numeral)]</span><br></pre></td></tr></table></figure></p>
-<p>作用是把字符串s中，从第index位到第index+ len(numeral)位（不包含第index + len(numeral)位自身）的字符提取出来。比如：</p>
-<pre><code>&gt;&gt;&gt; a = &apos;helloworld&apos;
-&gt;&gt;&gt; print a[2:5]
-llo
-</code></pre><p>即s的第2,3,4位被取出。</p>
-<p>回到对s = ‘MCMLXXII’的处理。</p>
-<pre><code>首先map中第一个罗马字符是M，只有一位，就把s 的第0位拿出来对比，发现s的第0位刚刚好是M，于是得到一个1000，index变为1，则之后从s的第一位开始。简单的说，相当于s 变成了s = &apos;CMLXXII&apos;
-
-接下来，经过一些无效的值以后，轮换到CM，发现CM为两位，就取出s的前两位，也就是CM，发现在s中刚刚好有CM,于是得到900. index再加2，则实际上s就相当于变成了LXXII
-
-继续经过一些无效值以后，轮换到了L，发现s当前的1位为L，于是在map中有对应的值50.然后index加1，s相当于变成了XXII
-
-接下来到了X，发现s当前的1位为X，在map中有对应的值10.然后index 再加1，s变成了XII
-
-虽然这个时候人已经知道是12了，但是计算机还是不知道，于是继续一个X，s变为II
-
-然后出现一个I，s变为I
-
-终于程序找到了一个直接相等的值I，于是转换结束。
-</code></pre><p>所以MCMLXXII对于的阿拉伯数字是1000+900+50+10+10+1+1 = 1972</p>
-<p>这个方法，把一个罗马数字从高位开始逐次剥离最高位，从而渐渐的把数字缩小。</p>
-<p>最近正在学习算法。因为越来越发现现在做的东西，如果仅仅实现功能的话，性能会出现瓶颈。希望我以后能写出更好的算法。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2509,7 +2514,7 @@ llo
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">156</span>
+                    <span class="site-state-item-count">164</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2596,7 +2601,9 @@ llo
                     
                       
                     
-                    <span class="site-state-item-count">37</span>
+                      
+                    
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2863,7 +2870,13 @@ llo
                     
                       
                     
-                    <span class="site-state-item-count">127</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">130</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

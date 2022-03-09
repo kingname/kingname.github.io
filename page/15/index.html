@@ -354,6 +354,229 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2016/06/27/alias-vs-virtualenv/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2016/06/27/alias-vs-virtualenv/" class="post-title-link" itemprop="url">alias导致virtualenv异常的分析和解法</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-06-27 23:40:56" itemprop="dateCreated datePublished" datetime="2016-06-27T23:40:56+08:00">2016-06-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/OS-X/" itemprop="url" rel="index"><span itemprop="name">OS X</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/06/27/alias-vs-virtualenv/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016/06/27/alias-vs-virtualenv/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>virtualenv 可以虚拟出一个独立的Python环境，在这个环境中安装的第三方库不会对系统中的Python产生影响。作为一个系统洁癖，我的系统中的Python环境只安装最主要的第三方库，我在开发Python项目的时候一般使用virtualenv生成的独立环境来安装项目需要的第三方库。但是如果同时使用了zsh的alias 和virtualenv，有可能就会导致virtualenv下面的python不能使用第三方库。</p>
+<h2 id="Python的运行方式"><a href="#Python的运行方式" class="headerlink" title="Python的运行方式"></a>Python的运行方式</h2><p>一般我们会使用以下两种方式之一来运行Python：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python xxx.py</span><br></pre></td></tr></table></figure>
+<p>或者在代码的第一行加上python的路径：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! /usr/local/bin/python</span></span><br></pre></td></tr></table></figure>
+<p>这两种方式，使用的是系统中的Python来解释代码。</p>
+<h2 id="问题的复现"><a href="#问题的复现" class="headerlink" title="问题的复现"></a>问题的复现</h2><p>如果电脑上安装了Python2 和Python3， 那么想运行Python3写的代码的时候，我们可以使用以下方法来运行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 xxx.py</span><br></pre></td></tr></table></figure>
+<p>但是由于有人不想写数字3， 于是就使用了zsh的alias功能，在<code>~/.zshrc</code>文件中，添加了一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias python=/usr/local/bin/python3</span><br></pre></td></tr></table></figure>
+<p>在这种情况下，使用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python xxx.py</span><br></pre></td></tr></table></figure>
+<p>就可以通过Python3来解析代码了。这种方式使用系统中的Python没有问题，但是如果在virtualenv下面可就惨了。</p>
+<p>我们创建一个虚拟环境并激活，安装Python的requests库，再启动python并导入requests库, 并其代码流程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv --python=python3 venv</span><br><span class="line">$ . venv/bin/activate</span><br><span class="line">$ pip install requests</span><br><span class="line">$ python</span><br><span class="line">&gt;&gt;&gt;import requests</span><br></pre></td></tr></table></figure>
+<p>如果我们设置了上面的alias，那么你一定会得到下面的结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">ImportError: No module named requests</span><br></pre></td></tr></table></figure>
+<p>于是你打开<code>venv/lib/python3.5/site-packages</code>却发现requests安安静静的躺在里面。于是你百思不得其解，明明pip 是把requests安装在虚拟环境下面的，为什么Python不能正常导入呢？于是你再执行以下代码查看环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">print(sys.path)</span><br></pre></td></tr></table></figure>
+<p>你看到的可能是下面的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[&apos;&apos;,</span><br><span class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python35.zip&apos;,</span><br><span class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python3.5&apos;,</span><br><span class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python3.5/plat-darwin&apos;,</span><br><span class="line">&apos;/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/lib/python3.5/lib-dynload&apos;,</span><br><span class="line">&apos;/usr/local/lib/python3.5/site-packages&apos;]</span><br></pre></td></tr></table></figure>
+<p>全部是系统下面Python的路径，和你的virtualenv 没有一点点的关系。</p>
+<p>然后你退出Python，在虚拟环境下面打印PATH，你却发现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo $PATH</span><br><span class="line">/Users/kingname/jikexueyuan/class_spider_basic/program/mongodb/venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</span><br></pre></td></tr></table></figure>
+<p>你的virtualenv环境好好的躺在你的环境变量的最前面。于是你快要疯掉了，到底是什么鬼，怎么会发生如此灵异的事件？系统不应该是首先找环境变量第一个位置下面的Python吗？怎么会跳过虚拟环境，去打开了系统中的Python呢？应该直接打开虚拟环境下面的Python才对啊！</p>
+<h2 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h2><p>问题的根源就在你的alias上面。</p>
+<p>zsh 的alias的优先级是非常高的，它会首先替换为等号后面的内容，然后再执行。那么即使在虚拟环境下，在终端输入<code>python</code>并回车以后，实际执行的代码是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/python3</span><br></pre></td></tr></table></figure>
+<p>你使用了绝对路径打开了系统中的Python3。</p>
+<p>而由于你没有对pip 设定alias, 因此你使用pip 安装requests的时候，它调用的是虚拟环境下面的pip,所以requests会正确安装在虚拟环境下面。</p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>解决办法有两个:</p>
+<ol>
+<li>在<code>~/.zshrc</code>中删除下面的代码，并重启终端：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias python=/usr/local/bin/python3</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>将<code>~/.zshrc</code>中的：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias python=/usr/local/bin/python3</span><br></pre></td></tr></table></figure>
+<p>修改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias python=python3</span><br></pre></td></tr></table></figure>
+<p>本文首发地址： <a href="http://kingname.info/2016/06/27/alias-vs-virtualenv/" target="_blank" rel="noopener">http://kingname.info/2016/06/27/alias-vs-virtualenv/</a>转载请注明出处。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2016/06/19/bean-in-python/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2300,203 +2523,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/02/27/Python的单元测试/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/02/27/Python的单元测试/" class="post-title-link" itemprop="url">Python的单元测试（一）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-02-27 22:50:47" itemprop="dateCreated datePublished" datetime="2015-02-27T22:50:47+08:00">2015-02-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/02/27/Python的单元测试/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/02/27/Python的单元测试/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。</p>
-<p>说<strong>一个函数</strong>高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面送出来（return），他不会说，我要生产一个轮子，但是我首先需要一个女人进来，他不会说，这是计划的一部分。</p>
-<p>说<strong>几个函数</strong>是低耦合的，就是指他们的依赖性小。他们就像是葫芦娃，每个都有自己独特的能力，可以自己单干，在关键的时候还可以合体，变成小金刚。他们就像积木一样，各有各的功能，需要使用的时候直接组合在一起就可以了。</p>
-<p>使用测试驱动开发，每一个测试只测试一个功能，这样就可以迫使函数把自己独立出来，尽量减少和其他函数的依赖。</p>
-<p>例如，有一个文件1.txt，他的内容是两个数字，使用逗号隔开。形如“2,4”（不包括外侧双引号，下同）。我要写一个程序readandadd.py，读取硬盘上的1.txt文件，然后把这个文件的内容打印到屏幕上。</p>
-<p>不规范的写法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">b = f.read().split(&apos;,&apos;)</span><br><span class="line">f.close()</span><br><span class="line">print int(b[0])+int(b[1])</span><br></pre></td></tr></table></figure></p>
-<p>不规范写法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def A():</span><br><span class="line">	f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">	b = f.read().split(&apos;,&apos;)</span><br><span class="line">	f.close()</span><br><span class="line">	print int(b[0])+int(b[1])</span><br><span class="line">A()</span><br></pre></td></tr></table></figure></p>
-<p>比较规范的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">def getnum(info):</span><br><span class="line">    twonum = info.split(&apos;,&apos;)</span><br><span class="line">    return twonum</span><br><span class="line"></span><br><span class="line">def addnum(twonum):</span><br><span class="line">    return int(twonum[0])+int(twonum[1])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">        info = read(&apos;1.txt&apos;)</span><br><span class="line">        twonum = getnum(info)</span><br><span class="line">        result = addnum(twonum)</span><br><span class="line">		print result</span><br></pre></td></tr></table></figure></p>
-<p>这样写的好处是，如果想测试读文件的功能，就只需要测试read()函数，如果想测试把两个数分开的功能，就只需要测试getnum()函数。而相反，在不规范写法二中，虽然只想测试两个数字相加的功能，可是却不得不首先打开文件并读取文件然后把数字分开。</p>
-<p>继续回到比较规范的写法当中，我相信很多人写完read()函数以后，肯定会输入如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">print read(&apos;1.txt&apos;)</span><br></pre></td></tr></table></figure></p>
-<p>然后运行程序，发现正常打印出’2,3’以后，再开始写getnum()函数。写完getnum以后，测试getnum()函数没问题以后再开始写然后测试addnum()函数。最后测试整个程序的功能。</p>
-<p>其实这个过程，已经就是在做单元测试了。然而这样操作的弊端是什么？如果整体程序已经写好了，之前做测试点代码也就删除了。那么如果突然把程序做了修改。例如1.txt里面数字的分隔从1个逗号变成了空格，或者变成了3个数字，那必然要修改getnum()，但是又如何测试修改的部分呢？还要把不相干的代码给注释掉。不仅麻烦，而且容易出错。</p>
-<p>现在，把测试的代码单独独立出来。会有什么效果呢？尝试创建一个test.py程序，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import readandadd</span><br><span class="line"></span><br><span class="line">def testread():</span><br><span class="line">    print &apos;read:&apos;,readandadd.read(&apos;1.txt&apos;)</span><br><span class="line"></span><br><span class="line">def testgetnum():</span><br><span class="line">    print &apos;getnum:&apos;,readandadd.getnum(&apos;2,3&apos;)</span><br><span class="line"></span><br><span class="line">def testaddnum():</span><br><span class="line">    print &apos;addnum:&apos;,readandadd.addnum([2,3])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    testread()</span><br><span class="line">    testgetnum()</span><br><span class="line">    testaddnum()</span><br></pre></td></tr></table></figure></p>
-<p>运行test.py以后输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">read: 2,3</span><br><span class="line">getnum: [&apos;2&apos;, &apos;3&apos;]</span><br><span class="line">addnum: 5</span><br></pre></td></tr></table></figure></p>
-<p>每一个函数的输出结果一目了然，而且在修改了readandadd.py的函数以后，重新运行test.py就可以知道输出结果有没有符合预期。</p>
-<p>当然，这里这个例子非常的简单，因此可以人工通过观察test.py的输出结果来确定是否符合预期，那对于大量的函数的测试，难道也要让肉眼来看吗？当然不是。于是，下一篇文章将会介绍Python的单元测试unittest。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2544,7 +2570,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">165</span>
+                    <span class="site-state-item-count">166</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2635,7 +2661,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">39</span>
+                      
+                    
+                    <span class="site-state-item-count">40</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2912,7 +2940,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">132</span>
+                      
+                    
+                    <span class="site-state-item-count">133</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

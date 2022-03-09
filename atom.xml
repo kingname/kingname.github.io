@@ -41,6 +41,31 @@
   </entry>
   
   <entry>
+    <title>使用 LogSeq 阅读 PDF体验极好</title>
+    <link href="https://www.kingname.info/2022/03/09/read-pdf-by-logseq/"/>
+    <id>https://www.kingname.info/2022/03/09/read-pdf-by-logseq/</id>
+    <published>2022-03-09T07:10:49.000Z</published>
+    <updated>2022-03-09T09:12:38.753Z</updated>
+    
+    <content type="html"><![CDATA[<iframe src="//player.bilibili.com/player.html?bvid=BV1iL411N7sq&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="720px" height="500px"> </iframe>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;iframe src=&quot;//player.bilibili.com/player.html?bvid=BV1iL411N7sq&amp;page=1&quot; scrolling=&quot;no&quot; border=&quot;0&quot; frameborder=&quot;no&quot; framespacing=&quot;0&quot; allowfu
+      
+    
+    </summary>
+    
+      <category term="LogSeq" scheme="https://www.kingname.info/categories/LogSeq/"/>
+    
+    
+      <category term="LogSeq" scheme="https://www.kingname.info/tags/LogSeq/"/>
+    
+  </entry>
+  
+  <entry>
     <title>FastAPI的小兄弟，开发命令行工具更给力</title>
     <link href="https://www.kingname.info/2022/03/06/typer/"/>
     <id>https://www.kingname.info/2022/03/06/typer/</id>
@@ -488,31 +513,6 @@
     
     
       <category term="Selenium" scheme="https://www.kingname.info/tags/Selenium/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：爬虫模拟浏览器如何避免重复登录？</title>
-    <link href="https://www.kingname.info/2021/12/23/remote-debug-puppeteer/"/>
-    <id>https://www.kingname.info/2021/12/23/remote-debug-puppeteer/</id>
-    <published>2021-12-23T02:55:02.000Z</published>
-    <updated>2021-12-23T02:56:51.573Z</updated>
-    
-    <content type="html"><![CDATA[<p>当我们使用模拟浏览器访问一个网站的时候，可能会遇到网站需要登录的情况。我的爬虫练习网站提供了这样一个<a href="http://exercise.kingname.info/exercise_login_success" target="_blank" rel="noopener">登录练习</a>的案例。</p><p>如果你手动用浏览器测试，你会发现这样一个现象：第一次访问的时候，自动跳转到登录页面。输入账号<code>kingname</code>和密码<code>genius</code>以后，可以看到登录成功的页面，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211215170103.png" alt></p><p>现在，你把浏览器关了再打开，然后再次访问这个网址，你会发现浏览器直接就能进入到登录成功的页面，不会再出现登录页面。</p><a id="more"></a><p>我们都知道，这是因为浏览器记住了网站的Cookies，即使关闭了浏览器再打开，这个Cookies依然存在，所以可以绕过登录功能。</p><p>但如果你使用Selenium或者Puppeteer/Pyppeteer，那么情况就不是这样了。当你第一次登录成功了以后，退出程序。第二次重新运行程序的时候，爬虫又要重新登录一次。这个过程一来拖慢了爬虫的运行速度，二来容易让网站检测到你的账号异常——难道自动登录功能失效了？为什么其他人的都正常，他的账号每小时都要重新登录一次？可能是爬虫，发个验证码过去探探虚实。</p><p>同理，还有时候，网站登录会出现很麻烦的验证码，但是一旦登录成功，这个验证码就再也不会出现了。处理这种验证码最简单的办法就是直接人工参与。那么如果爬虫每小时都要运行一次，岂不是每小时都要人来过一次验证码？能不能让爬虫只登录一次，之后就再也不登陆了呢？</p><p>方法有两个。第一个方法，也是大家最直观能想到的方法：登陆成功以后，把Cookies保存下来。下一次要重新登陆的时候直接把这个Cookies设置到浏览器里面可以了。这个方法网上有很多例子，你可以通过关键词“selenium 获取cookies”和“selenium设置cookies”搜索到，我就不再赘述了。</p><p>我们今天要讲的是第二个方法，也是最简单的方法。并且这个方法听起来很弱智：我不关浏览器，它的Cookies不就不会清空了吗？</p><p>但你仔细想一下，根据你之前的经验，当你的爬虫代码退出的时候，是不是浏览器也被自动关闭了？即使因为某种原因，爬虫代码本身崩溃了，浏览器没有关闭，那你第二次启动爬虫的时候，怎么重新连回之前启动的浏览器？</p><p>我们今天要做的，就是把启动浏览器和启动爬虫，这两件事情分开。首先使用某种方法单独启动浏览器，然后再启动爬虫代码，并且让爬虫代码接管这个浏览器并控制它。</p><p>Chrome浏览器是支持远程调试模式的。这个模式打开的情况下，Puppeteer或者Selenium可以通过websocket连上去，进而控制它。</p><p>首先我们来启动Chrome的远程调试端口。你需要找到Chrome的安装位置，在Chrome的地址栏输入<code>chrome://version</code>就能找到Chrome的安装路径，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211215204518.png" alt></p><p>有了这个以后，我们需要执行命令启动支持远程调试功能的Chrome。如果你的电脑是Mac，那么命令是：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"</span>  --remote-debugging-port=9222 --no-first-run --no-default-browser-check --user-data-dir=$(mktemp -d -t <span class="string">'chrome-remote_data_dir'</span>)</span><br></pre></td></tr></table></figure><p>注意，由于地址中有空格，所以要把可执行文件的路径用引号抱起来。</p><p>如果你的电脑是Windows，那么就很简单了，执行命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文件路径/chrome.exe --remote-debugging-port=9222</span><br></pre></td></tr></table></figure><p>启动以后如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211215204912.png" alt></p><p>此时，你先不要动这个通过命令启动的Chrome。你先打开普通的浏览器，输入网址：<code>http://127.0.0.1:9222/json/version</code>，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211215205821.png" alt></p><p>记住其中的<code>webSocketDebuggerUrl</code>后面的地址。这就是我们远程链接的地址。</p><p>今天我们以Puppeteer为例，介绍如何连接这个远程的Chrome。</p><p>在连之前，我们首先做一件事情，在通过命令启动的这个Chrome中，打开我们的登录练习页面，然后手动登录它。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211215205305.png" alt></p><p>然后，我们来写一段Puppeteer的代码：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">'puppeteer-core'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> address = <span class="string">'ws://127.0.0.1:9222/devtools/browser/f6ede2a1-cf7b-4a0d-b0ea-9c0cd24d240d'</span></span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.connect(&#123;</span><br><span class="line">  browserWSEndpoint: address,</span><br><span class="line">&#125;);</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.newPage();</span><br><span class="line">response = <span class="keyword">await</span> page.goto(<span class="string">'http://exercise.kingname.info/exercise_login_success'</span>, &#123; <span class="attr">waitUntil</span>: <span class="string">'load'</span>, <span class="attr">timeout</span>: <span class="number">0</span> &#125;);</span><br><span class="line">&#125;</span><br><span class="line">run()</span><br></pre></td></tr></table></figure><p>这段代码最核心的就两行，连接远程的Chrome：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> address = <span class="string">'ws://127.0.0.1:9222/devtools/browser/f6ede2a1-cf7b-4a0d-b0ea-9c0cd24d240d'</span></span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.connect(&#123;</span><br><span class="line">  browserWSEndpoint: address,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211215210106.png" alt></p><p>可以看到，代码控制浏览器打开了一个新的标签页，并且立刻就能打开登录成功后的页面，不需要再次登录。</p><p>大家可以试一试，现在在终端窗口里面按下Ctrl + C把当前的爬虫代码强行关闭，然后再启动一次，你会发现依然是登录以后的页面。</p><p>这样一来，以后遇到需要登录的网站，只需要使用这个远程调试模式，先启动一个支持远程调试的Chrome浏览器，然后手动在浏览器上完成登录操作，接下来爬虫代码就再也不需要考虑登录这个动作了，爬虫可以直接访问登录后的页面。</p><p>你自己测试的过程中，可能会发现标签页越开越多。其实不用担心，这是因为我为了演示登录后的页面，没有关闭当前标签页导致的。你的爬虫执行完操作以后，可以使用<code>await page.close()</code>关闭当前标签页。只要至少保留一个标签页不关闭，那么这个浏览器窗口就可以一直使用。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;当我们使用模拟浏览器访问一个网站的时候，可能会遇到网站需要登录的情况。我的爬虫练习网站提供了这样一个&lt;a href=&quot;http://exercise.kingname.info/exercise_login_success&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;登录练习&lt;/a&gt;的案例。&lt;/p&gt;
-&lt;p&gt;如果你手动用浏览器测试，你会发现这样一个现象：第一次访问的时候，自动跳转到登录页面。输入账号&lt;code&gt;kingname&lt;/code&gt;和密码&lt;code&gt;genius&lt;/code&gt;以后，可以看到登录成功的页面，如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211215170103.png&quot; alt&gt;&lt;/p&gt;
-&lt;p&gt;现在，你把浏览器关了再打开，然后再次访问这个网址，你会发现浏览器直接就能进入到登录成功的页面，不会再出现登录页面。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/categories/%E7%88%AC%E8%99%AB/"/>
-    
-    
-      <category term="Puppeteer" scheme="https://www.kingname.info/tags/Puppeteer/"/>
     
   </entry>
   

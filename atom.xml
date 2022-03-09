@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2022-03-09T09:06:54.954Z</updated>
+  <updated>2022-03-09T09:27:02.721Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,61 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何准备简历和面试（未闻Code直播录像）</title>
+    <link href="https://www.kingname.info/2022/03/09/how-to-prepare-for-interview/"/>
+    <id>https://www.kingname.info/2022/03/09/how-to-prepare-for-interview/</id>
+    <published>2022-03-09T09:26:09.000Z</published>
+    <updated>2022-03-09T09:27:02.721Z</updated>
+    
+    <content type="html"><![CDATA[<iframe src="//player.bilibili.com/player.html?bvid=BV1t3411B7XW&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="720px" height="500px"> </iframe>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;iframe src=&quot;//player.bilibili.com/player.html?bvid=BV1t3411B7XW&amp;page=1&quot; scrolling=&quot;no&quot; border=&quot;0&quot; frameborder=&quot;no&quot; framespacing=&quot;0&quot; allowfu
+      
+    
+    </summary>
+    
+      <category term="面试" scheme="https://www.kingname.info/categories/%E9%9D%A2%E8%AF%95/"/>
+    
+    
+      <category term="视频" scheme="https://www.kingname.info/tags/%E8%A7%86%E9%A2%91/"/>
+    
+      <category term="面试" scheme="https://www.kingname.info/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>不走弯路的Docker入门</title>
+    <link href="https://www.kingname.info/2022/03/09/intro-to-docker/"/>
+    <id>https://www.kingname.info/2022/03/09/intro-to-docker/</id>
+    <published>2022-03-09T09:24:02.000Z</published>
+    <updated>2022-03-09T09:25:33.107Z</updated>
+    
+    <content type="html"><![CDATA[<p>保证你看完这个视频，就能使用 Docker。</p><iframe src="//player.bilibili.com/player.html?bvid=BV1Tg41157j4&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="720px" height="500px"> </iframe>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;保证你看完这个视频，就能使用 Docker。&lt;/p&gt;
+&lt;iframe src=&quot;//player.bilibili.com/player.html?bvid=BV1Tg41157j4&amp;page=1&quot; scrolling=&quot;no&quot; border=&quot;0&quot; frameborder
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="https://www.kingname.info/categories/Docker/"/>
+    
+    
+      <category term="视频" scheme="https://www.kingname.info/tags/%E8%A7%86%E9%A2%91/"/>
+    
+      <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
+    
+  </entry>
   
   <entry>
     <title>GneList 来了！抓取列表页-极-其-简-单！</title>
@@ -45,7 +100,7 @@
     <link href="https://www.kingname.info/2022/03/09/read-pdf-by-logseq/"/>
     <id>https://www.kingname.info/2022/03/09/read-pdf-by-logseq/</id>
     <published>2022-03-09T07:10:49.000Z</published>
-    <updated>2022-03-09T09:12:38.753Z</updated>
+    <updated>2022-03-09T09:28:56.104Z</updated>
     
     <content type="html"><![CDATA[<iframe src="//player.bilibili.com/player.html?bvid=BV1iL411N7sq&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="720px" height="500px"> </iframe>]]></content>
     
@@ -60,6 +115,8 @@
     
       <category term="LogSeq" scheme="https://www.kingname.info/categories/LogSeq/"/>
     
+    
+      <category term="视频" scheme="https://www.kingname.info/tags/%E8%A7%86%E9%A2%91/"/>
     
       <category term="LogSeq" scheme="https://www.kingname.info/tags/LogSeq/"/>
     
@@ -467,52 +524,6 @@
     
     
       <category term="JavaScript" scheme="https://www.kingname.info/tags/JavaScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：Puppeteer 不重启如何更换代理 IP</title>
-    <link href="https://www.kingname.info/2021/12/23/puppeteer-change-proxy/"/>
-    <id>https://www.kingname.info/2021/12/23/puppeteer-change-proxy/</id>
-    <published>2021-12-23T02:55:22.000Z</published>
-    <updated>2021-12-23T02:58:32.889Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们知道，在写爬虫的过程中，如果总是使用同一个 IP，很容易就会被网站识别并封禁，所以需要使用代理 IP 并经常更换。</p><a id="more"></a><p>但如果你在网上搜索 Puppeteer 如何更换代理 IP，你会发现，网上的解决方案一般是这样写的：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">'puppeteer'</span>);</span><br><span class="line"></span><br><span class="line">(<span class="keyword">async</span>() =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.launch(&#123;</span><br><span class="line">    args: [ <span class="string">'--proxy-server=123.45.67.89:8888'</span> ]</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.newPage();</span><br><span class="line">  <span class="keyword">await</span> page.goto(<span class="string">'http://httpbin.org/ip'</span>);</span><br><span class="line">  <span class="keyword">await</span> browser.close();</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure><p>这种写法有一个问题，如果你要更换 IP，必须重启爬虫。那么有没有办法不重启爬虫也能更换代理 IP 呢？</p><p>方法有，并且有两个。</p><h2 id="隧道代理"><a href="#隧道代理" class="headerlink" title="隧道代理"></a>隧道代理</h2><p>对一些网站来说，只要每次访问的 IP 不一样就可以避免被封禁，那么我们可以使用隧道代理。隧道代理供应商会给我们提供一个唯一的域名和端口。我们把它设置为爬虫的代理就可以了。代理供应商会在后端自动给每一次请求更换 IP，不用我们来操心。</p><p>我们使用<a href="https://www.qg.net/business/proxyip/42.html" target="_blank" rel="noopener">青果云</a>的隧道代理来做演示。它可以免费试用2小时。我获取到的代理 IP 地址为：<code>http://D5A913AF:B1DE2C46D321@tunnel.qg.net:11151</code>。于是，我可以修改上面的 Puppeteer 代码中的 IP 地址：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">'puppeteer-core'</span>);</span><br><span class="line"></span><br><span class="line">(<span class="keyword">async</span>() =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> browser = <span class="keyword">await</span> puppeteer.launch(&#123;</span><br><span class="line">    args: [ <span class="string">'--proxy-server=tunnel.qg.net:11151'</span> ], <span class="attr">headless</span>: <span class="literal">false</span>, <span class="attr">executablePath</span>: <span class="string">'/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge'</span>&#125;);</span><br><span class="line">  <span class="keyword">const</span> page = <span class="keyword">await</span> browser.newPage();</span><br><span class="line">  <span class="keyword">await</span> page.authenticate(&#123;<span class="attr">username</span>: <span class="string">'账号'</span>, <span class="attr">password</span>: <span class="string">'密码'</span>&#125;);  <span class="comment">// 如果代理没有权限验证，可以移除这一行</span></span><br><span class="line">  response = <span class="keyword">await</span> page.goto(<span class="string">'http://httpbin.org/ip'</span>);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'第一次访问: '</span>, <span class="keyword">await</span> response.text());</span><br><span class="line">  response = <span class="keyword">await</span> page.goto(<span class="string">'http://httpbin.org/ip'</span>);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'第二次访问: '</span>, <span class="keyword">await</span> response.text());</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-12-19-11-05-57.png" alt></p><h2 id="动态按需修改代理-IP"><a href="#动态按需修改代理-IP" class="headerlink" title="动态按需修改代理 IP"></a>动态按需修改代理 IP</h2><p>IP 并不是换得越频繁越好。如果网站需要登录，那么你登录以后每一次请求都更换 IP，这反而会弄巧成拙，让网站更加怀疑你是不是爬虫。还有一些网站，例如淘宝，当你访问一个页面的时候，它会自动301跳转多次。在这几次跳转的时候，你必须保持 IP 一致，否则它就会屏蔽你。</p><p>我们有时候需要实现按需更换代理 IP——让开发者在需要更换 IP 的时候，再来更换。</p><p>为了让 Puppeteer 实现这个目标，我们可以安装一个第三方模块：<code>puppeteer-page-proxy</code>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i puppeteer-page-proxy</span><br></pre></td></tr></table></figure><p>安装完成以后，我们来使用看看：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">'puppeteer-core'</span>)</span><br><span class="line"><span class="keyword">const</span> useProxy = <span class="built_in">require</span>(<span class="string">'puppeteer-page-proxy'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">puppeteer.launch(&#123;<span class="attr">headless</span>: <span class="literal">false</span>, <span class="attr">executablePath</span>: <span class="string">'/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge'</span>&#125;).then(</span><br><span class="line">    <span class="keyword">async</span> browser =&gt; &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'start...'</span>)</span><br><span class="line">        <span class="keyword">const</span> page = <span class="keyword">await</span> browser.newPage()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">await</span> useProxy(page, <span class="string">'http://账号:密码@119.5.228.105:21477'</span>)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'change proxy success, start to visit url'</span>)</span><br><span class="line">        resp = <span class="keyword">await</span> page.goto(<span class="string">'http://httpbin.org/ip'</span>)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">await</span> resp.text())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">await</span> useProxy(page, <span class="string">'http://账号:密码@119.41.199.19:56214'</span>)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'change proxy success, start to visit url'</span>)</span><br><span class="line">        resp = <span class="keyword">await</span> page.goto(<span class="string">'http://httpbin.org/ip'</span>)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">await</span> resp.text())</span><br><span class="line">        &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-12-19-11-22-37.png" alt></p><p>当我们需要更换 IP 的时候，只需要在代码里面执行<code>await useProxy(page, &#39;http://账号:密码@IP:端口&#39;)</code>，就可以更换新的 IP 了。如果你的代理 IP 没有账号密码，那么可以把代码改成：<code>await useProxy(page, &#39;http://IP:端口&#39;)</code>。</p><p>可能有人会问，你上面的示例代码中，你是直接把代理填写到代码里面的。如果我需要访问某个 URL 来获取新的代理怎么办呢？其实这也很简单，你可以再安装一个第三方模块：<code>axios</code>用来发起网络请求获取新的代理 IP，然后再替换:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i axios</span><br></pre></td></tr></table></figure><p>还是以青果云的短效代理 IP 为例，它可以提供一个接口，访问接口后，你能得到一个有效期5-15分钟的短效 IP，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-12-19-11-29-14.png" alt></p><p>开通试用账号以后，你可以获得一个提取代理的 URL，类似于下面这样：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://proxy.qg.net/extract?Key=ABCDEFGH&amp;Num=1&amp;AreaId=&amp;Isp=&amp;DataFormat=txt&amp;DataSeparator=%5Cn&amp;Detail=0</span><br></pre></td></tr></table></figure><p>访问以后就能拿到代理IP，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-12-19-11-34-37.png" alt></p><p>现在，我们要在 Puppeteer 里面，先访问这个 URL 获取代理，再把代理IP 设置到 Puppeteer 中，然后再访问目标网页。对应的代码如下：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> puppeteer = <span class="built_in">require</span>(<span class="string">'puppeteer-extra'</span>)</span><br><span class="line"><span class="keyword">const</span> useProxy = <span class="built_in">require</span>(<span class="string">'puppeteer-page-proxy'</span>)</span><br><span class="line"><span class="keyword">const</span> axios = <span class="built_in">require</span>(<span class="string">'axios'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">set_proxy</span>(<span class="params">page</span>)</span>&#123;</span><br><span class="line">    resp = <span class="keyword">await</span> axios.get(<span class="string">'https://proxy.qg.net/extract?Key=ABCDEFG&amp;Num=1&amp;AreaId=&amp;Isp=&amp;DataFormat=txt&amp;DataSeparator=%5Cn&amp;Detail=0'</span>)</span><br><span class="line">    proxy = <span class="string">'http://账号:密码@'</span> + resp.data</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'获取到的代理 IP 为：'</span>, proxy)</span><br><span class="line">    <span class="keyword">await</span> useProxy(page, proxy)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">puppeteer.launch(&#123;<span class="attr">headless</span>: <span class="literal">false</span>, <span class="attr">executablePath</span>: <span class="string">'/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge'</span>&#125;).then(</span><br><span class="line">    <span class="keyword">async</span> browser =&gt; &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'start...'</span>)</span><br><span class="line">        <span class="keyword">const</span> [page] = <span class="keyword">await</span> browser.pages()</span><br><span class="line">        <span class="keyword">await</span> set_proxy(page)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'change proxy success, start to visit url'</span>)</span><br><span class="line">        resp = <span class="keyword">await</span> page.goto(<span class="string">'http://httpbin.org/ip'</span>)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">await</span> resp.text())</span><br><span class="line">&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-12-19-11-49-40.png" alt></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们知道，在写爬虫的过程中，如果总是使用同一个 IP，很容易就会被网站识别并封禁，所以需要使用代理 IP 并经常更换。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/categories/%E7%88%AC%E8%99%AB/"/>
-    
-    
-      <category term="Puppeteer" scheme="https://www.kingname.info/tags/Puppeteer/"/>
-    
-      <category term="代理" scheme="https://www.kingname.info/tags/%E4%BB%A3%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：Selenium如何接管已经运行的Chrome浏览器？</title>
-    <link href="https://www.kingname.info/2021/12/23/remote-debug-selenium/"/>
-    <id>https://www.kingname.info/2021/12/23/remote-debug-selenium/</id>
-    <published>2021-12-23T02:55:10.000Z</published>
-    <updated>2021-12-23T02:57:30.636Z</updated>
-    
-    <content type="html"><![CDATA[<p>在昨天的文章<a href="https://mp.weixin.qq.com/s/ZifW2YtB_G2hmf_Es0BAgw" target="_blank" rel="noopener">一日一技：爬虫模拟浏览器如何避免重复登录？</a>中，我讲到了如何使用Puppeteer接管已经运行的Chrome。今天我们来讲讲使用Selenium如何实现这个功能。</p><a id="more"></a><p>在正式开始之前，先纠正昨天的一个错误。昨天我讲到，Windows电脑启动Chrome的远程调试模式用到的命令是：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文件路径/chrome.exe --remote-debugging-port=9222</span><br></pre></td></tr></table></figure><p>这个地方漏掉了一个参数。正确的命令应该是：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文件路径/chrome.exe --remote-debugging-port=9222 --user-data-dir=<span class="string">"某个存在的文件夹地址"</span></span><br></pre></td></tr></table></figure><p>好了，回到正题。现在无论你使用macOS还是Windows，首先按昨天的文章所说，启动Chrome开放9222端口。然后，在这个Chrome中，手动登录示例网站。</p><p>接下来，编写下面这段代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> Chrome</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.chrome.options <span class="keyword">import</span> Options</span><br><span class="line"></span><br><span class="line">chrome_options = Options()</span><br><span class="line">chrome_options.add_experimental_option(<span class="string">"debuggerAddress"</span>, <span class="string">"127.0.0.1:9222"</span>)</span><br><span class="line"><span class="comment"># 注意我把chromedriver文件放到了当前文件夹里面，所以可以这样调用</span></span><br><span class="line"><span class="comment"># 如果你是windows电脑，你需要使用./chromedriver.exe</span></span><br><span class="line">driver = Chrome(<span class="string">'./chromedriver'</span>, options=chrome_options)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">driver.get(<span class="string">'http://exercise.kingname.info/exercise_login_success'</span>)</span><br><span class="line">input(<span class="string">'输入任意内容继续'</span>)</span><br><span class="line">driver.get(<span class="string">'https://www.kingname.info'</span>)</span><br><span class="line">input(<span class="string">'输入任意内容继续'</span>)</span><br><span class="line">driver.get(<span class="string">'http://exercise.kingname.info/exercise_login_success'</span>)</span><br></pre></td></tr></table></figure><p>如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20211216183133.png" alt></p><p>由于使用Selenium的时候，始终操作的都是当前标签页，为了证明确实有效，所以我在示例代码里面，先把爬虫暂停，需要你在终端按下任何键以后，再打开我的博客。接下来，等你确认博客已经打开以后，再回到终端按下任意键，Chrome会再次打开登录成功的页面。</p><p>你还可以试一试把Python程序终止，再重新运行。你会发现代码依然可以接管这个浏览器窗口。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在昨天的文章&lt;a href=&quot;https://mp.weixin.qq.com/s/ZifW2YtB_G2hmf_Es0BAgw&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;一日一技：爬虫模拟浏览器如何避免重复登录？&lt;/a&gt;中，我讲到了如何使用Puppeteer接管已经运行的Chrome。今天我们来讲讲使用Selenium如何实现这个功能。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/categories/%E7%88%AC%E8%99%AB/"/>
-    
-    
-      <category term="Selenium" scheme="https://www.kingname.info/tags/Selenium/"/>
     
   </entry>
   

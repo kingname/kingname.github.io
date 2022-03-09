@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2022-03-06T15:27:53.637Z</updated>
+  <updated>2022-03-09T09:04:22.587Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>GneList 来了！抓取列表页-极-其-简-单！</title>
+    <link href="https://www.kingname.info/2022/03/09/this-is-gnelist/"/>
+    <id>https://www.kingname.info/2022/03/09/this-is-gnelist/</id>
+    <published>2022-03-09T08:56:05.000Z</published>
+    <updated>2022-03-09T09:04:22.587Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/GeneralNewsExtractor/GeneralNewsExtractor" target="_blank" rel="noopener">Gne</a>发布以后，大家自动化抓取新闻正文页的需求被解决了。但随之而来的，不断有同学希望能出一个抓取列表页的工具，于是，就有了今天的 GneList。</p><a id="more"></a><h2 id="GneList-是什么"><a href="#GneList-是什么" class="headerlink" title="GneList 是什么"></a>GneList 是什么</h2><p>GneList是一个浏览器插件，专门用来生成列表页的 XPath。使用这个 XPath，你可以快速获取到列表页中的每一个条目。</p><h2 id="GneList-怎么用？"><a href="#GneList-怎么用？" class="headerlink" title="GneList 怎么用？"></a>GneList 怎么用？</h2><iframe src="//player.bilibili.com/player.html?bvid=BV1Nb4y1s7Lc&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe><p>GneList 的使用非常简单，几乎不需要说明。</p><ol><li>打开带有列表的页面</li><li>点击插件</li><li>输入名字，点击<code>开始抓取</code></li><li>鼠标点击列表的前两项，GneList 会自动选中所有项</li><li>点击<code>提交</code>按钮</li><li>去数据库查看 XPath</li></ol><h2 id="怎么安装-GneList"><a href="#怎么安装-GneList" class="headerlink" title="怎么安装 GneList?"></a>怎么安装 GneList?</h2><p>GneList 由两个部分组成：插件端与后端。</p><p>插件端的下载地址：<a href="https://github.com/GeneralNewsExtractor/GneList/releases/download/0.1/GneList.zip" target="_blank" rel="noopener">https://github.com/GeneralNewsExtractor/GneList/releases/download/0.1/GneList.zip</a></p><p>后端的代码：<a href="https://github.com/GeneralNewsExtractor/GneListBackend" target="_blank" rel="noopener">https://github.com/GeneralNewsExtractor/GneListBackend</a> ，并且后端依赖 MongoDB。</p><h3 id="安装后端"><a href="#安装后端" class="headerlink" title="安装后端"></a>安装后端</h3><p>首先确保你有一个可以连接的 MongoDB，我们假设它的 URI 是：<code>mongodb://localhost</code>。从 Github上面 clone 后端的代码：<code>https://github.com/GeneralNewsExtractor/GneListBackend.git</code>。</p><p>进入后端代码的根目录中的 config 文件夹中，你会发现一个<code>local.yml</code>文件。打开它，第一行填写 MongoDB 的 URI 地址，第二行是数据库名，第三行是集合名。插件生成的 XPath 会保存在这里供你的下游调用。</p><p>改好配置文件以后，回到后端的根目录，分别执行如下命令(你需要先安装 Pipenv)：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pipenv install</span><br><span class="line">pipenv shell</span><br><span class="line"><span class="built_in">export</span> <span class="built_in">local</span> <span class="comment"># 你自己创建的 yml文件的名字</span></span><br><span class="line">uvicorn main:app --port 8800 --host 0.0.0.0  <span class="comment"># 使用8800端口</span></span><br></pre></td></tr></table></figure><p>命令执行完成后，如果你使用浏览器访问<code>http://127.0.0.1:8800</code>，应该会看到下图的内容，说明后端搭建成功。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-03-08-22-40-38.png" alt></p><h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><p>GneList 插件支持所有基于 Chromium 内核的浏览器，包括但不限于 Chrome/Chromium/Edge。</p><p>从上面的地址下载<code>GneList.zip</code>后，把它解压到任何一个文件夹中，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-03-08-22-45-08.png" alt></p><p>然后打开你的浏览器的插件管理页面，启动<code>开发人员模式</code>，例如下图是我在 Edge 中开启开发人员模式的方法。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-03-08-22-47-02.png" alt></p><p>然后点击右上角的<code>加载解压缩的扩展</code>，选中<code>GneList</code>文件夹。完成。</p><p>现在，刷新已有的列表页，或者重新开一个新的列表页，然后点击插件，试用一下吧。</p><h3 id="管理配置页面"><a href="#管理配置页面" class="headerlink" title="管理配置页面"></a>管理配置页面</h3><p>在插件上右键，选择<code>扩展选项</code>。Chrome 上面，名字可能是叫做<code>选项</code>或者英文<code>Options</code>。可以打开如下图所示的页面：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-03-08-22-51-06.png" alt></p><p>如果你没有启动后端，或者后端地址不是<code>http://127.0.0.1:8800</code>（例如你把后端部署在服务器上，需要使用 IP 或者域名来访问，或者端口不是8800），那么这个页面应该如上图所示。</p><p>你可以把输入框中的地址改为<code>后端地址/rule</code>，例如<code>http://123.56.78.99:8888/rule</code>。然后点击<code>提交</code>按钮。接下来刷新页面，你就可以看到如下图所示的内容：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-03-08-22-54-35.png" alt></p><p>这个页面显示了你已经添加的所有网站的XPath，你可以对他们进行修改或者删除。</p><h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><blockquote><p>为什么插件生成的 XPath 这么奇怪？</p></blockquote><p>因为这些 XPath 是从 CssSelector 转成的 XPath，我用了一个第三方的 JavaScript 包。那个包转出来的就是这么奇怪。但不影响它的功能。我后面会更换更好的包，让 XPath 变得更好看。</p><blockquote><p>我的爬虫怎么使用这些 XPath？</p></blockquote><p>还记得一开始配置的 MongoDB 吗？让你的爬虫去里面读取就可以了。</p><blockquote><p>为什么我启动插件以后，点网页上面的元素第一次没有反应？</p></blockquote><p>第一次点击的时候，如果发现没有生成红框框，就多点一下。看到红框框了再点第二个元素。</p><h2 id="GneList-的原理是什么？"><a href="#GneList-的原理是什么？" class="headerlink" title="GneList 的原理是什么？"></a>GneList 的原理是什么？</h2><p>接下来的几篇文章，我会介绍 GneList 的原理。如果你等不及的话，也可以到 Github上查看<a href="https://github.com/GeneralNewsExtractor/GneList" target="_blank" rel="noopener">源代码</a>。GneList 与 Gne 一样，他们是站在其他优秀开源项目的肩膀上做出来的，尤其是受到 <a href="https://github.com/martinsbalodis/web-scraper-chrome-extension" target="_blank" rel="noopener">web-scraper-chrome-extension</a>的启发。因此，GneList也是完全开源的，允许非商业使用。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://github.com/GeneralNewsExtractor/GeneralNewsExtractor&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Gne&lt;/a&gt;发布以后，大家自动化抓取新闻正文页的需求被解决了。但随之而来的，不断有同学希望能出一个抓取列表页的工具，于是，就有了今天的 GneList。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Gne" scheme="https://www.kingname.info/categories/Gne/"/>
+    
+    
+      <category term="Gne" scheme="https://www.kingname.info/tags/Gne/"/>
+    
+      <category term="GneList" scheme="https://www.kingname.info/tags/GneList/"/>
+    
+  </entry>
   
   <entry>
     <title>FastAPI的小兄弟，开发命令行工具更给力</title>
@@ -489,38 +513,6 @@
     
     
       <category term="Puppeteer" scheme="https://www.kingname.info/tags/Puppeteer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：谁说 Scrapy 不能爬 HTTP/2?</title>
-    <link href="https://www.kingname.info/2021/10/21/scrapy-http2/"/>
-    <id>https://www.kingname.info/2021/10/21/scrapy-http2/</id>
-    <published>2021-10-21T13:27:02.000Z</published>
-    <updated>2021-10-21T13:28:38.070Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-15-04-09.png" alt></p><p>之前有一位爬虫大佬写了一篇文章，说 HTTP/2协议天然就能防大部分的爬虫。Python 无论是 requests 还是 Scrapy 都不支持 HTTP/2协议。</p><p><a href="https://http2.golang.org/" target="_blank" rel="noopener">Go + HTTP/2</a>这个网站可以检测你是否使用 HTTP/2协议进行请求。当我们直接使用浏览器访问的时候，页面长这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-51-13.png" alt="注意红框中的文字"></p><p>但如果我们直接使用 Scrapy 访问这个页面，并打印源代码，返回的 HTML 长这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-52-26.png" alt="注意红框中的文字"></p><p>这样看起来，似乎Scrapy 确实不支持HTTP/2协议？</p><a id="more"></a><p>但我为什么总是一直强调要读官方文档，不要去搜索一些垃圾博客呢。因为官方文档里面，已经明确告诉你Scrapy 不仅原生支持 HTTP/2，而且只需要改一个配置就可以了：<a href="https://docs.scrapy.org/en/latest/topics/settings.html#download-handlers-base" target="_blank" rel="noopener">Settings — Scrapy 2.5.0 documentation</a>。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-55-17.png" alt="更换下载器句柄就可以了"></p><p>请大家注意上图中标红色方框的地方。根据它的描述，我只需要在<code>settings.py</code>文件中，更新下载器句柄（handlers）就可以了。我们来测试一下。把下面这段代码直接复制到 Scrapy 爬虫中：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DOWNLOAD_HANDLERS = &#123;</span><br><span class="line">    <span class="string">'https'</span>: <span class="string">'scrapy.core.downloader.handlers.http2.H2DownloadHandler'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-57-55.png" alt></p><p>改好以后，重新运行爬虫，打印出来的源代码如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-59-26.png" alt></p><p>可以看到，不需要安装任何额外的库。Scrapy 原生就支持 HTTP/2了。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-15-04-09.png&quot; alt&gt;&lt;/p&gt;
-&lt;p&gt;之前有一位爬虫大佬写了一篇文章，说 HTTP/2协议天然就能防大部分的爬虫。Python 无论是 requests 还是 Scrapy 都不支持 HTTP/2协议。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://http2.golang.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Go + HTTP/2&lt;/a&gt;这个网站可以检测你是否使用 HTTP/2协议进行请求。当我们直接使用浏览器访问的时候，页面长这样：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-51-13.png&quot; alt=&quot;注意红框中的文字&quot;&gt;&lt;/p&gt;
-&lt;p&gt;但如果我们直接使用 Scrapy 访问这个页面，并打印源代码，返回的 HTML 长这样：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2021-10-02-14-52-26.png&quot; alt=&quot;注意红框中的文字&quot;&gt;&lt;/p&gt;
-&lt;p&gt;这样看起来，似乎Scrapy 确实不支持HTTP/2协议？&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/categories/%E7%88%AC%E8%99%AB/"/>
-    
-    
-      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-      <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
-    
-      <category term="HTTP/2" scheme="https://www.kingname.info/tags/HTTP-2/"/>
     
   </entry>
   

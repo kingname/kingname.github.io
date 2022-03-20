@@ -354,6 +354,400 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/01/Linux的screen/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/01/Linux的screen/" class="post-title-link" itemprop="url">断电不断网——Linux的screen</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-01 20:20:23" itemprop="dateCreated datePublished" datetime="2015-01-01T20:20:23+08:00">2015-01-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/01/Linux的screen/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/01/Linux的screen/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在<a href="http://kingname.info/2014/12/31/%E4%BD%BF%E7%94%A8%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91AWS%E6%90%AD%E5%BB%BAGmail%E9%82%AE%E4%BB%B6%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1%E4%BA%8C/" target="_blank" rel="noopener">使用AWS亚马逊云搭建Gmail转发服务（二）</a>中，我们最后运行了邮件转发程序。本以为程序就可以正常工作了，于是我关闭了Putty窗口。几个小时后回来，发现程序早就终止运行了。</p>
+<p>原来，在一般情况下，当一个session结束时，这个session里面运行的进程也会同时结束。这可不能达到我们要的效果。于是screen命令登场了。</p>
+<p>使用screen命令，可以让程序在断开session的时候继续运行。要打开screen，只需要在终端输入screen这个命令即可。请看下面演示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd wwwproject/ghelper</span><br><span class="line">screen</span><br><span class="line">python gmail_helper.py</span><br></pre></td></tr></table></figure>
+<p>这样就在一个screen里面运行了邮件转发程序。那么如何退出呢？</p>
+<p>键盘上Ctrl+A+D三个键一起按。这样就返回到了进入screen之前的终端界面。而邮件转发程序仍然在后台默默的运行。现在可以关闭putty，然后放心的去睡觉了。</p>
+<p>那重新SSH登录服务器以后，想关闭这个邮件转发程序怎么办？</p>
+<p>两个方法：</p>
+<p>方法一，直接结束Python进程。</p>
+<p>方法二，在终端窗口输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen -ls</span><br></pre></td></tr></table></figure></p>
+<p>终端窗口返回：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ubuntu@ip-172-31-15-35:~$ screen -ls</span><br><span class="line">There is a screen on:</span><br><span class="line">        7956.pts-0.ip-172-31-15-35      (01/01/2015 12:16:10 PM)        (Detached)</span><br><span class="line">1 Socket in /var/run/screen/S-ubuntu.</span><br></pre></td></tr></table></figure></p>
+<p>注意这里的7956就是pid，于是输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen -r 7956</span><br></pre></td></tr></table></figure></p>
+<p>就能回到Python的运行窗口了。于是，Ctrl+C结束程序运行。</p>
+<p>有了screen命令，再也不怕关闭session后程序结束运行了。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/" class="post-title-link" itemprop="url">使用AWS亚马逊云搭建Gmail转发服务（二）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-31 14:44:27" itemprop="dateCreated datePublished" datetime="2014-12-31T14:44:27+08:00">2014-12-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/31/使用亚马逊云AWS搭建Gmail邮件转发服务二/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在上一篇文章<a href="http://kingname.info/2014/12/30/%E4%BD%BF%E7%94%A8AWS%E4%BA%9A%E9%A9%AC%E9%80%8A%E4%BA%91%E6%90%AD%E5%BB%BAGmail%E8%BD%AC%E5%8F%91%E6%9C%8D%E5%8A%A1/" target="_blank" rel="noopener">使用AWS亚马逊云搭建Gmail转发服务（一）</a>中，我们介绍了如何在亚马逊AWS的免费主机EC2中使用Gmai API从而接收邮件的操作。在这篇文章中，将要讲解如何制作一个邮件转发服务。</p>
+<p>我之前有写一篇文章，<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="noopener">使用微信控制你的电脑</a>其中有讲解如何使用Python的smtplib库实现发送邮件。于是Gmail邮件转发的思路就出来了：</p>
+<p>程序定期检查Gmail邮箱，如果发现有新的邮件，就将新邮件的标题，发送人，还有邮件正文提取出来，并使用 MIMEText构造一个邮件的object 然后再用国内邮箱发送给自己的主邮箱。</p>
+<p>这里涉及到三个邮箱：Gmail，国内邮箱一（发送），国内邮箱二（接收）。其中国内邮箱二是我的常用邮箱，我将它和微信绑定，因此一旦有新邮件，就会收到提醒。国内邮箱一是一个备胎邮箱，他的作用就是一个转发而已。</p>
+<p>可能有人会问为什么不用Gmail直接转发？因为我觉得很有可能不久以后，Gmail发送的邮件，国内邮箱收不到。</p>
+<p>那么我们将<a href="http://kingname.info/2014/12/23/A-Totally-Amazing/" target="_blank" rel="noopener">使用微信控制你的电脑</a>这篇文章中涉及到的auto.py进行修改，编写一个ghelper_sender.py：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#-*-coding:utf-8 -*-</span><br><span class="line"></span><br><span class="line">import smtplib</span><br><span class="line">import sys</span><br><span class="line">from email.mime.text import MIMEText</span><br><span class="line"></span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&apos;utf-8&apos;)</span><br><span class="line"></span><br><span class="line">username = &quot;123@sina.com&quot;# 接收邮箱</span><br><span class="line">password = &quot;123abc&quot;# 接收邮箱密码</span><br><span class="line">mailbox = &quot;greensouth@foxmail.com&quot; #国内邮箱二</span><br><span class="line"></span><br><span class="line">def send_mail(subject,body=&apos;Success&apos;):</span><br><span class="line">        msg = MIMEText(body,&apos;plain&apos;,&apos;utf-8&apos;)#中文需参数‘utf-8’，单字节字符不需要</span><br><span class="line">        msg[&apos;Subject&apos;] = subject</span><br><span class="line">        msg[&apos;from&apos;] = username</span><br><span class="line">        handle = smtplib.SMTP(&apos;smtp.sina.com&apos;, 25)</span><br><span class="line">        handle.login(username,password)</span><br><span class="line">		handle.sendmail(username,mailbox, msg.as_string())</span><br><span class="line">        handle.close()</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意，msg[‘from’] 的值必须是国内邮箱一，而不是发邮件到Gmail邮箱的那个地址，否则会报错。</p>
+<p>现在打开上一篇文章中的ghelper_api.py，在最开头添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from ghelper_sender import send_mail</span><br></pre></td></tr></table></figure></p>
+<p>导入send_mail函数。</p>
+<p>由于ghelper_api.py 中，上一篇文章中通过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</span><br><span class="line">b = GetMessage(gmail_service,&apos;me&apos;,a)</span><br></pre></td></tr></table></figure></p>
+<p>获得你邮件的正文和发件人，现在再获取邮件的标题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</span><br></pre></td></tr></table></figure></p>
+<p>这里我把发件人和邮件正文添加到一起，于是得到以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</span><br><span class="line">b = GetMessage(gmail_service,&apos;me&apos;,a)</span><br><span class="line">content =  b[&apos;snippet&apos;]</span><br><span class="line">sender =  b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]</span><br><span class="line">subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</span><br><span class="line">body = sender + &apos;\n&apos; + content</span><br><span class="line">send_mail(subject,body)</span><br><span class="line">print subject</span><br><span class="line">print body</span><br><span class="line">print &apos;============================&apos;</span><br></pre></td></tr></table></figure></p>
+<p>这样就能发送一次邮件了。接收到的效果如图：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/gmailmail.jpg" alt><br>但是这显然不是我们需要的效果。我们希望这个程序能够自动运行，自动查看邮箱。于是，编写一个函数isnew()来检测是否有新的邮件发送过来，如果有就获取新邮件并发送。</p>
+<p>设定一个全局变量last_email用于保存已读的最后一封邮件，令他的初始化为当前邮箱里面最新的一封邮件的id.接下来每过一段时间，程序就检查邮箱里面邮件的id，如果和last_email相同，就什么都不做；如果不相同，则程序就读取邮件，直到读取到某一封邮件的id和last_email相同为止。再令last_email的值为当前最新的id.代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">def init():</span><br><span class="line">  global last_email</span><br><span class="line">  last_email = ListMessagesWithLabels(gmail_service,&apos;me&apos;)[0][&apos;id&apos;]</span><br><span class="line"></span><br><span class="line">def isnew():</span><br><span class="line">  global last_email</span><br><span class="line">  themail = ListMessagesWithLabels(gmail_service,&apos;me&apos;)</span><br><span class="line">  for each in themail:</span><br><span class="line">    if each[&apos;id&apos;] != last_email:</span><br><span class="line">      tosend(each[&apos;id&apos;])</span><br><span class="line">    else:</span><br><span class="line">      break</span><br><span class="line">  last_email = themail[0][&apos;id&apos;]</span><br><span class="line"></span><br><span class="line">def tosend(id):</span><br><span class="line">  b = GetMessage(gmail_service,&apos;me&apos;,id)</span><br><span class="line">  content =  b[&apos;snippet&apos;]</span><br><span class="line">  sender =  b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]</span><br><span class="line">  subject = b[&apos;payload&apos;][&apos;headers&apos;][12][&apos;value&apos;]</span><br><span class="line">  body = sender + &apos;\n&apos; + content</span><br><span class="line">  send_mail(subject,body)</span><br><span class="line">  print subject</span><br><span class="line">  print body</span><br><span class="line">  print &apos;============================&apos;</span><br></pre></td></tr></table></figure></p>
+<p>设定一个主函数，并把上面的代码放在主函数里面,并循环执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if __name__==&apos;__main__&apos;:</span><br><span class="line">    init()</span><br><span class="line">    while 1:</span><br><span class="line">        time.sleep(3600) #每一小时检查一次邮箱</span><br><span class="line">        isnew()</span><br></pre></td></tr></table></figure></p>
+<p>完整的代码我放在了Github上面，请戳-&gt;<a href="https://github.com/kingname/MCC/tree/master/ghelper" target="_blank" rel="noopener">https://github.com/kingname/MCC/tree/master/ghelper</a></p>
+<p>在下一篇文章中，将介绍Python的logging库，并将每次的发送记录通过日志记录下来。同时用Flask搭建一个网站，从而方便直观的检查这个程序的运行情况。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/30/使用AWS亚马逊云搭建Gmail转发服务/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2200,7 +2594,7 @@ llo
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">168</span>
+                    <span class="site-state-item-count">170</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3097,6 +3491,10 @@ axios.get('https://ja3er.com/json').then((response) => {
 
   
   
+    
+      
+    
+      
     
       
     

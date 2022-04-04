@@ -42,6 +42,28 @@
   </entry>
   
   <entry>
+    <title>极其简单，加速Github Release 下载</title>
+    <link href="https://www.kingname.info/2022/04/01/easy-github-download/"/>
+    <id>https://www.kingname.info/2022/04/01/easy-github-download/</id>
+    <published>2022-04-01T09:38:00.000Z</published>
+    <updated>2022-04-04T09:39:12.393Z</updated>
+    
+    <content type="html"><![CDATA[<p>不是程序员的同学，别忙着走。不要看到Github就觉得这篇文章跟你无关。无论你是不是程序员，这篇文章都能帮到你。</p><a id="more"></a><p>有一些开源软件，它的新版本是通过Github Release来发布的。你在它的官网点击下载以后，实际上是从一个Github的地址下载文件。</p><p>以我最近很喜欢用的LogSeq为例，这个软件版本更新比较频繁，但是每次更新以后，都需要从Github Release里面找到最新版本来安装，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220326175525.png" alt></p><p>但如果你从这里下载过东西，你就会发现这个下载速度太恼火了：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220326175624.png" alt></p><p>我Steam下载50GB的游戏不到1小时，可现在下载一个141MB的文件，竟然要2小时？</p><p>程序员同学自然有各种方法加速下载，但这些方法，要不就比较复杂，对不懂代码的同学不友好，要不就是方法涉及到一些众所周知却不能明说的东西。</p><p>不过，看到这篇文章的同学有福了，我们现在有一个<code>完全合法</code>，而且<code>极其简单</code>的方法来加速下载。</p><p>操作方法非常简单，只有3步：</p><ol><li>复制Github Release里面对应文件的下载地址</li><li>访问<a href="https://github.abskoop.workers.dev/" target="_blank" rel="noopener">GitHub 文件加速</a></li><li>粘贴Github Release文件的链接，并点击<code>下载按钮</code></li></ol><p>我们来具体操作一下。首先在Release页面，找到你要下载的那一个文件，在上面右键，点击<code>复制链接</code>：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220326180740.png" alt></p><p>复制出来的链接长成下面这样：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/logseq/logseq/releases/download/0.6.5/Logseq-darwin-x64-0.6.5.dmg</span><br></pre></td></tr></table></figure><p>然后把这个地址粘贴到加速网站里面并下载，下载速度有了质的提高：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220326181144.png" alt></p><p>这个网站的原理，是使用了Cloudflare Workers的全球CDN进行加速，完全合理合法。并且你甚至可以自己部署到自己服务器上面。这个网站的源代码也已经开源：<a href="https://github.com/hunshcn/gh-proxy" target="_blank" rel="noopener">GitHub - hunshcn/gh-proxy: github release、archive以及项目文件的加速项目</a>。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;不是程序员的同学，别忙着走。不要看到Github就觉得这篇文章跟你无关。无论你是不是程序员，这篇文章都能帮到你。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="技巧" scheme="https://www.kingname.info/categories/%E6%8A%80%E5%B7%A7/"/>
+    
+    
+      <category term="技巧" scheme="https://www.kingname.info/tags/%E6%8A%80%E5%B7%A7/"/>
+    
+  </entry>
+  
+  <entry>
     <title>一日一技：为什么网站知道我的爬虫使用了代理？</title>
     <link href="https://www.kingname.info/2022/03/20/proxy-is-not-everything/"/>
     <id>https://www.kingname.info/2022/03/20/proxy-is-not-everything/</id>
@@ -495,32 +517,6 @@
       <category term="中间人攻击" scheme="https://www.kingname.info/tags/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB/"/>
     
       <category term="Puppeteer" scheme="https://www.kingname.info/tags/Puppeteer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：macOS如何找回已经连接的Wi-Fi密码？</title>
-    <link href="https://www.kingname.info/2022/01/18/find-password/"/>
-    <id>https://www.kingname.info/2022/01/18/find-password/</id>
-    <published>2022-01-18T13:02:04.000Z</published>
-    <updated>2022-01-18T13:02:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们知道，iPhone之间，iPhone和macOS之间是可以一键分享Wi-Fi密码的。只要有一台手机连了Wi-Fi，那么当第二台手机要连Wi-Fi的时候，只要第一台手机在旁边，就会自动弹出一个是否分享Wi-Fi密码的提示，从而一键分享。</p><p>我的macOS两年前连过父母家的Wi-Fi。后来又通过它的分享功能让iPhone也连上了Wi-Fi。所以两年过去了，Wi-Fi密码早就忘记了。</p><p>现在，我想让一台安卓手机连上这个Wi-Fi应该怎么办呢？</p><a id="more"></a><p>首先尝试了暴力破解。我试了所有我能想到的密码，均告失败。</p><p>接下来我尝试登陆路由器后台，试图从路由器管理页面找到密码。但我发现路由器管理密码也忘记了。</p><p>如果不重置路由器，还有什么办法找回密码呢？</p><p>其实macOS是有办法查到已经连过的Wi-Fi的明文密码，方法非常简单。</p><p>首先在启动台中，找到一个叫做<code>钥匙串访问</code>的功能，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-01-03-10-23-30.png" alt></p><p>选择<code>系统</code>-<code>密码</code>，然后找到 Wi-Fi的名字，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-01-03-10-25-15.png" alt></p><p>在Wi-Fi 名字上右键，选择<code>将密码拷贝到剪贴板</code>，并输入电脑的账号和密码，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2022-01-03-10-26-45.png" alt></p><p>然后找任何一个可以打字的输入框，粘贴一下，就知道密码是什么了。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我们知道，iPhone之间，iPhone和macOS之间是可以一键分享Wi-Fi密码的。只要有一台手机连了Wi-Fi，那么当第二台手机要连Wi-Fi的时候，只要第一台手机在旁边，就会自动弹出一个是否分享Wi-Fi密码的提示，从而一键分享。&lt;/p&gt;
-&lt;p&gt;我的macOS两年前连过父母家的Wi-Fi。后来又通过它的分享功能让iPhone也连上了Wi-Fi。所以两年过去了，Wi-Fi密码早就忘记了。&lt;/p&gt;
-&lt;p&gt;现在，我想让一台安卓手机连上这个Wi-Fi应该怎么办呢？&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="技巧" scheme="https://www.kingname.info/categories/%E6%8A%80%E5%B7%A7/"/>
-    
-    
-      <category term="技巧" scheme="https://www.kingname.info/tags/%E6%8A%80%E5%B7%A7/"/>
-    
-      <category term="macOS" scheme="https://www.kingname.info/tags/macOS/"/>
     
   </entry>
   

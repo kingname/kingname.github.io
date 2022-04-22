@@ -354,6 +354,600 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/03/04/pythonunittest2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/03/04/pythonunittest2/" class="post-title-link" itemprop="url">Python的单元测试（二）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-03-04 19:08:20" itemprop="dateCreated datePublished" datetime="2015-03-04T19:08:20+08:00">2015-03-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/03/04/pythonunittest2/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/03/04/pythonunittest2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在<a href="http://kingname.info/2015/02/27/Python%E7%9A%84%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" target="_blank" rel="noopener">Python的单元测试（一）</a>中，我们讲了单元测试的概念以及一个简单的单元测试例子。</p>
+<p>在这个例子中，只有三个函数，于是可以把每个函数的输出结果打印到屏幕上，再用肉眼去看结果是否符合预期。然而假设有一个程序，有二十个类，每个类又有几十个函数，有些函数的输出结果还多达几十行，在这种情况下，肉眼如何看得出？</p>
+<p>当然你可以使用if判断<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> 输出结果 == 预期结果:</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">	<span class="keyword">print</span> <span class="string">u'不相等'</span></span><br></pre></td></tr></table></figure></p>
+<p>这个时候，你发现，程序有几个函数，后三行就要重复几次，本着代码简洁的原则，你把这个判断的过程写到一个函数中：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isequal</span><span class="params">(output,right_output)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> output == right_output:</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">print</span> <span class="string">u'不相等'</span></span><br></pre></td></tr></table></figure></p>
+<p>那么恭喜你，你步入正规了，然而，这一切已经有人为你做好了。欢迎unittest模块出场。</p>
+<blockquote>
+<p>unittest supports test automation, sharing of setup and shutdown code for tests, aggregation of tests into collections, and independence of the tests from the reporting framework. The unittest module provides classes that make it easy to support these qualities for a set of tests.</p>
+</blockquote>
+<p>Python的官方文档这样写到，unittest支持自动化测试，测试的安装分享和关闭代码……</p>
+<p>一句话说来，就是，unittest很好用。</p>
+<p>还是用上一次的readandadd.py来演示unittest的基本用法,首先介绍unittest的一个函数，assertEqual(first,second),这个函数的作用是检查变量first的值与second的值是否相等，如果不相等就抛出错误。 </p>
+<p>先创建utest.py文件，输入以下代码并运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#-*-coding:utf-8-*-</span><br><span class="line">import unittest</span><br><span class="line">import readandadd</span><br><span class="line"></span><br><span class="line">class basictest(unittest.TestCase): #类名可以随便取</span><br><span class="line">    def testread(self): #每个函数都要以test开头</span><br><span class="line">        output = readandadd.read(&apos;1.txt&apos;)</span><br><span class="line">        self.assertEqual(output,&apos;2,3&apos;)</span><br><span class="line"></span><br><span class="line">    def testgetnum(self):</span><br><span class="line">        output = readandadd.getnum(&apos;2,3&apos;)</span><br><span class="line">        self.assertEqual(output,[&apos;2&apos;, &apos;3&apos;])</span><br><span class="line"></span><br><span class="line">    def testaddnum(self):</span><br><span class="line">        output = readandadd.addnum([2,3])</span><br><span class="line">        self.assertEqual(output,5)</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    unittest.main()</span><br></pre></td></tr></table></figure></p>
+<p>运行结果如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests <span class="keyword">in</span> 0.001s</span><br><span class="line"></span><br><span class="line">OK</span><br></pre></td></tr></table></figure></p>
+<p>你也许会说，就一个ok，什么都没有啊。那我先把testread()函数下面的<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,<span class="string">'2,3'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,<span class="string">'2,4'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在运行utest.py看看输出结果如何：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">..F</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: testread (__main__.basictest)</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 8, <span class="keyword">in</span> testread</span><br><span class="line">    self.assertEqual(output,<span class="string">'2,4'</span>)</span><br><span class="line">AssertionError: <span class="string">'2,3'</span> != <span class="string">'2,4'</span></span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests <span class="keyword">in</span> 0.000s</span><br><span class="line"></span><br><span class="line">FAILED (failures=1)</span><br></pre></td></tr></table></figure></p>
+<p>这里准确的找出了错误的位置和错误的具体内容。注意看最上面，有个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">..F</span><br></pre></td></tr></table></figure></p>
+<p>猜测它可能是标示错误的位置。保持testread的错误不改，再把testgetnum()函数中的以下内容<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'3'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>改为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'6'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>再运行utest.py程序，输出结果如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">.FF</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: testgetnum (__main__.basictest)</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 12, <span class="keyword">in</span> testgetnum</span><br><span class="line">    self.assertEqual(output,[<span class="string">'2'</span>, <span class="string">'6'</span>])</span><br><span class="line">AssertionError: Lists differ: [<span class="string">'2'</span>, <span class="string">'3'</span>] != [<span class="string">'2'</span>, <span class="string">'6'</span>]</span><br><span class="line"></span><br><span class="line">First differing element 1:</span><br><span class="line">3</span><br><span class="line">6</span><br><span class="line"></span><br><span class="line">- [<span class="string">'2'</span>, <span class="string">'3'</span>]</span><br><span class="line">?        ^</span><br><span class="line"></span><br><span class="line">+ [<span class="string">'2'</span>, <span class="string">'6'</span>]</span><br><span class="line">?        ^</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">======================================================================</span><br><span class="line">FAIL: testread (__main__.basictest)</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"E:/mystuff/unitest/utest.py"</span>, line 8, <span class="keyword">in</span> testread</span><br><span class="line">    self.assertEqual(output,<span class="string">'2,4'</span>)</span><br><span class="line">AssertionError: <span class="string">'2,3'</span> != <span class="string">'2,4'</span></span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests <span class="keyword">in</span> 0.001s</span><br><span class="line"></span><br><span class="line">FAILED (failures=2)</span><br></pre></td></tr></table></figure></p>
+<p>可以看出，这里分别把两个错误显示了出来。并且第一行变成了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.FF</span><br></pre></td></tr></table></figure></p>
+<p>所以，第一行的内容应该从右往左读，它标明错误函数在所有函数的相对位置。</p>
+<p>现在再把testread()和testgetnum()改回去，再看看全部正确的输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 3 tests in 0.000s</span><br><span class="line"></span><br><span class="line">OK</span><br></pre></td></tr></table></figure></p>
+<p>印证了那句话，没有消息就是最好的消息。</p>
+<p>这篇文章介绍了单元测试模块unittest的assertEqual的基本用法，下一篇文章将要更加全面的介绍unittest模块。</p>
+<hr>
+<p>本文首发地址:<a href="http://kingname.info/2015/03/04/pythonunittest2/" target="_blank" rel="noopener">http://kingname.info/2015/03/04/pythonunittest2/</a></p>
+<p>作者：青南　</p>
+<p>转载请注明出处。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/02/27/Python的单元测试/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/02/27/Python的单元测试/" class="post-title-link" itemprop="url">Python的单元测试（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-02-27 22:50:47" itemprop="dateCreated datePublished" datetime="2015-02-27T22:50:47+08:00">2015-02-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/02/27/Python的单元测试/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/02/27/Python的单元测试/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>测试驱动的软件开发方式可以强迫程序员在开发程序的时候使程序的函数之间实现高内聚，低耦合。这样的方式可以降低函数之间的依赖性，方便后续的修改，增加功能和维护。</p>
+<p>说<strong>一个函数</strong>高内聚，就是指这个函数专注于实现单一的任务，不会做除了生产这个任务以外的其他事情。可以想象一个人，他把自己关在一个小房子里面生产东西，只留两扇窗户，他需要什么材料，你就从小窗户给他送进去（参数），他做好了东西，就给你从另一个窗户里面送出来（return），他不会说，我要生产一个轮子，但是我首先需要一个女人进来，他不会说，这是计划的一部分。</p>
+<p>说<strong>几个函数</strong>是低耦合的，就是指他们的依赖性小。他们就像是葫芦娃，每个都有自己独特的能力，可以自己单干，在关键的时候还可以合体，变成小金刚。他们就像积木一样，各有各的功能，需要使用的时候直接组合在一起就可以了。</p>
+<p>使用测试驱动开发，每一个测试只测试一个功能，这样就可以迫使函数把自己独立出来，尽量减少和其他函数的依赖。</p>
+<p>例如，有一个文件1.txt，他的内容是两个数字，使用逗号隔开。形如“2,4”（不包括外侧双引号，下同）。我要写一个程序readandadd.py，读取硬盘上的1.txt文件，然后把这个文件的内容打印到屏幕上。</p>
+<p>不规范的写法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">b = f.read().split(&apos;,&apos;)</span><br><span class="line">f.close()</span><br><span class="line">print int(b[0])+int(b[1])</span><br></pre></td></tr></table></figure></p>
+<p>不规范写法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def A():</span><br><span class="line">	f= open(&apos;1.txt&apos;,&apos;r&apos;)</span><br><span class="line">	b = f.read().split(&apos;,&apos;)</span><br><span class="line">	f.close()</span><br><span class="line">	print int(b[0])+int(b[1])</span><br><span class="line">A()</span><br></pre></td></tr></table></figure></p>
+<p>比较规范的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">def getnum(info):</span><br><span class="line">    twonum = info.split(&apos;,&apos;)</span><br><span class="line">    return twonum</span><br><span class="line"></span><br><span class="line">def addnum(twonum):</span><br><span class="line">    return int(twonum[0])+int(twonum[1])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">        info = read(&apos;1.txt&apos;)</span><br><span class="line">        twonum = getnum(info)</span><br><span class="line">        result = addnum(twonum)</span><br><span class="line">		print result</span><br></pre></td></tr></table></figure></p>
+<p>这样写的好处是，如果想测试读文件的功能，就只需要测试read()函数，如果想测试把两个数分开的功能，就只需要测试getnum()函数。而相反，在不规范写法二中，虽然只想测试两个数字相加的功能，可是却不得不首先打开文件并读取文件然后把数字分开。</p>
+<p>继续回到比较规范的写法当中，我相信很多人写完read()函数以后，肯定会输入如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def read(filename):</span><br><span class="line">    f= open(filename,&apos;r&apos;)</span><br><span class="line">    info = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    return info</span><br><span class="line"></span><br><span class="line">print read(&apos;1.txt&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>然后运行程序，发现正常打印出’2,3’以后，再开始写getnum()函数。写完getnum以后，测试getnum()函数没问题以后再开始写然后测试addnum()函数。最后测试整个程序的功能。</p>
+<p>其实这个过程，已经就是在做单元测试了。然而这样操作的弊端是什么？如果整体程序已经写好了，之前做测试点代码也就删除了。那么如果突然把程序做了修改。例如1.txt里面数字的分隔从1个逗号变成了空格，或者变成了3个数字，那必然要修改getnum()，但是又如何测试修改的部分呢？还要把不相干的代码给注释掉。不仅麻烦，而且容易出错。</p>
+<p>现在，把测试的代码单独独立出来。会有什么效果呢？尝试创建一个test.py程序，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import readandadd</span><br><span class="line"></span><br><span class="line">def testread():</span><br><span class="line">    print &apos;read:&apos;,readandadd.read(&apos;1.txt&apos;)</span><br><span class="line"></span><br><span class="line">def testgetnum():</span><br><span class="line">    print &apos;getnum:&apos;,readandadd.getnum(&apos;2,3&apos;)</span><br><span class="line"></span><br><span class="line">def testaddnum():</span><br><span class="line">    print &apos;addnum:&apos;,readandadd.addnum([2,3])</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    testread()</span><br><span class="line">    testgetnum()</span><br><span class="line">    testaddnum()</span><br></pre></td></tr></table></figure></p>
+<p>运行test.py以后输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">read: 2,3</span><br><span class="line">getnum: [&apos;2&apos;, &apos;3&apos;]</span><br><span class="line">addnum: 5</span><br></pre></td></tr></table></figure></p>
+<p>每一个函数的输出结果一目了然，而且在修改了readandadd.py的函数以后，重新运行test.py就可以知道输出结果有没有符合预期。</p>
+<p>当然，这里这个例子非常的简单，因此可以人工通过观察test.py的输出结果来确定是否符合预期，那对于大量的函数的测试，难道也要让肉眼来看吗？当然不是。于是，下一篇文章将会介绍Python的单元测试unittest。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/30/未知道——广场式的真匿名交流网站/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2015/01/30/未知道——广场式的真匿名交流网站/" class="post-title-link" itemprop="url">未知道——广场式的真匿名交流网站（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-01-30 15:24:35" itemprop="dateCreated datePublished" datetime="2015-01-30T15:24:35+08:00">2015-01-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/未知道/" itemprop="url" rel="index"><span itemprop="name">未知道</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/30/未知道——广场式的真匿名交流网站/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015/01/30/未知道——广场式的真匿名交流网站/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近在学习Flask，本着学以致用的原则，开发了“未知道”这个网站。未知道的宗旨是，不注册，不审核，不删帖，无私聊，不记录任何信息。是一个派对式的或者说广场式的真·匿名聊天环境。</p>
+<p>网站地址请戳-&gt;<a href="http://unknown.kingname.info/" target="_blank" rel="noopener">http://unknown.kingname.info/</a></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/unknown/QQ截图20150130152847.jpg" alt></p>
+<p>网站上线首日访问量突破2000，上线第二日访问量突破10000。</p>
+<p>现在到处都在要求实名制，请珍惜这少有的一片匿名的净土。</p>
+<p>这个网站目前仍然在每天增加新的功能，我会开一个系列文章，用以记录在这个网站的开发过程中遇到的问题以及解决方案。请大家保持关注。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/17/xpath提取多个标签下的text/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1861,653 +2455,6 @@ print b[&apos;payload&apos;][&apos;headers&apos;][3][&apos;value&apos;]
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" class="post-title-link" itemprop="url">对一个罗马数字与阿拉伯数字转换算法的分析</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-29 18:34:30" itemprop="dateCreated datePublished" datetime="2014-12-29T18:34:30+08:00">2014-12-29</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在看《Dive into Python》的单元测试时，发现用作例子的“阿拉伯数字-罗马数字”的转换算法非常的巧妙，现在发上来和大家分享一下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">romanNumeralMap = ((&apos;M&apos;,1000),</span><br><span class="line">		(&apos;CM&apos;,900),</span><br><span class="line">		(&apos;D&apos;,500),</span><br><span class="line">		(&apos;CD&apos;,400),</span><br><span class="line">		(&apos;C&apos;,100),</span><br><span class="line">		(&apos;XC&apos;,90),</span><br><span class="line">		(&apos;L&apos;,50),</span><br><span class="line">		(&apos;XL&apos;,40),</span><br><span class="line">		(&apos;X&apos;,10),</span><br><span class="line">		(&apos;IX&apos;,9),</span><br><span class="line">		(&apos;V&apos;,5),</span><br><span class="line">		(&apos;IV&apos;,4),</span><br><span class="line">		(&apos;I&apos;,1))</span><br><span class="line">def toRoman(n):</span><br><span class="line">	result = &quot;&quot;</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while n &gt;= integer:</span><br><span class="line">	 		result += numeral</span><br><span class="line">	 		n -= integer</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">def fromRoman(s):</span><br><span class="line">	result = 0</span><br><span class="line">	index = 0</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while s[index:index+len(numeral)] == numeral:</span><br><span class="line">	 		result += integer</span><br><span class="line">	 		index += len(numeral)</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">print toRoman(1356)</span><br><span class="line">print fromRoman(&apos;MCMLXXII&apos;)</span><br></pre></td></tr></table></figure>
-<p>这个算法的聪明之处，就在于他通过一个romanNumeralMap，把罗马数字与阿拉伯数字里面的“边界值”做出一一对应。这个边界刚刚好是罗马数字组合之间的转换。例如，I，II，III都可以通过第一个边界值组合获得；V，VI，VII，VIII可以通过V和I的组合获得。而对于一些特殊的值，则直接列出来。例如IV。通过这个边界值的组合，就能实现所需求的转换。这就类似于在一些机读卡上，需要填写1到100的数字，他会使用0,1,2,4,7这样以来:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3 = 1 + 2;</span><br><span class="line">5 = 4 + 1;</span><br><span class="line">6 = 4 + 2;</span><br><span class="line">8 = 7 + 1;</span><br><span class="line">9 = 7 + 2.</span><br></pre></td></tr></table></figure></p>
-<p>首先看一下toRoman()函数，把阿拉伯数字转换成罗马数字。它使用Python连接字符串的操作符号 + 来使“边界值”连接到一起。例如用作例子的n = 1356，程序遍历romanNumeralMap，寻找n对应的罗马数字，如果找不到，那就找刚刚比n小一点的数字对应的罗马字符。遍历在能使n 在romanNumeralMap有对应值时结束。</p>
-<pre><code>找到刚刚比1356小的那个值对应的罗马数字，也就是1000，M
-再继续找刚刚比n = 1356 - 1000 = 356小的数，也就是100，C;
-又继续找比n = 356 - 100 = 256小的数，还是100，也就是C;
-再找比n = 256 - 100 = 156小的数，仍然是100，C；
-继续找比n = 156 - 100 = 56 小的数，50，L；
-继续找比n = 56 - 50 = 6小的数，5，V；
-继续找n = 6 - 5 = 1对于的数，1，I。 结束。
-</code></pre><p>所以1356对应的值为MCCCLVI。 这样的操作很类似于在十进制里面，一个数字1356 = 1000 +　300 + 50 + 6，只是阿拉伯数字里面6是一个单独的符号，而罗马数字里面VI是个V + I的组合而已。</p>
-<p>下面再说说fromRoman()函数，把罗马数字转换成阿拉伯数字。这个函数在理解上面可能比toRoman()稍稍要困难一点。</p>
-<p>还是用例子来说明，MCMLXXII转换成阿拉伯数字。<br>其中如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s[index:index+len(numeral)]</span><br></pre></td></tr></table></figure></p>
-<p>作用是把字符串s中，从第index位到第index+ len(numeral)位（不包含第index + len(numeral)位自身）的字符提取出来。比如：</p>
-<pre><code>&gt;&gt;&gt; a = &apos;helloworld&apos;
-&gt;&gt;&gt; print a[2:5]
-llo
-</code></pre><p>即s的第2,3,4位被取出。</p>
-<p>回到对s = ‘MCMLXXII’的处理。</p>
-<pre><code>首先map中第一个罗马字符是M，只有一位，就把s 的第0位拿出来对比，发现s的第0位刚刚好是M，于是得到一个1000，index变为1，则之后从s的第一位开始。简单的说，相当于s 变成了s = &apos;CMLXXII&apos;
-
-接下来，经过一些无效的值以后，轮换到CM，发现CM为两位，就取出s的前两位，也就是CM，发现在s中刚刚好有CM,于是得到900. index再加2，则实际上s就相当于变成了LXXII
-
-继续经过一些无效值以后，轮换到了L，发现s当前的1位为L，于是在map中有对应的值50.然后index加1，s相当于变成了XXII
-
-接下来到了X，发现s当前的1位为X，在map中有对应的值10.然后index 再加1，s变成了XII
-
-虽然这个时候人已经知道是12了，但是计算机还是不知道，于是继续一个X，s变为II
-
-然后出现一个I，s变为I
-
-终于程序找到了一个直接相等的值I，于是转换结束。
-</code></pre><p>所以MCMLXXII对于的阿拉伯数字是1000+900+50+10+10+1+1 = 1972</p>
-<p>这个方法，把一个罗马数字从高位开始逐次剥离最高位，从而渐渐的把数字缩小。</p>
-<p>最近正在学习算法。因为越来越发现现在做的东西，如果仅仅实现功能的话，性能会出现瓶颈。希望我以后能写出更好的算法。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/23/A-Totally-Amazing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/23/A-Totally-Amazing/" class="post-title-link" itemprop="url">使用微信控制你的电脑</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-23 22:44:20" itemprop="dateCreated datePublished" datetime="2014-12-23T22:44:20+08:00">2014-12-23</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/23/A-Totally-Amazing/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/23/A-Totally-Amazing/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>A totally amazing!!!</p>
-<p>源代码请戳-&gt;<a href="https://github.com/kingname/MCC" target="_blank" rel="noopener">https://github.com/kingname/MCC</a></p>
-<p>实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~</p>
-<h2 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h2><p>程序由两部分构成:</p>
-<ul>
-<li>_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令</li>
-<li>auto.py为程序的主体文件，相关的实现代码均在里面</li>
-</ul>
-<h2 id="软件原理"><a href="#软件原理" class="headerlink" title="软件原理"></a>软件原理</h2><p>本程序需要使用两个邮箱，我给他们取名字为【主人邮箱】和【奴隶邮箱】。建议奴隶邮箱使用小号。主人邮箱使用大号，我是使用的我的QQ邮箱作为主人邮箱，临时申请的一个新浪邮箱作为奴隶邮箱。目前奴隶邮箱使用新浪邮箱测试通过，其他邮箱未做测试。各位有兴趣的朋友可以测试一下并反馈给我，非常感谢~</p>
-<p>本程序使用Python的poplib提供的函数，周期性读取奴隶邮箱最新的一封邮件，如果这封邮件是主人邮箱发送的，并且标题在_config.ini文件中有定义，则执行本标题定义的操作。</p>
-<p>例如，_config.ini文件中有如下定义：</p>
-<pre><code>music=D:\backup\Music\Intro.mp3
-</code></pre><p>主人邮箱发送一份邮件，标题为music，电脑就会调用默认播放器，播放D盘中的这个名叫Intro.mp3的音乐。如果这个Intro.mp3本身只有1秒钟，且没有内容，而音乐播放器设置为随机播放，就间接地实现了打开播放器随机播放音乐的目的。</p>
-<p>目前程序可以实现两类功能：<br>运行命令与打开文件。</p>
-<h3 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h3><p>其中运行命令的原理是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.system(command)</span><br></pre></td></tr></table></figure>
-<p>理论上任何在CMD命令提示符下可以执行的命令，在这里都可以执行。_config.ini中默认提供了两个样例，一个关闭计算机：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown=shutdown -f -s -t 10 -c closing...</span><br></pre></td></tr></table></figure>
-<p>另一个是列出当前目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir=dir</span><br></pre></td></tr></table></figure></p>
-<p>等号左侧为此命令的名字，也就是在邮件中可以发送的标题内容，等号右侧为命令本身。注意等号左右均不能有空格。</p>
-<h3 id="打开文件"><a href="#打开文件" class="headerlink" title="打开文件"></a>打开文件</h3><p>打开文件的原理是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</span><br></pre></td></tr></table></figure></p>
-<p>其中，open_file为文件在电脑中的位置。函数调用Windows的API来运行程序，效果和用鼠标双击相同。</p>
-<h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p>程序运行以后，先加载_config.ini，配置主人邮箱和奴隶邮箱，并确定扫描频率（time_limit）为多少秒检查一次邮箱。同时使用字典将命令的名称和命令本身添加到内存中。接下来的操作如下：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/MCCliuchen.png" alt></p>
-<p>使用主人邮箱发送相应的命令名称以后，就能触发电脑的相关操作。</p>
-<h2 id="程序配置"><a href="#程序配置" class="headerlink" title="程序配置"></a>程序配置</h2><p>打开_config.ini文件:</p>
-<ul>
-<li><p>host填写奴隶邮箱的pop3服务器，例如新浪的pop3服务器为</p>
-<pre><code>pop.sina.com
-</code></pre></li>
-<li><p>username为奴隶邮箱的邮箱号</p>
-</li>
-<li>password为奴隶邮箱的密码</li>
-<li>boss_email为主人邮箱号</li>
-<li>time_limit控制程序检查邮箱的评论，默认为300秒，也就是5分钟</li>
-<li><p>＜command＞与＜/command＞之间为命令区，此处可以使用任何能在CMD命令提示符中执行的命令格式为：</p>
-<pre><code>名字=命令
-</code></pre><p>注意=左右不能出现空格</p>
-</li>
-<li><p>＜open_file＞＜/open_file＞之间为可以打开的文件。任何在电脑上可以使用鼠标双击打开的程序、文件均可把其地址写在此处。格式为：</p>
-<pre><code>名字=地址
-</code></pre><p>注意=左右不能出现空格</p>
-</li>
-</ul>
-<h2 id="编译程序"><a href="#编译程序" class="headerlink" title="编译程序"></a>编译程序</h2><p>使用py2exe编译。进入代码目测，执行以下代码：</p>
-<pre><code>python mysetup.py py2exe
-</code></pre><h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>接下来的版本升级中</p>
-<ul>
-<li>会添加更多的操作进去</li>
-<li>开发图像界面，使配置更方便</li>
-<li>动态调整检查频率</li>
-<li>通过邮件的内容返回命令的执行状态</li>
-<li>通过邮件内容返回文件列表</li>
-<li>解决打开的文件功能在文件名和路径不能有汉字的bug</li>
-</ul>
-<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>感谢知乎用户 <a href="http://www.zhihu.com/people/yin-fitz" title="@印如意fitz" target="_blank" rel="noopener">@印如意fitz</a>的启发与思路提供。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/21/Python正则表达式中的re-S/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2014/12/21/Python正则表达式中的re-S/" class="post-title-link" itemprop="url">Python正则表达式中的re.S</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2014-12-21 09:55:54" itemprop="dateCreated datePublished" datetime="2014-12-21T09:55:54+08:00">2014-12-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2014/12/21/Python正则表达式中的re-S/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/21/Python正则表达式中的re-S/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在Python的正则表达式中，有一个参数为re.S。它表示“.”（不包含外侧双引号，下同）的作用扩展到整个字符串，包括“\n”。看如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a = &apos;&apos;&apos;asdfsafhellopass:</span><br><span class="line">	234455</span><br><span class="line">	worldafdsf</span><br><span class="line">	&apos;&apos;&apos;</span><br><span class="line">b = re.findall(&apos;hello(.*?)world&apos;,a)</span><br><span class="line">c = re.findall(&apos;hello(.*?)world&apos;,a,re.S)</span><br><span class="line">print &apos;b is &apos; , b</span><br><span class="line">print &apos;c is &apos; , c</span><br></pre></td></tr></table></figure></p>
-<p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b is  []</span><br><span class="line">c is  [&apos;pass:\n\t234455\n\t&apos;]</span><br></pre></td></tr></table></figure></p>
-<p>正则表达式中，“.”的作用是匹配除“\n”以外的任何字符，也就是说，它是在一行中进行匹配。这里的“行”是以“\n”进行区分的。a字符串有每行的末尾有一个“\n”，不过它不可见。</p>
-<p>如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始，不会跨行。而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，将“\n”当做一个普通的字符加入到这个字符串中，在整体中进行匹配。</p>
-<p>在re.py库的介绍中有以下语句：</p>
-<blockquote>
-<p>“.”      Matches any character except a newline.</p>
-</blockquote>
-<blockquote>
-<p>S  DOTALL      “.” matches any character at all, including the newline.</p>
-</blockquote>
-<p>这里特别感谢评论中叫做Style的朋友指出了我的错误。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2555,7 +2502,7 @@ llo
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">174</span>
+                    <span class="site-state-item-count">177</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2648,7 +2595,9 @@ llo
                     
                       
                     
-                    <span class="site-state-item-count">40</span>
+                      
+                    
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2929,7 +2878,15 @@ llo
                     
                       
                     
-                    <span class="site-state-item-count">134</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">138</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

@@ -354,6 +354,653 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" class="post-title-link" itemprop="url">对一个罗马数字与阿拉伯数字转换算法的分析</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-29 18:34:30" itemprop="dateCreated datePublished" datetime="2014-12-29T18:34:30+08:00">2014-12-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/29/对一个罗马数字与阿拉伯数字转换算法的分析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在看《Dive into Python》的单元测试时，发现用作例子的“阿拉伯数字-罗马数字”的转换算法非常的巧妙，现在发上来和大家分享一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">romanNumeralMap = ((&apos;M&apos;,1000),</span><br><span class="line">		(&apos;CM&apos;,900),</span><br><span class="line">		(&apos;D&apos;,500),</span><br><span class="line">		(&apos;CD&apos;,400),</span><br><span class="line">		(&apos;C&apos;,100),</span><br><span class="line">		(&apos;XC&apos;,90),</span><br><span class="line">		(&apos;L&apos;,50),</span><br><span class="line">		(&apos;XL&apos;,40),</span><br><span class="line">		(&apos;X&apos;,10),</span><br><span class="line">		(&apos;IX&apos;,9),</span><br><span class="line">		(&apos;V&apos;,5),</span><br><span class="line">		(&apos;IV&apos;,4),</span><br><span class="line">		(&apos;I&apos;,1))</span><br><span class="line">def toRoman(n):</span><br><span class="line">	result = &quot;&quot;</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while n &gt;= integer:</span><br><span class="line">	 		result += numeral</span><br><span class="line">	 		n -= integer</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">def fromRoman(s):</span><br><span class="line">	result = 0</span><br><span class="line">	index = 0</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while s[index:index+len(numeral)] == numeral:</span><br><span class="line">	 		result += integer</span><br><span class="line">	 		index += len(numeral)</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">print toRoman(1356)</span><br><span class="line">print fromRoman(&apos;MCMLXXII&apos;)</span><br></pre></td></tr></table></figure>
+<p>这个算法的聪明之处，就在于他通过一个romanNumeralMap，把罗马数字与阿拉伯数字里面的“边界值”做出一一对应。这个边界刚刚好是罗马数字组合之间的转换。例如，I，II，III都可以通过第一个边界值组合获得；V，VI，VII，VIII可以通过V和I的组合获得。而对于一些特殊的值，则直接列出来。例如IV。通过这个边界值的组合，就能实现所需求的转换。这就类似于在一些机读卡上，需要填写1到100的数字，他会使用0,1,2,4,7这样以来:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3 = 1 + 2;</span><br><span class="line">5 = 4 + 1;</span><br><span class="line">6 = 4 + 2;</span><br><span class="line">8 = 7 + 1;</span><br><span class="line">9 = 7 + 2.</span><br></pre></td></tr></table></figure></p>
+<p>首先看一下toRoman()函数，把阿拉伯数字转换成罗马数字。它使用Python连接字符串的操作符号 + 来使“边界值”连接到一起。例如用作例子的n = 1356，程序遍历romanNumeralMap，寻找n对应的罗马数字，如果找不到，那就找刚刚比n小一点的数字对应的罗马字符。遍历在能使n 在romanNumeralMap有对应值时结束。</p>
+<pre><code>找到刚刚比1356小的那个值对应的罗马数字，也就是1000，M
+再继续找刚刚比n = 1356 - 1000 = 356小的数，也就是100，C;
+又继续找比n = 356 - 100 = 256小的数，还是100，也就是C;
+再找比n = 256 - 100 = 156小的数，仍然是100，C；
+继续找比n = 156 - 100 = 56 小的数，50，L；
+继续找比n = 56 - 50 = 6小的数，5，V；
+继续找n = 6 - 5 = 1对于的数，1，I。 结束。
+</code></pre><p>所以1356对应的值为MCCCLVI。 这样的操作很类似于在十进制里面，一个数字1356 = 1000 +　300 + 50 + 6，只是阿拉伯数字里面6是一个单独的符号，而罗马数字里面VI是个V + I的组合而已。</p>
+<p>下面再说说fromRoman()函数，把罗马数字转换成阿拉伯数字。这个函数在理解上面可能比toRoman()稍稍要困难一点。</p>
+<p>还是用例子来说明，MCMLXXII转换成阿拉伯数字。<br>其中如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s[index:index+len(numeral)]</span><br></pre></td></tr></table></figure></p>
+<p>作用是把字符串s中，从第index位到第index+ len(numeral)位（不包含第index + len(numeral)位自身）的字符提取出来。比如：</p>
+<pre><code>&gt;&gt;&gt; a = &apos;helloworld&apos;
+&gt;&gt;&gt; print a[2:5]
+llo
+</code></pre><p>即s的第2,3,4位被取出。</p>
+<p>回到对s = ‘MCMLXXII’的处理。</p>
+<pre><code>首先map中第一个罗马字符是M，只有一位，就把s 的第0位拿出来对比，发现s的第0位刚刚好是M，于是得到一个1000，index变为1，则之后从s的第一位开始。简单的说，相当于s 变成了s = &apos;CMLXXII&apos;
+
+接下来，经过一些无效的值以后，轮换到CM，发现CM为两位，就取出s的前两位，也就是CM，发现在s中刚刚好有CM,于是得到900. index再加2，则实际上s就相当于变成了LXXII
+
+继续经过一些无效值以后，轮换到了L，发现s当前的1位为L，于是在map中有对应的值50.然后index加1，s相当于变成了XXII
+
+接下来到了X，发现s当前的1位为X，在map中有对应的值10.然后index 再加1，s变成了XII
+
+虽然这个时候人已经知道是12了，但是计算机还是不知道，于是继续一个X，s变为II
+
+然后出现一个I，s变为I
+
+终于程序找到了一个直接相等的值I，于是转换结束。
+</code></pre><p>所以MCMLXXII对于的阿拉伯数字是1000+900+50+10+10+1+1 = 1972</p>
+<p>这个方法，把一个罗马数字从高位开始逐次剥离最高位，从而渐渐的把数字缩小。</p>
+<p>最近正在学习算法。因为越来越发现现在做的东西，如果仅仅实现功能的话，性能会出现瓶颈。希望我以后能写出更好的算法。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/23/A-Totally-Amazing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/23/A-Totally-Amazing/" class="post-title-link" itemprop="url">使用微信控制你的电脑</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-23 22:44:20" itemprop="dateCreated datePublished" datetime="2014-12-23T22:44:20+08:00">2014-12-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/23/A-Totally-Amazing/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/23/A-Totally-Amazing/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>A totally amazing!!!</p>
+<p>源代码请戳-&gt;<a href="https://github.com/kingname/MCC" target="_blank" rel="noopener">https://github.com/kingname/MCC</a></p>
+<p>实际上使用任何可以发送邮件的东西都可以。但是因为微信比较普及，所以就用微信的发送邮件功能做一个测试吧~~</p>
+<h2 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h2><p>程序由两部分构成:</p>
+<ul>
+<li>_config.ini为配置文件，用于配置主人邮箱，奴隶邮箱和手工添加需要执行的命令</li>
+<li>auto.py为程序的主体文件，相关的实现代码均在里面</li>
+</ul>
+<h2 id="软件原理"><a href="#软件原理" class="headerlink" title="软件原理"></a>软件原理</h2><p>本程序需要使用两个邮箱，我给他们取名字为【主人邮箱】和【奴隶邮箱】。建议奴隶邮箱使用小号。主人邮箱使用大号，我是使用的我的QQ邮箱作为主人邮箱，临时申请的一个新浪邮箱作为奴隶邮箱。目前奴隶邮箱使用新浪邮箱测试通过，其他邮箱未做测试。各位有兴趣的朋友可以测试一下并反馈给我，非常感谢~</p>
+<p>本程序使用Python的poplib提供的函数，周期性读取奴隶邮箱最新的一封邮件，如果这封邮件是主人邮箱发送的，并且标题在_config.ini文件中有定义，则执行本标题定义的操作。</p>
+<p>例如，_config.ini文件中有如下定义：</p>
+<pre><code>music=D:\backup\Music\Intro.mp3
+</code></pre><p>主人邮箱发送一份邮件，标题为music，电脑就会调用默认播放器，播放D盘中的这个名叫Intro.mp3的音乐。如果这个Intro.mp3本身只有1秒钟，且没有内容，而音乐播放器设置为随机播放，就间接地实现了打开播放器随机播放音乐的目的。</p>
+<p>目前程序可以实现两类功能：<br>运行命令与打开文件。</p>
+<h3 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h3><p>其中运行命令的原理是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.system(command)</span><br></pre></td></tr></table></figure>
+<p>理论上任何在CMD命令提示符下可以执行的命令，在这里都可以执行。_config.ini中默认提供了两个样例，一个关闭计算机：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown=shutdown -f -s -t 10 -c closing...</span><br></pre></td></tr></table></figure>
+<p>另一个是列出当前目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir=dir</span><br></pre></td></tr></table></figure></p>
+<p>等号左侧为此命令的名字，也就是在邮件中可以发送的标题内容，等号右侧为命令本身。注意等号左右均不能有空格。</p>
+<h3 id="打开文件"><a href="#打开文件" class="headerlink" title="打开文件"></a>打开文件</h3><p>打开文件的原理是:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">win32api.ShellExecute(0, &apos;open&apos;, open_file, &apos;&apos;,&apos;&apos;,1)</span><br></pre></td></tr></table></figure></p>
+<p>其中，open_file为文件在电脑中的位置。函数调用Windows的API来运行程序，效果和用鼠标双击相同。</p>
+<h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p>程序运行以后，先加载_config.ini，配置主人邮箱和奴隶邮箱，并确定扫描频率（time_limit）为多少秒检查一次邮箱。同时使用字典将命令的名称和命令本身添加到内存中。接下来的操作如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/MCCliuchen.png" alt></p>
+<p>使用主人邮箱发送相应的命令名称以后，就能触发电脑的相关操作。</p>
+<h2 id="程序配置"><a href="#程序配置" class="headerlink" title="程序配置"></a>程序配置</h2><p>打开_config.ini文件:</p>
+<ul>
+<li><p>host填写奴隶邮箱的pop3服务器，例如新浪的pop3服务器为</p>
+<pre><code>pop.sina.com
+</code></pre></li>
+<li><p>username为奴隶邮箱的邮箱号</p>
+</li>
+<li>password为奴隶邮箱的密码</li>
+<li>boss_email为主人邮箱号</li>
+<li>time_limit控制程序检查邮箱的评论，默认为300秒，也就是5分钟</li>
+<li><p>＜command＞与＜/command＞之间为命令区，此处可以使用任何能在CMD命令提示符中执行的命令格式为：</p>
+<pre><code>名字=命令
+</code></pre><p>注意=左右不能出现空格</p>
+</li>
+<li><p>＜open_file＞＜/open_file＞之间为可以打开的文件。任何在电脑上可以使用鼠标双击打开的程序、文件均可把其地址写在此处。格式为：</p>
+<pre><code>名字=地址
+</code></pre><p>注意=左右不能出现空格</p>
+</li>
+</ul>
+<h2 id="编译程序"><a href="#编译程序" class="headerlink" title="编译程序"></a>编译程序</h2><p>使用py2exe编译。进入代码目测，执行以下代码：</p>
+<pre><code>python mysetup.py py2exe
+</code></pre><h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>接下来的版本升级中</p>
+<ul>
+<li>会添加更多的操作进去</li>
+<li>开发图像界面，使配置更方便</li>
+<li>动态调整检查频率</li>
+<li>通过邮件的内容返回命令的执行状态</li>
+<li>通过邮件内容返回文件列表</li>
+<li>解决打开的文件功能在文件名和路径不能有汉字的bug</li>
+</ul>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>感谢知乎用户 <a href="http://www.zhihu.com/people/yin-fitz" title="@印如意fitz" target="_blank" rel="noopener">@印如意fitz</a>的启发与思路提供。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/21/Python正则表达式中的re-S/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2014/12/21/Python正则表达式中的re-S/" class="post-title-link" itemprop="url">Python正则表达式中的re.S</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2014-12-21 09:55:54" itemprop="dateCreated datePublished" datetime="2014-12-21T09:55:54+08:00">2014-12-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/21/Python正则表达式中的re-S/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2014/12/21/Python正则表达式中的re-S/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Python的正则表达式中，有一个参数为re.S。它表示“.”（不包含外侧双引号，下同）的作用扩展到整个字符串，包括“\n”。看如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a = &apos;&apos;&apos;asdfsafhellopass:</span><br><span class="line">	234455</span><br><span class="line">	worldafdsf</span><br><span class="line">	&apos;&apos;&apos;</span><br><span class="line">b = re.findall(&apos;hello(.*?)world&apos;,a)</span><br><span class="line">c = re.findall(&apos;hello(.*?)world&apos;,a,re.S)</span><br><span class="line">print &apos;b is &apos; , b</span><br><span class="line">print &apos;c is &apos; , c</span><br></pre></td></tr></table></figure></p>
+<p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b is  []</span><br><span class="line">c is  [&apos;pass:\n\t234455\n\t&apos;]</span><br></pre></td></tr></table></figure></p>
+<p>正则表达式中，“.”的作用是匹配除“\n”以外的任何字符，也就是说，它是在一行中进行匹配。这里的“行”是以“\n”进行区分的。a字符串有每行的末尾有一个“\n”，不过它不可见。</p>
+<p>如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始，不会跨行。而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，将“\n”当做一个普通的字符加入到这个字符串中，在整体中进行匹配。</p>
+<p>在re.py库的介绍中有以下语句：</p>
+<blockquote>
+<p>“.”      Matches any character except a newline.</p>
+</blockquote>
+<blockquote>
+<p>S  DOTALL      “.” matches any character at all, including the newline.</p>
+</blockquote>
+<p>这里特别感谢评论中叫做Style的朋友指出了我的错误。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/18/从E-E到S-E/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1226,7 +1873,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">174</span>
+                    <span class="site-state-item-count">177</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1319,7 +1966,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">40</span>
+                      
+                    
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -1600,7 +2249,15 @@
                     
                       
                     
-                    <span class="site-state-item-count">134</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">138</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -2123,6 +2780,12 @@ axios.get('https://ja3er.com/json').then((response) => {
 
   
   
+    
+      
+    
+      
+    
+      
     
       
     

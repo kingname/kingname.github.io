@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2022-05-22T01:01:44.747Z</updated>
+  <updated>2022-05-29T12:27:19.939Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,56 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>《从论文到代码，学术研究的工程化落地实践》直播录屏</title>
+    <link href="https://www.kingname.info/2022/05/29/gne-origin/"/>
+    <id>https://www.kingname.info/2022/05/29/gne-origin/</id>
+    <published>2022-05-29T12:25:05.000Z</published>
+    <updated>2022-05-29T12:27:19.939Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220529195530.png" alt></p><a id="more"></a><p>PyCon China Python Meetup 2021 原计划2021年线下举行。由于疫情不可抗力，被延期到了今天线上举办。</p><p>我今天分享的题目是《从论文到代码，学术研究的工程化落地实践》。介绍了Gne的起源——如何从一篇论文，发展到现在能够每天入库100万篇新闻的通用爬虫系统的故事。</p><p>在分享中，我说明了学术研究与工程实践有哪些差异，在理论落地中，我们将会遇到哪些挑战。为什么有些领域，学术研究非常成熟了，但目前市面上还没有一家公司在这些领域落地成功。</p><p>请大家点击阅读原文观看视频。我的分享从04:41:47开始。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220529195530.png&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="直播" scheme="https://www.kingname.info/categories/%E7%9B%B4%E6%92%AD/"/>
+    
+    
+      <category term="Gne" scheme="https://www.kingname.info/tags/Gne/"/>
+    
+      <category term="直播" scheme="https://www.kingname.info/tags/%E7%9B%B4%E6%92%AD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一日一技：Any与TypeVar，让IDE的自动补全更好用</title>
+    <link href="https://www.kingname.info/2022/05/29/any-vs-typevar/"/>
+    <id>https://www.kingname.info/2022/05/29/any-vs-typevar/</id>
+    <published>2022-05-29T12:24:54.000Z</published>
+    <updated>2022-05-29T12:26:23.173Z</updated>
+    
+    <content type="html"><![CDATA[<p>相信有很多同学在写Python的时候，会使用类型标注来提高代码的可读性，同时还能帮助IDE实现自动补全。</p><a id="more"></a><p>假设我们现在获得了一个对象，这个对象可能是列表也可能是生成器，我写一个函数，获取它的第一个元素。代码很简单：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> Iterator</span><br><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> suppress</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">eat</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">f'<span class="subst">&#123;self.name&#125;</span>正在吃饭'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">walk</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">f'<span class="subst">&#123;self.name&#125;</span>正在走路'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_first_element</span><span class="params">(ele_list)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(ele_list, list):</span><br><span class="line">        <span class="keyword">return</span> ele_list[<span class="number">0</span>] <span class="keyword">if</span> ele_list <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(ele_list, Iterator):</span><br><span class="line">        <span class="keyword">with</span> suppress(Exception):</span><br><span class="line">            value = next(ele_list)</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    kingname = People(<span class="string">'kingname'</span>)</span><br><span class="line">    pm = People(<span class="string">'pm'</span>)</span><br><span class="line">    people_list = [kingname, pm]</span><br><span class="line"></span><br><span class="line">    obj = get_first_element(people_list)</span><br><span class="line">    <span class="keyword">if</span> obj:</span><br><span class="line">        print(obj.)</span><br></pre></td></tr></table></figure><p>代码写好了，但是当我获取第一个元素，想打印它里面的数据的时候，我发现我忘记了People这个类有哪些属性了，而此时PyCharm的自动补全也失效了，我不得不把代码往回翻，去寻找People定义的位置，效率非常低。如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220528174322.png" alt></p><p>如果我们使用了类型标注，就能解决这个问题：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220528174204.png" alt></p><p>这个常规用法，大家肯定都知道。</p><p>现在问题来了，我们除了<code>People</code>类，还有<code>Cat</code>类，并且列表里面的元素可能全是<code>People</code>类的实例，也可能全是<code>Cat</code>类实例，这种情况怎么办呢？</p><p>首先你遇到了第一个问题，<code>get_first_element</code>的参数的类型标注怎么写？</p><p>你可能会写成这样：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_first_element</span><span class="params">(ele_list: Union[List[Union[People, Cat]], Iterator[Union[People, Cat]]])</span></span></span><br></pre></td></tr></table></figure><p>那如果还有一个<code>Dog</code>类呢？</p><p>为了简化操作，你可能会用<code>Any</code>，类型，于是<code>get_first_element</code>变成了下面这样：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_first_element</span><span class="params">(ele_list: Union[List[Any], Iterator[Any]])</span> -&gt; Optional[Any]:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(ele_list, list):</span><br><span class="line">        <span class="keyword">return</span> ele_list[<span class="number">0</span>] <span class="keyword">if</span> ele_list <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(ele_list, Iterator):</span><br><span class="line">        <span class="keyword">with</span> suppress(Exception):</span><br><span class="line">            value = next(ele_list)</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure><p>现在你发现问题又来了，PyCharm的自动补全又坏了。因为Any是任何类型，所以在代码运行前，它其实不知道你返回的是什么东西。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220528174553.png" alt></p><p>这种情况下，你就需要使用Python类型标注中的<code>泛型</code>了。我们知道，泛型是静态语言中的概念，Python由于使用了类型标注，也有了类型。于是也就借用了这个概念。</p><p>我们来看看怎么使用它：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> TypeVar</span><br><span class="line"></span><br><span class="line">T = TypeVar(<span class="string">'T'</span>)</span><br></pre></td></tr></table></figure><p>注意这里的变量名<code>T</code>和TypeVar的参数<code>&#39;T&#39;</code>可以同时写成任意字符串，但变量名要与参数保持一致。例如：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GodType = TypeVar(<span class="string">'GodType'</span>)</span><br></pre></td></tr></table></figure><p>然后把T当做<code>Any</code>一样使用就可以。我们来看看效果：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220528173945.png" alt></p><p>可以看到，PyCharm又能自动补全了。使用<code>TypeVar</code>，可以告诉PyCharm，返回的类型跟传入参数中的<code>T</code>对应位置的类型保持一致。例如传入参数中，<code>T</code>在<code>List[T]</code>或者<code>Generator[T]</code>中，所以返回的参数需要与列表中的元素或者生成器中的元素类型保持一致。</p><p>我们用Cat生成器来测试一下，发现也能自动补全：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220528172546.png" alt></p><p>还有更厉害的，如果我的列表里面既有<code>Cat</code>的实例，又有<code>People</code>的实例怎么办？这个时候，PyCharm会直接把两个实例的可能补全都给你列出来：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220528172902.png" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;相信有很多同学在写Python的时候，会使用类型标注来提高代码的可读性，同时还能帮助IDE实现自动补全。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+      <category term="type hint" scheme="https://www.kingname.info/tags/type-hint/"/>
+    
+      <category term="PyCharm" scheme="https://www.kingname.info/tags/PyCharm/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：用Python做游戏有多简单</title>
@@ -468,58 +518,6 @@
     
     
       <category term="Golang" scheme="https://www.kingname.info/tags/Golang/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：反爬虫的极致手段，几行代码直接炸了爬虫服务器</title>
-    <link href="https://www.kingname.info/2022/03/06/gzip-boom/"/>
-    <id>https://www.kingname.info/2022/03/06/gzip-boom/</id>
-    <published>2022-03-06T15:16:09.000Z</published>
-    <updated>2022-03-06T15:26:02.606Z</updated>
-    
-    <content type="html"><![CDATA[<p>作为一个站长，你是不是对爬虫不胜其烦？爬虫天天来爬，速度又快，频率又高，服务器的大量资源被白白浪费。</p><p>看这篇文章的你有福了，我们今天一起来报复一下爬虫，直接把爬虫的服务器给干死机。</p><a id="more"></a><blockquote><p>本文有一个前提：你已经知道某个请求是爬虫发来的了，你不满足于单单屏蔽对方，而是想搞死对方。</p></blockquote><p>很多人的爬虫是使用Requests来写的，如果你阅读过Requests的文档，那么你可能在文档中的<a href="https://2.python-requests.org/en/master/user/quickstart/#binary-response-content" target="_blank" rel="noopener">Binary Response Content</a>这一小节，看到这样一句话：</p><blockquote><p>The gzip and deflate transfer-encodings are automatically decoded for you.<br>（Request）会自动为你把gzip和deflate转码后的数据进行解码</p></blockquote><p>网站服务器可能会使用<code>gzip</code>压缩一些大资源，这些资源在网络上传输的时候，是压缩后的二进制格式。客户端收到返回以后，如果发现返回的Headers里面有一个字段叫做<code>Content-Encoding</code>，其中的值包含<code>gzip</code>，那么客户端就会先使用<code>gzip</code>对数据进行解压，解压完成以后再把它呈现到客户端上面。浏览器自动就会做这个事情，用户是感知不到这个事情发生的。而<code>requests</code>、<code>Scrapy</code>这种网络请求库或者爬虫框架，也会帮你做这个事情，因此你不需要手动对网站返回的数据解压缩。</p><p>这个功能原本是一个方便开发者的功能，但我们可以利用这个功能来做报复爬虫的事情。</p><p>我们首先写一个客户端，来测试一下返回<code>gzip</code>压缩数据的方法。</p><p>我首先在硬盘上创建一个文本文件<code>text.txt</code>，里面有两行内容，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220124194721.png" alt></p><p>然后，我是用<code>gzip</code>命令把它压缩成一个<code>.gz</code>文件：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat text.txt | gzip &gt; data.gz</span><br></pre></td></tr></table></figure><p>接下来，我们使用FastAPI写一个HTTP服务器<code>server.py</code>：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, Response</span><br><span class="line"><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> FileResponse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app = FastAPI()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.get('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    resp = FileResponse(<span class="string">'data.gz'</span>)</span><br><span class="line">    <span class="keyword">return</span> resp</span><br></pre></td></tr></table></figure><p>然后使用命令<code>uvicorn server:app</code>启动这个服务。</p><p>接下来，我们使用requests来请求这个接口，会发现返回的数据是乱码，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220124195107.png" alt></p><p>返回的数据是乱码，这是因为服务器没有告诉客户端，这个数据是<code>gzip</code>压缩的，因此客户端只有原样展示。由于压缩后的数据是二进制内容，强行转成字符串就会变成乱码。</p><p>现在，我们稍微修改一下<code>server.py</code>的代码，通过Headers告诉客户端，这个数据是经过<code>gzip</code>压缩的：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, Response</span><br><span class="line"><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> FileResponse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app = FastAPI()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.get('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    resp = FileResponse(<span class="string">'data.gz'</span>)</span><br><span class="line">    resp.headers[<span class="string">'Content-Encoding'</span>] = <span class="string">'gzip'</span>  <span class="comment"># 说明这是gzip压缩的数据</span></span><br><span class="line">    <span class="keyword">return</span> resp</span><br></pre></td></tr></table></figure><p>修改以后，重新启动服务器，再次使用requests请求，发现已经可以正常显示数据了：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220124195422.png" alt></p><p>这个功能已经展示完了，那么我们怎么利用它呢？这就不得不提到压缩文件的原理了。</p><p>文件之所以能压缩，是因为里面有大量重复的元素，这些元素可以通过一种更简单的方式来表示。压缩的算法有很多种，其中最常见的一种方式，我们用一个例子来解释。假设有一个字符串，它长成下面这样：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br><span class="line">1111111111111111</span><br></pre></td></tr></table></figure><p>我们可以用5个字符来表示：<code>192个1</code>。这就相当于把192个字符压缩成了5个字符，压缩率高达97.4%。</p><p>如果我们可以把一个1GB的文件压缩成1MB，那么对服务器来说，仅仅是返回了1MB的二进制数据，不会造成任何影响。但是对客户端或者爬虫来说，它拿到这个1MB的数据以后，就会在内存中把它还原成1GB的内容。这样一瞬间爬虫占用的内存就增大了1GB。如果我们再进一步增大这个原始数据，那么很容易就可以把爬虫所在的服务器内存全部沾满，轻者服务器直接杀死爬虫进程，重则爬虫服务器直接死机。</p><p>你别以为这个压缩比听起来很夸张，其实我们使用很简单的一行命令就可以生成这样的压缩文件。</p><p>如果你用的是Linux，那么请执行命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/zero bs=1M count=1000 | gzip &gt; boom.gz</span><br></pre></td></tr></table></figure><p>如果你的电脑是macOS，那么请执行命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/zero bs=1048576 count=1000 | gzip &gt; boom.gz</span><br></pre></td></tr></table></figure><p>执行过程如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220124200621.png" alt></p><p>生成的这个<code>boom.gz</code>文件只有995KB。但是如果我们使用<code>gzip -d boom.gz</code>对这个文件解压缩，就会发现生成了一个1GB的<code>boom</code>文件，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220124200731.png" alt></p><p>只要大家把命令里面的<code>count=1000</code>改成一个更大的数字，就能得到更大的文件。</p><p>我现在把<code>count</code>改成<code>10</code>，给大家做一个演示（不敢用1GB的数据来做测试，害怕我的Jupyter崩溃）。生成的<code>boom.gz</code>文件只有10KB：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220124201125.png" alt></p><p>服务器返回一个10KB的二进制数据，没有任何问题。</p><p>现在我们用requests去请求这个接口，然后查看一下<code>resp</code>这个对象占用的内存大小：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220124201007.png" alt></p><p>可以看到，由于requests自动会对返回的数据解压缩，因此最终获得的resp对象竟然有10MB这么大。</p><p>如果大家想使用这个方法，一定要先确定这个请求是爬虫发的，再使用。否则被你干死的不是爬虫而是真实用户就麻烦了。</p><p>本文的写作过程中，参考了文章<a href="http://da.dadaaierer.com/?p=577" target="_blank" rel="noopener">网站gzip炸弹 – 王春伟的技术博客</a>，特别感谢原作者。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;作为一个站长，你是不是对爬虫不胜其烦？爬虫天天来爬，速度又快，频率又高，服务器的大量资源被白白浪费。&lt;/p&gt;
-&lt;p&gt;看这篇文章的你有福了，我们今天一起来报复一下爬虫，直接把爬虫的服务器给干死机。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="反爬虫" scheme="https://www.kingname.info/categories/%E5%8F%8D%E7%88%AC%E8%99%AB/"/>
-    
-    
-      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-      <category term="反爬虫" scheme="https://www.kingname.info/tags/%E5%8F%8D%E7%88%AC%E8%99%AB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：轻松排雷，爬虫让gzip炸弹变成哑炮</title>
-    <link href="https://www.kingname.info/2022/03/06/kill-gzip-boom/"/>
-    <id>https://www.kingname.info/2022/03/06/kill-gzip-boom/</id>
-    <published>2022-03-06T15:15:59.000Z</published>
-    <updated>2022-03-06T15:26:19.914Z</updated>
-    
-    <content type="html"><![CDATA[<p>在昨天的文章《<a href="https://mp.weixin.qq.com/s/Lzo6Pm09XsOqPkz3O91Mgg" target="_blank" rel="noopener">一日一技：反爬虫的极致手段，几行代码直接炸了爬虫服务器</a>》中，我讲到了后端如何使用gzip返回极高压缩率的文件，从而瞬间卡死爬虫。</p><p>大家都知道我的公众号风格，要<del>得罪</del>讨好就两边一起<del>得罪</del>讨好。昨天我帮了后端，今天我就帮帮爬虫。作为爬虫，如何避免踩中gzip炸弹？</p><p>最直接的方法，就是把你的爬虫隐藏起来，因为gzip炸弹只能在发现了爬虫以后使用，否则就会影响到正常用户。只要你的爬虫让网站无法发现，那么自然就不会踩中炸弹。</p><p>如果你没有把握隐藏爬虫，那么，请继续往下看。</p><a id="more"></a><p>查看gzip炸弹的URL返回的Headers，你会发现如下图所示的字段：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220125184230.png" alt></p><p>你只需要判断<code>resp.headers</code>中，是否有一个名为<code>content-encoding</code>，值包含<code>gzip</code>或<code>deflate</code>的字段。如果没有这个字段，或者值不含<code>gzip</code>、<code>deflate</code>那么你就可以放心，它大概率不是炸弹。</p><p>值得一提的是，当你不读取<code>resp.content</code>、<code>resp.text</code>的时候，Requests是不会擅自给你解压缩的，如下图所示。因此你可以放心查看Headers。：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220125184347.png" alt></p><p>那么，如果你发现网站返回的内容确实是<code>gzip</code>压缩后的内容了怎么办呢？这个时候，我们如何做到既不解压缩，又能获取到解压以后的大小？</p><p>如果你本地检查一个<code>.gz</code>文件，那么你可以使用命令<code>gzip -l xxx.gz</code>来查看它的头信息：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220125184943.png" alt></p><p>打印出来的数据中，第一个数字是压缩后的大小，第二个数字是解压以后的大小，第三个百分比是压缩率。这些信息是储存在压缩文件的头部信息中的，不用解压就能获取到。</p><p>那么当我使用Requests的时候，如何获得压缩后的二进制数据，防止它擅自解压缩？方法其实非常简单：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">resp = requests.get(url, stream=<span class="literal">True</span>)</span><br><span class="line">print(resp.raw.read())</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220125185246.png" alt></p><p>此时可以看到，这个大小是压缩后的二进制数据的大小。现在，我们可以使用如下代码，在不解压的情况下，查询到解压缩后的文件大小：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gzip</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">resp = requests.get(url, stream=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">decompressed = resp.raw.read()</span><br><span class="line"><span class="keyword">with</span> gzip.open(io.BytesIO(decompressed), <span class="string">'rb'</span>) <span class="keyword">as</span> g:</span><br><span class="line">    g.seek(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">    origin_size = g.tell()</span><br><span class="line">    print(origin_size)</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220125185700.png" alt></p><p>打印出来的数字转成MB就是10MB，也就是我们昨天测试的解压后的文件大小。</p><p>使用这个方法，我们就可以在不解压的情况下，知道网站返回的gzip压缩数据的实际大小。如果发现实际尺寸大得离谱，那就可以确定是gzip炸弹了，赶紧把它丢掉。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在昨天的文章《&lt;a href=&quot;https://mp.weixin.qq.com/s/Lzo6Pm09XsOqPkz3O91Mgg&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;一日一技：反爬虫的极致手段，几行代码直接炸了爬虫服务器&lt;/a&gt;》中，我讲到了后端如何使用gzip返回极高压缩率的文件，从而瞬间卡死爬虫。&lt;/p&gt;
-&lt;p&gt;大家都知道我的公众号风格，要&lt;del&gt;得罪&lt;/del&gt;讨好就两边一起&lt;del&gt;得罪&lt;/del&gt;讨好。昨天我帮了后端，今天我就帮帮爬虫。作为爬虫，如何避免踩中gzip炸弹？&lt;/p&gt;
-&lt;p&gt;最直接的方法，就是把你的爬虫隐藏起来，因为gzip炸弹只能在发现了爬虫以后使用，否则就会影响到正常用户。只要你的爬虫让网站无法发现，那么自然就不会踩中炸弹。&lt;/p&gt;
-&lt;p&gt;如果你没有把握隐藏爬虫，那么，请继续往下看。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="爬虫" scheme="https://www.kingname.info/categories/%E7%88%AC%E8%99%AB/"/>
-    
-    
-      <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-      <category term="反爬虫" scheme="https://www.kingname.info/tags/%E5%8F%8D%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   

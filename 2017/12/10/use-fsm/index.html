@@ -1,109 +1,31 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next muse use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.9.0">
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.kingname.info","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
-
-<link rel="stylesheet" href="/css/main.css?v=6.7.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '6.7.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  <meta name="description" content="提出问题使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。">
-<meta name="keywords" content="Python,FSM,有限状态机">
+    <meta name="description" content="提出问题使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用有限状态机原理实现英文分词">
 <meta property="og:url" content="https://www.kingname.info/2017/12/10/use-fsm/index.html">
 <meta property="og:site_name" content="谢乾坤 | Kingname">
 <meta property="og:description" content="提出问题使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-03-28.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-04-07.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-06-53.png">
@@ -116,30 +38,24 @@
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-14-13-43.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/split_fms3.png">
 <meta property="og:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-15-50-27.png">
-<meta property="og:updated_time" content="2018-09-25T13:33:27.402Z">
+<meta property="article:published_time" content="2017-12-10T04:12:55.000Z">
+<meta property="article:modified_time" content="2018-09-25T13:33:27.000Z">
+<meta property="article:author" content="青南">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="FSM">
+<meta property="article:tag" content="有限状态机">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用有限状态机原理实现英文分词">
-<meta name="twitter:description" content="提出问题使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。">
 <meta name="twitter:image" content="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-03-28.png">
 
 
-
-  <link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
-
+<link rel="canonical" href="https://www.kingname.info/2017/12/10/use-fsm/">
 
 
 
-  <link rel="canonical" href="https://www.kingname.info/2017/12/10/use-fsm/">
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.kingname.info/2017/12/10/use-fsm/","path":"2017/12/10/use-fsm/","title":"使用有限状态机原理实现英文分词"}</script>
 
-
-
-<script id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-
-  <title>使用有限状态机原理实现英文分词 | 谢乾坤 | Kingname</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用有限状态机原理实现英文分词 | 谢乾坤 | Kingname</title>
   
 
 
@@ -147,1446 +63,354 @@
 
 
 
+  <script async defer data-website-id="" src=""></script>
 
-
-
-
-
+  <script defer data-domain="" src=""></script>
 
   <noscript>
-  <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
-
-  .use-motion .logo,
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="谢乾坤 | Kingname" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">谢乾坤 | Kingname</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    
-      
-        <p class="site-subtitle">给时光以生命。</p>
-      
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">谢乾坤 | Kingname</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">给时光以生命。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
 
 
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-tags">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-public">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/mp" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>公众号</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
-
-  </li>
-
-      
-      
-    </ul>
-  
-
-  
-    
-
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-公众号"><a href="/mp" rel="section"><i class="fa fa-book fa-fw"></i>公众号</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
 </nav>
 
 
 
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">提出问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%98%AF%E5%A6%82%E4%BD%95%E4%B8%80%E6%AD%A5%E4%B8%80%E6%AD%A5%E6%81%B6%E5%8C%96%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">代码是如何一步一步恶化的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%AF%8D%E4%B8%8E%E7%A9%BA%E6%A0%BC"><span class="nav-number">2.1.</span> <span class="nav-text">单词与空格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%AF%8D%E7%A9%BA%E6%A0%BC%E4%B8%8E%E9%80%97%E5%8F%B7%E5%8F%A5%E5%8F%B7"><span class="nav-number">2.2.</span> <span class="nav-text">单词空格与逗号句号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%AF%8D%E7%A9%BA%E6%A0%BC%E4%B8%8E%E5%90%84%E7%A7%8D%E6%A0%87%E7%82%B9%E7%AC%A6%E5%8F%B7"><span class="nav-number">2.3.</span> <span class="nav-text">单词空格与各种标点符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E7%9A%84%E5%8D%95%E5%BC%95%E5%8F%B7"><span class="nav-number">2.4.</span> <span class="nav-text">奇奇怪怪的单引号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E8%BD%AC%E4%B9%89%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">状态转义图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-number">4.</span> <span class="nav-text">使用状态机</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="青南"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">青南</p>
+  <div class="site-description" itemprop="description">高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</div>
 </div>
-    </header>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">195</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">151</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/kingname" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;kingname" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:contact@kingname.info" title="E-Mail → mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
-  
-  
-  
-  
-
-  
-
-  <a href="https://github.com/kingname" class="github-corner" title="关注我" aria-label="关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+  </aside>
 
 
+    </div>
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-          <div id="content" class="content">
-            
+    <div class="main-inner post posts-expand">
 
-  <div id="posts" class="posts-expand">
-    
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2017/12/10/use-fsm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="青南">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用有限状态机原理实现英文分词 | 谢乾坤 | Kingname">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用有限状态机原理实现英文分词
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">使用有限状态机原理实现英文分词
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              
-            
-          </h1>
-        
+      <time title="创建时间：2017-12-10 12:12:55" itemprop="dateCreated datePublished" datetime="2017-12-10T12:12:55+08:00">2017-12-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+        </span>
+    </span>
 
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-12-10 12:12:55" itemprop="dateCreated datePublished" datetime="2017-12-10T12:12:55+08:00">2017-12-10</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/10/use-fsm/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/12/10/use-fsm/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
         <h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>使用Python开发一个英文句子分词程序，把一段英文句子切分为每一个单词。不能导入任何官方的或者第三方的库，也不能使用字符串的split()方法。</p>
-<a id="more"></a>
+<span id="more"></span>
+
 <h2 id="代码是如何一步一步恶化的"><a href="#代码是如何一步一步恶化的" class="headerlink" title="代码是如何一步一步恶化的"></a>代码是如何一步一步恶化的</h2><h3 id="单词与空格"><a href="#单词与空格" class="headerlink" title="单词与空格"></a>单词与空格</h3><p>对于只有单词和空格，不含其他符号的英语句子，可以使用空格来切分单词。于是对于句子<code>I am kingname</code>, 一个字符一个字符的进行遍历。首先遍历到<code>I</code>，发现它是一个字母，于是把它存到一个变量<code>word</code>中，然后遍历到空格，于是把变量<code>word</code>的值添加到变量<code>word_list</code>中，再把<code>word</code>清空。接下来遍历到字母<code>a</code>，又把<code>a</code>放到变量<code>word</code>中。再遍历到<code>m</code>，发现它还是一个字母，于是把字母<code>m</code>拼接到变量<code>word</code>的末尾。此时变量<code>word</code>的值为<code>am</code>。再遍历到第二个空格，于是把<code>word</code>的值添加到<code>word_list</code>中，清空<code>word</code>。</p>
 <p>最后，由于第三个单词<code>kingname</code>的末尾没有空格，所以需要手动把它添加到列表<code>word_list</code>中。</p>
 <p>完整的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter == <span class="string">' '</span>:</span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">''</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    sentence = <span class="string">'I am kingname'</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    print(result_word_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">split</span>(<span class="params">target</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter == <span class="string">&#x27; &#x27;</span>:</span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    sentence = <span class="string">&#x27;I am kingname&#x27;</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    <span class="built_in">print</span>(result_word_list)</span><br></pre></td></tr></table></figure>
+
 <p>运行效果如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-03-28.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-03-28.png"></p>
 <h3 id="单词空格与逗号句号"><a href="#单词空格与逗号句号" class="headerlink" title="单词空格与逗号句号"></a>单词空格与逗号句号</h3><p>现在不仅仅只有单词和空格，还有逗号和句号。有这样一个句子：”I am kingname,you should remember me.”如果使用上一小节的程序，那么代码就会出现问题，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-04-07.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-04-07.png"></p>
 <p>其中，”kingname,you”应该是两个单词，但是在这里变成了一个单词。所以现在不仅遇到空格要进行切分，遇到逗号句号还需要进行切分。那么对代码做一些修改，变成如下代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">' '</span>, <span class="string">','</span>, <span class="string">'.'</span>]:</span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">''</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    sentence = <span class="string">'I am kingname,you should remember me.'</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    print(result_word_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">split</span>(<span class="params">target</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;,&#x27;</span>, <span class="string">&#x27;.&#x27;</span>]:</span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    sentence = <span class="string">&#x27;I am kingname,you should remember me.&#x27;</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    <span class="built_in">print</span>(result_word_list)</span><br></pre></td></tr></table></figure>
+
 <p>现在运行起来看上去没有问题了，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-06-53.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-06-53.png"></p>
 <p>然而，有些人写英文的时候喜欢在标点符号右侧加一个空格，例如：”I am kingname, you should remember me.”这样小小的一修改，上面的代码又出问题了，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-09-39.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-09-39.png"></p>
 <p>分词出来的结果里面凭空多出来一个空字符串。为了解决这个问题，再加一层判断，只有发现<code>word</code>不为空字符串的时候才把它加入到<code>word_list</code>中，代码继续修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">' '</span>, <span class="string">','</span>, <span class="string">'.'</span>]:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">''</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    sentence = <span class="string">'I am kingname, you should remember me.'</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    print(result_word_list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">split</span>(<span class="params">target</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> [<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;,&#x27;</span>, <span class="string">&#x27;.&#x27;</span>]:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    sentence = <span class="string">&#x27;I am kingname, you should remember me.&#x27;</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    <span class="built_in">print</span>(result_word_list)</span><br></pre></td></tr></table></figure>
+
 <p>代码看起来又可以正常工作了。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-12-26.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-12-26.png"></p>
 <h3 id="单词空格与各种标点符号"><a href="#单词空格与各种标点符号" class="headerlink" title="单词空格与各种标点符号"></a>单词空格与各种标点符号</h3><p>标点符号可不仅仅只有逗号句号。现在又出现了冒号分号双引号感叹号问号等等杂七杂八的符号。英文句子变为：”I am kingname, you should say: “Kingname Oba” to me, will you?”</p>
 <p>使用上面的代码，发现运行起来又出问题了。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-21-15.png" alt></p>
-<p>为了能覆盖到所有的标点符号，现在修改一下逻辑。原来是“遇到空格/逗号/句号”就把<code>word</code>放到<code>word_list</code>中。现在要改为“如果当前字符不是字母，就把<code>word</code>放到<code>word_list</code>中”。于是代码进一步做修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">''</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    sentence = <span class="string">'I am kingname, you should say: "Kingname Oba" to me, will you?'</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    print(result_word_list)</span><br></pre></td></tr></table></figure>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-21-15.png"></p>
+<p>为了能覆盖到所有的标点符号，现在修改一下逻辑。原来是“遇到空格&#x2F;逗号&#x2F;句号”就把<code>word</code>放到<code>word_list</code>中。现在要改为“如果当前字符不是字母，就把<code>word</code>放到<code>word_list</code>中”。于是代码进一步做修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">constant = <span class="string">&#x27;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">split</span>(<span class="params">target</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    sentence = <span class="string">&#x27;I am kingname, you should say: &quot;Kingname Oba&quot; to me, will you?&#x27;</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    <span class="built_in">print</span>(result_word_list)</span><br></pre></td></tr></table></figure>
 <p>代码修改以后又可以正常工作了，其运行效果如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-24-52.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-24-52.png"></p>
 <h3 id="奇奇怪怪的单引号"><a href="#奇奇怪怪的单引号" class="headerlink" title="奇奇怪怪的单引号"></a>奇奇怪怪的单引号</h3><p>如果双引号包含的句子里面还需要用到引号，那么就需要在内部使用单引号。例如有这样一个句子：“I am kingname, you should say: “Kingname Oba, I always remember your motto: ‘kingname is genius’” to me, will you?”</p>
 <p>使用前面的代码，运行起来似乎没有问题，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-36-20.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-36-20.png"></p>
 <p>但是，单引号还有其他用途——有人喜欢把两个单词合并成一个单词，例如：</p>
 <ul>
-<li>“do not” == “don’t”</li>
-<li>“is not” == “isn’t”</li>
-<li>“I will” == “I’ll”</li>
-<li>“I have” == “I’ve”</li>
+<li>“do not” &#x3D;&#x3D; “don’t”</li>
+<li>“is not” &#x3D;&#x3D; “isn’t”</li>
+<li>“I will” &#x3D;&#x3D; “I’ll”</li>
+<li>“I have” &#x3D;&#x3D; “I’ve”</li>
 </ul>
 <p>在这种情况下，就应该把单引号连接的两部分看作是一个单词，不应该把它们切开。</p>
 <p>如果句子变成：<code>I&#39;m kingname, you should say: &quot;Kingname Oba, I always remember your motto: &#39;kingname&#39;s genius&#39;&quot; to me, won&#39;t you?</code>继续使用上面的代码，就发现返回的单词列表又不对了。如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-42-16.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-13-42-16.png"></p>
 <p>要解决这个问题，就需要确定单引号具体是做普通的引号来使用，还是放在缩写里使用。</p>
 <p>作为普通单引号使用的时候，如果是前单引号，那么它的左边必定不是字母，如果作为后单引号，那么它的右边必定不是字母。而缩写里面的单引号，它左右两侧必定都是字母。并且需要注意，如果是句子里面第一个符号就是单引号，那么此时它左边没有字符；如果句子里面最后一个符号是单引号，那么它右边没有字符，此时如果使用下标来查找，就需要当心下标越界。</p>
 <p>对代码进一步修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> index, letter <span class="keyword">in</span> enumerate(target):</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant <span class="keyword">and</span> letter != <span class="string">"'"</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">''</span></span><br><span class="line">        <span class="keyword">elif</span> letter == <span class="string">"'"</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt; index &lt; len(target) - <span class="number">1</span> \</span><br><span class="line">                    <span class="keyword">and</span> target[index - <span class="number">1</span>] <span class="keyword">in</span> constant \</span><br><span class="line">                    <span class="keyword">and</span> target[index + <span class="number">1</span>] <span class="keyword">in</span> constant:</span><br><span class="line">                word += letter</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    sentence = <span class="string">'''I'm kingname, you should say: "Kingname Oba, </span></span><br><span class="line"><span class="string">                  I always remember your motto: 'kingname's genius'" to me, won't you?'''</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> result_word_list:</span><br><span class="line">        print(word)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">constant = <span class="string">&#x27;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">split</span>(<span class="params">target</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> target:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    word_list = []</span><br><span class="line">    word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> index, letter <span class="keyword">in</span> <span class="built_in">enumerate</span>(target):</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">not</span> <span class="keyword">in</span> constant <span class="keyword">and</span> letter != <span class="string">&quot;&#x27;&quot;</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> word:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            word_list.append(word)</span><br><span class="line">            word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">elif</span> letter == <span class="string">&quot;&#x27;&quot;</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt; index &lt; <span class="built_in">len</span>(target) - <span class="number">1</span> \</span><br><span class="line">                    <span class="keyword">and</span> target[index - <span class="number">1</span>] <span class="keyword">in</span> constant \</span><br><span class="line">                    <span class="keyword">and</span> target[index + <span class="number">1</span>] <span class="keyword">in</span> constant:</span><br><span class="line">                word += letter</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            word += letter</span><br><span class="line">    <span class="keyword">if</span> word:</span><br><span class="line">        word_list.append(word)</span><br><span class="line">    <span class="keyword">return</span> word_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    sentence = <span class="string">&#x27;&#x27;&#x27;I&#x27;m kingname, you should say: &quot;Kingname Oba, </span></span><br><span class="line"><span class="string">                  I always remember your motto: &#x27;kingname&#x27;s genius&#x27;&quot; to me, won&#x27;t you?&#x27;&#x27;&#x27;</span></span><br><span class="line">    result_word_list = split(sentence)</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> result_word_list:</span><br><span class="line">        <span class="built_in">print</span>(word)</span><br></pre></td></tr></table></figure>
+
 <p>现在代码又可以成功运行了，如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-14-13-43.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-14-13-43.png"></p>
 <p>但是请细看代码，现在已经混乱到难以阅读难以理解了。如果再增加一个连字符又怎么改？如果单词内部出现了两个单引号怎么改？这种为了增加一个功能，要把很多不相干代码也进行修改的编码方式，相信可以击中很多初学者甚至是不少自称为软件工程师的人。</p>
 <h2 id="状态转义图"><a href="#状态转义图" class="headerlink" title="状态转义图"></a>状态转义图</h2><p>根据分词逻辑，遇到各种符号应该怎么处理，画一个分词的状态转移图出来。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/split_fms3.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/split_fms3.png"></p>
 <p>从这个图上可以看出来，其实程序只需要知道当前是什么状态，以及遇到什么字符需要转移到什么状态就可以了。没有必要知道自己是从哪个状态转移过来的，也没有必要知道和自己不相干的其他状态。</p>
 <p>举一个例子：<code>I&#39;m kingname, you should say: &quot;Kingname Oba, I always remember your motto: &#39;kingname&#39;s genius&#39;&quot; to me, won&#39;t you?</code>这个句子中，<code>should</code>这个单词就是处于“单词状态”。它不在单引号内部，它也不是一个缩写。当我们对句子每个字符进行遍历的时候，遍历到“should”的“s”时进入“单词状态”，在单词状态，只需要关心接下来过来的下一个字符是什么，如果是字母，那依然是单词状态，把字母直接拼接上来即可。如果是单引号，那么进入“单引号在单词中状态”。至于“单引号在单词中状态”有什么逻辑，单词状态的代码根本不需要知道。这就像是接力赛，我把棒交给下一个人，我的任务就做完了，下一个人是跑到终点还是爬到终点，都和我没有关系。</p>
 <p>这就是有限状态机FSM的原理。</p>
-<h2 id="使用状态机"><a href="#使用状态机" class="headerlink" title="使用状态机"></a>使用状态机</h2><p>根据这个原理，使用状态和转移关系来改写代码，就可以让代码的逻辑变得非常清晰。改进以后的代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Spliter</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.constant = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></span><br><span class="line">        self.state = <span class="string">'初始状态'</span></span><br><span class="line">        self.word = <span class="string">''</span></span><br><span class="line">        self.word_list = []</span><br><span class="line">        self.state_dict = &#123;<span class="string">'初始状态'</span>: self.parse_init,</span><br><span class="line">                           <span class="string">'单词状态'</span>: self.parse_word,</span><br><span class="line">                           <span class="string">'单引号在单词中状态'</span>: self.parse_contraction&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_init</span><span class="params">(self, letter)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</span><br><span class="line">            self.state = <span class="string">'单词状态'</span></span><br><span class="line">            self.word += letter</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_word</span><span class="params">(self, letter)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</span><br><span class="line">            self.word += letter</span><br><span class="line">        <span class="keyword">elif</span> letter == <span class="string">"'"</span>:</span><br><span class="line">            self.state = <span class="string">'单引号在单词中状态'</span></span><br><span class="line">            self.word += <span class="string">"'"</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.word_list.append(self.word)</span><br><span class="line">            self.state = <span class="string">'初始状态'</span></span><br><span class="line">            self.word = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_contraction</span><span class="params">(self, letter)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</span><br><span class="line">            self.word += letter</span><br><span class="line">            self.state = <span class="string">'单词状态'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.word_list.append(self.word[:<span class="number">-1</span>])</span><br><span class="line">            self.word = <span class="string">''</span></span><br><span class="line">            self.state = <span class="string">'初始状态'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(self, target)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">            self.state_dict[self.state](letter)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.word_list</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    spliter = Spliter()</span><br><span class="line">    sentence = <span class="string">'''I'm kingname, you should say: "Kingname Oba, </span></span><br><span class="line"><span class="string">                      I always remember your motto: 'kingname's genius'" to me, won't you?'''</span></span><br><span class="line">    print(spliter.split(sentence))</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用状态机"><a href="#使用状态机" class="headerlink" title="使用状态机"></a>使用状态机</h2><p>根据这个原理，使用状态和转移关系来改写代码，就可以让代码的逻辑变得非常清晰。改进以后的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Spliter</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.constant = <span class="string">&#x27;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span></span><br><span class="line">        self.state = <span class="string">&#x27;初始状态&#x27;</span></span><br><span class="line">        self.word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        self.word_list = []</span><br><span class="line">        self.state_dict = &#123;<span class="string">&#x27;初始状态&#x27;</span>: self.parse_init,</span><br><span class="line">                           <span class="string">&#x27;单词状态&#x27;</span>: self.parse_word,</span><br><span class="line">                           <span class="string">&#x27;单引号在单词中状态&#x27;</span>: self.parse_contraction&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse_init</span>(<span class="params">self, letter</span>):</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</span><br><span class="line">            self.state = <span class="string">&#x27;单词状态&#x27;</span></span><br><span class="line">            self.word += letter</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse_word</span>(<span class="params">self, letter</span>):</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</span><br><span class="line">            self.word += letter</span><br><span class="line">        <span class="keyword">elif</span> letter == <span class="string">&quot;&#x27;&quot;</span>:</span><br><span class="line">            self.state = <span class="string">&#x27;单引号在单词中状态&#x27;</span></span><br><span class="line">            self.word += <span class="string">&quot;&#x27;&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.word_list.append(self.word)</span><br><span class="line">            self.state = <span class="string">&#x27;初始状态&#x27;</span></span><br><span class="line">            self.word = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse_contraction</span>(<span class="params">self, letter</span>):</span><br><span class="line">        <span class="keyword">if</span> letter <span class="keyword">in</span> self.constant:</span><br><span class="line">            self.word += letter</span><br><span class="line">            self.state = <span class="string">&#x27;单词状态&#x27;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.word_list.append(self.word[:-<span class="number">1</span>])</span><br><span class="line">            self.word = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            self.state = <span class="string">&#x27;初始状态&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">split</span>(<span class="params">self, target</span>):</span><br><span class="line">        <span class="keyword">for</span> letter <span class="keyword">in</span> target:</span><br><span class="line">            self.state_dict[self.state](letter)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.word_list</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    spliter = Spliter()</span><br><span class="line">    sentence = <span class="string">&#x27;&#x27;&#x27;I&#x27;m kingname, you should say: &quot;Kingname Oba, </span></span><br><span class="line"><span class="string">                      I always remember your motto: &#x27;kingname&#x27;s genius&#x27;&quot; to me, won&#x27;t you?&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="built_in">print</span>(spliter.split(sentence))</span><br></pre></td></tr></table></figure>
+
 <p>代码运行效果如下图所示。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-15-50-27.png" alt></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/2017-12-10-15-50-27.png"></p>
 <p>需要注意的是，图中的代码只是使用了有限状态机的原理，而并非一个有限状态机。</p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-      <div>
-        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-  <img id="wechat_subscriber_qcode" src="/images/640.gif" alt="谢乾坤 | Kingname wechat" style="width: 200px; max-width: 100%;">
-  <div>第一时间获取最新文章更新，请订阅我的微信公众号：未闻Code</div>
-</div>
-
-      </div>
-    
-
-    
-      
-    
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Python/" rel="tag"># Python</a>
-          
-            <a href="/tags/FSM/" rel="tag"># FSM</a>
-          
-            <a href="/tags/有限状态机/" rel="tag"># 有限状态机</a>
-          
-        </div>
-      
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
 
-      
-      
-      
+  <div class="social-list">
 
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/10/03/teamflowy/" rel="next" title="TeamFlowy——结合Teambition与Workflowy">
-                <i class="fa fa-chevron-left"></i> TeamFlowy——结合Teambition与Workflowy
-              </a>
-            
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/FSM/" rel="tag"># FSM</a>
+              <a href="/tags/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA/" rel="tag"># 有限状态机</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/17/auto-deploy-blog/" rel="prev" title="使用Jenkins自动部署博客">
-                使用Jenkins自动部署博客 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/10/03/teamflowy/" rel="prev" title="TeamFlowy——结合Teambition与Workflowy">
+                  <i class="fa fa-chevron-left"></i> TeamFlowy——结合Teambition与Workflowy
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/12/17/auto-deploy-blog/" rel="next" title="使用Jenkins自动部署博客">
+                  使用Jenkins自动部署博客 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-    <div class="comments" id="comments">
-    </div>
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name">谢乾坤 | Kingname</p>
-              <p class="site-description motion-element" itemprop="description">高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。</p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">190</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">45</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">150</span>
-                    <span class="site-state-item-name">标签</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://github.com/kingname" title="GitHub &rarr; https://github.com/kingname" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="mailto:contact@kingname.info" title="E-Mail &rarr; mailto:contact@kingname.info" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                </span>
-              
-            </div>
-          
-
-          
-
-          
-          
-            <div class="links-of-blogroll motion-element links-of-blogroll-block">
-              <div class="links-of-blogroll-title">
-                <i class="fa  fa-fw fa-link"></i>
-                Links
-              </div>
-              <ul class="links-of-blogroll-list">
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://chuangzaoshi.com/" title="http://chuangzaoshi.com/" rel="noopener" target="_blank">创造狮</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="https://godbmw.com" title="https://godbmw.com" rel="noopener" target="_blank">董沅鑫的个人网站</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://www.weishidong.com/" title="http://www.weishidong.com/" rel="noopener" target="_blank">韦世东的技术日志</a>
-                  </li>
-                
-              </ul>
-            </div>
-          
-
-          
-            
-          
-          <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-
-<script>
-var rvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
-			var gvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
-			var bvalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
-			var avalue = 5 + Math.floor(Math.random() * 10) - Math.floor(Math.random() * 5);
-
-			var inject = function () {
-				const toBlob = HTMLCanvasElement.prototype.toBlob;
-				const toDataURL = HTMLCanvasElement.prototype.toDataURL;
-				const getImageData = CanvasRenderingContext2D.prototype.getImageData;
-
-				var noisify = function (canvas, context) {
-
-					//const shift = {
-					//    'r': rvalue,
-					//    'g': gvalue,
-					//    'b': bvalue,
-					//    'a': avalue
-					//};
-
-					const shift = {
-						'r': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
-						'g': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
-						'b': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5),
-						'a': Math.floor(Math.random() * 15) - Math.floor(Math.random() * 5)
-					};
-
-					const width = canvas.width, height = canvas.height;
-					const imageData = getImageData.apply(context, [0, 0, width, height]);
-					for (let i = 0; i < height; i++) {
-						for (let j = 0; j < width; j++) {
-							const n = ((i * (width * 4)) + (j * 4));
-							imageData.data[n + 0] = imageData.data[n + 0] + shift.r;
-							imageData.data[n + 1] = imageData.data[n + 1] + shift.g;
-							imageData.data[n + 2] = imageData.data[n + 2] + shift.b;
-							imageData.data[n + 3] = imageData.data[n + 3] + shift.a;
-						}
-					}
-					//
-					//window.top.postMessage("canvas-fingerprint-defender-alert", '*');
-					context.putImageData(imageData, 0, 0);
-				};
-				//
-				Object.defineProperty(HTMLCanvasElement.prototype, "toBlob", {
-					"value": function () {
-						noisify(this, this.getContext("2d"));
-						return toBlob.apply(this, arguments);
-					}
-				});
-				//
-				Object.defineProperty(HTMLCanvasElement.prototype, "toDataURL", {
-					"value": function () {
-						noisify(this, this.getContext("2d"));
-						return toDataURL.apply(this, arguments);
-					}
-				});
-				//
-				Object.defineProperty(CanvasRenderingContext2D.prototype, "getImageData", {
-					"value": function () {
-						noisify(this.canvas, this);
-						return getImageData.apply(this, arguments);
-					}
-				});
-				//
-				document.documentElement.dataset.cbscriptallow = true;
-
-				HTMLCanvasElement.prototype.toDataURL.toString = function () {
-					return 'toDataURL() { [native code] }';
-				}
-
-				HTMLCanvasElement.prototype.toBlob.toString = function () {
-					return 'toBlob() { [native code] }';
-				}
-
-				CanvasRenderingContext2D.prototype.getImageData.toString = function () {
-					return 'getImageData() { [native code] }';
-				}
-
-
-			};
-
-			//inject();
-
-			bmak = {
-				wgl: function() {
-					try {
-						var t = document["createElement"]("canvas"),
-							a = t["getContext"]("webgl");
-						bmak["wv"] = "n", bmak["wr"] = "n", bmak["weh"] = "n", bmak["wl"] = 0, a && (bmak["wv"] = "b", bmak["wr"] = "b",
-							bmak["weh"] = "b", a["getSupportedExtensions"]() && (bmak["weh"] = bmak["ats"](bmak["mn_s"](JSON["stringify"]
-								(a[
-									"getSupportedExtensions"]()["sort"]()))), bmak["wl"] = a["getSupportedExtensions"]()["length"], a[
-								"getSupportedExtensions"]()["indexOf"]("WEBGL_debug_renderer_info") >= 0 && (bmak["wv"] = a["getParameter"]
-								(a[
-									"getExtension"]("WEBGL_debug_renderer_info")["UNMASKED_VENDOR_WEBGL"]), bmak["wr"] = a["getParameter"](a[
-									"getExtension"]("WEBGL_debug_renderer_info")["UNMASKED_RENDERER_WEBGL"]))));
-					} catch (t) {
-						bmak["wv"] = "e", bmak["wr"] = "e", bmak["weh"] = "e", bmak["wl"] = 0;
-					}
-				},
-				uar: function() {
-					return window["navigator"]["userAgent"]["replace"](/\\|"/g, "");
-				},
-                fas: function() {
-                    try {
-                        return Boolean(navigator["credentials"]) + (Boolean(navigator["appMinorVersion"]) << 1) + (Boolean(navigator[
-                                "bluetooth"]) << 2) + (Boolean(navigator["storage"]) << 3) + (Boolean(Math["imul"]) << 4) + (Boolean(navigator[
-                                "getGamepads"]) << 5) + (Boolean(navigator["getStorageUpdates"]) << 6) + (Boolean(navigator[
-                                "hardwareConcurrency"]) << 7) + (Boolean(navigator["mediaDevices"]) << 8) + (Boolean(navigator["mozAlarms"]) <<
-                            9) + (Boolean(navigator["mozConnection"]) << 10) + (Boolean(navigator["mozIsLocallyAvailable"]) << 11) + (
-                            Boolean(navigator["mozPhoneNumberService"]) << 12) + (Boolean(navigator["msManipulationViewsEnabled"]) << 13) +
-                            (Boolean(navigator["permissions"]) << 14) + (Boolean(navigator["registerProtocolHandler"]) << 15) + (Boolean(
-                                navigator["requestMediaKeySystemAccess"]) << 16) + (Boolean(navigator["requestWakeLock"]) << 17) + (Boolean(
-                                navigator["sendBeacon"]) << 18) + (Boolean(navigator["serviceWorker"]) << 19) + (Boolean(navigator[
-                                "storeWebWideTrackingException"]) << 20) + (Boolean(navigator["webkitGetGamepads"]) << 21) + (Boolean(navigator[
-                                "webkitTemporaryStorage"]) << 22) + (Boolean(Number["parseInt"]) << 23) + (Boolean(Math["hypot"]) << 24);
-                    } catch (t) {
-                        return 0;
-                    }
-                },
-                csh: function() {
-
-				    try{
-
-                        if (window["speechSynthesis"]) {
-                            var t = window["speechSynthesis"]["getVoices"]();
-
-                            if (t["length"] > 0) {
-                                for (var a = "", e = 0; e < t["length"]; e++) a += t[e]["voiceURI"] + "_" + t[e]["lang"];
-
-                                bmak["ssh"] = bmak["ats"](bmak["mn_s"](a));
-                            } else bmak["ssh"] = "0";
-                        } else bmak["ssh"] = "n";
-
-					}catch (err)
-					{
-
-					}
-
-                },
-                ats: function(t) {
-                    for (var a = "", e = 0; e < t["length"]; e++) a += 2 == t[e]["toString"](16)["length"] ? t[e]["toString"](16) : "0" +
-                        t[e]["toString"](16);
-
-                    return a;
-                },
-                mn_s: function(t) {
-                    var a = [1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221, 3624381080,
-                            310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580, 3835390401, 4022224774,
-                            264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986, 2554220882, 2821834349, 2952996808,
-                            3210313671, 3336571891, 3584528711, 113926993, 338241895, 666307205, 773529912, 1294757372, 1396182291,
-                            1695183700, 1986661051, 2177026350, 2456956037, 2730485921, 2820302411, 3259730800, 3345764771, 3516065817,
-                            3600352804, 4094571909, 275423344, 430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063,
-                            1747873779, 1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298
-                        ],
-                        e = 1779033703,
-                        n = 3144134277,
-                        o = 1013904242,
-                        m = 2773480762,
-                        r = 1359893119,
-                        i = 2600822924,
-                        c = 528734635,
-                        b = 1541459225,
-                        d = bmak["encode_utf8"](t),
-                        s = 8 * d["length"];
-                    d += String["fromCharCode"](128);
-
-                    for (var k = d["length"] / 4 + 2, l = Math["ceil"](k / 16), u = new Array(l), _ = 0; _ < l; _++) {
-                        u[_] = new Array(16);
-
-                        for (var f = 0; f < 16; f++) u[_][f] = d["charCodeAt"](64 * _ + 4 * f) << 24 | d["charCodeAt"](64 * _ + 4 * f + 1) <<
-                            16 | d["charCodeAt"](64 * _ + 4 * f + 2) << 8 | d["charCodeAt"](64 * _ + 4 * f + 3) << 0;
-                    }
-
-                    var p = s / Math["pow"](2, 32);
-                    u[l - 1][14] = Math["floor"](p), u[l - 1][15] = s;
-
-                    for (var v = 0; v < l; v++) {
-                        for (var h, g = new Array(64), w = e, y = n, E = o, S = m, C = r, h = i, B = c, x = b, _ = 0; _ < 64; _++) {
-                            var M, j, A, L, P, T;
-                            _ < 16 ? g[_] = u[v][_] : (M = bmak["rotate_right"](g[_ - 15], 7) ^ bmak["rotate_right"](g[_ - 15], 18) ^ g[_ -
-                            15] >>> 3, j = bmak["rotate_right"](g[_ - 2], 17) ^ bmak["rotate_right"](g[_ - 2], 19) ^ g[_ - 2] >>> 10, g[_] =
-                                g[_ - 16] + M + g[_ - 7] + j), j = bmak["rotate_right"](C, 6) ^ bmak["rotate_right"](C, 11) ^ bmak[
-                                "rotate_right"](C, 25), A = C & h ^ ~C & B, L = x + j + A + a[_] + g[_], M = bmak["rotate_right"](w, 2) ^ bmak[
-                                "rotate_right"](w, 13) ^ bmak["rotate_right"](w, 22), P = w & y ^ w & E ^ y & E, T = M + P, x = B, B = h, h = C,
-                                C = S + L >>> 0, S = E, E = y, y = w, w = L + T >>> 0;
-                        }
-
-                        e += w, n += y, o += E, m += S, r += C, i += h, c += B, b += x;
-                    }
-
-                    return [e >> 24 & 255, e >> 16 & 255, e >> 8 & 255, 255 & e, n >> 24 & 255, n >> 16 & 255, n >> 8 & 255, 255 & n, o >>
-                    24 & 255, o >> 16 & 255, o >> 8 & 255, 255 & o, m >> 24 & 255, m >> 16 & 255, m >> 8 & 255, 255 & m, r >> 24 &
-                    255, r >> 16 & 255, r >> 8 & 255, 255 & r, i >> 24 & 255, i >> 16 & 255, i >> 8 & 255, 255 & i, c >> 24 & 255, c >>
-                    16 & 255, c >> 8 & 255, 255 & c, b >> 24 & 255, b >> 16 & 255, b >> 8 & 255, 255 & b
-                    ];
-                }
-
-
-			};
-
-			bmak["wgl"]();
-			var a = {};
-			a["sf4"] = function() {
-				var t = bmak["uar"]();
-				return !(!~t["indexOf"]("Version/4.0") || !(~t["indexOf"]("iPad;") || ~t["indexOf"]("iPhone") || ~t["indexOf"](
-					"Mac OS X 10_5")));
-			};
-			a["canvas"] = function(t) {
-				try {
-					//if (void 0 !== a["cache"]["canvas"]) return a["cache"]["canvas"];
-					var e = -1;
-					if (!a["sf4"]()) {
-						var n = document["createElement"]("canvas");
-						if (n["width"] = 280, n["height"] = 60, n["style"]["display"] = "none", "function" == typeof n["getContext"]) {
-							var o = n["getContext"]("2d");
-							o["fillStyle"] = "rgb(102, 204, 0)", o["fillRect"](100, 5, 80, 50), o["fillStyle"] = "#f60", o["font"] =
-								"16pt Arial", o["fillText"](t, 10, 40), o["strokeStyle"] = "rgb(120, 186, 176)", o["arc"](80, 10, 20, 0, Math[
-									"PI"], !1), o["stroke"]();
-							var m = n["toDataURL"]();
-							e = 0;
-							for (var r = 0; r < m["length"]; r++) {
-								e = (e << 5) - e + m["charCodeAt"](r), e &= e;
-							}
-							e = e["toString"]();
-							var i = document["createElement"]("canvas");
-							i["width"] = 16, i["height"] = 16;
-							var c = i["getContext"]("2d");
-							c["font"] = "6pt Arial", a["rVal"] = Math["floor"](1000 * Math["random"]())["toString"](), c["fillText"](a[
-									"rVal"],
-								1, 12);
-							for (var b = i["toDataURL"](), d = 0, s = 0; s < b["length"]; s++) {
-								d = (d << 5) - d + b["charCodeAt"](s), d &= d;
-							}
-							a["rCFP"] = d["toString"]();
-						}
-					}
-
-					return e;
-				} catch (t) {
-					return "exception";
-				}
-			};
-			var c1 = a["canvas"]("<@nv45. F1n63r,Pr1n71n6!");
-			var c2 = a["canvas"]("m,Ev!xV67BaU> eh2m<f3AG3@");
-
-			bmak.csh();
-            let canvas = [c1,c2,a["rCFP"],bmak.fas(),bmak["ssh"]]
-axios.get('https://ja3er.com/json').then((response) => {
-    ja3_info = response.data
-    ts = Math.floor(Date.now()/ 1000)
-    body = {ja3: ja3_info.ja3, ja3_hash: ja3_info.ja3_hash, ua: ja3_info['User-Agent'], ts: ts, canvas: canvas}
-    axios.post('https://antispider.kingname.info/detect_spider', body).then((resp) => {
-        // TODO: 根据 score 的值判断该用户是否为爬虫
-    })
-})
-</script>
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#提出问题"><span class="nav-number">1.</span> <span class="nav-text">提出问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码是如何一步一步恶化的"><span class="nav-number">2.</span> <span class="nav-text">代码是如何一步一步恶化的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单词与空格"><span class="nav-number">2.1.</span> <span class="nav-text">单词与空格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单词空格与逗号句号"><span class="nav-number">2.2.</span> <span class="nav-text">单词空格与逗号句号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单词空格与各种标点符号"><span class="nav-number">2.3.</span> <span class="nav-text">单词空格与各种标点符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#奇奇怪怪的单引号"><span class="nav-number">2.4.</span> <span class="nav-text">奇奇怪怪的单引号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#状态转义图"><span class="nav-number">3.</span> <span class="nav-text">状态转义图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用状态机"><span class="nav-number">4.</span> <span class="nav-text">使用状态机</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">谢乾坤 | Kingname</span>
-
-  
-
-  
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
 
 
 
 
-        
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
 
 
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-    
-
-    
+<div class="copyright">
+  &copy; 2014 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">青南</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
+    </div>
+  </footer>
+
   
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
 
-<script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
+  <a href="https://github.com/kingname" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
   
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/src/utils.js?v=6.7.0"></script>
-
-  <script src="/js/src/motion.js?v=6.7.0"></script>
-
-
-
-  
-  
-
-  
-  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
-<script src="/js/src/post-details.js?v=6.7.0"></script>
-
-
-
-  
-
-
-  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
-
-
-
-  
   
 
 
@@ -1594,72 +418,9 @@ axios.get('https://ja3er.com/json').then((response) => {
 
   
 
-<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
 
 
 
-<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-
-<script>
-  var GUEST = ['nick', 'mail', 'link'];
-  var guest = 'nick,mail,link';
-  guest = guest.split(',').filter(function (item) {
-    return GUEST.indexOf(item) > -1;
-  });
-  new Valine({
-    el: '#comments',
-    verify: true,
-    notify: false,
-    appId: 'nJ1y0DoPkV2nOGKAGVvwJwEy-9Nh9j0Va',
-    appKey: 'Kr0yjGifADbUdAIo4bpCr20f',
-    placeholder: '告诉我，你在想什么。',
-    avatar: 'mm',
-    meta: guest,
-    pageSize: '10' || 10,
-    visitor: false
-  });
-</script>
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 </body>
 </html>

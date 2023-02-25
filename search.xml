@@ -10257,4 +10257,31 @@ llo
         <tag>Flask</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：【最新】再次突破CloudFlare五秒盾付费版</title>
+    <url>/2023/02/25/crack-cf-2/</url>
+    <content><![CDATA[<p>去年我写了一篇文章：<a href="https://mp.weixin.qq.com/s/zwmatF3yTgSyS0gz8sinaA">一日一技：如何捅穿Cloud Flare的5秒盾</a> ，这篇文章使用的第三方库『cloudscraper』可以绕过免费版的五秒盾。但遇到付费版就无能为力了。</p>
+<span id="more"></span>
+
+<p>最近在爬币圈的网站，其中有一个网站叫做：<a href="https://www.coinbase.com/ventures/content">Codebase</a>使用的就是付费版的CloudFlare五秒盾。当我们使用CloudScraper去爬时，报错如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225100842.png"></p>
+<p>那么现阶段，付费版的CloudFlare五秒盾，有没有什么办法绕过呢？其实方法非常简单。只需要使用Docker运行一个容器就可以了。启动命令为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name=flaresolverr \</span><br><span class="line">  -p 8191:8191 \</span><br><span class="line">  -e LOG_LEVEL=info \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  ghcr.io/flaresolverr/flaresolverr:latest</span><br></pre></td></tr></table></figure>
+
+<p>这个容器启动以后，会开启8191端口。我们通过往这个端口发送http请求，让他转发请求给目标网站，就可以绕过五秒盾。</p>
+<p>具体使用示例：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://localhost:8191/v1&quot;</span></span><br><span class="line"></span><br><span class="line">payload = json.dumps(&#123;</span><br><span class="line">  <span class="string">&quot;cmd&quot;</span>: <span class="string">&quot;request.get&quot;</span>,</span><br><span class="line">  <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://www.coinbase.com/ventures/content&quot;</span>,</span><br><span class="line">  <span class="string">&quot;maxTimeout&quot;</span>: <span class="number">60000</span></span><br><span class="line">&#125;)</span><br><span class="line">headers = &#123;</span><br><span class="line">  <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">response = requests.post(url, headers=headers, data=payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个Docker镜像启动的接口，返回的数据是JOSN，网页源代码在其中的.solution.response中</span></span><br><span class="line"><span class="built_in">print</span>(response.json()[<span class="string">&#x27;solution&#x27;</span>][<span class="string">&#x27;response&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<p>访问效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225101520.png"></p>
+<p>我们再写几行代码来提取一下标题：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225104136.png"></p>
+<p>我们启动的这个容器，为什么可以绕过CloudFlare的五秒盾呢，关键原因就在这个项目中：<a href="https://github.com/FlareSolverr/FlareSolverr">FlareSolverr</a>。大家可以阅读他的源代码，看看他是怎么绕过的。</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>爬虫</tag>
+        <tag>5秒盾</tag>
+      </tags>
+  </entry>
 </search>

@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-01-14T14:16:11.551Z</updated>
+  <updated>2023-02-25T03:02:37.234Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：【最新】再次突破CloudFlare五秒盾付费版</title>
+    <link href="https://www.kingname.info/2023/02/25/crack-cf-2/"/>
+    <id>https://www.kingname.info/2023/02/25/crack-cf-2/</id>
+    <published>2023-02-25T03:01:20.000Z</published>
+    <updated>2023-02-25T03:02:37.234Z</updated>
+    
+    <content type="html"><![CDATA[<p>去年我写了一篇文章：<a href="https://mp.weixin.qq.com/s/zwmatF3yTgSyS0gz8sinaA">一日一技：如何捅穿Cloud Flare的5秒盾</a> ，这篇文章使用的第三方库『cloudscraper』可以绕过免费版的五秒盾。但遇到付费版就无能为力了。</p><span id="more"></span><p>最近在爬币圈的网站，其中有一个网站叫做：<a href="https://www.coinbase.com/ventures/content">Codebase</a>使用的就是付费版的CloudFlare五秒盾。当我们使用CloudScraper去爬时，报错如下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225100842.png"></p><p>那么现阶段，付费版的CloudFlare五秒盾，有没有什么办法绕过呢？其实方法非常简单。只需要使用Docker运行一个容器就可以了。启动命令为：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name=flaresolverr \</span><br><span class="line">  -p 8191:8191 \</span><br><span class="line">  -e LOG_LEVEL=info \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  ghcr.io/flaresolverr/flaresolverr:latest</span><br></pre></td></tr></table></figure><p>这个容器启动以后，会开启8191端口。我们通过往这个端口发送http请求，让他转发请求给目标网站，就可以绕过五秒盾。</p><p>具体使用示例：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://localhost:8191/v1&quot;</span></span><br><span class="line"></span><br><span class="line">payload = json.dumps(&#123;</span><br><span class="line">  <span class="string">&quot;cmd&quot;</span>: <span class="string">&quot;request.get&quot;</span>,</span><br><span class="line">  <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://www.coinbase.com/ventures/content&quot;</span>,</span><br><span class="line">  <span class="string">&quot;maxTimeout&quot;</span>: <span class="number">60000</span></span><br><span class="line">&#125;)</span><br><span class="line">headers = &#123;</span><br><span class="line">  <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">response = requests.post(url, headers=headers, data=payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个Docker镜像启动的接口，返回的数据是JOSN，网页源代码在其中的.solution.response中</span></span><br><span class="line"><span class="built_in">print</span>(response.json()[<span class="string">&#x27;solution&#x27;</span>][<span class="string">&#x27;response&#x27;</span>])</span><br></pre></td></tr></table></figure><p>访问效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225101520.png"></p><p>我们再写几行代码来提取一下标题：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225104136.png"></p><p>我们启动的这个容器，为什么可以绕过CloudFlare的五秒盾呢，关键原因就在这个项目中：<a href="https://github.com/FlareSolverr/FlareSolverr">FlareSolverr</a>。大家可以阅读他的源代码，看看他是怎么绕过的。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;去年我写了一篇文章：&lt;a href=&quot;https://mp.weixin.qq.com/s/zwmatF3yTgSyS0gz8sinaA&quot;&gt;一日一技：如何捅穿Cloud Flare的5秒盾&lt;/a&gt; ，这篇文章使用的第三方库『cloudscraper』可以绕过免费版的五秒盾。但遇到付费版就无能为力了。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+    <category term="5秒盾" scheme="https://www.kingname.info/tags/5%E7%A7%92%E7%9B%BE/"/>
+    
+  </entry>
   
   <entry>
     <title>Flask中如何嵌套启动子线程？</title>
@@ -473,31 +496,6 @@
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
     <category term="水印" scheme="https://www.kingname.info/tags/%E6%B0%B4%E5%8D%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>写在公众号粉丝2w时</title>
-    <link href="https://www.kingname.info/2022/04/22/20000-fans/"/>
-    <id>https://www.kingname.info/2022/04/22/20000-fans/</id>
-    <published>2022-04-22T07:38:30.000Z</published>
-    <updated>2022-04-22T07:41:34.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>今天，2022年4月21日，公众号未闻Code粉丝突破20000！</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220421143345.png"></p><p>感谢现在正在看这篇文章的各位。</p><span id="more"></span><p>这个公众号其实在2014年就开通了，如果我当时就认真经营的话，现在可能已经财务自由了吧（笑）。</p><p>认真更新未闻Code是从2018年底开始的，当时我的爬虫书《Python爬虫开发，从入门到实战》快要出版了，于是我想着写点公众号文章来造造势。没想到这一写就是4年。</p><p>我平时记录的技术笔记已经有几百篇了，所以第一个半年，我可以保证每天一篇原创小技巧文章的更新。后来，存货用完了，但因为我本来就有习惯记录工作中遇到的问题和解决方案，所以也能保证每两天一篇文章的更新频率。后来开通了公众号的粉丝群，大家在群里面提的问题，也成了我写作的素材。</p><p>在这四年写公众号的过程中，很多同学私聊我，表示对我文章的感谢，我的文章帮他解决了难题，帮他找到了工作。但其实我也要感谢所有问我问题的同学，是你们一次又一次的帮我验证了费曼学习法的正确。以教促学确实是最好的学习方法，在给你们解答的时候，在为了解答你们的问题，我去翻软件源代码的时候，我的知识得以进一步巩固和完善，我们都变得比以往更强了。</p><p>4月18号有一个同学给我发邮件，咨询知识管理的问题：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220419112405.png"></p><p>这里我也贴一下我给他的回复，大家也可以参考一下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220419112720.png"></p><p>在这四年中，不时有同学跟我说，我的文章被某某培训机构拿去做教材，一次收费几千上万，但为什么我依然要坚持免费写这些文章？</p><p>我觉得，坚持写文章并免费发布，是为了表达我对互联网的感谢吧。我是开源运动的受益者，我也是互联网上浩如烟海的技术文章的受益者。我从Coursera上面的课程入门Python，通过互联网上的文档学会各种框架和技术。既然我走到现在，没有花一分钱，那我没有理由在输出的时候收费。</p><p>我很赞同吴恩达说过的一句话：让全世界所有人免费享受高品质的教育。</p><p>如果大家在其它地方看到了我的文章被收费出售，只需要顺手点个举报，然后让被骗的人知道原文出自我这里就好了。当更多的人知道在哪里可以第一时间免费获取到高质量的干货，那么他们自然不会去花钱购买二手货了。</p><p>未闻Code现在以及未来，所有文章都是免费的，对所有人开放的。不会出现让你读一半然后交费才能读剩下一半的情况。</p><p>在公众号粉丝群里面，我发现很多同学咨询的问题都是我文章写过的，但是大家都知道公众号的搜索功能非常垃圾，所以公众号文章我也会同步到我的个人博客上：<a href="https://www.kingname.info/">https://www.kingname.info</a> 如果你在公众号搜索不到内容，不妨通过Google搜索我的博客，也许可以找到你想要的内容。</p><p>除了公众号和博客，如果你想看视频，我也在B站也有大量录播的视频：<a href="https://space.bilibili.com/10089274">https://space.bilibili.com/10089274</a> ；如果你喜欢邮件订阅，在竹白上也有Newsletter: <a href="https://kingname.zhubai.love/">https://kingname.zhubai.love/</a> 以上所有地方发布的所有内容，都是完全免费的。</p><p>另外，如果你觉得这些免费的内容还不够的话，我还开通了知识星球『未闻Code』，相比于以上免费的内容，付费的星球额外提供了：软件架构咨询，线上一对一职业生涯规划咨询，直播等等附加的服务。</p><p>最后，再一次表示对各位读者的感谢。我会从评论区选7个同学，赠送7本签名版的《Python爬虫开发，从入门到实战》。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;今天，2022年4月21日，公众号未闻Code粉丝突破20000！&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220421143345.png&quot;&gt;&lt;/p&gt;
-&lt;p&gt;感谢现在正在看这篇文章的各位。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="感想" scheme="https://www.kingname.info/categories/%E6%84%9F%E6%83%B3/"/>
-    
-    
-    <category term="公众号" scheme="https://www.kingname.info/tags/%E5%85%AC%E4%BC%97%E5%8F%B7/"/>
-    
-    <category term="未闻 Code" scheme="https://www.kingname.info/tags/%E6%9C%AA%E9%97%BB-Code/"/>
     
   </entry>
   

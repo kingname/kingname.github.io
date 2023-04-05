@@ -10284,4 +10284,57 @@ llo
         <tag>5秒盾</tag>
       </tags>
   </entry>
+  <entry>
+    <title>助力大语言模型训练，无压力爬取六百亿网页</title>
+    <url>/2023/04/05/common-crawl/</url>
+    <content><![CDATA[<p>ChatGPT一炮而红，让国内很多公司开始做大语言模型。然后他们很快就遇到了第一个问题，训练数据怎么来。有些公司去买数据，有些公司招聘爬虫工程师。但如果现在才开发爬虫，那恐怕已经来不及了。</p>
+<p>即使爬虫工程师非常厉害，可以破解任意反爬虫机制，可以让爬虫跑满网络带宽，可是要训练出GPT-3这种规模的大语言模型，这个数据并不是一天两天就能爬完的。并且，有很多老网站的数据，早就被删除了，爬虫想爬也爬不到。</p>
+<p>如果你看了今天这篇文章，那么恭喜你，你即将知道如何快速获取600亿网站的数据。从2008年开始爬取，这些网站数据横跨40多种语言。截止我写这篇文章的时候，最新的数据积累到了2023年2月。只要是Google现在或者曾经搜索得到的网站，你在这里都能找到。唯一制约你的，就是你的硬盘大小——仅仅2023年1月和2月的网页加到一起，就有400TB。而且所有这些数据，完全免费！不需要注册登录！不需要梯子！不需要下载任何额外软件！只需要浏览器或者Linux中的wget命令就能直接下载。</p>
+<span id="more"></span>
+
+<p>这个项目叫做<a href="https://commoncrawl.org/">Common Crawl</a>，官网长这样：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405134726.png"></p>
+<p>获取数据的方法，网站已经写到了<a href="https://commoncrawl.org/the-data/get-started/">Get Started</a>中。我们来看看这个页面的第一段话：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405134908.png"></p>
+<blockquote>
+<p>The Common Crawl corpus contains petabytes of data collected since 2008. It contains raw web page data, extracted metadata and text extractions.</p>
+<p>Common Crawl语料库包含了上PB的数据。这些数据从2008年开始收集。他包含了网页的原始页面HTML、提取出来的元信息和纯文本。</p>
+</blockquote>
+<p>Common Crawl的数据保存在亚马逊S3上面，我们可以直接通过HTTP来下载。当然如果你硬盘够大，你可以写代码来批量下载全部数据，这个时候可以使用Python的boto3模块访问S3.</p>
+<p>我用HTTP下载的方式，来给大家演示一下这个数据怎么下载和使用。我们在上面提到的Get Started页面，找到你想下载数据的时间点。例如我想下载2023年1月和2月的网站数据，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405135318.png"></p>
+<p>点击红框中的链接，进入一个新的页面。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405135438.png"></p>
+<p>从这个页面上，我们可以看到这个数据集的简介。2023年1月到2月的数据，从1月26号开始抓取，到2月9号截止。包含315亿个页面。原始数据不压缩的情况下有400TB。这些网站来自3300万个域名，130亿个之前没有抓过的URL。</p>
+<p>在这个页面，我们可以看到一个表格，这里面显示了不同的数据类型：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405135838.png"></p>
+<p>其中<code>WARC files</code>文件，记录的是网页的原始HTML代码。<code>WET files</code>文件，记录的是简单处理后，提取出来的网页所有纯文本。</p>
+<p>大家不要被最后一列的数据大小吓到了。你不需要一次性下载这么大的数据。</p>
+<p>以WARC文件为例，点击<code>File List</code>中的链接，会自动下载一个很小的压缩文件<code>warc.paths.gz</code>。这个文件需要使用gunzip命令来解压缩。这个命令理论上在macOS和Linux中都是自带的。使用如下命令解压缩：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gunzip warc.paths.gz</span><br></pre></td></tr></table></figure>
+
+<p>解压完成以后，会生成一个<code>warc.paths</code>的文件。这个文件有9.2MB，也非常的小。我们可以使用vim或者less命令查看里面的内容，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405140447.png"></p>
+<p>这里面列出来的是不同时间段的文件。我们可以依次下载每个文件，分别解压缩。这样分文件，是Common Crawl为了方便大家下载而做的。否则一次性下载几十TB，谁受得了。</p>
+<p>我们随便找一个地址，例如<code>crawl-data/CC-MAIN-2023-06/segments/1674764494826.88/warc/CC-MAIN-20230126210844-20230127000844-00001.warc.gz</code>。把这个地址前面拼接上域名<code>https://data.commoncrawl.org/</code>，因此完整的URL应该是：<code>https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-06/segments/1674764494826.88/warc/CC-MAIN-20230126210844-20230127000844-00001.warc.gz</code>。这就是能够下载这个时间段数据的URL了。这个压缩文件有好几个G，因此不建议直接在浏览器上面打开这个URL。我们可以使用wget命令来下载。当然你也可以用迅雷来下。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405140939.png"></p>
+<p>下载完成以后，会得到一个<code>CC-MAIN-20230126210844-20230127000844-00001.warc.gz</code>文件，继续使用<code>gunzip</code>命令解压缩，得到<code>CC-MAIN-20230126210844-20230127000844-00001.warc</code>文件。这个文件本质上是一个文本文件，可以使用vim或者less命令查看：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405141309.png"></p>
+<p>这里面记录的是网站的元信息和HTML。数据是以WARC格式储存的。关于这个格式，在上面提到的Get Started页面可以看到具体的说明：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405141817.png"></p>
+<p>你可以直接写一个程序来解析，或者安装一些现成的程序来解析，并转成JSON或者其他格式。Ubuntu下面可以使用apt命令安装warcat来解析，这里就不多说了。如果不知道怎么解析也可以问一问ChatGPT。</p>
+<p>我们再来看一下<code>WET</code>文件，打开以后如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405142104.png"></p>
+<p>算是一个比较粗糙的正文提取方法，仅仅是把页面上的所有文本全部提取出来了而已。</p>
+<p>如果你想让新闻类、博客类文章的提取效果更好，那么可以试一试把这个WARC格式里面的HTML提取出来，然后使用我的<a href="https://github.com/GeneralNewsExtractor/GeneralNewsExtractor">GNE</a>来提取正文，提取效果就会好非常多：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405142554.png"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>众所周知，中文互联网是封闭的互联网。但不要因此就觉得整个互联网上现在已经没有良心网站了。Common Crawl就属于这样的良心网站，完全免费，不需要注册登录，没有任何限制，不需要安装任何软件，直接获取15年来绝大部分网站的原始数据。</p>
+<p>希望这些数据，能让我们自己的大模型更进一步。</p>
+]]></content>
+      <tags>
+        <tag>通用爬虫</tag>
+        <tag>ChatGPT</tag>
+        <tag>大预言模型</tag>
+      </tags>
+  </entry>
 </search>

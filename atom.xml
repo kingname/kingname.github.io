@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-04-05T06:57:57.366Z</updated>
+  <updated>2023-04-15T13:51:55.840Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>轻声低语，藏在光芒下的语音转文字模型Whisper</title>
+    <link href="https://www.kingname.info/2023/04/15/whisper/"/>
+    <id>https://www.kingname.info/2023/04/15/whisper/</id>
+    <published>2023-04-15T13:51:11.000Z</published>
+    <updated>2023-04-15T13:51:55.840Z</updated>
+    
+    <content type="html"><![CDATA[<p>ChatGPT的模型<code>gpt-3.5-turbo</code>发布当天，OpenAI还开源了一个语音转文本的模型：Whisper。但由于ChatGPT本身太过于耀眼，很多人都忽略了Whisper的存在。</p><p>我当时也是这样，我一度以为，Whisper也是一个API，需要发送POST请求到OpenAI的服务器上，然后它传回识别的结果。所以我很长一段时间一直都没有试用过这个模型。</p><p>直到前几天，我看到有人在少数派上面发了一篇文章，介绍他刚做的语音识别App，并且说这个App基于Whisper，完全不需要联网。我当时还奇怪，不联网你怎么调Whisper的API？于是我终于去认真了解了一下Whisper，发现它是OpenAI开源的语音转文字的模型，并不是API服务。这个模型只需要有Python就能本地离线运行，不需要联网。</p><span id="more"></span><p>Whisper的Github地址为：<a href="https://github.com/openai/whisper%EF%BC%8C%E5%9C%A8Python%E4%B8%8B%E7%94%A8%E8%B5%B7%E6%9D%A5%E9%9D%9E%E5%B8%B8%E7%AE%80%E5%8D%95%EF%BC%9A">https://github.com/openai/whisper，在Python下用起来非常简单：</a></p><p>首先安装第三方库：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip install openai-whisper</span><br></pre></td></tr></table></figure><p>接下来，在电脑上安装<code>ffmpeg</code>。以下是各种系统下的安装命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># on Ubuntu or Debian</span></span><br><span class="line">sudo apt update &amp;&amp; sudo apt install ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on Arch Linux</span></span><br><span class="line">sudo pacman -S ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on MacOS using Homebrew (https://brew.sh/)</span></span><br><span class="line">brew install ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on Windows using Chocolatey (https://chocolatey.org/)</span></span><br><span class="line">choco install ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on Windows using Scoop (https://scoop.sh/)</span></span><br><span class="line">scoop install ffmpeg</span><br></pre></td></tr></table></figure><p>以上就是全部的准备工作了。我们来测试一下这个模型的准确率有多高。下面是我的一段录音：</p><blockquote><p>录音可以在<a href="https://mp.weixin.qq.com/s/45rKugFD9eYwGOKn4IJOmw">公众号</a>收听：</p></blockquote><p>录音文件地址为：<code>/Users/kingname/Downloads/公众号演示.m4a</code>。那么编写如下代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> whisper</span><br><span class="line"></span><br><span class="line">model = whisper.load_model(<span class="string">&quot;base&quot;</span>)</span><br><span class="line">result = model.transcribe(<span class="string">&quot;/Users/kingname/Downloads/公众号演示.m4a&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(result[<span class="string">&quot;text&quot;</span>])</span><br></pre></td></tr></table></figure><p>第一次加载模型时，它会自动去拉取模型文章。不同的模型文件大小不一样。拉取完成以后，后面再次使用就不需要联网了。</p><p>生成效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415211136.png"></p><p>虽然有一两个错别字，但基本无伤大雅。更换更大的模型以后，准确率可以进一步提升：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415211745.png"></p><p>我们知道，语音识别最麻烦的就是同音字，这种情况我们可以使用Whisper配合ChatGPT来进行纠正：</p><blockquote><p>录音可以在<a href="https://mp.weixin.qq.com/s/45rKugFD9eYwGOKn4IJOmw">公众号</a>收听。</p></blockquote><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415214623.png"></p><p>直接识别出来基本都是错别字，因为专有名词+同音字，必须通过联系上下文才能知道应该使用哪个字。我们让ChatGPT来改写一下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415210735.png"></p><p>经过测试，<code>small</code>模型对中文的识别效果已经非常好了，它运行起来会占用2GB左右的内存。速度也非常快。当我们想从一段视频里面把音频转成文字，或者自己做播客想生成字幕时，用这个模型就非常方便，完全免费，还不用担心自己的声音别泄露出去。</p><p>虽然Whisper是国外公司做的，但是它对中文的识别效果目前超过了国内许多大厂的中文语音识别产品。其中包括以语音识别著称的某飞公司，他们的产品效果经过测试没有Whisper好。这也说明了国内语音识别技术尚需进一步提升，需要更多的研究和开发。在这方面，国产货还有很大的努力空间，需要不断地探索和创新，以便更好地满足用户的需求。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;ChatGPT的模型&lt;code&gt;gpt-3.5-turbo&lt;/code&gt;发布当天，OpenAI还开源了一个语音转文本的模型：Whisper。但由于ChatGPT本身太过于耀眼，很多人都忽略了Whisper的存在。&lt;/p&gt;
+&lt;p&gt;我当时也是这样，我一度以为，Whisper也是一个API，需要发送POST请求到OpenAI的服务器上，然后它传回识别的结果。所以我很长一段时间一直都没有试用过这个模型。&lt;/p&gt;
+&lt;p&gt;直到前几天，我看到有人在少数派上面发了一篇文章，介绍他刚做的语音识别App，并且说这个App基于Whisper，完全不需要联网。我当时还奇怪，不联网你怎么调Whisper的API？于是我终于去认真了解了一下Whisper，发现它是OpenAI开源的语音转文字的模型，并不是API服务。这个模型只需要有Python就能本地离线运行，不需要联网。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="语音转文字" scheme="https://www.kingname.info/tags/%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97/"/>
+    
+    <category term="OpenAI" scheme="https://www.kingname.info/tags/OpenAI/"/>
+    
+  </entry>
   
   <entry>
     <title>助力大语言模型训练，无压力爬取六百亿网页</title>
@@ -468,32 +493,6 @@
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
     <category term="PyGame" scheme="https://www.kingname.info/tags/PyGame/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：如何从大量商品数据里面找到降价商品？</title>
-    <link href="https://www.kingname.info/2022/05/22/find-discount/"/>
-    <id>https://www.kingname.info/2022/05/22/find-discount/</id>
-    <published>2022-05-22T00:59:16.000Z</published>
-    <updated>2022-05-22T01:00:40.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>相信很多做爬虫的同学都会爬电商网站，每天爬一次，然后监控商品是否降价。如果你只监控一个商品，那么是否降价这非常容易判断，但如果你要找到这个网站里面所有降价的商品，那就非常麻烦了。</p><p>如下图所示，是美国电商沃尔玛的全站商品数据：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220516193731.png"></p><p>每个商品每天都会爬一次，一共有61w+条数据。里面有N个商品降价了，现在需要把这些降价的商品找出来。</p><span id="more"></span><p>商品有十几万个，如果你分别找到每个商品的ID，然后用ID再找到这个商品每一天的数据，最后看它是否降价，这个工作量非常大，速度也会非常慢。</p><p>Pandas内部使用了SIMB技术来对并行计算进行优化，我们需要尽量在不使用for循环的情况下，完成这个任务。</p><p>为了简单起见，我们假设降价就是指今天比昨天的价格低，不考虑先涨价再降价的情况。</p><p>要解决这个问题，我们需要使用DataFrame的<code>pct_change()</code>方法。它就像是<code>reduce</code>一样，给出一系列数据，它会计算数据改变量的百分比——第二条相对于第一条数据的改变，第三条数据相对于第二条数据的改变，第四条数据相对于第三条数据的改变。</p><p>首先我们使用<code>date</code>字段对数据进行排序，确保价格是按时间排列的。然后对商品的<code>id</code>进行分组，这样就能拿到每一个商品每天的价格了。然后对<code>price</code>字段使用<code>pct_change()</code>：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df2[<span class="string">&#x27;pct&#x27;</span>] = df2.sort_values([<span class="string">&#x27;date&#x27;</span>, <span class="string">&#x27;id&#x27;</span>]).groupby([<span class="string">&#x27;id&#x27;</span>]).price.pct_change()</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220516195027.png"></p><p>图中最右侧<code>pct</code>字段是NaN，是因为这是这些商品的第一条数据，所以始终是NaN.</p><p>我们筛选出今天（2022-05-16），pct小于0的商品：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220516195318.png"></p><p>这些就是降价的商品了。我们可以随便筛选一个商品来检查一下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220516195454.png"></p><p>使用<code>pct_change()</code>速度非常快，60w数据几乎秒出。比for循环快多了。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;相信很多做爬虫的同学都会爬电商网站，每天爬一次，然后监控商品是否降价。如果你只监控一个商品，那么是否降价这非常容易判断，但如果你要找到这个网站里面所有降价的商品，那就非常麻烦了。&lt;/p&gt;
-&lt;p&gt;如下图所示，是美国电商沃尔玛的全站商品数据：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220516193731.png&quot;&gt;&lt;/p&gt;
-&lt;p&gt;每个商品每天都会爬一次，一共有61w+条数据。里面有N个商品降价了，现在需要把这些降价的商品找出来。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="Pandas" scheme="https://www.kingname.info/tags/Pandas/"/>
     
   </entry>
   

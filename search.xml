@@ -10345,7 +10345,7 @@ llo
 <p>直到前几天，我看到有人在少数派上面发了一篇文章，介绍他刚做的语音识别App，并且说这个App基于Whisper，完全不需要联网。我当时还奇怪，不联网你怎么调Whisper的API？于是我终于去认真了解了一下Whisper，发现它是OpenAI开源的语音转文字的模型，并不是API服务。这个模型只需要有Python就能本地离线运行，不需要联网。</p>
 <span id="more"></span>
 
-<p>Whisper的Github地址为：<a href="https://github.com/openai/whisper%EF%BC%8C%E5%9C%A8Python%E4%B8%8B%E7%94%A8%E8%B5%B7%E6%9D%A5%E9%9D%9E%E5%B8%B8%E7%AE%80%E5%8D%95%EF%BC%9A">https://github.com/openai/whisper，在Python下用起来非常简单：</a></p>
+<p>Whisper的Github地址为：<a href="https://github.com/openai/whisper">https://github.com/openai/whisper</a>，在Python下用起来非常简单：</p>
 <p>首先安装第三方库：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 -m pip install openai-whisper</span><br></pre></td></tr></table></figure>
 

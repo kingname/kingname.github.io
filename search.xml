@@ -10387,7 +10387,11 @@ llo
 <blockquote>
 <p>靠近函数名的装饰器先执行，远离函数名的装饰器后执行。</p>
 </blockquote>
-<p>这种说法是不准确的。但是这些半吊子多半还会不服，他们会甩出一段代码给你，来『证明』自己的观点：</p>
+<p>这种说法是不准确的。</p>
+<span id="more"></span>
+
+
+<p>但是这些半吊子多半还会不服，他们会甩出一段代码给你，来『证明』自己的观点：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">decorator_outer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;我是外层装饰器&quot;</span>)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>():</span><br><span class="line">        func()</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decorator_inner</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;我是内层装饰器&quot;</span>)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>():</span><br><span class="line">        func()</span><br><span class="line">    <span class="keyword">return</span> wrapper  </span><br><span class="line"></span><br><span class="line"><span class="meta">@decorator_outer</span></span><br><span class="line"><span class="meta">@decorator_inner</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;我是函数本身&quot;</span>)</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
 
 <p>运行效果如下图所示：</p>
@@ -10433,6 +10437,52 @@ llo
       <tags>
         <tag>Python</tag>
         <tag>装饰器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一日一技：在LangChain中使用Azure OpenAI Embedding服务</title>
+    <url>/2023/05/13/langchain-azure-openai/</url>
+    <content><![CDATA[<p>如果大家深入使用过ChatGPT的API，或者用过听说过AutoGPT，那么可能会知道，它背后所依赖的语言框架<a href="https://python.langchain.com/en/latest/index.html">LangChain</a>。LangChain能够让大语言模型具有访问互联网的能力，以及与其他各种API互动交互，甚至是执行系统命令的能力。</p>
+<p>ChatGPT的prompt支持的Token数量是有限的，但是使用LangChain，能够很容易实现ChatPDF&#x2F;ChatDoc的效果。即使一段文本有几百万字，也能让ChatGPT对其中的内容进行总结，也能让你针对文本中的内容进行提问。</p>
+<p><a href="https://python.langchain.com/en/latest/use_cases/question_answering.html">Question Answering over Docs</a>这是LangChain官方文档给出的示例，如果你使用的是OpenAI官方的API，你只需要复制粘贴上面的代码，就可以实现针对大文本进行提问。</p>
+<p>如果你使用的是Azure OpenAI提供的接口，那就比较麻烦，需要多一些设置。我们来看一下我在使用过程中所踩的坑。</p>
+<span id="more"></span>
+
+<p>我们首先复制如下4行代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> TextLoader </span><br><span class="line"><span class="keyword">from</span> langchain.indexes <span class="keyword">import</span> VectorstoreIndexCreator</span><br><span class="line"></span><br><span class="line">loader = TextLoader(<span class="string">&#x27;article.txt&#x27;</span>)</span><br><span class="line">index = VectorstoreIndexCreator().from_loaders([loader])</span><br><span class="line"><span class="built_in">print</span>(index)</span><br></pre></td></tr></table></figure>
+
+<p>其中的<code>article.txt</code>，就是随便找了一篇我博客的文章，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513164423.png"></p>
+<p>现在直接运行肯定是会报错的，因为我们还没有配置API的相关信息：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513164502.png"></p>
+<p>由于我们使用的是微软Azure OpenAI提供的接口，因此通过环境变量设置接口信息时，需要额外设置一些参数：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513165158.png"></p>
+<p>设置完成以后，再次运行，会发现依然报错。说明它擅自使用<code>chromadb</code>作为向量数据库，甚至都不给我选择的机会。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513165448.png"></p>
+<p>按它的要求，安装一下这个<code>chromadb</code>，再次运行，发现还是报错：<code>openai.error.InvalidRequestError: Resource not found</code>。之所以会出现这种情况，是因为在LangChain的源代码中，代码会走到<code>langchain.embeddings.openai.OpenAIEmbeddings._get_len_safe_embeddings</code>这个位置，在如下图所示的地方：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513173932.png"></p>
+<p>本来应该再传入参数<code>deployment</code>、<code>api_type</code>和<code>api_version</code>。但是这里都漏掉了。导致里面的代码始终会以OpenAI官方的接口来请求URL，所以会找不到。</p>
+<p>即便你修改源代码，在这里加上了这三个参数，你会发现还是有问题，继续报如下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openai.error.InvalidRequestError: Too many inputs. The max number of inputs is 1.  We hope to increase the number of inputs per request soon. Please contact us through an Azure support request at: https://go.microsoft.com/fwlink/?linkid=2213926 for further questions.</span><br></pre></td></tr></table></figure>
+
+<p>这是因为Azure OpenAI服务提供的embedding模型，并发请求只有1.而在LangChain会以一个比较高的并发去请求，所以会报这个错误。</p>
+<p>不要在去源代码上修改了。我们回到最开始的代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index = VectorstoreIndexCreator().from_loaders([loader])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>来看一下<code>VectorstoreIndexCreator</code>这个类它的实现方式：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513174515.png"></p>
+<p>可以看到，这个类继承了<code>pydantic.BaseModel</code>，那就简单了。我们可以直接在初始化<code>VectorstoreIndexCreator </code>时，传入<code>embedding</code>参数。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513174803.png"></p>
+<p>现在代码终于不报错了。代码中的<code>chunk_size=1</code>，限定了并发为1。那么我们继续把代码写完。运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513180220.png"></p>
+<p>我们还可以通过主动传入参数的方式，使用其他的数据库而不是Chroma。这里以Redis为例：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230513180939.png"></p>
+<p>不过要使用Redis来作为向量数据库，需要在Redis中安装Redis Stack模块。安装方法可以在<a href="https://redis.io/docs/stack/">Redis官方文档</a>中找到。</p>
+]]></content>
+      <tags>
+        <tag>ChatGPT</tag>
+        <tag>LangChain</tag>
+        <tag>Azure</tag>
       </tags>
   </entry>
 </search>

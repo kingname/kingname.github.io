@@ -1,3 +1,4 @@
+https://www.kingname.info/2023/05/17/prompt-reverse-engineer/
 https://www.kingname.info/2023/04/16/order-of-decorator/
 https://www.kingname.info/2023/05/13/langchain-azure-openai/
 https://www.kingname.info/2023/04/15/whisper/
@@ -362,6 +363,8 @@ https://www.kingname.info/tags/OpenAI/
 https://www.kingname.info/tags/%E8%A3%85%E9%A5%B0%E5%99%A8/
 https://www.kingname.info/tags/LangChain/
 https://www.kingname.info/tags/Azure/
+https://www.kingname.info/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/
+https://www.kingname.info/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/
 https://www.kingname.info/categories/%E6%84%9F%E6%83%B3/
 https://www.kingname.info/categories/Hexo/
 https://www.kingname.info/categories/Python/

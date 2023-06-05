@@ -1,3 +1,4 @@
+https://www.kingname.info/about/index.html
 https://www.kingname.info/2023/05/17/prompt-reverse-engineer/
 https://www.kingname.info/2023/04/16/order-of-decorator/
 https://www.kingname.info/2023/05/13/langchain-azure-openai/
@@ -44,7 +45,6 @@ https://www.kingname.info/2022/03/06/detect-js-click/
 https://www.kingname.info/2022/03/06/knowledge-in-bad-code/
 https://www.kingname.info/2022/03/06/use-npm-package-in-browser/
 https://www.kingname.info/2022/03/06/limit-use-time/
-https://www.kingname.info/about/index.html
 https://www.kingname.info/2022/01/18/run-js-in-golang/
 https://www.kingname.info/2022/01/18/how-to-read-doc/
 https://www.kingname.info/2022/01/18/relative-url/

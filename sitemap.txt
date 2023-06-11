@@ -1,3 +1,4 @@
+https://www.kingname.info/2023/06/11/retry-in-requests/
 https://www.kingname.info/about/index.html
 https://www.kingname.info/2023/05/17/prompt-reverse-engineer/
 https://www.kingname.info/2023/04/16/order-of-decorator/

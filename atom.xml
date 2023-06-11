@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-05-17T01:29:28.904Z</updated>
+  <updated>2023-06-11T12:20:23.650Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：方法不对，代码翻倍。Requests如何正确重试？</title>
+    <link href="https://www.kingname.info/2023/06/11/retry-in-requests/"/>
+    <id>https://www.kingname.info/2023/06/11/retry-in-requests/</id>
+    <published>2023-06-11T12:19:32.000Z</published>
+    <updated>2023-06-11T12:20:23.650Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>程序员是一个需要持续学习的群体，如果你发现你现在写的代码跟你5年前的代码没什么区别，说明你掉队了。</p></blockquote><p>我们在做Python开发时，经常使用一些第三方库，这些库很多年来持续添加了新功能。但我发现很多同学在使用这些第三方库时，根本不会使用新的功能。他们的代码跟几年前没有任何区别。</p><span id="more"></span><p>举个例子，使用Request发起HTTP请求，请求失败时，不管什么原因，原地重试最多3次。很多人主要有下面3种写法来重试。</p><h2 id="常见的老方法"><a href="#常见的老方法" class="headerlink" title="常见的老方法"></a>常见的老方法</h2><h3 id="使用第三方库"><a href="#使用第三方库" class="headerlink" title="使用第三方库"></a>使用第三方库</h3><p>这类同学会使用一些专业做重试的第三方库，例如tenacity。详见我的这篇文章：<a href="https://mp.weixin.qq.com/s/7Dj-RpHsbGFZu_iPlkCU0w">Tenacity——Exception Retry 从此无比简单</a></p><h3 id="手动写装饰器"><a href="#手动写装饰器" class="headerlink" title="手动写装饰器"></a>手动写装饰器</h3><p>这类同学会使用装饰器，所以一般会手写装饰器从而复用，例如：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">retry</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrap</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                result = func(*args, **kwargs)</span><br><span class="line">                <span class="keyword">return</span> result</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;报错了，重试&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> wrap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@retry</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_request</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;以下是发起请求的相关代码&#x27;</span>)</span><br></pre></td></tr></table></figure><h3 id="反复for循环"><a href="#反复for循环" class="headerlink" title="反复for循环"></a>反复for循环</h3><p>还有一些同学，写代码走的是野路子：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):  <span class="comment"># 重试10次</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            resp = requests.get(<span class="string">&#x27;某某URL&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> resp.json()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;请求报错了，重试第<span class="subst">&#123;i&#125;</span>次&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br></pre></td></tr></table></figure><p>这类同学基本不会复用代码。代码里面要向N个url发起请求，他们就会在N个地方像上面这样写代码。</p><h2 id="新的方法"><a href="#新的方法" class="headerlink" title="新的方法"></a>新的方法</h2><p>这里我虽然说是新方法，但是这个方法应该至少在9年前就能用了。只是网上用的人比较少。我们可以使用requests自带的<code>HTTPAdapter</code>来实现自动重试。当我们不关心具体报错是什么，只需要机械重试时，就可以使用这个方法：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> requests.adapters <span class="keyword">import</span> HTTPAdapter, Retry</span><br><span class="line"></span><br><span class="line">session = requests.Session()</span><br><span class="line">retries = Retry(total=<span class="number">3</span>, backoff_factor=<span class="number">1</span>)</span><br><span class="line">session.mount(<span class="string">&#x27;http://&#x27;</span>, HTTPAdapter(max_retries=retries))</span><br><span class="line">session.mount(<span class="string">&#x27;https://&#x27;</span>, HTTPAdapter(max_retries=retries))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接下来使用session发起的所有请求，默认最多会重试3次</span></span><br><span class="line">session.get(<span class="string">&#x27;http://httpbin.org/delay/5&#x27;</span>, timeout=<span class="number">2</span>)</span><br><span class="line">session.get(<span class="string">&#x27;https://www.kingname.info&#x27;</span>)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;程序员是一个需要持续学习的群体，如果你发现你现在写的代码跟你5年前的代码没什么区别，说明你掉队了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我们在做Python开发时，经常使用一些第三方库，这些库很多年来持续添加了新功能。但我发现很多同学在使用这些第三方库时，根本不会使用新的功能。他们的代码跟几年前没有任何区别。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：Prompt逆向工程，破解小红书文案生成器</title>
@@ -473,27 +497,6 @@
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
     <category term="正则表达式" scheme="https://www.kingname.info/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：如何让自己的工具函数在Python全局可用？</title>
-    <link href="https://www.kingname.info/2022/06/20/utility-anywhere/"/>
-    <id>https://www.kingname.info/2022/06/20/utility-anywhere/</id>
-    <published>2022-06-20T11:32:32.000Z</published>
-    <updated>2022-06-20T11:34:06.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们在开发Python项目的时候，经常会写一些工具函数。为了在项目里面多个.py文件中使用这个工具函数，就不得不在多个地方都导入它，非常麻烦。</p><span id="more"></span><p>例如下面这个例子：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220609210015.png"></p><p>在<code>A.py</code>和<code>C.py</code>文件都要使用<code>clean_msg</code>这个工具函数，那么他们就都要从<code>util.py</code>中导入<code>clean_msg</code>。这似乎理所当然。</p><p>但今天我在看<a href="https://github.com/gruns/icecream/blob/master/icecream/builtins.py">icecream&#x2F;builtins.py</a>源代码的时候，突然发现了一个高级用法，可以让我们使用工具函数的时候，就像使用Python的<code>print</code>函数一样，不用导入，而是直接使用。</p><p>我们先来看看效果：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220609211901.png"></p><p>大家注意<code>A.py</code>和<code>C.py</code>，我并没有导入<code>clean_msg</code>而是直接使用了这个函数。并且运行完全正常。</p><p>关键原理就在入口文件<code>main.py</code>，被我框住的3行：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> builtins</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> util <span class="keyword">import</span> clean_msg</span><br><span class="line"><span class="built_in">setattr</span>(builtins, <span class="string">&#x27;clean_msg&#x27;</span>, clean_msg)</span><br></pre></td></tr></table></figure><p>在Python里面，所有内置的函数或者类都在<code>builtins</code>模块中，因此在代码里面可以直接使用而不用导入。现在只需要把我们自定义的工具函数注册到<code>builtins</code>模块中，就能让它跟内置函数有相同的效果。</p><p>如果想把一个工具函数注册成为内置函数，只需要在入口文件中导入它，然后使用<code>setattr</code>把它设置成<code>builtins</code>模块的一个属性。第二个参数是你想全局调用的时候的名字，第三个参数就是你需要注册的工具函数。名字可以跟工具函数的名字不相同，只要不跟已有的内置函数重复就好了。</p><p>注册完成以后，在这个项目的整个运行时中，任何<code>.py</code>文件里面都可以直接通过注册的名字调用这个工具函数，就跟调用内置函数一样。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;我们在开发Python项目的时候，经常会写一些工具函数。为了在项目里面多个.py文件中使用这个工具函数，就不得不在多个地方都导入它，非常麻烦。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

@@ -10555,4 +10555,68 @@ llo
         <tag>爬虫</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：iOS抓包最简单方案</title>
+    <url>/2023/07/16/easy-capture-packet-in-ios/</url>
+    <content><![CDATA[<p>写过爬虫的同学都知道，当我们想对App或者小程序进行抓包时，最常用的工具是Charles、Fiddler或者MimtProxy。但这些软件用起来非常复杂。特别是当你花了一两个小时把这些软件搞定的时候，别人只用了15分钟就已经手动把需要的数据抄写完成了。</p>
+<h2 id="我的需求"><a href="#我的需求" class="headerlink" title="我的需求"></a>我的需求</h2><p>如果你不是专业的爬虫开发者，那么大多数时候你的抓包需求都是很小的需求，手动操作也不是不能。这种时候，我们最需要的是一种简单快捷的，毫不费力的方法来解放双手。</p>
+<p>例如我最近在玩《塞尔达传说——王国之泪》，我有一个小需求，就是想找到防御力最大的帽子、衣服和裤子来混搭。这些数据，在一个叫做『Jump』的App上面全都有，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_2413.PNG"></p>
+<p>防具总共也就几十个，肉眼一个一个看也没问题，就是费点时间而已。那么，如果我想高效一些，有没有什么简单办法通过抓包再加上Python写几行代码来筛选，快速找到我想要的数据呢？</p>
+<span id="more"></span>
+
+<h2 id="手机上的操作"><a href="#手机上的操作" class="headerlink" title="手机上的操作"></a>手机上的操作</h2><p>实际上，方法非常简单。我们只需要在手机上安装一个App，叫做『Stream』，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215107.png"></p>
+<p>这个软件在App Store国区就可以下载。</p>
+<p>第一次打开这个App的时候，我们设置一下根证书，点击下图中箭头指向的这个按钮：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215253.png"></p>
+<p>他会一步一步指导你安装根证书。整个过程不超过30秒，这里我就不再赘述了。</p>
+<p>安装完成根证书以后，我们点击『开始抓包』按钮。此时，手机上面所有的流量就会经过Stream并抓取下来。</p>
+<p>我们打开Jump App，找到防具列表，然后不停往下滑动屏幕，直到滑到最下面。</p>
+<p>然后回到Stream，点击『停止抓包』按钮。抓包过程就完成了。</p>
+<p>我们点击『抓包历史』按钮，找到刚刚抓到的数据包，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215823.png"></p>
+<p>按域名进行筛选，方便找到Jump App发送的HTTP请求。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215939.png"></p>
+<p>打开请求以后，点击『响应』-『查看响应』按钮，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220139.png"></p>
+<p>我们就能看到如下图所示请求体，这确实就是防具对应的数据包，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220231.png"></p>
+<p>我们现在，需要使用筛选功能，选出所有获取防具信息的后端请求。所以先到『请求选项卡』，查看一下URL的规律，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220643.png"></p>
+<p>回到请求列表页，点击右上角的放大镜进行筛选，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220741.png"></p>
+<p>筛选以后，只有5个请求了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220816.png"></p>
+<p>最后一步，我们点击右上角的『编辑』按钮，选中所有请求，并点击右下角的『导出HAR』，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706221022.png"></p>
+<p>大家可以使用AirDrop或者微信发送到电脑上。到此为止，手机上的所有操作就已经结束了。接下来我们来到电脑上，写一段Python代码来解析这个HAR文件。</p>
+<h2 id="写一点点代码"><a href="#写一点点代码" class="headerlink" title="写一点点代码"></a>写一点点代码</h2><p>这段代码非常简单，大家可以直接复制：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> brotli</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> haralyzer <span class="keyword">import</span> HarParser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;/Users/kingname/Downloads/Stream-2023-07-06 22:08:44.har&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    har_parser = HarParser(json.loads(f.read()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">data = har_parser.har_data</span><br><span class="line">entries = data[<span class="string">&#x27;entries&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> entry <span class="keyword">in</span> entries:</span><br><span class="line">    text = entry[<span class="string">&#x27;response&#x27;</span>][<span class="string">&#x27;content&#x27;</span>][<span class="string">&#x27;text&#x27;</span>]</span><br><span class="line">    content = brotli.decompress(base64.b64decode(text)).decode()</span><br><span class="line">    info = json.loads(content)</span><br><span class="line">    <span class="built_in">print</span>(info)</span><br></pre></td></tr></table></figure>
+
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706222937.png"></p>
+<p>这里我们使用了两个第三方库，分别是<code>haralyzer</code>和<code>brotli</code>。其中的<code>haralyzer</code>是用来解析HAR文件；<code>brotli</code>是用来对数据进行解压缩。</p>
+<p>在一般情况下，其他网站的HAR解析，代码到<code>text = entry[&#39;response&#39;][&#39;content&#39;][&#39;text&#39;]</code>就可以了。返回的<code>text</code>直接就是人眼可读的内容了。但Jump稍微特殊一些，因为它返回的内容经过压缩，所以获取到的是Base64字符串。如果我们直接打印，就会看到：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706223442.png"></p>
+<p>这个Base64不能直接解码，因为解了以后是二进制信息。从之前Stream的响应Headers里面，我们可以看到这个数据是经过<code>br</code>压缩的，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706223625.png"></p>
+<p>所以需要使用<code>brotli</code>解压缩：<code>brotli.decompress(base64.b64decode(text)).decode()</code>。</p>
+<p>现在你已经拿到返回数据的JSON信息了。那么接下来要对数据进行怎么样的处理，都不再是问题了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>安装Stream并设置根证书</li>
+<li>打开抓包功能</li>
+<li>打开目标App或者微信刷程序，让流量经过Stream</li>
+<li>关闭抓包功能，从抓包历史里面找到目前请求的URL规则</li>
+<li>筛选出所有需要的请求，导出为HAR文件</li>
+<li>使用Python解析HAR文件</li>
+</ol>
+<p>当你熟练以后，整个过程不超过3分钟就能完成。</p>
+]]></content>
+      <tags>
+        <tag>爬虫</tag>
+        <tag>iOS</tag>
+        <tag>抓包</tag>
+      </tags>
+  </entry>
 </search>

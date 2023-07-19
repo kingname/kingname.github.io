@@ -10619,4 +10619,39 @@ llo
         <tag>抓包</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：不走常规路线，列表页1秒搞定</title>
+    <url>/2023/07/19/crawl-by-sitemap/</url>
+    <content><![CDATA[<p>最近遇到一个需求，需要抓取<a href="https://docusaurus.io/docs">Docusaurus</a>上面的全部文档。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718201900.png"></p>
+<p>抓文档的正文非常简单，使用GNE高级版，只要有URL直接就能抓取下来，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718202210.png"></p>
+<p>但现在的问题是，我怎么获取到每一篇文档的URL？</p>
+<span id="more"></span>
+
+<p>Docusaurus是一个文档框架，它的页面和目录都是JavaScript实时渲染的。当我们没有展开它的目录时，XPath只能提取到当前大标题的链接，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718203207.png"></p>
+<p>当我们点开了某个大标题，让里面的小标题出现时，XPath能够提取的数据会随之变化，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718203336.png"></p>
+<p>在这种情况下，我们经常使用的爬虫方案，都会遇到阻碍：</p>
+<ol>
+<li>直接使用Requests获取源代码——源代码里面没有每条目录的URL</li>
+<li>使用Selenium——直接执行XPath获取不完整。你需要控制Selenium依次点开每个小箭头，才能使用XPath获取到全部的URL。</li>
+</ol>
+<p>这时候，有同学就会开始使用Charles来抓网站的Ajax请求了。然后你会发现，目录每一项的URL是在一个js文件中的：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718203837.png"></p>
+<p>Docusaurus还比较简单。你把这个js文件下载下来，用正则表达式从里面把所有URL所在的JSON字符串提取出来，就能拿到文档目录页的所有URL。</p>
+<p>不过有兴趣的同学可以再试一试这个网站：<a href="https://docs.uniswap.org/concepts/governance/overview">Uniswap Docs</a>。它的URL是分散在很多JS文件中的，解析起来非常麻烦。</p>
+<p>遇到这种网站怎么快速获取目录页的所有URL呢？其实不需要使用任何高级工具就能解决。</p>
+<p>对于<a href="https://docusaurus.io/docs">Docusaurus</a>，我们只需要在它的域名后面加上<code>/sitemap.xml</code>，然后搜索关键词<code>/docs/</code>，就可以找到所有的文档URL，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718204539.png"></p>
+<p>由于Docusaurus是一个用来生成文档的框架，所以理论上所有使用Docusaurus生成的文档，都可以通过这个方法获得所有文档页面的URL。</p>
+<p>同理，对于Uniswap Docs这个网站，在域名后面加上<code>/sitemap.xml</code>，然后搜索关键词<code>/concepts</code>就可以找到所有文档页面的URL，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718204747.png"></p>
+<p>这两个例子是想告诉大家，拿到一个爬虫任务的时候，不要一上来就写XPath或者一来就抓包。先研究一下网站，有时候可以减少很多不必要的工作量。</p>
+]]></content>
+      <tags>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
 </search>

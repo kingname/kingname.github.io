@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-07-16T13:13:51.534Z</updated>
+  <updated>2023-07-19T12:30:44.157Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：不走常规路线，列表页1秒搞定</title>
+    <link href="https://www.kingname.info/2023/07/19/crawl-by-sitemap/"/>
+    <id>https://www.kingname.info/2023/07/19/crawl-by-sitemap/</id>
+    <published>2023-07-19T12:30:12.000Z</published>
+    <updated>2023-07-19T12:30:44.157Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近遇到一个需求，需要抓取<a href="https://docusaurus.io/docs">Docusaurus</a>上面的全部文档。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718201900.png"></p><p>抓文档的正文非常简单，使用GNE高级版，只要有URL直接就能抓取下来，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718202210.png"></p><p>但现在的问题是，我怎么获取到每一篇文档的URL？</p><span id="more"></span><p>Docusaurus是一个文档框架，它的页面和目录都是JavaScript实时渲染的。当我们没有展开它的目录时，XPath只能提取到当前大标题的链接，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718203207.png"></p><p>当我们点开了某个大标题，让里面的小标题出现时，XPath能够提取的数据会随之变化，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718203336.png"></p><p>在这种情况下，我们经常使用的爬虫方案，都会遇到阻碍：</p><ol><li>直接使用Requests获取源代码——源代码里面没有每条目录的URL</li><li>使用Selenium——直接执行XPath获取不完整。你需要控制Selenium依次点开每个小箭头，才能使用XPath获取到全部的URL。</li></ol><p>这时候，有同学就会开始使用Charles来抓网站的Ajax请求了。然后你会发现，目录每一项的URL是在一个js文件中的：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718203837.png"></p><p>Docusaurus还比较简单。你把这个js文件下载下来，用正则表达式从里面把所有URL所在的JSON字符串提取出来，就能拿到文档目录页的所有URL。</p><p>不过有兴趣的同学可以再试一试这个网站：<a href="https://docs.uniswap.org/concepts/governance/overview">Uniswap Docs</a>。它的URL是分散在很多JS文件中的，解析起来非常麻烦。</p><p>遇到这种网站怎么快速获取目录页的所有URL呢？其实不需要使用任何高级工具就能解决。</p><p>对于<a href="https://docusaurus.io/docs">Docusaurus</a>，我们只需要在它的域名后面加上<code>/sitemap.xml</code>，然后搜索关键词<code>/docs/</code>，就可以找到所有的文档URL，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718204539.png"></p><p>由于Docusaurus是一个用来生成文档的框架，所以理论上所有使用Docusaurus生成的文档，都可以通过这个方法获得所有文档页面的URL。</p><p>同理，对于Uniswap Docs这个网站，在域名后面加上<code>/sitemap.xml</code>，然后搜索关键词<code>/concepts</code>就可以找到所有文档页面的URL，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718204747.png"></p><p>这两个例子是想告诉大家，拿到一个爬虫任务的时候，不要一上来就写XPath或者一来就抓包。先研究一下网站，有时候可以减少很多不必要的工作量。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近遇到一个需求，需要抓取&lt;a href=&quot;https://docusaurus.io/docs&quot;&gt;Docusaurus&lt;/a&gt;上面的全部文档。如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718201900.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;抓文档的正文非常简单，使用GNE高级版，只要有URL直接就能抓取下来，如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230718202210.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;但现在的问题是，我怎么获取到每一篇文档的URL？&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：iOS抓包最简单方案</title>
@@ -477,29 +500,6 @@
     <category term="XPath" scheme="https://www.kingname.info/tags/XPath/"/>
     
     <category term="lxml" scheme="https://www.kingname.info/tags/lxml/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：Bug分析，假删除导致文章发布成功却打不开的问题</title>
-    <link href="https://www.kingname.info/2022/06/20/fake-delete/"/>
-    <id>https://www.kingname.info/2022/06/20/fake-delete/</id>
-    <published>2022-06-20T11:32:53.000Z</published>
-    <updated>2022-06-20T11:35:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>公司有一个内部博客，大家可以在上面创建自己的账号，然后写文章在全公司分享。昨天这个内部博客开通了API，因此我准备写一个Python程序，把自己公众号文章都搬运上去。</p><span id="more"></span><p>然后我就发现这个API接口有一个bug。并且根据它的现象，猜到它问题出在哪里。</p><p>我先来简单描述一下现象。</p><p>假设我硬盘上现在有50个Markdown文件。现在我要把它发布到网站上。简化代码如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> path <span class="keyword">in</span> glob.glob(<span class="string">&#x27;blog/*.md&#x27;</span>):</span><br><span class="line">  <span class="keyword">with</span> <span class="built_in">open</span>(path) <span class="keyword">as</span> f:</span><br><span class="line">        article = f.read()</span><br><span class="line">    requests.post(<span class="string">&#x27;https://xxx.yyy.com/post?token=abcasdf&#x27;</span>, json=&#123;<span class="string">&#x27;content&#x27;</span>: content&#125;)</span><br></pre></td></tr></table></figure><p>发布完成以后，文章确实都已经在网页上出现了，并且<strong>每篇文章都能正常显示</strong>。但我粗略浏览了一下，发现里面有一些文章的末尾带上来我的微信公众号二维码。我不想让公司的人知道我的公众号，所以准备修改一下文章。</p><p>有一些文章有二维码，有一些没有，一个一个改起来很麻烦，所以我做了两步操作。首先写了一个程序，扫描所有Markdown文件，发现二维码就删掉。然后，我直接在网站上把刚刚发布的所有文章都删了（懒得去看哪篇有二维码，哪篇没有，干脆全删了重发）。</p><p>接下来，我再次运行程序批量重新发布文章。2秒钟以后发布完成。</p><p>本来一切看起来都很正常，但是当我到网站上查看的时候，发现有很多文章点开以后，都提示『该文章已经删除』。</p><p>我一开始在想是不是我的程序写的不对，漏掉了这些文章。我重新单独一篇一篇发布这篇文章，API接口返回发布成功，可在网页上还是显示文章已经删除。</p><p>然后我一篇一篇检查这些发布失败的文章，发现有一个共同的特点：他们是一开始就没有二维码的文章。相当于这些文章我在网站上删除以后原样重新又发了一次。</p><p>那我就有了一个初步的猜测，大概知道原因是什么了：</p><ol><li>因为每篇文章有一个docid，当第一次发布文章的时候，这个docid就是文章正文内容的md5值。只要文章完全一样，连续发多少次，它的docid都一样。这样就可以防止出现重复文章。（更新的时候，需要用户主动提供docid，避免重新生成新的）。</li><li>这个网站的删除功能，肯定是假删除。也就是当我点了删除文章的按钮时，文章其实依然在数据库里面，只不过增加了一个字段<code>removed=True</code>。网页显示文章的时候，查询条件肯定是<code>col.find(&#123;&#39;removed&#39;: &#123;&quot;$ne&quot;: True&#125;&#125;)</code>，所以就不会把这些被软删除的文章显示出来。</li><li>API发布新文章的时候，肯定使用的是更新操作。并且使用了<code>upsert=True</code>。</li></ol><p>以MongoDB为例，这个API背后的逻辑肯定是这样的：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">post_article</span>(<span class="params">docid, article_info</span>):</span><br><span class="line">      mongo.update_one(&#123;<span class="string">&#x27;_id&#x27;</span>: docid&#125;, &#123;<span class="string">&#x27;$set&#x27;</span>: article_info&#125;, upsert=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure><p><code>upsert=True</code>的作用，是先检查数据是否存在，如果存在就更新，如果不存在就插入。</p><p>第一次发布的时候，文章不存在，直接插入，正常。如果用户正常使用修改接口，修改了正文，因为用户主动提供了docid，所以也能正常更新。</p><p>但如果用户先删除了数据，此时数据库中，增加了一个字段<code>removed=True</code>。然后用户又原封不动重新发一次文章。那么docid肯定还是原来那个。这条文章已经在数据库中存在了。于是逐一更新了每个字段。但是新发布的字段里面是没有<code>removed</code>这个字段的，所以更新的时候不会更新它，它还在数据库里面。所以就出现了发布成功，但是打开新闻又提示文章已经删除。</p><p>我去问了一下做这个API的同学，果然它的bug原因跟我设想的一模一样。</p><p>这个bug解决方法非常简单，发布新文章的时候，把<code>update_one</code>改成<code>replace_one</code>就可以了：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">post_article</span>(<span class="params">docid, article_info</span>):</span><br><span class="line">      mongo.replace_one(&#123;<span class="string">&#x27;_id&#x27;</span>: docid&#125;, &#123;<span class="string">&#x27;$set&#x27;</span>: article_info&#125;, upsert=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;公司有一个内部博客，大家可以在上面创建自己的账号，然后写文章在全公司分享。昨天这个内部博客开通了API，因此我准备写一个Python程序，把自己公众号文章都搬运上去。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="后端" scheme="https://www.kingname.info/categories/%E5%90%8E%E7%AB%AF/"/>
-    
-    
-    <category term="软件设计" scheme="https://www.kingname.info/tags/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/"/>
-    
-    <category term="后端" scheme="https://www.kingname.info/tags/%E5%90%8E%E7%AB%AF/"/>
     
   </entry>
   

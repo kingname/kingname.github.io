@@ -10654,4 +10654,34 @@ llo
         <tag>爬虫</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：如何对Python代码进行混淆</title>
+    <url>/2023/08/14/pyminifier/</url>
+    <content><![CDATA[<p>目前市面上没有任何方法能够完全避免你的程序被人反编译。即便是3A游戏大作，发布出来没多久也会被人破解。现在只能做到增大反编译的难度，让程序相对无法那么快被破解。</p>
+<p>我们知道，Python代码默认是公开的。当你要把一个Python项目给别人运行的时候，一般来说别人就能看到你的全部源代码。我们可以使用Cython、Nuitka对代码进行打包，编译成.so文件、.dll文件或者是可执行文件，从而在一定程度上避免别人看到你的源代码。我在字节的时候，内部的一个系统就是使用Cython打包的，然后部署到客户的服务器上。</p>
+<span id="more"></span>
+
+<p>Cython、Nuitka在打包大型项目时，需要写大量的配置文件甚至是额外的程序，有一定的使用成本。如果你对安全的要求并没有那么高，那么其实你只需要对Python代码进行混淆，就能防止自己的代码被人<code>轻易</code>看到了。</p>
+<p>我们可以使用<code>Pyminifier</code>来对Python代码进行混淆。它的使用方法非常简单，<code>pip</code>安装以后，执行几行命令就可以完成。我们来看几个例子。</p>
+<p>假设我有一段Python爬虫代码。原始代码是这样的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">import</span> uvicorn</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI</span><br><span class="line"><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> FileResponse</span><br><span class="line"></span><br><span class="line">IMAGE_TYPE = [<span class="string">&#x27;*.J*&#x27;</span>, <span class="string">&#x27;*.P*&#x27;</span>, <span class="string">&#x27;*.j*&#x27;</span>, <span class="string">&#x27;*.p*&#x27;</span>, <span class="string">&#x27;*.GIF&#x27;</span>, <span class="string">&#x27;*.gif&#x27;</span>]</span><br><span class="line">app = FastAPI()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">iter_images</span>(<span class="params">folder=<span class="string">&#x27;*&#x27;</span></span>):</span><br><span class="line">    images = []</span><br><span class="line">    target_folder = Path(<span class="string">&#x27;images&#x27;</span>) / Path(folder)</span><br><span class="line">    <span class="keyword">if</span> folder != <span class="string">&#x27;*&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> Path(target_folder).exists():</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">for</span> image_type <span class="keyword">in</span> IMAGE_TYPE:</span><br><span class="line">        images.extend(glob.glob(<span class="built_in">str</span>(target_folder / Path(image_type))))</span><br><span class="line">    <span class="keyword">return</span> images</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.get(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    images = iter_images()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> images:</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&#x27;success&#x27;</span>: <span class="literal">False</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;No Images.&#x27;</span>&#125;</span><br><span class="line">    path = random.choice(images)</span><br><span class="line">    <span class="keyword">return</span> FileResponse(path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.get(<span class="params"><span class="string">&#x27;/every/&#123;name&#125;&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_one_goddess</span>(<span class="params">name</span>):</span><br><span class="line">    images = iter_images(name)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> images:</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&#x27;success&#x27;</span>: <span class="literal">False</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;No Images.&#x27;</span>&#125;</span><br><span class="line">    path = random.choice(images)</span><br><span class="line">    <span class="keyword">return</span> FileResponse(path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    uvicorn.run(app=<span class="string">&#x27;main:app&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这段代码能够实现一个简单的图片服务器，当我们访问<code>http://127.0.0.1:8000</code>时，就会随机显示一张图片，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230813142830.png"></p>
+<p>我们现在来安装<code>pyminifier</code>。由于这个程序的代码很久没有更新了，因此如果你的Python版本比较高，那么需要首先降一下<code>setuptools</code>的版本，然后再安装<code>pyminifier</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install <span class="string">&quot;setuptools&lt;58.0.0&quot;</span></span><br><span class="line">pip install pyminifier</span><br></pre></td></tr></table></figure>
+
+<p>安装完成以后，我们来对代码进行混淆，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pyminifier --nonlatin --replacement-length=50 main.py &gt; output.py</span><br></pre></td></tr></table></figure>
+
+<p>生成的<code>output.py</code>就是混淆以后的代码，效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230813143231.png"></p>
+<p>这样的代码，显然已经完全没法看了。除非对方就是冲着对你的代码进行破解来的，否则一般人看了这个混淆以后的代码，直接就走了。</p>
+<p>混淆完成以后，这个代码依然是直接运行<code>python output.py</code>。功能不受任何影响。</p>
+<p>这样的混淆，属于『君子锁』，只放君子不防小人。真的要反混淆其实并不困难。只是增加了几步操作而已。在对保密要求不那么高的情况下可以使用，毕竟非常简单，不需要对已有代码做任何修改。</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
 </search>

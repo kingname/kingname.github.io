@@ -10684,4 +10684,27 @@ llo
         <tag>Python</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：Scrapy最新版不兼容scrapy_redis的问题</title>
+    <url>/2023/08/20/scrapy-redis-no-crawler/</url>
+    <content><![CDATA[<p>有不少同学在写爬虫时，会使用Scrapy + scrapy_redis实现分布式爬虫。不过scrapy_redis最近几年更新已经越来越少，有一种廉颇老矣的感觉。Scrapy的很多更新，scrapy_redis已经跟不上了。</p>
+<span id="more"></span>
+
+<p>大家在安装Scrapy时，如果没有指定具体的版本，那么就会默认安装最新版。</p>
+<p>这两天如果有同学安装了最新版的Scrapy和scrapy_redis，运行以后就会出现下面的报错：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">TypeError: crawl() got an unexpected keyword argument <span class="string">&#x27;spider&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230820152921.png"></p>
+<p>遇到这种情况，解决方法非常简单，不要安装Scrapy最新版就可以了。在使用<code>pip</code>安装时，绑定Scrapy版本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 -m pip install scrapy==2.9.0</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>爬虫</tag>
+        <tag>Scrapy</tag>
+        <tag>scrapy_redis</tag>
+      </tags>
+  </entry>
 </search>

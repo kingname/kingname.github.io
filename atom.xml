@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-08-14T12:31:36.221Z</updated>
+  <updated>2023-08-20T07:42:35.045Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：Scrapy最新版不兼容scrapy_redis的问题</title>
+    <link href="https://www.kingname.info/2023/08/20/scrapy-redis-no-crawler/"/>
+    <id>https://www.kingname.info/2023/08/20/scrapy-redis-no-crawler/</id>
+    <published>2023-08-20T07:41:34.000Z</published>
+    <updated>2023-08-20T07:42:35.045Z</updated>
+    
+    <content type="html"><![CDATA[<p>有不少同学在写爬虫时，会使用Scrapy + scrapy_redis实现分布式爬虫。不过scrapy_redis最近几年更新已经越来越少，有一种廉颇老矣的感觉。Scrapy的很多更新，scrapy_redis已经跟不上了。</p><span id="more"></span><p>大家在安装Scrapy时，如果没有指定具体的版本，那么就会默认安装最新版。</p><p>这两天如果有同学安装了最新版的Scrapy和scrapy_redis，运行以后就会出现下面的报错：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: crawl() got an unexpected keyword argument <span class="string">&#x27;spider&#x27;</span></span><br></pre></td></tr></table></figure><p>如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230820152921.png"></p><p>遇到这种情况，解决方法非常简单，不要安装Scrapy最新版就可以了。在使用<code>pip</code>安装时，绑定Scrapy版本：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip install scrapy==2.9.0</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;有不少同学在写爬虫时，会使用Scrapy + scrapy_redis实现分布式爬虫。不过scrapy_redis最近几年更新已经越来越少，有一种廉颇老矣的感觉。Scrapy的很多更新，scrapy_redis已经跟不上了。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+    <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
+    
+    <category term="scrapy_redis" scheme="https://www.kingname.info/tags/scrapy-redis/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：如何对Python代码进行混淆</title>
@@ -463,31 +488,6 @@
     
     
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：二分偏左，二分搜索在分布式系统里面也有用？</title>
-    <link href="https://www.kingname.info/2022/06/22/bisect-left/"/>
-    <id>https://www.kingname.info/2022/06/22/bisect-left/</id>
-    <published>2022-06-22T14:10:36.000Z</published>
-    <updated>2022-06-22T14:11:44.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>相信大家都知道二分搜索，在一个有序的列表中，使用二分搜索，能够以O(logN)的时间复杂度快速确定目标是不是在列表中。</p><span id="more"></span><p>二分搜索的代码非常简单，使用递归只需要几行代码就能搞定：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">sorted_list, target</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    sorted_list是单调递增的列表</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> sorted_list:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = <span class="built_in">len</span>(sorted_list) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> target &gt; sorted_list[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(sorted_list[mid + <span class="number">1</span>:], target)</span><br><span class="line">    <span class="keyword">elif</span> target &lt; sorted_list[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(sorted_list[:mid], target)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622195247.png"></p><p>Python自带了一个二分搜索的模块，叫做<code>bisect</code>，它也能实现二分搜索，但是它的执行结果跟我们上面代码的效果有点不同：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> bisect</span><br><span class="line"></span><br><span class="line">a = [<span class="number">41</span>, <span class="number">46</span>, <span class="number">67</span>, <span class="number">74</span>, <span class="number">75</span>, <span class="number">76</span>, <span class="number">80</span>, <span class="number">86</span>, <span class="number">92</span>, <span class="number">100</span>]</span><br><span class="line">index = bisect.bisect(a, <span class="number">75</span>)</span><br><span class="line"><span class="built_in">print</span>(index)</span><br><span class="line"></span><br><span class="line">index = bisect.bisect(a, <span class="number">82</span>)</span><br><span class="line"><span class="built_in">print</span>(index)</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622195723.png"></p><p>可以看到，<code>bisect.bisect()</code>返回一个索引。如果要搜索的数已经在列表里面了，那么它返回的是这个数在列表中，<code>最右边</code>的这个目标数的索引+1. 以列表<code>[41, 46, 67, 74, 75, 76, 80, 86, 92, 100]</code>为例，要搜索<code>75</code>。由于<code>75</code>在原来列表中的索引是<code>4</code>。因此返回<code>索引+1</code>也就是5. 如果原来列表中，<code>75</code>出现了多次，比如<code>[41, 46, 67, 74, 75, 75, 76, 80, 86, 92, 100]</code>那么返回的是<code>最右边</code>那个<code>75</code>对应的索引<code>+1</code>，也就是<code>6</code>。</p><p>如果要找的数字不在原来列表中，那么<code>bisect.bisect()</code>会返回一个索引，当我们把目标数字插入到这个列表中对应索引的位置时，列表依然有序。例如<code>[41, 46, 67, 74, 75, 76, 80, 86, 92, 100]</code>中，我们找<code>82</code>。它返回的是<code>7</code>。原来列表里面索引为7的位置是数字<code>86</code>，我们把82插入到这个位置，原有的数据依次后移一位，此时列表依然有序。</p><p><code>bisect</code>这个模块还有一个函数，叫做<code>bisect.bisect_left()</code>。如果目标数字在原来的列表中，那么返回的是最左边那个数字对应的索引.如果不在列表中，那么返回的索引插入目标数字以后依然有序，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622201213.png"></p><p>这个函数看起来非常简单，但你可能不知道，它在分布式系统中也有重要的用途。</p><p>假设现在你有10个Redis的单节点用来做分布式缓存。因为某种原因，你不能做集群。当你要搜索一个数据的时候，你要先确定这个数据在不在Redis中。如果在，就直接从Redis中读取数据；如果不在，就先去数据库里面读取，然后缓存到Redis中。</p><p>因为数据量很大，你不能把同一份数据同时存在10个Redis节点里面，因此你需要设计一个算法，不同的数据存放在不同的Redis节点中。</p><p>当你要查询数据的时候，你能根据这个算法查询到数据（如果在缓存中）应该存放在哪个Redis中。</p><p>稍微有一点分布式系统设计经验的同学肯定会想到，这个简单啊，10个Redis节点编号0-9.对<code>key</code>计算Hash值，这个哈希值是32位的十六进制数，可以转换成十进制以后对10求余数，余数是多少，就放到对应的节点里面。</p><p>这样一来，只要来了一个新的数据，你只需要去余数对应的Redis中判断它有没有缓存就可以了。</p><p>但问题来了，如果你开始使用这个方法，Redis中已经有数据了，那么你的Redis节点数就不能变了。一旦你增加或者减少1个节点，所有余数全部变了，新来的数据找到的Redis节点肯定是错的。例如key的Hash值原来除以10，余数是2，现在除以9，余数是1.那本来你应该去2号Redis找缓存，现在却跑到1号Redis找缓存，那一定找不到。</p><p>这个问题要怎么解决呢？我们用一个简单的例子来做演示。假设我现在有一个列表：<code>[200, 250, 300, 400, 500, 530, 600]</code>。每个数字代表这个价位的房子。单位是万。你想买一个房子，但便宜的房子太破，好的房子又太贵。因此你只找价格等于你的期望，或者虽然比你的期望略高但差距最小的房子。</p><p>假设现在你的期望是250万，而正好有个房子卖250万，因此你可以买它。</p><p>假设现在你的期望是470万，那么你唯一的选择是500万的房子。</p><p>到目前为止应该非常好理解，那么我们来增加或者减少候选项：</p><ol><li>500万的房子被别人买走了。列表变成<code>[200, 250, 300, 400, 530, 600]</code>，因此唯一适合你的是530万的房子。</li><li>如果现在250万的房子被人买走了，列表变成<code>[200, 300, 400, 500, 530, 600]</code>。此时对你<strong>没有任何影响</strong>，适合你的房子还是500万的房子。</li><li>如果现在增加了一个480万的房子，列表变成<code>[200, 250, 300, 400, 480, 500, 530, 600]</code>。那么现在适合你的房子变成了480万。</li><li>如果现在增加了一个240万的房子，列表变成<code>[200, 240, 250, 300, 400, 500, 530, 600]</code>。此时对你<strong>没有任何影响</strong>，适合你的还是500万的房子。</li></ol><p>这个场景，我们正好可以使用<code>bisect.bisect_left()</code>！效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622205247.png"></p><p>当备选项发生改变的时候，只有你目标选项附近的房子受到了影响。而小于你候选项的房子和贵的多的房子的变动，对你没有任何影响。</p><p>你注意到了吗，这个场景跟我们分布式缓存增减Redis节点的场景非常像。我们原来有10台Redis，现在新增了一台，变成11台了。那么<strong>只有一台</strong>Redis的<strong>部分缓存</strong>会迁移到这个新增的Redis中。而其它9台Redis的缓存不需要做任何改变。</p><p>同理，当我们删除一台Redis节点时，这个被删除的节点里面的数据，只需要同步到它旁边的另一台Redis节点中就可以了。另外8个Redis节点不需要做任何修改！（也可以不同步，只有一小部分key会因为删除这个节点导致找不到数据，而重新读数据库。80%的缓存不会受到任何影响。）</p><p>这就是<strong>一致性Hash</strong>的算法。</p><p>我来简单描述一下这个算法的实现过程。首先，我们使用<code>redis.Redis(不同redis的连接参数)</code>创建10个连接对象。然后把每个连接对象和一个Hash值创建映射，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622210646.png"></p><p>然后，我们把这10个Hash值排序以后放到一个列表中。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622210719.png"></p><p>现在，来了一条新的缓存查询需求，我们计算key对应的Hash值，然后使用<code>bisect.bisect_left()</code>到列表中去寻找它对应的Redis节点的Hash值的索引。如果返回的索引等于列表的长度，那么让索引等于0. 找到索引以后，拿到对应的Redis节点的Hash，最后再用这个Hash去找到对应的Redis节点，简化代码如下：</p><p>&#96;<img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622211401.png"></p><p>如果新增或者删除了Redis节点，那么只需要更新<code>node_map</code>和<code>cycle</code>就可以了。只会发生很小的数据迁移，对绝大部分的缓存都不会造成任何影响。例如我现在把<code>第1个Redis链接对象</code>对应的Hash：<code>fbef6b15be1abe9edc8f6aaac6a86357</code>从<code>node_map</code>和<code>cycle</code>中删除。再进行查询，会发现依然找到的是编号为6的Redis节点。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220622212427.png"></p><p>一致性Hash在分布式系统中有广泛的应用。但你可能想不到，它的核心原理就是二分搜索里面的<code>bisect_left</code>。</p><p>当然，上面只是简化算法。一致性Hash的完整算法还涉及到虚拟节点和避免数据倾斜的算法。如果大家有兴趣的话，我也可以写一篇文章，完整解释它的算法实现。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;相信大家都知道二分搜索，在一个有序的列表中，使用二分搜索，能够以O(logN)的时间复杂度快速确定目标是不是在列表中。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="分布式系统" scheme="https://www.kingname.info/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="二分搜索" scheme="https://www.kingname.info/tags/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2/"/>
-    
-    <category term="一致性哈希" scheme="https://www.kingname.info/tags/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/"/>
-    
-    <category term="分布式系统" scheme="https://www.kingname.info/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   

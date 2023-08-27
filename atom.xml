@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-08-20T07:42:35.045Z</updated>
+  <updated>2023-08-27T13:47:14.365Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：在Scrapy中如何拼接URL Query参数？</title>
+    <link href="https://www.kingname.info/2023/08/27/scrapy-params/"/>
+    <id>https://www.kingname.info/2023/08/27/scrapy-params/</id>
+    <published>2023-08-27T13:45:55.000Z</published>
+    <updated>2023-08-27T13:47:14.365Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们知道，在使用Requests发起GET请求时，可以通过<code>params</code>参数来传递URL参数，让Requests在背后帮你把URL拼接完整。例如下面这段代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 实际需要请求的url参数为：</span></span><br><span class="line"><span class="comment"># https://www.kingname.info/article?id=1&amp;doc=2&amp;xx=3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">params = &#123;</span><br><span class="line"><span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;doc&#x27;</span>: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;xx&#x27;</span>: <span class="string">&#x27;3&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">requests.get(<span class="string">&#x27;https://www.kingname.info/article&#x27;</span>, params=params)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>那么在Scrapy中，发起GET请求时，应该怎么写才能实现这种效果呢？</p><span id="more"></span><p>我知道很多同学是通过字符串的format操作来拼接URL的：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">url_template = <span class="string">&#x27;https://www.kingname.info/article?id=&#123;id&#125;&amp;doc=&#123;doc&#125;&amp;xx=&#123;xx&#125;&#x27;</span></span><br><span class="line">params = &#123;</span><br><span class="line"><span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;doc&#x27;</span>: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;xx&#x27;</span>: <span class="string">&#x27;3&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">url = url_template.<span class="built_in">format</span>(**params)</span><br></pre></td></tr></table></figure><p>但实际上，Scrapy的<code>FormRequest</code>不仅能用来发起POST请求，还可以在GET请求的时候用来拼接参数。它的写法为：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">params = &#123;</span><br><span class="line"><span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;doc&#x27;</span>: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;xx&#x27;</span>: <span class="string">&#x27;3&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">yield</span> scrapy.FormRequest(<span class="string">&#x27;https://www.kingname.info/article&#x27;</span>, formdata=params, method=<span class="string">&#x27;GET&#x27;</span>)</span><br></pre></td></tr></table></figure><p>这只是一个小技巧。大家可以自由选择是使用这种方法还是使用字符串的format填充。</p><p>不过话说回来，我想起以前遇到过一个网站，他们的反爬虫方法非常巧妙。</p><p>在正常情况下URL的参数顺序是没有任何关系的，什么顺序都可以。但这个网站反爬虫的机制，其中一个环节会判断这些参数在URL中的顺序。例如写成<code>https://www.kingname.info/article?id=1&amp;doc=2&amp;xx=3</code>就一切正常，但写成<code>https://www.kingname.info/article?doc=2&amp;id=1&amp;xx=3</code>就无法访问。当我们无论使用Requests的params参数，还是使用Scrapy的<code>FormRequest</code>参数，它自动组装的参数一般都是字典序，会按参数的首字母顺序排序。但这个网站需要的参数顺序刚好不是字典序，于是网站就会发现你。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;我们知道，在使用Requests发起GET请求时，可以通过&lt;code&gt;params&lt;/code&gt;参数来传递URL参数，让Requests在背后帮你把URL拼接完整。例如下面这段代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 实际需要请求的url参数为：&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# https://www.kingname.info/article?id=1&amp;amp;doc=2&amp;amp;xx=3&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; requests&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;params = &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;string&quot;&gt;&amp;#x27;id&amp;#x27;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&amp;#x27;1&amp;#x27;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;string&quot;&gt;&amp;#x27;doc&amp;#x27;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&amp;#x27;2&amp;#x27;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;string&quot;&gt;&amp;#x27;xx&amp;#x27;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&amp;#x27;3&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;requests.get(&lt;span class=&quot;string&quot;&gt;&amp;#x27;https://www.kingname.info/article&amp;#x27;&lt;/span&gt;, params=params)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;那么在Scrapy中，发起GET请求时，应该怎么写才能实现这种效果呢？&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+    <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：Scrapy最新版不兼容scrapy_redis的问题</title>
@@ -465,29 +489,6 @@
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
     <category term="NLP" scheme="https://www.kingname.info/tags/NLP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：如何实现带timeout的input？</title>
-    <link href="https://www.kingname.info/2022/07/13/input-timeout/"/>
-    <id>https://www.kingname.info/2022/07/13/input-timeout/</id>
-    <published>2022-07-13T12:42:10.000Z</published>
-    <updated>2022-07-13T12:43:40.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们知道，在Python里面，可以使用<code>input</code>获取用户的输入。例如：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220627211414.png"></p><p>但有一个问题，如果你什么都不输入，程序会永远卡在这里。有没有什么办法，可以给<code>input</code>设置超时时间呢？如果用户在一定时间内不输入，就自动使用默认值。</p><span id="more"></span><p>要实现这个需求，在Linux&#x2F;macOS系统下面，我们可以使用<code>selectors</code>。这是Python自带的模块，不需要额外安装。对应的代码如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> selectors</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timeout_input</span>(<span class="params">msg, default=<span class="string">&#x27;&#x27;</span>, timeout=<span class="number">5</span></span>):</span><br><span class="line">    sys.stdout.write(msg)</span><br><span class="line">    sys.stdout.flush()</span><br><span class="line">    sel = selectors.DefaultSelector()</span><br><span class="line">    sel.register(sys.stdin, selectors.EVENT_READ)</span><br><span class="line">    events = sel.select(timeout)</span><br><span class="line">    <span class="keyword">if</span> events:</span><br><span class="line">        key, _ = events[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> key.fileobj.readline().rstrip()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        sys.stdout.write(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> default</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220627214433.png"></p><p><a href="https://docs.python.org/3.8/library/selectors.html">selectors</a>这个模块，可以使用系统层级的<code>select</code>，实现IO多路复用。</p><p>这段代码来自<a href="https://github.com/johejo/inputimeout/blob/master/inputimeout/inputimeout.py">inputimeout</a>。上面除了Linux&#x2F;macOS版本外，还有Windows版本。大家有兴趣可以看一下。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;我们知道，在Python里面，可以使用&lt;code&gt;input&lt;/code&gt;获取用户的输入。例如：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220627211414.png&quot;&gt;&lt;/p&gt;
-&lt;p&gt;但有一个问题，如果你什么都不输入，程序会永远卡在这里。有没有什么办法，可以给&lt;code&gt;input&lt;/code&gt;设置超时时间呢？如果用户在一定时间内不输入，就自动使用默认值。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
   </entry>
   

@@ -10707,4 +10707,28 @@ llo
         <tag>scrapy_redis</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：在Scrapy中如何拼接URL Query参数？</title>
+    <url>/2023/08/27/scrapy-params/</url>
+    <content><![CDATA[<p>我们知道，在使用Requests发起GET请求时，可以通过<code>params</code>参数来传递URL参数，让Requests在背后帮你把URL拼接完整。例如下面这段代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实际需要请求的url参数为：</span></span><br><span class="line"><span class="comment"># https://www.kingname.info/article?id=1&amp;doc=2&amp;xx=3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">params = &#123;</span><br><span class="line">	<span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;doc&#x27;</span>: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;xx&#x27;</span>: <span class="string">&#x27;3&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">requests.get(<span class="string">&#x27;https://www.kingname.info/article&#x27;</span>, params=params)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那么在Scrapy中，发起GET请求时，应该怎么写才能实现这种效果呢？</p>
+<span id="more"></span>
+
+<p>我知道很多同学是通过字符串的format操作来拼接URL的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">url_template = <span class="string">&#x27;https://www.kingname.info/article?id=&#123;id&#125;&amp;doc=&#123;doc&#125;&amp;xx=&#123;xx&#125;&#x27;</span></span><br><span class="line">params = &#123;</span><br><span class="line">	<span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;doc&#x27;</span>: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;xx&#x27;</span>: <span class="string">&#x27;3&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">url = url_template.<span class="built_in">format</span>(**params)</span><br></pre></td></tr></table></figure>
+
+<p>但实际上，Scrapy的<code>FormRequest</code>不仅能用来发起POST请求，还可以在GET请求的时候用来拼接参数。它的写法为：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">params = &#123;</span><br><span class="line">	<span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;doc&#x27;</span>: <span class="string">&#x27;2&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;xx&#x27;</span>: <span class="string">&#x27;3&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">yield</span> scrapy.FormRequest(<span class="string">&#x27;https://www.kingname.info/article&#x27;</span>, formdata=params, method=<span class="string">&#x27;GET&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这只是一个小技巧。大家可以自由选择是使用这种方法还是使用字符串的format填充。</p>
+<p>不过话说回来，我想起以前遇到过一个网站，他们的反爬虫方法非常巧妙。</p>
+<p>在正常情况下URL的参数顺序是没有任何关系的，什么顺序都可以。但这个网站反爬虫的机制，其中一个环节会判断这些参数在URL中的顺序。例如写成<code>https://www.kingname.info/article?id=1&amp;doc=2&amp;xx=3</code>就一切正常，但写成<code>https://www.kingname.info/article?doc=2&amp;id=1&amp;xx=3</code>就无法访问。当我们无论使用Requests的params参数，还是使用Scrapy的<code>FormRequest</code>参数，它自动组装的参数一般都是字典序，会按参数的首字母顺序排序。但这个网站需要的参数顺序刚好不是字典序，于是网站就会发现你。</p>
+]]></content>
+      <tags>
+        <tag>爬虫</tag>
+        <tag>Scrapy</tag>
+      </tags>
+  </entry>
 </search>

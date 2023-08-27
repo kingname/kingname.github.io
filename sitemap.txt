@@ -1,3 +1,4 @@
+https://www.kingname.info/2023/08/27/scrapy-params/
 https://www.kingname.info/2023/08/20/scrapy-redis-no-crawler/
 https://www.kingname.info/2023/08/14/pyminifier/
 https://www.kingname.info/2023/07/19/crawl-by-sitemap/

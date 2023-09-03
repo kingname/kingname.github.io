@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-08-27T13:47:14.365Z</updated>
+  <updated>2023-09-03T01:32:16.898Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：从PDF完美提取表格</title>
+    <link href="https://www.kingname.info/2023/09/03/extract-table-from-pdf/"/>
+    <id>https://www.kingname.info/2023/09/03/extract-table-from-pdf/</id>
+    <published>2023-09-03T01:31:41.000Z</published>
+    <updated>2023-09-03T01:32:16.898Z</updated>
+    
+    <content type="html"><![CDATA[<p>在之前很长一段时间，从PDF文件中提取表格都是一个老大难的问题。无论你使用的是PyPDF2还是其他什么第三方库，提取出来的表格都会变成纯文本，难以二次利用。</p><p>但现在好消息来了，专业处理PDF的第三方库<code>PyMuPDF</code>升级到了1.23.0，已经支持完美提取PDF中的表格了。还可以把表格转换为Pandas的DataFrame供你分析。</p><span id="more"></span><p><code>PyMuPDF</code>的使用非常简单，首先我们来安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pymupdf pandas openpyxl</span><br></pre></td></tr></table></figure><p>其中安装<code>pandas</code>是为了能让它转成DataFrame，安装<code>openpyxl</code>是为了能把结果导出为Excel。</p><p>我们来看一个测试的PDF文件，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230831221415.png"></p><p>其中表格在第5页，那么我们编写如下代码，读取第五页的表格：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> fitz</span><br><span class="line"></span><br><span class="line">doc = fitz.<span class="built_in">open</span>(<span class="string">&#x27;example.pdf&#x27;</span>)</span><br><span class="line">page = doc[<span class="number">4</span>] <span class="comment"># 下标从0开始,第五页对应4</span></span><br><span class="line">tables = page.find_tables()</span><br><span class="line">df = tables[<span class="number">0</span>].to_pandas()</span><br><span class="line">df.to_excel(<span class="string">&#x27;table.xlsx&#x27;</span>, index=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure><p>读取第5页的表格，把它转换为DataFrame，然后输出为Excel文件。</p><p>生成的Excel文件如下图所示，表格中的所有信息都完整读取，连换行符都能正常保留：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230831221646.png"></p><p>当然你也可以不输出成Excel，而是直接在代码里面对DataFrame进行分析。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;在之前很长一段时间，从PDF文件中提取表格都是一个老大难的问题。无论你使用的是PyPDF2还是其他什么第三方库，提取出来的表格都会变成纯文本，难以二次利用。&lt;/p&gt;
+&lt;p&gt;但现在好消息来了，专业处理PDF的第三方库&lt;code&gt;PyMuPDF&lt;/code&gt;升级到了1.23.0，已经支持完美提取PDF中的表格了。还可以把表格转换为Pandas的DataFrame供你分析。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="PDF" scheme="https://www.kingname.info/tags/PDF/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：在Scrapy中如何拼接URL Query参数？</title>
@@ -461,34 +483,6 @@
     
     
     <category term="软件工程" scheme="https://www.kingname.info/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：把自然语言描述的时间转成标准格式</title>
-    <link href="https://www.kingname.info/2022/07/13/nlp-datetime/"/>
-    <id>https://www.kingname.info/2022/07/13/nlp-datetime/</id>
-    <published>2022-07-13T12:42:17.000Z</published>
-    <updated>2022-07-13T12:44:32.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>如果你使用过嘀嗒清单或者Todoist，那你应该知道他们有一个很好用的功能，那就是自动识别任务中的时间，例如：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">下周二下午三点给老板发邮件</span><br></pre></td></tr></table></figure><p>它会自动识别为：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220707211422.png"></p><p>今天，公众号粉丝群里面，有一个叫做NowAnti的同学推荐了一个项目，叫做<a href="https://github.com/yiyujianghu/sinan">司南</a>，它就可以让Python实现这样的功能。</p><span id="more"></span><p>我们来看看这个第三方库怎么使用。首先pip安装它：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip install sinan</span><br></pre></td></tr></table></figure><p>安装完成以后，使用方法非常简单：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sinan <span class="keyword">import</span> Sinan</span><br><span class="line">obj = Sinan(<span class="string">&#x27;下周二下午三点给老板发邮件&#x27;</span>)</span><br><span class="line">result = obj.parse()</span><br><span class="line"><span class="built_in">print</span>(result)</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220707212153.png"></p><p>这个库不仅可以解析时间，它还可以解析更复杂的语句，例如：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj = Sinan(<span class="string">&#x27;明天晚上八点提十公斤的礼物，徒步往西走两公里，原地等待三个小时，如果发 现温度低于十六度，就给我打电话，我的手机号是：16758493028&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.parse()</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220707212802.png"></p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;如果你使用过嘀嗒清单或者Todoist，那你应该知道他们有一个很好用的功能，那就是自动识别任务中的时间，例如：&lt;/p&gt;
-&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;下周二下午三点给老板发邮件&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-
-&lt;p&gt;它会自动识别为：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220707211422.png&quot;&gt;&lt;/p&gt;
-&lt;p&gt;今天，公众号粉丝群里面，有一个叫做NowAnti的同学推荐了一个项目，叫做&lt;a href=&quot;https://github.com/yiyujianghu/sinan&quot;&gt;司南&lt;/a&gt;，它就可以让Python实现这样的功能。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/categories/Python/"/>
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="NLP" scheme="https://www.kingname.info/tags/NLP/"/>
     
   </entry>
   

@@ -10757,4 +10757,33 @@ llo
         <tag>PDF</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：如何同时使用多个GPT的API Key？</title>
+    <url>/2023/09/03/multi-gpt-key/</url>
+    <content><![CDATA[<p>相信很多同学或多或少都在Python中使用过GPT API，通过Python安装<code>openai</code>库，来调用GPT模型。</p>
+<p>OpenAI官方文档中给出了一个示例，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903093758.png"><br>如果你只有一个API账号，那么你可能不觉得这样写有什么问题。但如果你想同时使用两个账号怎么办？</p>
+<span id="more"></span>
+
+<p>有些同学可能知道，微软的Azure也提供GPT接口，在Python中也需要通过<code>openai</code>库来调用，它的调用示例为：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903094110.png"><br>当你全局设置了<code>openai.api_type = &#39;azure&#39;</code>以后，你怎么同时使用OpenAI的GPT接口？</p>
+<p>这两个文档中给出的示例写法，都是全局写法，一但设定以后，在整个运行时中，所有调用GPT接口的地方，都会使用这里设置的参数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> openai</span><br><span class="line"></span><br><span class="line">openai.xx = yy</span><br></pre></td></tr></table></figure>
+
+<p>有些同学不知道怎么在Python SDK中同时使用多个账号，于是他们只有使用GPT的Rest HTTP接口，自己封装一个函数来发起请求从而切换不同的账号。放弃了Python SDK提供的各种便利。</p>
+<p>但实际上，根本没有那么麻烦。在<code>openai</code>模块里面，天然就可以切换多个账号。虽然文档里面没有写，但是我们可以通过函数签名来找到这种方法。</p>
+<p>如下图所示，在PyCharm中，随便写一段调用<code>openai</code>模块的代码，然后Windows按下键盘的Ctrl，MacOS按下键盘的Command，并鼠标左键点击<code>create</code>函数：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903094837.png"><br>跳转到的函数里面，还有一个<code>create</code>函数，继续按上面的方法跳入，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903094937.png"><br>接下来，你就会看到这个<code>create</code>函数能够接受的参数里面，包含了几个很熟悉的名字：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903095029.png"></p>
+<p>也就是说，当你想同时调用多个账号时，不需要在一开始给openai设置对应的参数，你只需要在调用<code>.create</code>函数的时候，把对应的API参数传入就可以了。示例代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> openai</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用OpenAI账号1</span></span><br><span class="line">response1 = openai.ChatCompletion.create(  </span><br><span class="line">            engine=<span class="string">&quot;chatgpt&quot;</span>,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            temperature=<span class="number">0.9</span>,  </span><br><span class="line">            max_tokens=<span class="number">800</span>,  </span><br><span class="line">            top_p=<span class="number">0.95</span>,  </span><br><span class="line">            frequency_penalty=<span class="number">0</span>,  </span><br><span class="line">            presence_penalty=<span class="number">0</span>,  </span><br><span class="line">            api_key=<span class="string">&#x27;xxxxxxxx&#x27;</span>,  <span class="comment"># 在这里传入API Key</span></span><br><span class="line">            stop=[<span class="string">&quot;&lt;|im_end|&gt;&quot;</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用OpenAI账号2</span></span><br><span class="line">response2 = openai.ChatCompletion.create(  </span><br><span class="line">            engine=<span class="string">&quot;chatgpt16k&quot;</span>,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            temperature=<span class="number">0.9</span>,  </span><br><span class="line">            max_tokens=<span class="number">800</span>,  </span><br><span class="line">            top_p=<span class="number">0.95</span>,  </span><br><span class="line">            frequency_penalty=<span class="number">0</span>,  </span><br><span class="line">            presence_penalty=<span class="number">0</span>,  </span><br><span class="line">            api_key=<span class="string">&#x27;yyyyyyyyy&#x27;</span>,   <span class="comment"># 在这里传入API Key</span></span><br><span class="line">            stop=[<span class="string">&quot;&lt;|im_end|&gt;&quot;</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用Azure OpenAI 账号</span></span><br><span class="line">response3 = openai.ChatCompletion.create(  </span><br><span class="line">            engine=<span class="string">&quot;gpt4&quot;</span>,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            temperature=<span class="number">0.9</span>,  </span><br><span class="line">            max_tokens=<span class="number">800</span>,  </span><br><span class="line">            top_p=<span class="number">0.95</span>,  </span><br><span class="line">            frequency_penalty=<span class="number">0</span>,  </span><br><span class="line">            presence_penalty=<span class="number">0</span>,  </span><br><span class="line">            api_key=<span class="string">&#x27;zzzzzzz&#x27;</span>,   <span class="comment"># 在这里传入API Key</span></span><br><span class="line">            api_base=<span class="string">&#x27;https://xxx.openai.azure.com/&#x27;</span>,  </span><br><span class="line">            api_type=<span class="string">&quot;azure&quot;</span>,  </span><br><span class="line">            api_version=<span class="string">&#x27;2023-05-15&#x27;</span>,  </span><br><span class="line">            stop=[<span class="string">&quot;&lt;|im_end|&gt;&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+<p>使用这种方法，我们就可以在一个程序里面同时使用多个GPT账号了。</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>ChatGPT</tag>
+      </tags>
+  </entry>
 </search>

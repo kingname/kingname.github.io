@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-09-03T02:20:42.886Z</updated>
+  <updated>2023-09-05T15:09:21.289Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：从Pandas DataFrame两个小技巧</title>
+    <link href="https://www.kingname.info/2023/09/05/pandas-normal-columns/"/>
+    <id>https://www.kingname.info/2023/09/05/pandas-normal-columns/</id>
+    <published>2023-09-05T15:08:39.000Z</published>
+    <updated>2023-09-05T15:09:21.289Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天我从网上下载了一批数据。这些数据是Excel格式，我需要把他们转移到MySQL中。这是一个非常简单的需求。</p><span id="more"></span><p>正常情况下，我们只需要5行代码就能解决问题：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> create_engine</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">engine = create_engine(<span class="string">&#x27;数据库链接URI&#x27;</span>, echo=<span class="literal">False</span>)</span><br><span class="line">df = pd.read_excel(<span class="string">&#x27;Excel文件路径&#x27;</span>)</span><br><span class="line">df.to_sql(name=<span class="string">&#x27;表名&#x27;</span>, con=engine)</span><br></pre></td></tr></table></figure><p>但我发现，这个下载的文件有两个工作簿(Sheet)，第一个Sheet叫做<code>Overall</code>，第二个Sheet叫做<code>Result</code>。我们需要的数据在<code>Result</code>这个工作簿中。那么，在使用Pandas读取时，需要这样写代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_excel(<span class="string">&#x27;文件路径&#x27;</span>, <span class="string">&#x27;Result&#x27;</span>)</span><br></pre></td></tr></table></figure><p>第二个问题，是这个Excel表格的列名，包含了一些不能作为MySQL字段名的值，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230905223117.png"><br>其中的空格、括号、百分号、&amp;符号都不适合放到MySQL的字段名中。那么怎么快速批量把这些字符全部替换掉呢？可以使用如下的写法：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.columns = df.columns.<span class="built_in">str</span>.strip().<span class="built_in">str</span>.lower().<span class="built_in">str</span>.replace(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;_&#x27;</span>).<span class="built_in">str</span>.replace(<span class="string">&#x27;(&#x27;</span>, <span class="string">&#x27;&#x27;</span>).<span class="built_in">str</span>.replace(<span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;&#x27;</span>).<span class="built_in">str</span>.replace(<span class="string">&#x27;%&#x27;</span>, <span class="string">&#x27;percent_unit&#x27;</span>).<span class="built_in">str</span>.replace(<span class="string">&#x27;&amp;&#x27;</span>, <span class="string">&#x27;_and_&#x27;</span>)</span><br></pre></td></tr></table></figure><p>这样可以批量把所有列名转换为小写字母，并移除特殊符号。效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230905223656.png"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;今天我从网上下载了一批数据。这些数据是Excel格式，我需要把他们转移到MySQL中。这是一个非常简单的需求。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="Pandas" scheme="https://www.kingname.info/tags/Pandas/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：如何同时使用多个GPT的API Key？</title>
@@ -468,23 +489,6 @@
     
     
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>写在我的30岁。</title>
-    <link href="https://www.kingname.info/2022/09/24/in-my-30/"/>
-    <id>https://www.kingname.info/2022/09/24/in-my-30/</id>
-    <published>2022-09-24T06:54:41.000Z</published>
-    <updated>2023-01-01T07:01:10.595Z</updated>
-    
-    <content type="html"><![CDATA[<p>到今天就满30岁了。</p><span id="more"></span><p>这十年，大学毕业，在成都工作两年，在北京工作一年，在杭州工作两年，在上海工作两年。见过北方秋冬的萧瑟，见过江南初春的烟雨。</p><p>这十年，去过大大小小的公司。中国的外资的、卷的和不卷的。有工作体验极好的团队，让人想在这干一辈子；也有工作体验极差的部门，入职第一天就想离开。有人说，愿意主动跳出舒适圈的人，本质上都是抖M。</p><p>这十年，出版了两本书、讲过很多课、写了几百篇公众号原创文章，开源项目拿到过几千Star、还当了微软最有价值专家。不断提升自己的同时，也帮助了很多人。</p><p>这十年，幸好有七年自由自在的时光。我的大学，能在校园里充分度过；工作以后，也能在任何时候说走就走，去看佛罗伦萨的教堂、去泰国和越南的沙滩奔跑，去参加几万人的演唱会。</p><p>五年前，只身一人开始北漂，没有钱也没有认识的人。现在，虽然没有回到成都，但已经在上海成家。有一个爱我的妻子，有一群很好的朋友，有一个还算不错的工作。</p><p>四年前，我认识了我现在妻子。她是目前为止我见过的最好的产品经理（实话实说，不带光环）。也是我见过最会人际沟通的人。她不仅会做产品，还会做设计，做运营。文章写得非常好。作为美术生，只用半年的学习就能上211。她拥有我从来都学不会的社交技能。我不是一个懂得享受生活的人，但是有她在的日子里，我的生活比之前精彩了很多。</p><p>这十年，我从一个需要被人带的应届生，一步一步走过来。虽然很多人现在叫我大佬，但我觉得我距离大佬还差很多。我高中同学，从程序转成产品，现在已经做到了某大厂一人之下万人之上的位置。而我现在还是一个小小的螺丝钉。</p><p>总结起来，这十年里，虽有遗憾，并无后悔。</p><p>满30岁了，三十而立。立什么呢？立志、立身、立言。加油吧。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;到今天就满30岁了。&lt;/p&gt;</summary>
-    
-    
-    
     
   </entry>
   

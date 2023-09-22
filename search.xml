@@ -10810,4 +10810,39 @@ llo
         <tag>Pandas</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：JSON如何快速转成对象？</title>
+    <url>/2023/09/22/json-to-obj/</url>
+    <content><![CDATA[<p>我们知道，在Python里面，要把JSON转成字典是非常容易的，只需要使用<code>json.loads(JSON字符串)</code>就可以了。</p>
+<p>但如果这个JSON转成的字典，嵌套比较深，那么要读取里面的数据就非常麻烦了。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230921195257.png"></p>
+<p>如果我要读取把图中的<code>end</code>减去<code>start</code>字段，那么用字典的时候，代码要写成这样：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">result = info[<span class="string">&#x27;data&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;entities&#x27;</span>][<span class="string">&#x27;annotations&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;end&#x27;</span>] - info[<span class="string">&#x27;data&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;entities&#x27;</span>][<span class="string">&#x27;annotations&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;start&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>光是看到这些方括号和单引号，就够让人头晕了。</p>
+<span id="more"></span>
+
+<p>但如果改成下面这样，看起来就清爽多了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">result = info.data[<span class="number">0</span>].entities.annotations[<span class="number">0</span>].end - info.data[<span class="number">0</span>].entities.annotations[<span class="number">0</span>].start</span><br></pre></td></tr></table></figure>
+
+<p>那么如何快速把一个嵌套很深的字典转换为对象呢？其实非常简单，使用Python自带的<code>SimpleNamespace</code>就可以了。</p>
+<p>使用<code>SimpleNamespace</code>可以快速创建一个空对象，并设置它的属性，用法如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> SimpleNamespace</span><br><span class="line"></span><br><span class="line">ins = SimpleNamespace(aa=<span class="number">1</span>, bb=<span class="number">2</span>, cc=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(ins.bb)</span><br></pre></td></tr></table></figure>
+
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230921202311.png"></p>
+<p>基于字典创建也非常简单：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> SimpleNamespace</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">data = &#123;<span class="string">&#x27;aa&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;bb&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;cc&#x27;</span>: <span class="number">3</span>&#125;</span><br><span class="line">ins = SimpleNamespace(**data)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(ins.bb)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230921202359.png"><br>对于深层嵌套的JSON字符串，我们在使用<code>json.loads</code>时，额外设置一个参数：<code>object_hook</code>，就可以实现递归式转换内层字典：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = json.loads(JSON字符串, object_hook=<span class="keyword">lambda</span> d: SimpleNamespace(**d))</span><br></pre></td></tr></table></figure>
+
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230921203719.png"></p>
+<p>关于参数<code>object_hook</code>的具体用法，大家可以看<a href="https://docs.python.org/3/library/json.html#json.loads">官方文档</a></p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
 </search>

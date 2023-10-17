@@ -10845,4 +10845,71 @@ llo
         <tag>Python</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：Requests被网站识别怎么办？</title>
+    <url>/2023/10/17/curl-cffi/</url>
+    <content><![CDATA[<p>现在有很多网站，已经能够通过JA3或者其他指纹信息，来识别你的请求是不是Requests发起的。这种情况下，你无论怎么改Headers还是代理，都没有任何意义。</p>
+<p>我之前写过一篇文章：<a href="https://mp.weixin.qq.com/s/7VJHCl2ht4pjkgIdcOKc5w">Python如何突破JA3</a>，但方法非常复杂，很多初学者表示上手有难度。那么今天我来一个更简单的方法，只需要修改两行代码。并且不仅能过JA3，还能过Akamai。</p>
+<span id="more"></span>
+
+<p>先来看一段代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests  </span><br><span class="line">  </span><br><span class="line">headers = &#123;  </span><br><span class="line">    <span class="string">&#x27;accept&#x27;</span>: <span class="string">&#x27;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;accept-language&#x27;</span>: <span class="string">&#x27;zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;cache-control&#x27;</span>: <span class="string">&#x27;no-cache&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;dnt&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;pragma&#x27;</span>: <span class="string">&#x27;no-cache&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;sec-ch-ua&#x27;</span>: <span class="string">&#x27;&quot;Chromium&quot;;v=&quot;118&quot;, &quot;Microsoft Edge&quot;;v=&quot;118&quot;, &quot;Not=A?Brand&quot;;v=&quot;99&quot;&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;sec-ch-ua-mobile&#x27;</span>: <span class="string">&#x27;?0&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;sec-ch-ua-platform&#x27;</span>: <span class="string">&#x27;&quot;macOS&quot;&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;sec-fetch-dest&#x27;</span>: <span class="string">&#x27;document&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;sec-fetch-mode&#x27;</span>: <span class="string">&#x27;navigate&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;sec-fetch-site&#x27;</span>: <span class="string">&#x27;same-origin&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;sec-fetch-user&#x27;</span>: <span class="string">&#x27;?1&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;upgrade-insecure-requests&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.46&#x27;</span>,  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">response = requests.get(<span class="string">&#x27;https://tls.browserleaks.com/json&#x27;</span>, headers=headers)  </span><br><span class="line"><span class="built_in">print</span>(response.json())</span><br></pre></td></tr></table></figure>
+
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231016224733.png"></p>
+<p>这是直接使用Requests发起的请求。你可以试一试，加上代理以后，这里的<code>ja3_hash</code>并不会发生变化。并且<code>akamai_hash</code>和<code>akamai_text</code>都是空。这个特征上非常明显的，网站直接根据这些特征就可以屏蔽你的爬虫。</p>
+<p>现在，我们使用两行代码解决这个问题。</p>
+<p>首先，安装一个第三方库：<code>curl_cffi</code>:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 -m pip install curl_cffi</span><br></pre></td></tr></table></figure>
+
+<p>然后，修改我们这段代码的第一行，把<code>import requests</code>改成<code>from curl_cffi import requests</code>。最后，在<code>requests.get</code>中加一个参数：<code>impersonate=&quot;chrome110&quot;</code>。完整效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231016225250.png"></p>
+<p>完成了。以上就是全部修改。网站已经无法识别你的爬虫了。在网站看来，这只是一个Chrome 110版本发起的请求。甚至Akamai需要的签名也都有了。</p>
+<p><code>curl_cffi</code>不仅完全兼容Requests的语法，而且还支持Asyncio。要使用异步写法时，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> curl_cffi.requests <span class="keyword">import</span> AsyncSession</span><br><span class="line"></span><br><span class="line">urls = [</span><br><span class="line">    <span class="string">&quot;https://googel.com/&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://facebook.com/&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://twitter.com/&quot;</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">	<span class="keyword">async</span> <span class="keyword">with</span> AsyncSession() <span class="keyword">as</span> s:</span><br><span class="line">	    tasks = []</span><br><span class="line">	    <span class="keyword">for</span> url <span class="keyword">in</span> urls:</span><br><span class="line">	        task = s.get(<span class="string">&quot;https://example.com&quot;</span>)</span><br><span class="line">	        tasks.append(task)</span><br><span class="line">	    results = <span class="keyword">await</span> asyncio.gather(*tasks)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">asyncio.run(main())</span><br></pre></td></tr></table></figure>
+
+<p>关于<code>curl_cffi</code>的更多用法，可以查看它的Github：<a href="https://github.com/yifeikong/curl_cffi">Python binding for curl-impersonate via cffi</a></p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>拒绝成为这样的程序员</title>
+    <url>/2023/10/17/rubbish/</url>
+    <content><![CDATA[<p>产品经理这两天在跟我抱怨他们公司的一个码农。听的我火冒三丈，差点把跟了我十多年的搪瓷水杯砸烂。</p>
+<p>正好在知识星球和微信群里面，有不少同学跟我咨询程序员的职业发展以及怎么应对三十岁危机。</p>
+<p>借此机会，我准备用几篇文章来讲讲自己的经验和个人的观点。</p>
+<span id="more"></span>
+
+<p>有这样一批人，他们在大公司里工作了十几年，年龄一大把，还是一个大头兵。他们被号称经验丰富，但实际上是把一年的工作经验用了十多年，对主流的技术一无所知，他们已经无法适应现在的技术发展。</p>
+<p>这些人，每天看起来非常努力，加班加到很晚。产品经理提需求，他们看起来是在非常努力的完成，但完成的效果非常差。产品给他们提修改意见，他们看起来非常积极地去修改。但是改了A问题，出现B问题，改了B问题，出现C问题，修好C问题，A问题又出现了……</p>
+<p>产品经理每次一说产出效果不好，他们马上就会蹦出一大堆技术名词，又是什么业界难题，又是什么行业边界，又是什么技术翘翘板，把A改了，那么从理论上说B就一定有问题。ABC三个需求无法同时满足。言语之间时不时蹦出一些他们昨天刷公众号看到的技术名词。但其实真正的原因是这个需求达到了他们知识的边界，而他们又不愿意学习。他们花3个月做出来的东西，换一个应届生2天就能完成，而且效果好十倍。</p>
+<p>这些人，永远把自己当作一个螺丝钉。产品需要什么，自己就做什么。产品不说的，自己坚决不做。产品找过来，一句“你又没有说要这个功能”就把自己的责任推卸干净。</p>
+<p>当任务涉及到多个人协作时，这些人把自己的活干完就跑了。从来不会通知一下上下游的同事。等到项目预计上线的前一晚，产品经理来问：</p>
+<blockquote>
+<p>“你这个功能做完了吗？”<br>“做完了。”<br>“那调试好了吗？”<br>“我不知道上游的xx和下游的yy他们做完了没有。”</p>
+</blockquote>
+<p>这样的人，我称之为老油条。</p>
+<p>老油条特别喜欢装无辜，我都已经这么努力了，你还想怎么样？然后在线上线下宣传自己被公司压榨，被同事排挤，被老员工PUA.但真实的情况是，公司只让他在做这一件事情，他做了三个月。每一次效果不好，其他人都在陪着他分析原因，等他修改。改完以后效果更差。大家给他一次又一次机会，上线时间为他一次又一次推迟，他一次又一次让大家失望。每次还都会找各种理由各种借口。</p>
+<p>很多人希望公司能够开除他，但是老板有顾虑，公司有担忧。不敢开除，甚至不敢给他打低绩效。公司，特别是大公司，非常害怕他们在网上发帖。</p>
+<p>弱小不一定有理，弱小只是某些老油条的遮羞布。</p>
+<p>我觉得现在互联网环境的风气极差。正适合这些老油条肆意妄为。</p>
+<p>当一个人在网上发帖说自己被公司开除了，一大批不知道任何内情的网民就会开始攻击公司，觉得这个人太可怜，觉得这个公司太黑毫无人性。特别是当公司是某些著名大厂时，这种攻击更是毫不留情。</p>
+<p>民众总是相信弱小者的哭诉，从来听不见强者背后的辩解。知情人为公司解释两句，一大群人站出来要为弱小着主持公道：你是资本的走狗，你是五毛党，你收了多少钱。</p>
+<p>正是这样的老油条，导致开除一个人的成本非常高，公司迫于不想惹麻烦，很多时候对于能力差的人选择睁一只眼闭一只眼。现在大环境降本增效，去肥增瘦，能力差的老油条占住了坑位，就会导致真正有能力的人失去一个又一个进入大厂的机会。</p>
+<p>几个大厂里面，有很多很多这样的老油条。看这篇文章的你，本来有机会进大厂一展才华，但都是因为这些老油条占住了人头，导致对应的岗位不再招人。其实你比他更加适合这个岗位，但没办法。</p>
+<p>公司没有办法开掉这些人，因为现在舆论的风暴太猛。这些风暴始于老油条的装可怜，加强于键盘党的假公道，盛行于跟风人的瞎同情。</p>
+<p>没有办法，真的没办法。</p>
+<p>每当产品经理跟我讲起他们公司里面的老油条，我都恨不能当场掀桌，但没办法，我吵架超不过，大架也打不过。赢了坐牢，输了住院。</p>
+<p>没办法，真的没办法。</p>
+<p>只盼大家擦亮眼睛，在同情某些被劝退的互联网员工前，别急着站队，先想想这个人是不是占了本该属于你的岗位。</p>
+<hr>
+<p>抱怨归抱怨，希望大家不要成为这样的人。我们下一篇文章，来讲讲我们应该如何成为一个不会被年龄所限制的优秀工程师。</p>
+]]></content>
+      <tags>
+        <tag>开发经验</tag>
+      </tags>
+  </entry>
 </search>

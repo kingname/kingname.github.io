@@ -1,4 +1,5 @@
 https://www.kingname.info/2023/10/28/json-in-html/
+https://www.kingname.info/2023/10/28/parse-json-object/
 https://www.kingname.info/2023/10/17/curl-cffi/
 https://www.kingname.info/2023/10/17/rubbish/
 https://www.kingname.info/2023/09/22/json-to-obj/

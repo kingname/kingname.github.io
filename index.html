@@ -160,7 +160,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">215</span>
+          <span class="site-state-item-count">216</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,6 +204,102 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2023/10/28/parse-json-object/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="青南">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 谢乾坤 | Kingname">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/10/28/parse-json-object/" class="post-title-link" itemprop="url">一日一技：爬虫如何解析JavaScript Object？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-10-28 12:09:38 / 修改时间：12:10:47" itemprop="dateCreated datePublished" datetime="2023-10-28T12:09:38+08:00">2023-10-28</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>342</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>我们在开发爬虫的过程中，经常发现有一些网站，会直接把数据放到HTML中的<code>&lt;script&gt;</code>标签里面。这些数据长得有点像JSON，但又有差异，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231028114032.png"></p>
+<p>这种格式，我们叫做JavaScript Object。长得很像Python的字典，又很像是JSON。但是这个格式在Python里面，无论直接当字典解析，还是当JSON解析，都会报错，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231028114304.png"></p>
+<p>遇到这种情况，有同学准备使用正则表达式来解析，又有同学直接放弃。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/10/28/parse-json-object/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2023/10/28/json-in-html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -234,7 +330,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-10-28 11:33:18 / 修改时间：11:33:51" itemprop="dateCreated datePublished" datetime="2023-10-28T11:33:18+08:00">2023-10-28</time>
+      <time title="创建时间：2023-10-28 11:33:18 / 修改时间：12:11:28" itemprop="dateCreated datePublished" datetime="2023-10-28T11:33:18+08:00">2023-10-28</time>
     </span>
 
   
@@ -244,7 +340,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>721</span>
+      <span>722</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -265,33 +361,14 @@
           <p>我们在开发爬虫的过程中，经常发现有一些网站，会直接把数据以JSON的形式，通过<code>&lt;script&gt;</code>标签放到页面源代码中。如下图所示：</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017203837.png"></p>
 <p>有时候请求URL拿到HTML的过程比较麻烦，有些同学习惯先把HTML复制到代码里面，先把解析的逻辑写好，然后再去开发请求HTML的代码。</p>
-<p>这个思路本身是没有什么问题的，于是他们就写了如下的代码：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017204158.png"></p>
-<p>代码中的<code>html_data = &#39;&#39;&#39;</code>里面就是原样复制的网页HTML，没有做任何修改，因为太长了，我这里做了折叠。展开以后如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017204331.png"></p>
-<p>但当运行这段代码的时候，发现代码报错了，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017211730.png"></p>
-<p>看这个报错信息，难道说是JSON本身有问题？于是，你到网页上，把这个JSON复制下来：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017211909.png"></p>
-<p>使用JSONHero这种验证网站，进行验证，结果发现一切正常：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212033.png"></p>
-<p>这就见鬼了，为什么正则表达式提取的JSON就不对呢？你开启PyCharm的调试模式，看看正则表达式提取出来的JSON：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212214.png"></p>
-<p>你把提取出来的JSON复制粘贴到JSONHero网站上，竟然报错了：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212329.png"><br>到底是哪里有问题呢？为什么直接从网页上复制JSON就没有问题，而使用正则表达式提取的JSON就有问题呢？</p>
-<p>其实原因非常简单，问题就出现在HTML中的JSON里面的反斜杠：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212617.png"></p>
-<p>我们知道，反斜杠是不能单独存在的，它有自己独特的意义。在代码里面，我使用了<code>&#39;&#39;&#39;</code>三个引号来抱住整个网页的HTML，这个时候，Python发现这里的<code>\&quot;</code>这种写法，会自动把反斜杠去掉。于是，正则表达式提取出来的JSON，引号就会出现冲突，如下图所示：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017213018.png"></p>
-<p>这样的JSON就会变成不合法的JSON。因为在JSON中，字符串内部作为普通字符的双引号，应该使用反斜杠转义，而这里的反斜杠被自动删除了。</p>
-<p>要解决这个问题，有三种方法：</p>
-<ul>
-<li>手动修改JSON里面的所有反斜杠，把每一根反斜杠变成两根反斜杠：<code>\&quot;</code> -&gt; <code>\\&quot;</code>。（太麻烦了，就不演示了）</li>
-<li>在三引号前加上<code>r</code>，此时Python会自动把所有的反斜杠转换为普通的字符串：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017213410.png"></li>
-<li>把HTML写到文件里面，通过读文件的形式来读源代码。Python自动就会处理反斜杠。</li>
-</ul>
-<p>总结，这个问题只有在你直接把HTML粘贴到Python代码里面的时候会出现。如果你是直接使用Requests请求网页，或者你把HTML存到文件里面，通过读文件的形式来读HTML，那么Python都能自动处理好这个反斜杠的问题。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/10/28/json-in-html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1060,99 +1137,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2023/08/14/pyminifier/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="青南">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 谢乾坤 | Kingname">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/08/14/pyminifier/" class="post-title-link" itemprop="url">一日一技：如何对Python代码进行混淆</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-08-14 20:30:58 / 修改时间：20:31:36" itemprop="dateCreated datePublished" datetime="2023-08-14T20:30:58+08:00">2023-08-14</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>781</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>目前市面上没有任何方法能够完全避免你的程序被人反编译。即便是3A游戏大作，发布出来没多久也会被人破解。现在只能做到增大反编译的难度，让程序相对无法那么快被破解。</p>
-<p>我们知道，Python代码默认是公开的。当你要把一个Python项目给别人运行的时候，一般来说别人就能看到你的全部源代码。我们可以使用Cython、Nuitka对代码进行打包，编译成.so文件、.dll文件或者是可执行文件，从而在一定程度上避免别人看到你的源代码。我在字节的时候，内部的一个系统就是使用Cython打包的，然后部署到客户的服务器上。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/08/14/pyminifier/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1178,14 +1162,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">228k</span>
+    <span title="站点总字数">229k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">12:41</span>
+    <span title="站点阅读时长">12:43</span>
   </span>
 </div>
 <div class="busuanzi-count">

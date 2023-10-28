@@ -10918,6 +10918,8 @@ llo
     <content><![CDATA[<p>我们在开发爬虫的过程中，经常发现有一些网站，会直接把数据以JSON的形式，通过<code>&lt;script&gt;</code>标签放到页面源代码中。如下图所示：</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017203837.png"></p>
 <p>有时候请求URL拿到HTML的过程比较麻烦，有些同学习惯先把HTML复制到代码里面，先把解析的逻辑写好，然后再去开发请求HTML的代码。</p>
+<span id="more"></span>
+
 <p>这个思路本身是没有什么问题的，于是他们就写了如下的代码：</p>
 <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017204158.png"></p>
 <p>代码中的<code>html_data = &#39;&#39;&#39;</code>里面就是原样复制的网页HTML，没有做任何修改，因为太长了，我这里做了折叠。展开以后如下图所示：</p>
@@ -10944,6 +10946,36 @@ llo
 <li>把HTML写到文件里面，通过读文件的形式来读源代码。Python自动就会处理反斜杠。</li>
 </ul>
 <p>总结，这个问题只有在你直接把HTML粘贴到Python代码里面的时候会出现。如果你是直接使用Requests请求网页，或者你把HTML存到文件里面，通过读文件的形式来读HTML，那么Python都能自动处理好这个反斜杠的问题。</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一日一技：爬虫如何解析JavaScript Object？</title>
+    <url>/2023/10/28/parse-json-object/</url>
+    <content><![CDATA[<p>我们在开发爬虫的过程中，经常发现有一些网站，会直接把数据放到HTML中的<code>&lt;script&gt;</code>标签里面。这些数据长得有点像JSON，但又有差异，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231028114032.png"></p>
+<p>这种格式，我们叫做JavaScript Object。长得很像Python的字典，又很像是JSON。但是这个格式在Python里面，无论直接当字典解析，还是当JSON解析，都会报错，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231028114304.png"></p>
+<p>遇到这种情况，有同学准备使用正则表达式来解析，又有同学直接放弃。</p>
+<span id="more"></span>
+
+<p>但实际上，这种数据结构，使用Yaml是可以直接解析成Python的字典。我们首先来安装一下Yaml：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install pyyaml</span><br></pre></td></tr></table></figure>
+
+<p>然后直接像解析JSON一样解析：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line">data = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">    name: &#x27;青南&#x27;,</span></span><br><span class="line"><span class="string">    salary: 999999999,</span></span><br><span class="line"><span class="string">    address: &#x27;上海&#x27;,</span></span><br><span class="line"><span class="string">    pro: true</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">info = yaml.safe_load(data)</span><br></pre></td></tr></table></figure>
+
+<p>运行效果如下图所示，已经直接解析成了Python的字典：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231028114627.png"></p>
+<p>Yaml格式是JSON格式的超集，因此，使用pyyaml库也能直接解析正常的JSON：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231028114801.png"></p>
+<p>甚至各种复杂的混合格式也能正常解析：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231028115156.png"></p>
+<p>关于YAML格式的更多介绍，请看我以前的文章：</p>
+<p><a href="https://mp.weixin.qq.com/s/SYehHHKofb2lA_J7--UjGA">一日一技：不用游标卡尺，Yaml 格式5分钟入门</a><br><a href="https://mp.weixin.qq.com/s/I4Uyw8Zrkf7bwzbyR8dE_A">一日一技：如何处理配置文件中的重复值？</a><br><a href="https://mp.weixin.qq.com/s/jEQMNxC4o0PKSrQz4rI7Lw">一日一技：优雅地加载Yaml配置文件</a></p>
 ]]></content>
       <tags>
         <tag>Python</tag>

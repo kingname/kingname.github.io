@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-10-17T12:22:30.006Z</updated>
+  <updated>2023-10-28T03:33:51.727Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：HTML里面提取的JSON怎么解析不了？</title>
+    <link href="https://www.kingname.info/2023/10/28/json-in-html/"/>
+    <id>https://www.kingname.info/2023/10/28/json-in-html/</id>
+    <published>2023-10-28T03:33:18.000Z</published>
+    <updated>2023-10-28T03:33:51.727Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们在开发爬虫的过程中，经常发现有一些网站，会直接把数据以JSON的形式，通过<code>&lt;script&gt;</code>标签放到页面源代码中。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017203837.png"></p><p>有时候请求URL拿到HTML的过程比较麻烦，有些同学习惯先把HTML复制到代码里面，先把解析的逻辑写好，然后再去开发请求HTML的代码。</p><p>这个思路本身是没有什么问题的，于是他们就写了如下的代码：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017204158.png"></p><p>代码中的<code>html_data = &#39;&#39;&#39;</code>里面就是原样复制的网页HTML，没有做任何修改，因为太长了，我这里做了折叠。展开以后如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017204331.png"></p><p>但当运行这段代码的时候，发现代码报错了，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017211730.png"></p><p>看这个报错信息，难道说是JSON本身有问题？于是，你到网页上，把这个JSON复制下来：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017211909.png"></p><p>使用JSONHero这种验证网站，进行验证，结果发现一切正常：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212033.png"></p><p>这就见鬼了，为什么正则表达式提取的JSON就不对呢？你开启PyCharm的调试模式，看看正则表达式提取出来的JSON：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212214.png"></p><p>你把提取出来的JSON复制粘贴到JSONHero网站上，竟然报错了：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212329.png"><br>到底是哪里有问题呢？为什么直接从网页上复制JSON就没有问题，而使用正则表达式提取的JSON就有问题呢？</p><p>其实原因非常简单，问题就出现在HTML中的JSON里面的反斜杠：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212617.png"></p><p>我们知道，反斜杠是不能单独存在的，它有自己独特的意义。在代码里面，我使用了<code>&#39;&#39;&#39;</code>三个引号来抱住整个网页的HTML，这个时候，Python发现这里的<code>\&quot;</code>这种写法，会自动把反斜杠去掉。于是，正则表达式提取出来的JSON，引号就会出现冲突，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017213018.png"></p><p>这样的JSON就会变成不合法的JSON。因为在JSON中，字符串内部作为普通字符的双引号，应该使用反斜杠转义，而这里的反斜杠被自动删除了。</p><p>要解决这个问题，有三种方法：</p><ul><li>手动修改JSON里面的所有反斜杠，把每一根反斜杠变成两根反斜杠：<code>\&quot;</code> -&gt; <code>\\&quot;</code>。（太麻烦了，就不演示了）</li><li>在三引号前加上<code>r</code>，此时Python会自动把所有的反斜杠转换为普通的字符串：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017213410.png"></li><li>把HTML写到文件里面，通过读文件的形式来读源代码。Python自动就会处理反斜杠。</li></ul><p>总结，这个问题只有在你直接把HTML粘贴到Python代码里面的时候会出现。如果你是直接使用Requests请求网页，或者你把HTML存到文件里面，通过读文件的形式来读HTML，那么Python都能自动处理好这个反斜杠的问题。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;我们在开发爬虫的过程中，经常发现有一些网站，会直接把数据以JSON的形式，通过&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签放到页面源代码中。如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-c</summary>
+      
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：Requests被网站识别怎么办？</title>
@@ -473,27 +498,6 @@
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
     <category term="Flask" scheme="https://www.kingname.info/tags/Flask/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：如何正确为历史遗留代码补充单元测试？</title>
-    <link href="https://www.kingname.info/2023/01/01/add-unit-test-for-old-code/"/>
-    <id>https://www.kingname.info/2023/01/01/add-unit-test-for-old-code/</id>
-    <published>2023-01-01T06:54:12.000Z</published>
-    <updated>2023-01-01T06:59:52.837Z</updated>
-    
-    <content type="html"><![CDATA[<p>我们知道，在软件工程中，单元测试是保证软件质量的重要手段之一。一个优秀的代码，单元测试的代码量，经常会超过被测试的代码本身。一个理想化的开发团队，可能有三分之二的时间是在写测试，剩下的三分之一时间才是写业务代码。</p><span id="more"></span><p>如果你的项目是从一开始就写单元测试，那么你写起来应该轻松又愉快，因为单元测试会促使你的代码自身变成可测试的代码。</p><p>但如果你接手了一个大项目，里面已经有几十万行代码了，那么给这些代码补单元测试会让你知道什么叫做痛不欲生。你会发现有一些函数，它让你不知道怎么写测试代码。</p><p>我们来看一个例子：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220825225545.png"></p><p>我想测试的是<code>business_code</code>里面，<code>check_data_dup</code>分别返回True或者False的时候，下面代码的逻辑。也就是说，我只关心第18-27行的逻辑。这个时候不关心MySQL和Redis。但是每次测试都要从他们里面读取数据，这样就会导致测试代码依赖外部环境。如果MySQL或者Redis挂了，那么测试代码就会运行失败。</p><p>而且，就算Redis和MySQL没有故障，你怎么知道你的data_id和pk，在数据库中对应的是什么数据？为了分别走到特定的分支，你还需要去检测数据库中特定数据的id。万一是测试环境，别人修改了里面的数据，你的测试也可能会挂掉。</p><p>如果直接使用Pytest来写测试案例，代码是这样的：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220825230624.png"></p><p>可以看到，我运行Pytest以后，成功了一个，失败了一个。这里我模拟出数据库中没有数据能够让<code>check_data_dup</code>走到返回<code>True</code>逻辑的情况。</p><p>难道为了让单元测试进行下去，我还要去数据库构造一条特定的数据？这只是单元测试，又不是集成测试。</p><p>为了解决这个问题，我们就可以使用<code>mock</code>模块。这是Python自带的一个模块，可以动态替换函数。</p><p>它的写法非常简单：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220825232830.png"></p><p>我们只需要使用<code>@mock.patch</code>装饰器，装饰测试函数就可以了。这个装饰器接收两个参数，第一个参数是被模拟的函数的路径，以点分割；第二个参数是你想让它返回的值。</p><p>从上图可以看到，<code>test_runner.py</code>运行以后，原本在<code>read_data_from_redis</code>和<code>read_data_from_mysql</code>中打印的两段文字都没有打印，说明这两个函数已经被动态替换了，他们内部的代码不会运行。只会直接返回我们预设的这个返回值。这样一来就跟数据库解耦了。</p><p>注意，在上图中，由于我们已经mock了<code>check_data_dup</code>，因此<code>read_data_from_redis</code>和<code>read_data_from_mysql</code>两个函数随便返回什么值都可以。如果你想顺带也测试一下<code>check_data_dup</code>，那么可以不mock它，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220825233357.png"></p><p>在<code>check_data_dup</code>函数的逻辑中，如果<code>data</code>参数含有字符<code>x</code>，并且<code>user_id</code>是偶数，就返回<code>True</code>，否则返回<code>False</code>。我们通过mock两个读数据的函数，分别设置不同的返回值，就能满足让<code>check_data_dup</code>返回不同值的条件。</p><p><code>mock.path</code>有一个小坑，一定要注意。我们来看看下面这个文件结构：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220825234500.png"></p><p><code>read_data_from_redis</code>和<code>read_data_from_mysql</code>两个函数分布在了不同的文件里面。在<code>runner.py</code>中导入并使用了他们。<code>test_runner.py</code>中，我们使用<code>@mock.patch</code>对这两个函数定义的路径打补丁进行替换。可是替换了以后，运行Pytest，会发现这两个函数竟然正常运行了。也就是说我们的替换失败了。</p><p>之所以会出现这种情况，是因为我们要打补丁的并不是这两个函数定义的地方，而是使用的地方。我们在<code>runner.py</code>中，分别使用如下两个语句：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> mysql_util.SqlUtil <span class="keyword">import</span> read_data_from_mysql</span><br><span class="line"><span class="keyword">from</span> controller.lib.redis.RedisUtil <span class="keyword">import</span> read_data_from_redis</span><br></pre></td></tr></table></figure><p>导入了这两个函数，我们也是在<code>runner.py</code>中使用他们的。因此，<code>@mock.patch</code>的第一个参数，依然应该是<code>runner.read_data_from_redis</code>和<code>runner.read_data_from_mysql</code>。</p><p>正确的做法如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20220825234131.png"></p><p><code>mock.patch</code>还有更多高级用法，例如替换类，替换实例方法等等。可以在<a href="https://docs.python.org/dev/library/unittest.mock.html">unittest.mock</a>中找到他。从Python 3.3开始，官方自带了<code>unittest.mock</code>，它跟直接<code>import mock</code>的效果是一样的。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;我们知道，在软件工程中，单元测试是保证软件质量的重要手段之一。一个优秀的代码，单元测试的代码量，经常会超过被测试的代码本身。一个理想化的开发团队，可能有三分之二的时间是在写测试，剩下的三分之一时间才是写业务代码。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="单元测试" scheme="https://www.kingname.info/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   

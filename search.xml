@@ -10912,4 +10912,42 @@ llo
         <tag>开发经验</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：HTML里面提取的JSON怎么解析不了？</title>
+    <url>/2023/10/28/json-in-html/</url>
+    <content><![CDATA[<p>我们在开发爬虫的过程中，经常发现有一些网站，会直接把数据以JSON的形式，通过<code>&lt;script&gt;</code>标签放到页面源代码中。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017203837.png"></p>
+<p>有时候请求URL拿到HTML的过程比较麻烦，有些同学习惯先把HTML复制到代码里面，先把解析的逻辑写好，然后再去开发请求HTML的代码。</p>
+<p>这个思路本身是没有什么问题的，于是他们就写了如下的代码：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017204158.png"></p>
+<p>代码中的<code>html_data = &#39;&#39;&#39;</code>里面就是原样复制的网页HTML，没有做任何修改，因为太长了，我这里做了折叠。展开以后如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017204331.png"></p>
+<p>但当运行这段代码的时候，发现代码报错了，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017211730.png"></p>
+<p>看这个报错信息，难道说是JSON本身有问题？于是，你到网页上，把这个JSON复制下来：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017211909.png"></p>
+<p>使用JSONHero这种验证网站，进行验证，结果发现一切正常：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212033.png"></p>
+<p>这就见鬼了，为什么正则表达式提取的JSON就不对呢？你开启PyCharm的调试模式，看看正则表达式提取出来的JSON：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212214.png"></p>
+<p>你把提取出来的JSON复制粘贴到JSONHero网站上，竟然报错了：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212329.png"><br>到底是哪里有问题呢？为什么直接从网页上复制JSON就没有问题，而使用正则表达式提取的JSON就有问题呢？</p>
+<p>其实原因非常简单，问题就出现在HTML中的JSON里面的反斜杠：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017212617.png"></p>
+<p>我们知道，反斜杠是不能单独存在的，它有自己独特的意义。在代码里面，我使用了<code>&#39;&#39;&#39;</code>三个引号来抱住整个网页的HTML，这个时候，Python发现这里的<code>\&quot;</code>这种写法，会自动把反斜杠去掉。于是，正则表达式提取出来的JSON，引号就会出现冲突，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017213018.png"></p>
+<p>这样的JSON就会变成不合法的JSON。因为在JSON中，字符串内部作为普通字符的双引号，应该使用反斜杠转义，而这里的反斜杠被自动删除了。</p>
+<p>要解决这个问题，有三种方法：</p>
+<ul>
+<li>手动修改JSON里面的所有反斜杠，把每一根反斜杠变成两根反斜杠：<code>\&quot;</code> -&gt; <code>\\&quot;</code>。（太麻烦了，就不演示了）</li>
+<li>在三引号前加上<code>r</code>，此时Python会自动把所有的反斜杠转换为普通的字符串：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231017213410.png"></li>
+<li>把HTML写到文件里面，通过读文件的形式来读源代码。Python自动就会处理反斜杠。</li>
+</ul>
+<p>总结，这个问题只有在你直接把HTML粘贴到Python代码里面的时候会出现。如果你是直接使用Requests请求网页，或者你把HTML存到文件里面，通过读文件的形式来读HTML，那么Python都能自动处理好这个反斜杠的问题。</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
 </search>

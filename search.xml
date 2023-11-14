@@ -11053,4 +11053,31 @@ llo
         <tag>Docker</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：警告但不禁止，遗留代码的优化策略</title>
+    <url>/2023/11/14/typeddict/</url>
+    <content><![CDATA[<p>在之前的多篇文章中，我都反复告诫大家，不要滥用字典来传大量数据。因为当你的函数收到一个字典的时候，你根本不知道这个字典里面有哪些Key，你必须有一层一层往上看，找到所有尝试往字典里面添加新Key的地方，你才能知道它总共有哪些Key。</p>
+<p>但是，在正常公司项目中，我们可能会需要维护一些历史遗留代码。代码规模大，函数调用层级非常深。并且之前的人已经使用字典来传递了大量的数据。</p>
+<p>短时间内，我们没有办法直接把字典改成Dataclass。那么我们能做的，就是尽量避免后续的维护者往里面加入新的Key。我以前遇到过一个项目，它有一个字典，刚刚开始初始化的时候，只有5个Key。这个字典作为参数被传入了很多个函数，每个函数都会往它里面加很多个Key。到最后，这个字典里面已经有40多个Key了。</p>
+<span id="more"></span>
+
+<p>对历史遗留代码的修改，必须要谨小慎微，稍不注意改错一行代码，可能整个系统就不能工作了。因此，我们的目标是<code>尽量在不影响现有代码功能</code>的情况下，以<code>警告</code>而不是<code>禁止</code>的形式告诉其他开发者，不要再加Key进去了。如果你强行要加入，代码也能运行，但出问题你要自己负责。</p>
+<p>我们知道，Python 的类型标注正好就是警告但不禁止。当你的类型有问题时，他会告诉你这里有错，但你强行要运行，代码也能正常工作。</p>
+<p>对于字典，我们可以使用<code>TypedDict</code>来限制它能有哪些Key。我们来看一段代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> TypedDict  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="title class_ inherited__">TypedDict</span>):  </span><br><span class="line">    name: <span class="built_in">str</span>  </span><br><span class="line">    age: <span class="built_in">int</span>  </span><br><span class="line">    address: <span class="built_in">str</span>  </span><br><span class="line">    salary: <span class="built_in">int</span>  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">kingname: User = &#123;  </span><br><span class="line">    <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;青南&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;age&#x27;</span>: <span class="number">18</span>,  </span><br><span class="line">    <span class="string">&#x27;address&#x27;</span>: <span class="string">&#x27;上海&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;salary&#x27;</span>: <span class="number">9999999999</span>  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_dict</span>(<span class="params">user: User</span>):  </span><br><span class="line">    <span class="built_in">print</span>(user[<span class="string">&#x27;name&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<p>这只是一段看似非常普通的代码，在PyCharm也看不出有什么异常：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114205721.png"></p>
+<p>但当我想在函数里面，额外往字典加一个新字段时，就会发出警报：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114205854.png"></p>
+<p>这个警告在一定程度上，可以提醒其他人不要往字典中乱加Key。虽然强行添加也没有问题，但至少起到了提醒的作用。</p>
+<p>如果你在一开始初始化字典时，就把类型指定好，那么你一开始就必须提供所有字段，否则它也会发出警告，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114210236.png"></p>
+<p>这种情况下，我们可以在初始化字典时，不加类型标注，但在函数参数里面加上类型标注。那么这样以来，就能实现：<code>只能往字典添加特定的字段，不能添加额外字段</code>。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114210502.png"></p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
 </search>

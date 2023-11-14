@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-11-11T07:00:05.749Z</updated>
+  <updated>2023-11-14T13:22:43.434Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：警告但不禁止，遗留代码的优化策略</title>
+    <link href="https://www.kingname.info/2023/11/14/typeddict/"/>
+    <id>https://www.kingname.info/2023/11/14/typeddict/</id>
+    <published>2023-11-14T13:21:12.000Z</published>
+    <updated>2023-11-14T13:22:43.434Z</updated>
+    
+    <content type="html"><![CDATA[<p>在之前的多篇文章中，我都反复告诫大家，不要滥用字典来传大量数据。因为当你的函数收到一个字典的时候，你根本不知道这个字典里面有哪些Key，你必须有一层一层往上看，找到所有尝试往字典里面添加新Key的地方，你才能知道它总共有哪些Key。</p><p>但是，在正常公司项目中，我们可能会需要维护一些历史遗留代码。代码规模大，函数调用层级非常深。并且之前的人已经使用字典来传递了大量的数据。</p><p>短时间内，我们没有办法直接把字典改成Dataclass。那么我们能做的，就是尽量避免后续的维护者往里面加入新的Key。我以前遇到过一个项目，它有一个字典，刚刚开始初始化的时候，只有5个Key。这个字典作为参数被传入了很多个函数，每个函数都会往它里面加很多个Key。到最后，这个字典里面已经有40多个Key了。</p><span id="more"></span><p>对历史遗留代码的修改，必须要谨小慎微，稍不注意改错一行代码，可能整个系统就不能工作了。因此，我们的目标是<code>尽量在不影响现有代码功能</code>的情况下，以<code>警告</code>而不是<code>禁止</code>的形式告诉其他开发者，不要再加Key进去了。如果你强行要加入，代码也能运行，但出问题你要自己负责。</p><p>我们知道，Python 的类型标注正好就是警告但不禁止。当你的类型有问题时，他会告诉你这里有错，但你强行要运行，代码也能正常工作。</p><p>对于字典，我们可以使用<code>TypedDict</code>来限制它能有哪些Key。我们来看一段代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> TypedDict  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="title class_ inherited__">TypedDict</span>):  </span><br><span class="line">    name: <span class="built_in">str</span>  </span><br><span class="line">    age: <span class="built_in">int</span>  </span><br><span class="line">    address: <span class="built_in">str</span>  </span><br><span class="line">    salary: <span class="built_in">int</span>  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">kingname: User = &#123;  </span><br><span class="line">    <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;青南&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;age&#x27;</span>: <span class="number">18</span>,  </span><br><span class="line">    <span class="string">&#x27;address&#x27;</span>: <span class="string">&#x27;上海&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;salary&#x27;</span>: <span class="number">9999999999</span>  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_dict</span>(<span class="params">user: User</span>):  </span><br><span class="line">    <span class="built_in">print</span>(user[<span class="string">&#x27;name&#x27;</span>])</span><br></pre></td></tr></table></figure><p>这只是一段看似非常普通的代码，在PyCharm也看不出有什么异常：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114205721.png"></p><p>但当我想在函数里面，额外往字典加一个新字段时，就会发出警报：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114205854.png"></p><p>这个警告在一定程度上，可以提醒其他人不要往字典中乱加Key。虽然强行添加也没有问题，但至少起到了提醒的作用。</p><p>如果你在一开始初始化字典时，就把类型指定好，那么你一开始就必须提供所有字段，否则它也会发出警告，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114210236.png"></p><p>这种情况下，我们可以在初始化字典时，不加类型标注，但在函数参数里面加上类型标注。那么这样以来，就能实现：<code>只能往字典添加特定的字段，不能添加额外字段</code>。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231114210502.png"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;在之前的多篇文章中，我都反复告诫大家，不要滥用字典来传大量数据。因为当你的函数收到一个字典的时候，你根本不知道这个字典里面有哪些Key，你必须有一层一层往上看，找到所有尝试往字典里面添加新Key的地方，你才能知道它总共有哪些Key。&lt;/p&gt;
+&lt;p&gt;但是，在正常公司项目中，我们可能会需要维护一些历史遗留代码。代码规模大，函数调用层级非常深。并且之前的人已经使用字典来传递了大量的数据。&lt;/p&gt;
+&lt;p&gt;短时间内，我们没有办法直接把字典改成Dataclass。那么我们能做的，就是尽量避免后续的维护者往里面加入新的Key。我以前遇到过一个项目，它有一个字典，刚刚开始初始化的时候，只有5个Key。这个字典作为参数被传入了很多个函数，每个函数都会往它里面加很多个Key。到最后，这个字典里面已经有40多个Key了。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+  </entry>
   
   <entry>
     <title>老板让我加班怎么办？GPTs创建机器人实战</title>
@@ -460,31 +481,6 @@
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
     <category term="装饰器" scheme="https://www.kingname.info/tags/%E8%A3%85%E9%A5%B0%E5%99%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>轻声低语，藏在光芒下的语音转文字模型Whisper</title>
-    <link href="https://www.kingname.info/2023/04/15/whisper/"/>
-    <id>https://www.kingname.info/2023/04/15/whisper/</id>
-    <published>2023-04-15T13:51:11.000Z</published>
-    <updated>2023-04-15T15:50:37.886Z</updated>
-    
-    <content type="html"><![CDATA[<p>ChatGPT的模型<code>gpt-3.5-turbo</code>发布当天，OpenAI还开源了一个语音转文本的模型：Whisper。但由于ChatGPT本身太过于耀眼，很多人都忽略了Whisper的存在。</p><p>我当时也是这样，我一度以为，Whisper也是一个API，需要发送POST请求到OpenAI的服务器上，然后它传回识别的结果。所以我很长一段时间一直都没有试用过这个模型。</p><p>直到前几天，我看到有人在少数派上面发了一篇文章，介绍他刚做的语音识别App，并且说这个App基于Whisper，完全不需要联网。我当时还奇怪，不联网你怎么调Whisper的API？于是我终于去认真了解了一下Whisper，发现它是OpenAI开源的语音转文字的模型，并不是API服务。这个模型只需要有Python就能本地离线运行，不需要联网。</p><span id="more"></span><p>Whisper的Github地址为：<a href="https://github.com/openai/whisper">https://github.com/openai/whisper</a>，在Python下用起来非常简单：</p><p>首先安装第三方库：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip install openai-whisper</span><br></pre></td></tr></table></figure><p>接下来，在电脑上安装<code>ffmpeg</code>。以下是各种系统下的安装命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># on Ubuntu or Debian</span></span><br><span class="line">sudo apt update &amp;&amp; sudo apt install ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on Arch Linux</span></span><br><span class="line">sudo pacman -S ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on MacOS using Homebrew (https://brew.sh/)</span></span><br><span class="line">brew install ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on Windows using Chocolatey (https://chocolatey.org/)</span></span><br><span class="line">choco install ffmpeg</span><br><span class="line"></span><br><span class="line"><span class="comment"># on Windows using Scoop (https://scoop.sh/)</span></span><br><span class="line">scoop install ffmpeg</span><br></pre></td></tr></table></figure><p>以上就是全部的准备工作了。我们来测试一下这个模型的准确率有多高。下面是我的一段录音：</p><blockquote><p>录音可以在<a href="https://mp.weixin.qq.com/s/45rKugFD9eYwGOKn4IJOmw">公众号</a>收听：</p></blockquote><p>录音文件地址为：<code>/Users/kingname/Downloads/公众号演示.m4a</code>。那么编写如下代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> whisper</span><br><span class="line"></span><br><span class="line">model = whisper.load_model(<span class="string">&quot;base&quot;</span>)</span><br><span class="line">result = model.transcribe(<span class="string">&quot;/Users/kingname/Downloads/公众号演示.m4a&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(result[<span class="string">&quot;text&quot;</span>])</span><br></pre></td></tr></table></figure><p>第一次加载模型时，它会自动去拉取模型文章。不同的模型文件大小不一样。拉取完成以后，后面再次使用就不需要联网了。</p><p>生成效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415211136.png"></p><p>虽然有一两个错别字，但基本无伤大雅。更换更大的模型以后，准确率可以进一步提升：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415211745.png"></p><p>我们知道，语音识别最麻烦的就是同音字，这种情况我们可以使用Whisper配合ChatGPT来进行纠正：</p><blockquote><p>录音可以在<a href="https://mp.weixin.qq.com/s/45rKugFD9eYwGOKn4IJOmw">公众号</a>收听。</p></blockquote><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415214623.png"></p><p>直接识别出来基本都是错别字，因为专有名词+同音字，必须通过联系上下文才能知道应该使用哪个字。我们让ChatGPT来改写一下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230415210735.png"></p><p>经过测试，<code>small</code>模型对中文的识别效果已经非常好了，它运行起来会占用2GB左右的内存。速度也非常快。当我们想从一段视频里面把音频转成文字，或者自己做播客想生成字幕时，用这个模型就非常方便，完全免费，还不用担心自己的声音别泄露出去。</p><p>虽然Whisper是国外公司做的，但是它对中文的识别效果目前超过了国内许多大厂的中文语音识别产品。其中包括以语音识别著称的某飞公司，他们的产品效果经过测试没有Whisper好。这也说明了国内语音识别技术尚需进一步提升，需要更多的研究和开发。在这方面，国产货还有很大的努力空间，需要不断地探索和创新，以便更好地满足用户的需求。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;ChatGPT的模型&lt;code&gt;gpt-3.5-turbo&lt;/code&gt;发布当天，OpenAI还开源了一个语音转文本的模型：Whisper。但由于ChatGPT本身太过于耀眼，很多人都忽略了Whisper的存在。&lt;/p&gt;
-&lt;p&gt;我当时也是这样，我一度以为，Whisper也是一个API，需要发送POST请求到OpenAI的服务器上，然后它传回识别的结果。所以我很长一段时间一直都没有试用过这个模型。&lt;/p&gt;
-&lt;p&gt;直到前几天，我看到有人在少数派上面发了一篇文章，介绍他刚做的语音识别App，并且说这个App基于Whisper，完全不需要联网。我当时还奇怪，不联网你怎么调Whisper的API？于是我终于去认真了解了一下Whisper，发现它是OpenAI开源的语音转文字的模型，并不是API服务。这个模型只需要有Python就能本地离线运行，不需要联网。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="语音转文字" scheme="https://www.kingname.info/tags/%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97/"/>
-    
-    <category term="OpenAI" scheme="https://www.kingname.info/tags/OpenAI/"/>
     
   </entry>
   

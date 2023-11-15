@@ -1,3 +1,4 @@
+https://www.kingname.info/2023/11/15/git-worktree/
 https://www.kingname.info/2023/11/14/typeddict/
 https://www.kingname.info/2023/11/11/gpts/
 https://www.kingname.info/2023/11/11/python-run-other-code/

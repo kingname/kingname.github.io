@@ -11080,4 +11080,37 @@ llo
         <tag>Python</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：如何同时在多个分支写代码？</title>
+    <url>/2023/11/15/git-worktree/</url>
+    <content><![CDATA[<p>当我们在维护公司项目时，可能会遇到这样的场景：我正在开发一个新功能，突然需要修一个Bug。</p>
+<p>这个时候，有些同学是这样做的：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&#x27;WIP&#x27;</span></span><br><span class="line">git checkout -b 新的分支名</span><br><span class="line"></span><br><span class="line">...新的代码修改完成并push以后...</span><br><span class="line"></span><br><span class="line">git checkout 老分支</span><br><span class="line">...继续开发...</span><br></pre></td></tr></table></figure>
+
+<p>更有一些经验的同学，可能会这样写：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git stash</span><br><span class="line">git checkout -b 新的分支</span><br><span class="line">...新的代码修改完成并push以后...</span><br><span class="line">git checkout 老分支</span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure>
+
+<p>但如果在修这个Bug的时候，又来了一个更紧急的Bug需要修怎么办？到后面很容易就把前面的代码搞忘了。</p>
+<span id="more"></span>
+
+<p>其实我们有更好的办法，那就是使用<code>git worktree</code>命令。这个命令甚至可以让你同时在10个分支上开发，并且1秒无负担切换到任意分支。</p>
+<p>假设现在我所在的项目文件夹为<code>/Users/kingname/Projects/JobCleaner</code>，在<code>feature</code>分支。现在来了一个Bug需要修复，于是，我只需要执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">git worktree add ../JobCleanerBugFix master</span><br><span class="line"><span class="built_in">cd</span> ../JobCleanerBugFix</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure>
+
+<p>此时，Git会自动在<code>/Users/kingname/Projects/</code>文件夹下面，创建一个新的文件夹<code>JobCleanerBugFix</code>。并且这个代码已经在master分支了。你可以直接使用PyCharm或者任何其他的代码编辑器，打开这个文件夹，然后像正常开发一样修复Bug。</p>
+<p>整个过程中，<code>/Users/kingname/Projects/JobCleaner</code>始终是你之前开发新功能的代码，假设你之前的PyCharm有一个窗口开着这个文件夹，那么你随时可以正常在里面修改代码。</p>
+<p>这个时候如果又来了一个更紧急的Bug了，那么你只需要在<code>/Users/kingname/Projects/JobCleaner</code>里面再次执行代码，创建第三个文件夹即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git worktree add ../JobCleanerP0Bug master</span><br><span class="line"><span class="built_in">cd</span> ../JobCleanerP0Bug</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure>
+
+<p>这三个文件夹互相独立，你的IDE可以分别打开这三个文件夹，同步修改任何代码。他们完全不会有任何影响，看起来就跟3个独立的项目一样。</p>
+<p>理论上你可以无限这样添加。</p>
+<p>当你在<code>/Users/kingname/Projects/JobCleanerP0Bug</code>下面已经改完了代码，你只需要正常提交就可以了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git add xxx.py yyy.py</span><br><span class="line">git commit -m <span class="string">&#x27;修复bug&#x27;</span></span><br><span class="line">git push origin master:bugfix</span><br></pre></td></tr></table></figure>
+
+<p>提交完成，确认没有任何问题以后，回到<code>/Users/kingname/Projects/JobCleaner</code>文件夹，执行命令<code>git worktree remove ../JobCleanerP0Bug/</code>，就会自动删除<code>/Users/kingname/Projects/JobCleanerP0Bug</code>文件夹。</p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
 </search>

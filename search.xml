@@ -11113,4 +11113,51 @@ llo
         <tag>Git</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：分布式系统的低成本权限校验机制</title>
+    <url>/2023/11/29/jwt/</url>
+    <content><![CDATA[<p>经常关注未闻Code的同学都知道，我做了一个叫做<a href="https://github.com/GeneralNewsExtractor/GeneralNewsExtractor">GNE</a>的开源项目，它能够自动提取新闻类网页的正文。效果远远好于市面上其他的开源新闻提取工具。</p>
+<p>大家可能不知道，GNE还有一个高级版，叫做GnePro。它可以让你输入URL就自动提取新闻的正文，提取的字段比GNE多得多。并且已经在8个国家13万个网站上做过测试，识别准确率100%。</p>
+<span id="more"></span>
+
+<p>GnePro是使用K8S搭建的爬虫集群。背后有几十台服务器，通过一个网关做负载均衡。在设计GnePro权限机制的时候，我希望它能够尽量简单，尽量不依赖第三方的组件。</p>
+<p>常规的权限校验机制一般是这样的，用户登录以后，在Cookies里面会有一个SessionId.当用户要查询数据时，往后端发起请求。后端从请求中拿到这个SessionId，到Redis或者其他数据库中，查询到这个用户的Session。在Session中，储存了用户的一些登录信息和权限信息。再根据这个权限信息返回用户有权限的内容。</p>
+<p>但这个方法需要额外引入Redis或者其他的数据库。那么这就面临着数据同步，并发冲突等等问题。</p>
+<p>我的需求很简单，只需要知道用户的账户什么时候过期，用户是什么等级就可以了。<code>V1</code>等级只能返回新闻正文，标题，发布时间，作者，图片。<code>V2</code>在<code>V1</code>的基础上，还可以返回面包屑，SEO数据，网页标签，支持JavaScript渲染。<code>V3</code>还可以返回经过清洗的网页正文源代码，支持用户上传HTML进行解析。因此，我不使用Session，而是使用JWT来实现。</p>
+<p>这种情况下，使用JWT非常合适。JWT不需要引入第三方的组件。任何一个服务器都能独立进行权限校验。</p>
+<p>例如，我定义一个数据结构，注明了用户现在是什么等级，这次授权什么时候过期：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">user_info = &#123;  </span><br><span class="line">    <span class="string">&#x27;level&#x27;</span>: <span class="string">&#x27;v2&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;expire&#x27;</span>: <span class="string">&#x27;2023-12-01 00:00:00&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;青南&#x27;</span>  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在Python中，使用<code>PyJWT</code>就能非常方便地生成JWT Token。首先使用pip安装PyJWT：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python3 -m pip install pyjwt</span><br></pre></td></tr></table></figure>
+
+<p>然后3行代码生成Token：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> jwt  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">user_info = &#123;  </span><br><span class="line">    <span class="string">&#x27;level&#x27;</span>: <span class="string">&#x27;v1&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;expire&#x27;</span>: <span class="string">&#x27;2023-12-01 00:00:00&#x27;</span>,  </span><br><span class="line">    <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;青南&#x27;</span>  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">password = <span class="string">&#x27;青南工资9999999999&#x27;</span>  </span><br><span class="line">  </span><br><span class="line">token = jwt.encode(user_info, password, algorithm=<span class="string">&#x27;HS256&#x27;</span>)  </span><br><span class="line"><span class="built_in">print</span>(token)</span><br></pre></td></tr></table></figure>
+
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231122205212.png"></p>
+<p>经常写爬虫的同学，可能对这个<code>eyJh</code>开头的字符串很熟悉，很多网站的Headers里面都有长成这样的Token。</p>
+<p>当一个用户在我这里充值了会员以后，我就生成一个token发给他。当他使用GnePro发起请求时，把这个Token放到Headers就可以了。</p>
+<p>我的后端收到请求以后，无论当前在哪个服务器上面，只需要执行下面几行代码，就能解析出用户权限信息：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> jwt  </span><br><span class="line">  </span><br><span class="line">token = <span class="string">&#x27;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsZXZlbCI6InYxIiwiZXhwaXJlIjoiMjAyMy0xMi0wMSAwMDowMDowMCIsIm5hbWUiOiJcdTk3NTJcdTUzNTcifQ.8xEkWL1pbtHKMXjrVsTtiY4JZnSMf--ufK3fiDp67SY&#x27;</span>  </span><br><span class="line">password = <span class="string">&#x27;青南工资9999999999&#x27;</span>  </span><br><span class="line">  </span><br><span class="line">user_info = jwt.decode(token, password, algorithms=[<span class="string">&#x27;HS256&#x27;</span>])  </span><br><span class="line"><span class="built_in">print</span>(user_info)</span><br></pre></td></tr></table></figure>
+
+<p>运行效果如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231122212341.png"></p>
+<p>需要注意的是，这个JWT Token看起来这么长一串，就跟密码一样，但其实我们可以直接使用<a href="https://jwt.io/">Jwt.io</a>这个网站进行解析，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231122212954.png"></p>
+<p>解析JWT Token是不需要密码的。但是生成&#x2F;修改JWT Token需要密码。如果密码不正确，就会生成另外一个JWT Token：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231122213944.png"></p>
+<p>这个Token虽然跟我刚刚生成的非常像，但是由于密码不对，我这边进行校验的时候就会报错：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231122214153.png"></p>
+<p>因此，我生成这个Token以后，我并不担心用户会把<code>level</code>改成<code>v3</code>。因为他没有我的密码，他生成的Token在我这里通不过验证。我就能知道这个Token是否被篡改过。</p>
+<p>整个校验过程只需要几行代码，不需要任何第三方组件。完美符合少即是多的原则。</p>
+<p>当然JWT并不能完全替代Session。因为Session可以实时控制用户的权限和行为。例如网站要做一个单点登录，用户在A浏览器登录，就会自动在B浏览器登出。这个功能单独使用JWT就做不到。</p>
+<p>有人可能会说，你在JWT的信息里面加个SessionId不就好了吗。后端读到SessionId对应的信息，就可以进行更多操作了。</p>
+<p>但这样做，跟直接在Cookies里面放SessionId有什么区别？JWT本来就是在轻量级的权限校验里面使用的。它有适合自己的场景。不需要成为Session。大家也不要把JWT当Session用。</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>后端</tag>
+      </tags>
+  </entry>
 </search>

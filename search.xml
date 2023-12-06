@@ -11172,6 +11172,8 @@ llo
 <li>支持自动提取网页全部URL</li>
 <li>在8个国家13万个新闻类网站进行测试,准确率高达90%</li>
 </ul>
+<span id="more"></span>
+
 <h2 id="提取文章正文"><a href="#提取文章正文" class="headerlink" title="提取文章正文"></a>提取文章正文</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;https://crawler.kingname.info/gne/crawl&quot;</span></span><br><span class="line"></span><br><span class="line">body = &#123;</span><br><span class="line">  <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://www.kingname.info/2023/10/17/rubbish/&quot;</span>,</span><br><span class="line">  <span class="string">&quot;js&quot;</span>: <span class="literal">False</span>,</span><br><span class="line">  <span class="string">&quot;charset&quot;</span>: <span class="string">&quot;auto&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line">  <span class="string">&#x27;token&#x27;</span>: <span class="string">&#x27;&lt;TOKEN&gt;&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">response = requests.post(url, headers=headers, json=body)</span><br><span class="line"></span><br><span class="line">response.json()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>返回数据如下：</p>

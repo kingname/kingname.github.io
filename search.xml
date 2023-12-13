@@ -11229,7 +11229,7 @@ llo
       </tags>
   </entry>
   <entry>
-    <title>一日一技：更自动提取任意信息的通用爬虫</title>
+    <title>一日一技：自动提取任意信息的通用爬虫</title>
     <url>/2023/12/13/really-general-spider/</url>
     <content><![CDATA[<p>使用过GNE的同学都知道，GNE虽然是通用爬虫，但只是文章类页面的通用爬虫。如果一个页面不是文章页，那么就无能为力了。</p>
 <p>随着ChatGPT引领的大语言模型时代到来，这个问题基本上已经不是问题了。我们先来看一个效果。首先打开Linkedin，随便找一个招聘的岗位，如下图所示：</p>

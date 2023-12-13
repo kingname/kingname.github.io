@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-12-06T13:39:22.337Z</updated>
+  <updated>2023-12-13T13:34:41.998Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：更自动提取任意信息的通用爬虫</title>
+    <link href="https://www.kingname.info/2023/12/13/really-general-spider/"/>
+    <id>https://www.kingname.info/2023/12/13/really-general-spider/</id>
+    <published>2023-12-13T13:30:35.000Z</published>
+    <updated>2023-12-13T13:34:41.998Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用过GNE的同学都知道，GNE虽然是通用爬虫，但只是文章类页面的通用爬虫。如果一个页面不是文章页，那么就无能为力了。</p><p>随着ChatGPT引领的大语言模型时代到来，这个问题基本上已经不是问题了。我们先来看一个效果。首先打开Linkedin，随便找一个招聘的岗位，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231213202941.png"></p><p>然后，我们直接使用GPT从这里提取信息：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231213202205.png"></p><span id="more"></span><p>对应的Prompt为：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">你是一个数据提取小助手，能够从一大段招聘相关的文本中提取有用的信息并以JSON格式返回。</span><br><span class="line"></span><br><span class="line">&#123;经过清洗的网页源代码或者文本&#125;</span><br><span class="line"></span><br><span class="line">请从上面的文本中，提取招聘相关的信息，返回数据格式如下： &#123;&quot;title&quot;: &quot;岗位名称&quot;, &quot;full_time&quot;: &quot;是否为全职&quot;, &quot;employee_num&quot;: &quot;雇员数量&quot;, &quot;level&quot;: &quot;岗位等级&quot;, &quot;skill&quot;: &quot;岗位需要的技能&quot;, &quot;desc&quot;: &quot;岗位描述&quot;, &quot;company&quot;: &quot;公司介绍&quot;, &quot;do&quot;: &quot;岗位具体做什么事情&quot;, &quot;requirement&quot;: &quot;岗位要求&quot;, &quot;goodpoint&quot;: &quot;优先录取条件&quot;&#125;</span><br></pre></td></tr></table></figure><p>在生产环境，我们显然不能使用GPT的网页版。但GPT API的收费比较贵，一般来说，GPT 3.5 Turbo的价格是每1000 Tokens收费0.002美元；GPT 4 Turbo的价格是每1000 Prompt Token收费0.01美元，每1000 Completion Tokens收费0.03美元。</p><p>如果我们直接把网页的源代码整个丢给GPT接口，那么费用是非常昂贵的。这种情况下，我们就应该先对网页源代码进行清洗，移除显然不需要的元素，从而大幅减少Token的占用。</p><p>首先，我们可以先移除一些显然不可能包含关键内容的标签：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">USELESS_TAG = [<span class="string">&#x27;style&#x27;</span>, <span class="string">&#x27;script&#x27;</span>, <span class="string">&#x27;link&#x27;</span>, <span class="string">&#x27;video&#x27;</span>, <span class="string">&#x27;iframe&#x27;</span>, <span class="string">&#x27;source&#x27;</span>, <span class="string">&#x27;picture&#x27;</span>, <span class="string">&#x27;header&#x27;</span>, <span class="string">&#x27;blockquote&#x27;</span>,  </span><br><span class="line">               <span class="string">&#x27;footer&#x27;</span>, <span class="string">&#x27;code&#x27;</span>]</span><br></pre></td></tr></table></figure><p>然后，我们可以根据一些元素的class属性，找到另外一批显然不可能包含关键内容的标签，一并移除：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">USELESS_ATTR = &#123;  </span><br><span class="line">                <span class="string">&#x27;share&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;contribution&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;copyright&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;copy-right&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;disclaimer&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;recommend&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;related&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;footer&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;comment&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;social&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;submeta&#x27;</span>,  </span><br><span class="line">                <span class="string">&#x27;report-infor&#x27;</span>,  </span><br><span class="line">                <span class="string">&quot;auto_modal&quot;</span>  </span><br><span class="line">                &#125;</span><br></pre></td></tr></table></figure><p>接下来，对于下面没有text()元素的标签，也可以移除。</p><p>清洗干净以后，我们再使用XPath：<code>normalize-space(string())</code>提取出页面上的文本，把文本发给GPT，就可以正常解析内容了。</p><p>具体清洗的代码，大家可以在<a href="https://github.com/GeneralNewsExtractor/GeneralNewsExtractor/blob/master/gne/utils.py">GNE的源代码</a>可以看到详细的清洗步骤和流程。</p><p>随着MistralAI前两天在推特上通过磁力链接的方式发布模型，我们可以预见到，未来开源大模型功能越来越强大的同时，对机器配置的需求会越来越低。我看有一些大模型的计费方案，已经改成每100万Token几毛钱了。所以未来通用爬虫的解析门槛会越来越低，就像我这篇文章给出的例子，你只需要写几段Prompt，就可以解析出你需要的内容。</p><p>以后做通用爬虫，唯一的技术挑战就是怎么获取到网页源代码。只要有了源代码，剩下的事情交给大模型就好了。</p><p>有一个好的爬虫代理，就能爬取绝大多数的网站。国内的代理供应商，一般隧道代理都是按并发数收费，性能都差不多。但国外的代理，不知道哪根筋不对，全都是按流量收费的。我调研了十多个海外代理供应商，最后综合评测下来亮代理还不错，虽然也是按流量收费，但代理可用性确实非常高。有兴趣的同学可以试一试，他们提供免费试用：<a href="https://get.brightdata.com/8n707n">Proxy - Bright Data</a></p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231213213401.png"></p><p>最后还是我前两年的观点，国内这边的工作环境会越来越恶劣，大家尽快放眼海外，爬虫出海，程序出海，才是未来的方向。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;使用过GNE的同学都知道，GNE虽然是通用爬虫，但只是文章类页面的通用爬虫。如果一个页面不是文章页，那么就无能为力了。&lt;/p&gt;
+&lt;p&gt;随着ChatGPT引领的大语言模型时代到来，这个问题基本上已经不是问题了。我们先来看一个效果。首先打开Linkedin，随便找一个招聘的岗位，如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231213202941.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;然后，我们直接使用GPT从这里提取信息：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231213202205.png&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+    <category term="通用爬虫" scheme="https://www.kingname.info/tags/%E9%80%9A%E7%94%A8%E7%88%AC%E8%99%AB/"/>
+    
+    <category term="ChatGPT" scheme="https://www.kingname.info/tags/ChatGPT/"/>
+    
+  </entry>
   
   <entry>
     <title>GnePro：文章类通用爬虫接口</title>
@@ -461,30 +488,6 @@
     <category term="iOS" scheme="https://www.kingname.info/tags/iOS/"/>
     
     <category term="抓包" scheme="https://www.kingname.info/tags/%E6%8A%93%E5%8C%85/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：方法不对，代码翻倍。Requests如何正确重试？</title>
-    <link href="https://www.kingname.info/2023/06/11/retry-in-requests/"/>
-    <id>https://www.kingname.info/2023/06/11/retry-in-requests/</id>
-    <published>2023-06-11T12:19:32.000Z</published>
-    <updated>2023-06-11T12:20:23.650Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>程序员是一个需要持续学习的群体，如果你发现你现在写的代码跟你5年前的代码没什么区别，说明你掉队了。</p></blockquote><p>我们在做Python开发时，经常使用一些第三方库，这些库很多年来持续添加了新功能。但我发现很多同学在使用这些第三方库时，根本不会使用新的功能。他们的代码跟几年前没有任何区别。</p><span id="more"></span><p>举个例子，使用Request发起HTTP请求，请求失败时，不管什么原因，原地重试最多3次。很多人主要有下面3种写法来重试。</p><h2 id="常见的老方法"><a href="#常见的老方法" class="headerlink" title="常见的老方法"></a>常见的老方法</h2><h3 id="使用第三方库"><a href="#使用第三方库" class="headerlink" title="使用第三方库"></a>使用第三方库</h3><p>这类同学会使用一些专业做重试的第三方库，例如tenacity。详见我的这篇文章：<a href="https://mp.weixin.qq.com/s/7Dj-RpHsbGFZu_iPlkCU0w">Tenacity——Exception Retry 从此无比简单</a></p><h3 id="手动写装饰器"><a href="#手动写装饰器" class="headerlink" title="手动写装饰器"></a>手动写装饰器</h3><p>这类同学会使用装饰器，所以一般会手写装饰器从而复用，例如：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">retry</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrap</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                result = func(*args, **kwargs)</span><br><span class="line">                <span class="keyword">return</span> result</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;报错了，重试&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> wrap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@retry</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_request</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;以下是发起请求的相关代码&#x27;</span>)</span><br></pre></td></tr></table></figure><h3 id="反复for循环"><a href="#反复for循环" class="headerlink" title="反复for循环"></a>反复for循环</h3><p>还有一些同学，写代码走的是野路子：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):  <span class="comment"># 重试10次</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            resp = requests.get(<span class="string">&#x27;某某URL&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> resp.json()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;请求报错了，重试第<span class="subst">&#123;i&#125;</span>次&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br></pre></td></tr></table></figure><p>这类同学基本不会复用代码。代码里面要向N个url发起请求，他们就会在N个地方像上面这样写代码。</p><h2 id="新的方法"><a href="#新的方法" class="headerlink" title="新的方法"></a>新的方法</h2><p>这里我虽然说是新方法，但是这个方法应该至少在9年前就能用了。只是网上用的人比较少。我们可以使用requests自带的<code>HTTPAdapter</code>来实现自动重试。当我们不关心具体报错是什么，只需要机械重试时，就可以使用这个方法：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> requests.adapters <span class="keyword">import</span> HTTPAdapter, Retry</span><br><span class="line"></span><br><span class="line">session = requests.Session()</span><br><span class="line">retries = Retry(total=<span class="number">3</span>, backoff_factor=<span class="number">1</span>)</span><br><span class="line">session.mount(<span class="string">&#x27;http://&#x27;</span>, HTTPAdapter(max_retries=retries))</span><br><span class="line">session.mount(<span class="string">&#x27;https://&#x27;</span>, HTTPAdapter(max_retries=retries))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接下来使用session发起的所有请求，默认最多会重试3次</span></span><br><span class="line">session.get(<span class="string">&#x27;http://httpbin.org/delay/5&#x27;</span>, timeout=<span class="number">2</span>)</span><br><span class="line">session.get(<span class="string">&#x27;https://www.kingname.info&#x27;</span>)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;程序员是一个需要持续学习的群体，如果你发现你现在写的代码跟你5年前的代码没什么区别，说明你掉队了。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;我们在做Python开发时，经常使用一些第三方库，这些库很多年来持续添加了新功能。但我发现很多同学在使用这些第三方库时，根本不会使用新的功能。他们的代码跟几年前没有任何区别。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   

@@ -160,7 +160,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">222</span>
+          <span class="site-state-item-count">223</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -195,6 +195,111 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2015/01/08/%E6%B8%85%E7%A9%BAGithub%E4%B8%8A%E6%9F%90%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%86%E5%8F%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="青南">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 谢乾坤 | Kingname">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2015/01/08/%E6%B8%85%E7%A9%BAGithub%E4%B8%8A%E6%9F%90%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%86%E5%8F%B2/" class="post-title-link" itemprop="url">清空Github上某个文件的历史</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-01-08 16:04:53" itemprop="dateCreated datePublished" datetime="2015-01-08T16:04:53+08:00">2015-01-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BB%8F%E9%AA%8C/" itemprop="url" rel="index"><span itemprop="name">经验</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>210</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>文章首发地址：<a target="_blank" rel="noopener" href="http://kingname.info/">http://kingname.info</a></p>
+<p>今天在Github更新代码的时候，不小心把Gmail私钥文件更新上去了。即便我立刻删除了这个文件，可是在版本历史里面仍然可以看到这个文件的内容。这可把我吓坏了。</p>
+<p>Google一圈以后，终于找到了解决办法。把某个文件的历史版本全部清空。</p>
+<p>首先cd 进入项目文件夹下，然后执行以下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git filter-branch --force --index-filter &#x27;git rm --cached --ignore-unmatch 文件名&#x27; --prune-empty --tag-name-filter cat -- --all</span><br><span class="line"></span><br><span class="line">git push origin master --force</span><br><span class="line"></span><br><span class="line">rm -rf .git/refs/original/</span><br><span class="line"></span><br><span class="line">git reflog expire --expire=now --all</span><br><span class="line"></span><br><span class="line">git gc --prune=now</span><br><span class="line"></span><br><span class="line">git gc --aggressive --prune=now</span><br></pre></td></tr></table></figure>
+<p>虽然不知道他们的作用是什么，不过真的解决了我的问题。看起来，以前我说我熟练掌握git，真是自不量力。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1411,174 +1516,6 @@ llo
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/15/%E4%BF%AE%E6%94%B9Coney%E4%B8%BB%E9%A2%98%E4%B9%8B%E4%BE%A7%E8%BE%B9%E6%A0%8F%E7%A7%BB%E4%BD%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="青南">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="谢乾坤 | Kingname">
-      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 谢乾坤 | Kingname">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2014/12/15/%E4%BF%AE%E6%94%B9Coney%E4%B8%BB%E9%A2%98%E4%B9%8B%E4%BE%A7%E8%BE%B9%E6%A0%8F%E7%A7%BB%E4%BD%8D/" class="post-title-link" itemprop="url">修改Coney主题之侧边栏移位</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2014-12-15 18:09:54" itemprop="dateCreated datePublished" datetime="2014-12-15T18:09:54+08:00">2014-12-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coney_0.jpg"></p>
-<p>Coney是一个非常漂亮的Hexo主题，作者的博客请戳-&gt;<a target="_blank" rel="noopener" href="http://gengbiao.me/">http://gengbiao.me/</a> 本博客的主题是基于Coney修改而成。</p>
-<p>我个人比较喜欢侧边栏在左边，于是我希望能将右侧的侧边栏整体移动到左边去。大家对比我的博客首页和主题作者的博客首页就可以看出不同。</p>
-<p>在修改之前，需要解释一下div标签。不讲定义，只举例子。大家注意这篇文章的配图。设想有这样一个场景，你要搬家，从成都搬到北京。你可以一件一件的把家里的东西搬出来，然后运到北京，再放进新的家。也可以，把你的整个房子连根撬起来，用超人或者热气球直接运送到北京去。这么做的好处是，你只需要搬房子，而房子里面的东西完全不受影响。div标签就可是实现这样的功能。</p>
-<p>使用Chrome的审查元素功能，可以发现这个主题首页的正文部分的布局是这样的：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyconey_layout.png"></p>
-<p>其中A，B分别是控制侧边栏开启和关闭的开关，A是openaside, B是closeaside，在侧边栏开启的时候，A是隐藏的。</p>
-<p>当然实际的布局里还有其他div，但是当我只需要知道你有一个房子，房子里有几间房间的时候，我是没有必要去关心你卫生间里是马桶还是痰盂的。</p>
-<p>那么现在目标就是，把asidepart，openaside这两个东西移动到左边，把main移动到右边。我这里没有说closeaside，不是笔误，而是因为closeaside是在asidepart里面的，因此移动asidepart的时候，closeaside跟着就移动了。</p>
-<p>打开themes\coney\source\css_partial文件夹，发现有一个aside.styl文件，根据名字猜测，这个东西应该就是关于侧边栏的布局了。</p>
-<p>打开aside.styl文件，发现这其实就是一个css文件。首先看到前面几段代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">//button</span><br><span class="line">.openaside</span><br><span class="line">  display none</span><br><span class="line">  position fixed</span><br><span class="line">  right 7.5%</span><br><span class="line">  top 260px</span><br><span class="line">  a</span><br><span class="line">    display block</span><br><span class="line">    color color-white</span><br><span class="line">    border 1px solid color-white</span><br><span class="line">    border-radius 5px</span><br><span class="line">    background color-theme</span><br><span class="line">    padding 0.2em 0.55em</span><br><span class="line">    &amp;::before</span><br><span class="line">      font-family font-icon-family</span><br><span class="line">      font-smoothing()</span><br><span class="line">      content &quot;\f0c9&quot;</span><br><span class="line"></span><br><span class="line">.closeaside</span><br><span class="line">  display none</span><br><span class="line">  a</span><br><span class="line">    color color-theme</span><br><span class="line">    &amp;:hover</span><br><span class="line">      color color-blue</span><br><span class="line">    &amp;::before</span><br><span class="line">      font-family font-icon-family</span><br><span class="line">      font-smoothing()</span><br><span class="line">      content &quot;\f0c9&quot;</span><br><span class="line">  @media tablet</span><br><span class="line">    display block</span><br><span class="line">    position absolute</span><br><span class="line">    right 25px</span><br><span class="line">    top 22px</span><br><span class="line"></span><br><span class="line">//sidebar</span><br><span class="line">#asidepart</span><br><span class="line">  background color-section</span><br><span class="line">  margin 1em 0 0</span><br><span class="line">  padding 0.5em 2% 1em</span><br><span class="line">  @media tablet</span><br><span class="line">    position relative</span><br><span class="line">    float left</span><br><span class="line">    width 18%</span><br><span class="line">    margin 2em 0 0 3%</span><br></pre></td></tr></table></figure>
-<p>Coney作者的命名方式非常好，于是我们很容易就看到了需要的内容。<br>在.openaside下面，看到一个</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">right 7.5%</span><br></pre></td></tr></table></figure>
-<p>当我们隐藏了侧边栏以后，看到的小方块，就是箭头指向的这个</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside.jpg"></p>
-<p>如果我把这个right改成left会有什么效果呢？不妨一试</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside_change1.jpg"></p>
-<p>看起来有点效果了。那么继续看下面的.closeaside</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">right 25px</span><br></pre></td></tr></table></figure>
-<p>尝试把right修改为left,对比一下前后效果：</p>
-<p>修改前：</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneycloseaside1.jpg"></p>
-<p>修改后:</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneycloseaside2.jpg"></p>
-<p>这个小图标在侧边栏里面的相对位置改变了，这就像是你从家里的卧室走到了厨房。你并不关心房子外面是不是奥特曼在打小怪兽。你只是换了一个房间。</p>
-<p>再往下走，发现#asidepart下面有个</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">position relative</span><br><span class="line">float left</span><br></pre></td></tr></table></figure>
-<p>我想把侧边栏从右边移动到左边，那这里应该有个right才对，为什么它竟然是left？而且position的意思是位置，relative是相对，也就是说是相对位置？很奇怪，先不动它。</p>
-<p>再来找找main在哪里。在themes\coney\source\css_partial下面的index.styl里发现了它。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#main</span><br><span class="line">  margin 1em 0 0</span><br><span class="line">  line-height line-height+0.3</span><br><span class="line">  @media tablet</span><br><span class="line">    margin 2em 0 0</span><br><span class="line">    width 75%</span><br><span class="line">    position relative</span><br><span class="line">    float left</span><br><span class="line">    transition margin 0.5s ease-out</span><br></pre></td></tr></table></figure>
-<p>这里发现了一个left，既然我想把main从左边移动到右边，那就尝试把这个left改成right,然后测试一下效果。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymain_right.jpg"></p>
-<p>哈哈，成了！</p>
-<p>等等，别高兴的太早，点一下关闭侧边栏的按钮试一试。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymain_change2.jpg"></p>
-<p>是不是感觉怪怪的？对比一下作者的博客效果</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneyopenaside.jpg"></p>
-<p>隐藏侧边栏以后，文章列表应该向右移动，那我把侧边栏移动到左边并隐藏以后，文章列表应该向左移动才对啊！可是它为什么死在那里了？</p>
-<p>经过询问作者，我得知这个文章列表的移动的相关javascript代码在after_footer.ejs文件中。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">var m = $(&#x27;#main&#x27;),</span><br><span class="line">      a = $(&#x27;#asidepart&#x27;),</span><br><span class="line">      c = $(&#x27;.closeaside&#x27;),</span><br><span class="line">      o = $(&#x27;.openaside&#x27;);</span><br><span class="line">...........</span><br><span class="line"></span><br><span class="line">c.click(function()&#123;</span><br><span class="line">    a.addClass(&#x27;fadeOut&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);</span><br><span class="line">    o.css(&#x27;display&#x27;, &#x27;block&#x27;).addClass(&#x27;fadeIn&#x27;);</span><br><span class="line">    m.addClass(&#x27;moveMain&#x27;);</span><br><span class="line">  &#125;);</span><br><span class="line">  o.click(function()&#123;</span><br><span class="line">    o.css(&#x27;display&#x27;, &#x27;none&#x27;).removeClass(&#x27;beforeFadeIn&#x27;);</span><br><span class="line">    a.css(&#x27;display&#x27;, &#x27;block&#x27;).removeClass(&#x27;fadeOut&#x27;).addClass(&#x27;fadeIn&#x27;);      </span><br><span class="line">    m.removeClass(&#x27;moveMain&#x27;);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
-<p>虽然我不会javascript，但是根据这段代码，猜一下意思：</p>
-<pre><code>当关闭侧边栏(closeaside)按钮被点击，就添加一个叫做moveMain的东西；
-当打开侧边栏(openaside)的按钮被点击，就移除这个叫做moveMain的东西。
-</code></pre>
-<p>觉得moveMain很可疑，而且move移动，Main就是文章列表的div的名字，这个解释天衣无缝啊。</p>
-<p>我在themes\coney\source\css_partial文件夹下面的index.styl中找到了这个moveMain</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.moveMain</span><br><span class="line">  margin-left 10% !important</span><br></pre></td></tr></table></figure>
-<p>网上搜索了一下，发现margin-left的意思是：</p>
-<blockquote>
-<p>margin-left 属性设置元素的左外边距。</p>
-</blockquote>
-<p>就是距离左侧10%的距离，假设原来的距离小于10%，当我点了关闭侧边栏以后，为了让main距离左侧的距离达到10%，不就正好的是向右移动吗？</p>
-<p>既然这个解释天衣无缝，那就把left改成right试一试效果。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneymove.jpg"></p>
-<p>这样看起来似乎已经达到效果了，但是感觉有些地方不太和谐。</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis.jpg"></p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis2.jpg"></p>
-<p>侧边栏距离文章列表太近了。</p>
-<p>这个时候就要用到Chrome的强大功能了，启动审查元素功能，定位到侧边栏</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis3.jpg"></p>
-<p>注意右侧</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">margin 2em 0 0 3%</span><br></pre></td></tr></table></figure>
-<p>margin是边界的意思，那么右边四个数据应该就是控制侧边栏上下左右距离的了。尝试修改，发现吧3%改成0的时候，出现了我希望的效果</p>
-<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/change_coneydis4.jpg"></p>
-<p>这个数据是在aside.styl中，修改以后生成页面，完美实现了需求的功能。你在首页或者这个页面都可以看到最终效果。</p>
-<p>需要说明的是，虽然我写了这么长一篇，但是我实际上是没有CSS基础的，都是自己摸索，所以你也可以做出自己的主题。</p>
-<p>既然选择了Hexo，也就选择了折腾。</p>
-<p>生命不息，折腾不止。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/21/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/23/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1604,14 +1541,14 @@ llo
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">244k</span>
+    <span title="站点总字数">245k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">13:33</span>
+    <span title="站点阅读时长">13:36</span>
   </span>
 </div>
 <div class="busuanzi-count">

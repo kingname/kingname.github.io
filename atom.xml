@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2023-12-13T14:03:29.092Z</updated>
+  <updated>2023-12-27T14:11:26.845Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一测：Bright Data的海外代理测试</title>
+    <link href="https://www.kingname.info/2023/12/27/test-bright-data-proxy/"/>
+    <id>https://www.kingname.info/2023/12/27/test-bright-data-proxy/</id>
+    <published>2023-12-27T14:10:08.000Z</published>
+    <updated>2023-12-27T14:11:26.845Z</updated>
+    
+    <content type="html"><![CDATA[<p>上周的公众号文章提到了Bright Data提供的代理服务。没想到他们的运营同学竟然找上了门，问我能不能帮他们做一个评测。</p><p>我之前使用Bright Data的代理，是因为突然有一天我的HuggingFace爬虫挂了。比较奇怪的是，这个爬虫在我电脑上始终正常运行，但一放到服务器上就请求失败。联想到HuggingFace被封了，而这个爬虫之前一直使用的国内代理供应商，那么原因就很明显了。因为我的电脑是24小时挂着梯子的，所以能够正常访问HuggineFace，但爬虫部署到服务器上面以后，他会自动使用配置好的国内代理。由于国内代理也受到GFW的影响，因此也会出问题。</p><span id="more"></span><p>首先看一下Bright Data他们代理的基本功能，基于数据中心的隧道代理和基于住宅IP的隧道代理还有基于Sim卡的隧道代理。海外代理都是按流量收费的，确实比较贵，如下图所示。数据中心的代理IP，每GB流量收费0.1美元。住宅IP的代理IP，每GB流量收费15美元。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224133835.png"><br>以数据中心代理为例，我开通的是隧道代理，只需要设置一个固定的地址，爬虫每次请求自动都会使用不同的IP。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224150206.png"></p><p>当我们不使用代理时，访问HuggingFace会出现一直没有响应最后超时的情况。当我们在海外服务器上面使用代理访问HuggingFace时，一切正常。</p><p>作为海外代理，Bright Data的隧道IP在海外服务器上面访问HuggingFace是正常的。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224151844.png"><br>需要注意的是，这种爬虫代理不是梯子。直接使用它，在国内是无法访问墙外网站的。GFW有一万种方法识别它。所以我们只有使用海外的服务器来运行。这不是Bright Data的问题，所有爬虫代理都是这样的。</p><p>我们今天测试一下代理的稳定性。在测试其他很多代理供应商时，请求量多了经常会出现<code>Caused by ProxyError(&#39;Cannot connect to proxy&#39;...</code>这种报错，还需要我们自己来写重试逻辑。而Bright Data的隧道代理把所有重试都帮我们做了。我们分别在我家的宽带和我的Azure香港服务器上面，测试数据中心IP和住宅IP的代理可用情况。</p><p>测试代码如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">proxies = &#123;</span><br><span class="line">    <span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://帐号:密码@brd.superproxy.io:22225&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https&#x27;</span>: <span class="string">&#x27;http://帐号:密码@brd.superproxy.io:22225&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = requests.get(<span class="string">&#x27;https://lumtest.com/myip.json&#x27;</span>, proxies=proxies, timeout=<span class="number">5</span>)</span><br><span class="line">        info = response.json()</span><br><span class="line">        info.update(info.pop(<span class="string">&#x27;geo&#x27;</span>))</span><br><span class="line">        info.update(info.pop(<span class="string">&#x27;asn&#x27;</span>))</span><br><span class="line">        result.append(info)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(result)</span><br><span class="line"><span class="built_in">len</span>(df.index)</span><br></pre></td></tr></table></figure><p>数据中心代理，在我家的网络进行测试：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224152521.png"><br>测试下来，100次请求，有7次请求超过5秒报错。剩下93次在5秒内完成。这93次成功请求的信息如下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224152853.png"></p><p>国家分布如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224153022.png"></p><p>说明Bright Data的代理确实在全球分布的。</p><p>当我把timeout设置为10秒时，只有2次请求超时。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224154532.png"></p><p>当我把timeout设置成20秒时，所有请求全部成功。经过多次测试，所有请求最终都能在20秒内完成，不会出现除了超时外的其他报错。说明他们内部做了异常的自动重试机制，能确保你的请求始终能够成功。</p><p>接下来，我在Azure香港服务器上面测试，这次稳定性高了不少，100次请求只有1次超过了5秒。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224142638.png"></p><p>把timeout设置成10秒以后，所有请求全部成功。</p><p>接下来，测试住宅IP的使用请求。更换了帐号密码以后，在我家的网络测试效果如下：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224143650.png"></p><p>有88次请求能够在5秒内完成。12次请求超过5秒报错。注意图中的红色警报并不是错误。是因为家庭代理需要安装Bright Data的证书。如果不使用证书，就需要在Requests的请求中加上<code>verify=False</code>。于是Request就会有这个警告。</p><p>在Azure香港服务区测试住宅IP的效果如下图所示，所有请求全部能够在5秒内完成。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224144329.png"></p><p>经过这次测试，可以看到Bright Data的稳定性还是不错的。除了代理外，Bright Data还提供爬虫浏览器和验证码破解接口。大家有空可以试一试。扫码注册可以获得免费试用。</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231213213401.png"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;上周的公众号文章提到了Bright Data提供的代理服务。没想到他们的运营同学竟然找上了门，问我能不能帮他们做一个评测。&lt;/p&gt;
+&lt;p&gt;我之前使用Bright Data的代理，是因为突然有一天我的HuggingFace爬虫挂了。比较奇怪的是，这个爬虫在我电脑上始终正常运行，但一放到服务器上就请求失败。联想到HuggingFace被封了，而这个爬虫之前一直使用的国内代理供应商，那么原因就很明显了。因为我的电脑是24小时挂着梯子的，所以能够正常访问HuggineFace，但爬虫部署到服务器上面以后，他会自动使用配置好的国内代理。由于国内代理也受到GFW的影响，因此也会出问题。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
+    
+    <category term="代理" scheme="https://www.kingname.info/tags/%E4%BB%A3%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：自动提取任意信息的通用爬虫</title>
@@ -461,33 +483,6 @@
     
     
     <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：iOS抓包最简单方案</title>
-    <link href="https://www.kingname.info/2023/07/16/easy-capture-packet-in-ios/"/>
-    <id>https://www.kingname.info/2023/07/16/easy-capture-packet-in-ios/</id>
-    <published>2023-07-16T13:12:58.000Z</published>
-    <updated>2023-07-16T13:13:51.534Z</updated>
-    
-    <content type="html"><![CDATA[<p>写过爬虫的同学都知道，当我们想对App或者小程序进行抓包时，最常用的工具是Charles、Fiddler或者MimtProxy。但这些软件用起来非常复杂。特别是当你花了一两个小时把这些软件搞定的时候，别人只用了15分钟就已经手动把需要的数据抄写完成了。</p><h2 id="我的需求"><a href="#我的需求" class="headerlink" title="我的需求"></a>我的需求</h2><p>如果你不是专业的爬虫开发者，那么大多数时候你的抓包需求都是很小的需求，手动操作也不是不能。这种时候，我们最需要的是一种简单快捷的，毫不费力的方法来解放双手。</p><p>例如我最近在玩《塞尔达传说——王国之泪》，我有一个小需求，就是想找到防御力最大的帽子、衣服和裤子来混搭。这些数据，在一个叫做『Jump』的App上面全都有，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_2413.PNG"></p><p>防具总共也就几十个，肉眼一个一个看也没问题，就是费点时间而已。那么，如果我想高效一些，有没有什么简单办法通过抓包再加上Python写几行代码来筛选，快速找到我想要的数据呢？</p><span id="more"></span><h2 id="手机上的操作"><a href="#手机上的操作" class="headerlink" title="手机上的操作"></a>手机上的操作</h2><p>实际上，方法非常简单。我们只需要在手机上安装一个App，叫做『Stream』，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215107.png"></p><p>这个软件在App Store国区就可以下载。</p><p>第一次打开这个App的时候，我们设置一下根证书，点击下图中箭头指向的这个按钮：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215253.png"></p><p>他会一步一步指导你安装根证书。整个过程不超过30秒，这里我就不再赘述了。</p><p>安装完成根证书以后，我们点击『开始抓包』按钮。此时，手机上面所有的流量就会经过Stream并抓取下来。</p><p>我们打开Jump App，找到防具列表，然后不停往下滑动屏幕，直到滑到最下面。</p><p>然后回到Stream，点击『停止抓包』按钮。抓包过程就完成了。</p><p>我们点击『抓包历史』按钮，找到刚刚抓到的数据包，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215823.png"></p><p>按域名进行筛选，方便找到Jump App发送的HTTP请求。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706215939.png"></p><p>打开请求以后，点击『响应』-『查看响应』按钮，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220139.png"></p><p>我们就能看到如下图所示请求体，这确实就是防具对应的数据包，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220231.png"></p><p>我们现在，需要使用筛选功能，选出所有获取防具信息的后端请求。所以先到『请求选项卡』，查看一下URL的规律，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220643.png"></p><p>回到请求列表页，点击右上角的放大镜进行筛选，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220741.png"></p><p>筛选以后，只有5个请求了，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706220816.png"></p><p>最后一步，我们点击右上角的『编辑』按钮，选中所有请求，并点击右下角的『导出HAR』，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706221022.png"></p><p>大家可以使用AirDrop或者微信发送到电脑上。到此为止，手机上的所有操作就已经结束了。接下来我们来到电脑上，写一段Python代码来解析这个HAR文件。</p><h2 id="写一点点代码"><a href="#写一点点代码" class="headerlink" title="写一点点代码"></a>写一点点代码</h2><p>这段代码非常简单，大家可以直接复制：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> brotli</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> haralyzer <span class="keyword">import</span> HarParser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;/Users/kingname/Downloads/Stream-2023-07-06 22:08:44.har&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    har_parser = HarParser(json.loads(f.read()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">data = har_parser.har_data</span><br><span class="line">entries = data[<span class="string">&#x27;entries&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> entry <span class="keyword">in</span> entries:</span><br><span class="line">    text = entry[<span class="string">&#x27;response&#x27;</span>][<span class="string">&#x27;content&#x27;</span>][<span class="string">&#x27;text&#x27;</span>]</span><br><span class="line">    content = brotli.decompress(base64.b64decode(text)).decode()</span><br><span class="line">    info = json.loads(content)</span><br><span class="line">    <span class="built_in">print</span>(info)</span><br></pre></td></tr></table></figure><p>运行效果如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706222937.png"></p><p>这里我们使用了两个第三方库，分别是<code>haralyzer</code>和<code>brotli</code>。其中的<code>haralyzer</code>是用来解析HAR文件；<code>brotli</code>是用来对数据进行解压缩。</p><p>在一般情况下，其他网站的HAR解析，代码到<code>text = entry[&#39;response&#39;][&#39;content&#39;][&#39;text&#39;]</code>就可以了。返回的<code>text</code>直接就是人眼可读的内容了。但Jump稍微特殊一些，因为它返回的内容经过压缩，所以获取到的是Base64字符串。如果我们直接打印，就会看到：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706223442.png"></p><p>这个Base64不能直接解码，因为解了以后是二进制信息。从之前Stream的响应Headers里面，我们可以看到这个数据是经过<code>br</code>压缩的，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230706223625.png"></p><p>所以需要使用<code>brotli</code>解压缩：<code>brotli.decompress(base64.b64decode(text)).decode()</code>。</p><p>现在你已经拿到返回数据的JSON信息了。那么接下来要对数据进行怎么样的处理，都不再是问题了。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol><li>安装Stream并设置根证书</li><li>打开抓包功能</li><li>打开目标App或者微信刷程序，让流量经过Stream</li><li>关闭抓包功能，从抓包历史里面找到目前请求的URL规则</li><li>筛选出所有需要的请求，导出为HAR文件</li><li>使用Python解析HAR文件</li></ol><p>当你熟练以后，整个过程不超过3分钟就能完成。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;写过爬虫的同学都知道，当我们想对App或者小程序进行抓包时，最常用的工具是Charles、Fiddler或者MimtProxy。但这些软件用起来非常复杂。特别是当你花了一两个小时把这些软件搞定的时候，别人只用了15分钟就已经手动把需要的数据抄写完成了。&lt;/p&gt;
-&lt;h2 id=&quot;我的需求&quot;&gt;&lt;a href=&quot;#我的需求&quot; class=&quot;headerlink&quot; title=&quot;我的需求&quot;&gt;&lt;/a&gt;我的需求&lt;/h2&gt;&lt;p&gt;如果你不是专业的爬虫开发者，那么大多数时候你的抓包需求都是很小的需求，手动操作也不是不能。这种时候，我们最需要的是一种简单快捷的，毫不费力的方法来解放双手。&lt;/p&gt;
-&lt;p&gt;例如我最近在玩《塞尔达传说——王国之泪》，我有一个小需求，就是想找到防御力最大的帽子、衣服和裤子来混搭。这些数据，在一个叫做『Jump』的App上面全都有，如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_2413.PNG&quot;&gt;&lt;/p&gt;
-&lt;p&gt;防具总共也就几十个，肉眼一个一个看也没问题，就是费点时间而已。那么，如果我想高效一些，有没有什么简单办法通过抓包再加上Python写几行代码来筛选，快速找到我想要的数据呢？&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-    <category term="iOS" scheme="https://www.kingname.info/tags/iOS/"/>
-    
-    <category term="抓包" scheme="https://www.kingname.info/tags/%E6%8A%93%E5%8C%85/"/>
     
   </entry>
   

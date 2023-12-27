@@ -11264,4 +11264,45 @@ llo
         <tag>ChatGPT</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一测：Bright Data的海外代理测试</title>
+    <url>/2023/12/27/test-bright-data-proxy/</url>
+    <content><![CDATA[<p>上周的公众号文章提到了Bright Data提供的代理服务。没想到他们的运营同学竟然找上了门，问我能不能帮他们做一个评测。</p>
+<p>我之前使用Bright Data的代理，是因为突然有一天我的HuggingFace爬虫挂了。比较奇怪的是，这个爬虫在我电脑上始终正常运行，但一放到服务器上就请求失败。联想到HuggingFace被封了，而这个爬虫之前一直使用的国内代理供应商，那么原因就很明显了。因为我的电脑是24小时挂着梯子的，所以能够正常访问HuggineFace，但爬虫部署到服务器上面以后，他会自动使用配置好的国内代理。由于国内代理也受到GFW的影响，因此也会出问题。</p>
+<span id="more"></span>
+
+<p>首先看一下Bright Data他们代理的基本功能，基于数据中心的隧道代理和基于住宅IP的隧道代理还有基于Sim卡的隧道代理。海外代理都是按流量收费的，确实比较贵，如下图所示。数据中心的代理IP，每GB流量收费0.1美元。住宅IP的代理IP，每GB流量收费15美元。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224133835.png"><br>以数据中心代理为例，我开通的是隧道代理，只需要设置一个固定的地址，爬虫每次请求自动都会使用不同的IP。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224150206.png"></p>
+<p>当我们不使用代理时，访问HuggingFace会出现一直没有响应最后超时的情况。当我们在海外服务器上面使用代理访问HuggingFace时，一切正常。</p>
+<p>作为海外代理，Bright Data的隧道IP在海外服务器上面访问HuggingFace是正常的。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224151844.png"><br>需要注意的是，这种爬虫代理不是梯子。直接使用它，在国内是无法访问墙外网站的。GFW有一万种方法识别它。所以我们只有使用海外的服务器来运行。这不是Bright Data的问题，所有爬虫代理都是这样的。</p>
+<p>我们今天测试一下代理的稳定性。在测试其他很多代理供应商时，请求量多了经常会出现<code>Caused by ProxyError(&#39;Cannot connect to proxy&#39;...</code>这种报错，还需要我们自己来写重试逻辑。而Bright Data的隧道代理把所有重试都帮我们做了。我们分别在我家的宽带和我的Azure香港服务器上面，测试数据中心IP和住宅IP的代理可用情况。</p>
+<p>测试代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">proxies = &#123;</span><br><span class="line">    <span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://帐号:密码@brd.superproxy.io:22225&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https&#x27;</span>: <span class="string">&#x27;http://帐号:密码@brd.superproxy.io:22225&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = requests.get(<span class="string">&#x27;https://lumtest.com/myip.json&#x27;</span>, proxies=proxies, timeout=<span class="number">5</span>)</span><br><span class="line">        info = response.json()</span><br><span class="line">        info.update(info.pop(<span class="string">&#x27;geo&#x27;</span>))</span><br><span class="line">        info.update(info.pop(<span class="string">&#x27;asn&#x27;</span>))</span><br><span class="line">        result.append(info)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(result)</span><br><span class="line"><span class="built_in">len</span>(df.index)</span><br></pre></td></tr></table></figure>
+
+<p>数据中心代理，在我家的网络进行测试：<br><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224152521.png"><br>测试下来，100次请求，有7次请求超过5秒报错。剩下93次在5秒内完成。这93次成功请求的信息如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224152853.png"></p>
+<p>国家分布如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224153022.png"></p>
+<p>说明Bright Data的代理确实在全球分布的。</p>
+<p>当我把timeout设置为10秒时，只有2次请求超时。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224154532.png"></p>
+<p>当我把timeout设置成20秒时，所有请求全部成功。经过多次测试，所有请求最终都能在20秒内完成，不会出现除了超时外的其他报错。说明他们内部做了异常的自动重试机制，能确保你的请求始终能够成功。</p>
+<p>接下来，我在Azure香港服务器上面测试，这次稳定性高了不少，100次请求只有1次超过了5秒。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224142638.png"></p>
+<p>把timeout设置成10秒以后，所有请求全部成功。</p>
+<p>接下来，测试住宅IP的使用请求。更换了帐号密码以后，在我家的网络测试效果如下：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224143650.png"></p>
+<p>有88次请求能够在5秒内完成。12次请求超过5秒报错。注意图中的红色警报并不是错误。是因为家庭代理需要安装Bright Data的证书。如果不使用证书，就需要在Requests的请求中加上<code>verify=False</code>。于是Request就会有这个警告。</p>
+<p>在Azure香港服务区测试住宅IP的效果如下图所示，所有请求全部能够在5秒内完成。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231224144329.png"></p>
+<p>经过这次测试，可以看到Bright Data的稳定性还是不错的。除了代理外，Bright Data还提供爬虫浏览器和验证码破解接口。大家有空可以试一试。扫码注册可以获得免费试用。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20231213213401.png"></p>
+]]></content>
+      <tags>
+        <tag>爬虫</tag>
+        <tag>代理</tag>
+      </tags>
+  </entry>
 </search>

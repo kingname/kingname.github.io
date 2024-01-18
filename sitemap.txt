@@ -1,3 +1,4 @@
+https://www.kingname.info/2024/01/18/nextjs-cors/
 https://www.kingname.info/2024/01/01/2023-2024/
 https://www.kingname.info/2023/12/27/test-bright-data-proxy/
 https://www.kingname.info/2023/12/13/really-general-spider/
@@ -393,6 +394,8 @@ https://www.kingname.info/tags/%E6%8A%93%E5%8C%85/
 https://www.kingname.info/tags/scrapy-redis/
 https://www.kingname.info/tags/PDF/
 https://www.kingname.info/tags/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/
+https://www.kingname.info/tags/%E5%89%8D%E7%AB%AF/
+https://www.kingname.info/tags/Next-js/
 https://www.kingname.info/categories/%E6%84%9F%E6%83%B3/
 https://www.kingname.info/categories/Hexo/
 https://www.kingname.info/categories/Python/

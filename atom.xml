@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2024-01-18T14:01:06.197Z</updated>
+  <updated>2024-01-28T08:09:30.395Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：iOS下的开源免费消息推送服务</title>
+    <link href="https://www.kingname.info/2024/01/28/bark/"/>
+    <id>https://www.kingname.info/2024/01/28/bark/</id>
+    <published>2024-01-28T08:08:32.000Z</published>
+    <updated>2024-01-28T08:09:30.395Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们在部署代码到线上以后，可能会需要在一些情况下给自己发报警通知。如果是公司的线上业务，一般会有公司内部的各种通知工具。</p><p>但如果是自己的个人服务，我们应该怎么推送消息呢？有些同学可能使用过叮叮或者飞书机器人，但是这些机器人要发送通知还需要拉个群，稍微有点麻烦。有些同学可能使用的是Telegram，但使用它需要梯子也不太方便。</p><p>如果你的手机是iPhone，那么你可以使用一个开源免费超级轻量级的消息推送服务：<a href="https://bark.day.app/">Bark</a>.</p><span id="more"></span><p>使用Bark只需要简单调用接口即可给自己的iPhone发送推送。它只依赖苹果APNs，及时、稳定、可靠。不会消耗设备的电量， 基于系统推送服务与推送扩展，APP本体并不需要运行。能够使用点对点加密，实现隐私安全，确保即使是Bark的开发者在内的所有人都无法窃取你的隐私。</p><p>使用Bark非常简单，首先在Apple Store搜索<code>Bark</code>并安装，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_3829.PNG"></p><p>安装完成以后，只有第一次需要打开这个App，从里面复制通知地址，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240128152221.png"></p><p>复制其中的URL，并修改URL里面的中文，就可以实现通知了。例如我的URL是：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.day.app/asdfasdfasd/这里改成你自己的推送内容</span><br></pre></td></tr></table></figure><p>把其中的<code>这里改成你自己的推送内容</code>改成我需要推送的内容，例如：</p><p><code>https://api.day.app/asdfasdfasd/除了在未闻Code公众号与kingname.info外的任何地方看到本文均为违规转载欢迎大家举报</code></p><p>可以使用Python或者干脆直接在浏览器访问这个地址，你的手机就会收到通知，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_3831.PNG"></p><p>推送的消息还可以点开，点开以后可以复制或者分享消息，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/7821706427188_.png"></p><p>如果你推送的消息是一个URL，那么当你点击推送的URL时，可以自动使用浏览器打开这个URL。而且这里的URL还可以是URL Scheme.如果你知道URL Scheme，你就知道它可以打开App的特定功能，以滴答清单为例。可以在这里看到滴答清单的<a href="https://help.dida365.com/tasks/a/6424515668858634240">URL Scheme和使用说明</a></p><p>我现在使用滴答清单的快速添加任务这个功能，当我的线上服务出现bug时，给我发送通知，当我在手机上点击通知以后，自动在我的滴答清单创建一个待办事项。</p><p>创建任务的URL Scheme是：<code>ticktick://x-callback-url/v1/add_task?title=任务文本</code>。因此，我们可以使用如下代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> quote</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">message = <span class="string">&#x27;线上系统发生故障，立刻修复&#x27;</span></span><br><span class="line"></span><br><span class="line">body = &#123;</span><br><span class="line">    <span class="string">&#x27;url&#x27;</span>: <span class="string">f&#x27;ticktick://x-callback-url/v1/add_task?title=<span class="subst">&#123;quote(message)&#125;</span>&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;body&#x27;</span>: message</span><br><span class="line">&#125;</span><br><span class="line">resp = requests.post(<span class="string">&#x27;https://api.day.app/asdfasdfasdf&#x27;</span>, json=body).json()</span><br><span class="line"><span class="built_in">print</span>(resp)</span><br></pre></td></tr></table></figure><p>运行这段代码以后，手机就会收到消息推送，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_3833.PNG"></p><p>点开这个通知，就会自动跳转到滴答清单并自动添加任务，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/IMG_3834.PNG"></p><p>通过修改URL Scheme的参数，可以添加到不同的任务清单里面或者实现更多复杂操作。具体可以参阅滴答清单的文档。</p><p>从上面这个例子可以看到，借助Bark，我们可以实现非常多的自动化工作流，从而大大提高工作效率。</p><p><a href="https://github.com/Finb/Bark">在Bark的文档和Github中</a>，你还可以看到如何自定义Bark后端服务器和如何实现消息加密的方法，从而让你彻底掌控Bark的所有消息通知，避免敏感信息泄漏。</p><hr><p>未闻Code Telegram Channel开通了！每天都有各种开发小技巧更新，速来！！</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240118220059.png"></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;我们在部署代码到线上以后，可能会需要在一些情况下给自己发报警通知。如果是公司的线上业务，一般会有公司内部的各种通知工具。&lt;/p&gt;
+&lt;p&gt;但如果是自己的个人服务，我们应该怎么推送消息呢？有些同学可能使用过叮叮或者飞书机器人，但是这些机器人要发送通知还需要拉个群，稍微有点麻烦。有些同学可能使用的是Telegram，但使用它需要梯子也不太方便。&lt;/p&gt;
+&lt;p&gt;如果你的手机是iPhone，那么你可以使用一个开源免费超级轻量级的消息推送服务：&lt;a href=&quot;https://bark.day.app/&quot;&gt;Bark&lt;/a&gt;.&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="iOS" scheme="https://www.kingname.info/tags/iOS/"/>
+    
+    <category term="消息推送" scheme="https://www.kingname.info/tags/%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：next.js如何正确处理跨域问题？</title>
@@ -458,31 +483,6 @@
     <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
     
     <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：Scrapy最新版不兼容scrapy_redis的问题</title>
-    <link href="https://www.kingname.info/2023/08/20/scrapy-redis-no-crawler/"/>
-    <id>https://www.kingname.info/2023/08/20/scrapy-redis-no-crawler/</id>
-    <published>2023-08-20T07:41:34.000Z</published>
-    <updated>2023-08-20T07:42:35.045Z</updated>
-    
-    <content type="html"><![CDATA[<p>有不少同学在写爬虫时，会使用Scrapy + scrapy_redis实现分布式爬虫。不过scrapy_redis最近几年更新已经越来越少，有一种廉颇老矣的感觉。Scrapy的很多更新，scrapy_redis已经跟不上了。</p><span id="more"></span><p>大家在安装Scrapy时，如果没有指定具体的版本，那么就会默认安装最新版。</p><p>这两天如果有同学安装了最新版的Scrapy和scrapy_redis，运行以后就会出现下面的报错：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: crawl() got an unexpected keyword argument <span class="string">&#x27;spider&#x27;</span></span><br></pre></td></tr></table></figure><p>如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230820152921.png"></p><p>遇到这种情况，解决方法非常简单，不要安装Scrapy最新版就可以了。在使用<code>pip</code>安装时，绑定Scrapy版本：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip install scrapy==2.9.0</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;有不少同学在写爬虫时，会使用Scrapy + scrapy_redis实现分布式爬虫。不过scrapy_redis最近几年更新已经越来越少，有一种廉颇老矣的感觉。Scrapy的很多更新，scrapy_redis已经跟不上了。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="爬虫" scheme="https://www.kingname.info/tags/%E7%88%AC%E8%99%AB/"/>
-    
-    <category term="Scrapy" scheme="https://www.kingname.info/tags/Scrapy/"/>
-    
-    <category term="scrapy_redis" scheme="https://www.kingname.info/tags/scrapy-redis/"/>
     
   </entry>
   

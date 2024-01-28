@@ -160,7 +160,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">226</span>
+          <span class="site-state-item-count">227</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -170,7 +170,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">168</span>
+        <span class="site-state-item-count">169</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -195,6 +195,146 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.kingname.info/2014/12/29/%E5%AF%B9%E4%B8%80%E4%B8%AA%E7%BD%97%E9%A9%AC%E6%95%B0%E5%AD%97%E4%B8%8E%E9%98%BF%E6%8B%89%E4%BC%AF%E6%95%B0%E5%AD%97%E8%BD%AC%E6%8D%A2%E7%AE%97%E6%B3%95%E7%9A%84%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="青南">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="谢乾坤 | Kingname">
+      <meta itemprop="description" content="高级数据挖掘工程师，《Python 爬虫开发 从入门到实战》、《左手 MongoDB 右手 Redis——从入门到商业实战》作者。 微软最有价值专家 MVP，Python, Scrapy, MongoDB, Redis, Pandas, Golang。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 谢乾坤 | Kingname">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2014/12/29/%E5%AF%B9%E4%B8%80%E4%B8%AA%E7%BD%97%E9%A9%AC%E6%95%B0%E5%AD%97%E4%B8%8E%E9%98%BF%E6%8B%89%E4%BC%AF%E6%95%B0%E5%AD%97%E8%BD%AC%E6%8D%A2%E7%AE%97%E6%B3%95%E7%9A%84%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">对一个罗马数字与阿拉伯数字转换算法的分析</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-12-29 18:34:30" itemprop="dateCreated datePublished" datetime="2014-12-29T18:34:30+08:00">2014-12-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2018-09-25 21:33:27" itemprop="dateModified" datetime="2018-09-25T21:33:27+08:00">2018-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在看《Dive into Python》的单元测试时，发现用作例子的“阿拉伯数字-罗马数字”的转换算法非常的巧妙，现在发上来和大家分享一下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">romanNumeralMap = ((&#x27;M&#x27;,1000),</span><br><span class="line">		(&#x27;CM&#x27;,900),</span><br><span class="line">		(&#x27;D&#x27;,500),</span><br><span class="line">		(&#x27;CD&#x27;,400),</span><br><span class="line">		(&#x27;C&#x27;,100),</span><br><span class="line">		(&#x27;XC&#x27;,90),</span><br><span class="line">		(&#x27;L&#x27;,50),</span><br><span class="line">		(&#x27;XL&#x27;,40),</span><br><span class="line">		(&#x27;X&#x27;,10),</span><br><span class="line">		(&#x27;IX&#x27;,9),</span><br><span class="line">		(&#x27;V&#x27;,5),</span><br><span class="line">		(&#x27;IV&#x27;,4),</span><br><span class="line">		(&#x27;I&#x27;,1))</span><br><span class="line">def toRoman(n):</span><br><span class="line">	result = &quot;&quot;</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while n &gt;= integer:</span><br><span class="line">	 		result += numeral</span><br><span class="line">	 		n -= integer</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">def fromRoman(s):</span><br><span class="line">	result = 0</span><br><span class="line">	index = 0</span><br><span class="line">	for numeral, integer in romanNumeralMap:</span><br><span class="line">		while s[index:index+len(numeral)] == numeral:</span><br><span class="line">	 		result += integer</span><br><span class="line">	 		index += len(numeral)</span><br><span class="line">	return result</span><br><span class="line"></span><br><span class="line">print toRoman(1356)</span><br><span class="line">print fromRoman(&#x27;MCMLXXII&#x27;)</span><br></pre></td></tr></table></figure>
+<p>这个算法的聪明之处，就在于他通过一个romanNumeralMap，把罗马数字与阿拉伯数字里面的“边界值”做出一一对应。这个边界刚刚好是罗马数字组合之间的转换。例如，I，II，III都可以通过第一个边界值组合获得；V，VI，VII，VIII可以通过V和I的组合获得。而对于一些特殊的值，则直接列出来。例如IV。通过这个边界值的组合，就能实现所需求的转换。这就类似于在一些机读卡上，需要填写1到100的数字，他会使用0,1,2,4,7这样以来:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3 = 1 + 2;</span><br><span class="line">5 = 4 + 1;</span><br><span class="line">6 = 4 + 2;</span><br><span class="line">8 = 7 + 1;</span><br><span class="line">9 = 7 + 2.</span><br></pre></td></tr></table></figure>
+<p>首先看一下toRoman()函数，把阿拉伯数字转换成罗马数字。它使用Python连接字符串的操作符号 + 来使“边界值”连接到一起。例如用作例子的n &#x3D; 1356，程序遍历romanNumeralMap，寻找n对应的罗马数字，如果找不到，那就找刚刚比n小一点的数字对应的罗马字符。遍历在能使n 在romanNumeralMap有对应值时结束。</p>
+<pre><code>找到刚刚比1356小的那个值对应的罗马数字，也就是1000，M
+再继续找刚刚比n = 1356 - 1000 = 356小的数，也就是100，C;
+又继续找比n = 356 - 100 = 256小的数，还是100，也就是C;
+再找比n = 256 - 100 = 156小的数，仍然是100，C；
+继续找比n = 156 - 100 = 56 小的数，50，L；
+继续找比n = 56 - 50 = 6小的数，5，V；
+继续找n = 6 - 5 = 1对于的数，1，I。 结束。
+</code></pre>
+<p>所以1356对应的值为MCCCLVI。 这样的操作很类似于在十进制里面，一个数字1356 &#x3D; 1000 +　300 + 50 + 6，只是阿拉伯数字里面6是一个单独的符号，而罗马数字里面VI是个V + I的组合而已。</p>
+<p>下面再说说fromRoman()函数，把罗马数字转换成阿拉伯数字。这个函数在理解上面可能比toRoman()稍稍要困难一点。</p>
+<p>还是用例子来说明，MCMLXXII转换成阿拉伯数字。<br>其中如下代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s[index:index+len(numeral)]</span><br></pre></td></tr></table></figure>
+<p>作用是把字符串s中，从第index位到第index+ len(numeral)位（不包含第index + len(numeral)位自身）的字符提取出来。比如：</p>
+<pre><code>&gt;&gt;&gt; a = &#39;helloworld&#39;
+&gt;&gt;&gt; print a[2:5]
+llo
+</code></pre>
+<p>即s的第2,3,4位被取出。</p>
+<p>回到对s &#x3D; ‘MCMLXXII’的处理。</p>
+<pre><code>首先map中第一个罗马字符是M，只有一位，就把s 的第0位拿出来对比，发现s的第0位刚刚好是M，于是得到一个1000，index变为1，则之后从s的第一位开始。简单的说，相当于s 变成了s = &#39;CMLXXII&#39;
+
+接下来，经过一些无效的值以后，轮换到CM，发现CM为两位，就取出s的前两位，也就是CM，发现在s中刚刚好有CM,于是得到900. index再加2，则实际上s就相当于变成了LXXII
+
+继续经过一些无效值以后，轮换到了L，发现s当前的1位为L，于是在map中有对应的值50.然后index加1，s相当于变成了XXII
+
+接下来到了X，发现s当前的1位为X，在map中有对应的值10.然后index 再加1，s变成了XII
+
+虽然这个时候人已经知道是12了，但是计算机还是不知道，于是继续一个X，s变为II
+
+然后出现一个I，s变为I
+
+终于程序找到了一个直接相等的值I，于是转换结束。
+</code></pre>
+<p>所以MCMLXXII对于的阿拉伯数字是1000+900+50+10+10+1+1 &#x3D; 1972</p>
+<p>这个方法，把一个罗马数字从高位开始逐次剥离最高位，从而渐渐的把数字缩小。</p>
+<p>最近正在学习算法。因为越来越发现现在做的东西，如果仅仅实现功能的话，性能会出现瓶颈。希望我以后能写出更好的算法。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1037,14 +1177,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">249k</span>
+    <span title="站点总字数">250k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">13:49</span>
+    <span title="站点阅读时长">13:52</span>
   </span>
 </div>
 <div class="busuanzi-count">

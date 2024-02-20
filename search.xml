@@ -11477,4 +11477,40 @@ llo
         <tag>LLM</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：Python工具脚本如何调用外层模块</title>
+    <url>/2024/02/20/python-m/</url>
+    <content><![CDATA[<p>我三年前写过一篇文章：<a href="https://mp.weixin.qq.com/s/Ee2qpmkS8leR2BQGOi_uWA">《小问题大隐患：如何正确设置 Python 项目的入口文件？》</a>。讲到Python项目应该如何正确组织代码结构。入口文件应该在最外面，调用关系应该是从外向内调用。而不要学Java，从一个很深层的文件夹里面往外调用。</p>
+<p>不过我在这篇文章的最后，也提到了一种例外情况，那就是工具脚本不受这个规则的限制。如下图所示。</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240220213950.png"></p>
+<span id="more"></span>
+<p>今天有同学在问我，这种情况应该怎么调用，才能让<code>remove_outdated_data.py</code>正确导入<code>models</code>里面的模块。我们今天就来说明一下。</p>
+<p>首先，我们来创建一个示例程序，结构如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240220214321.png"></p>
+<p>其中，<code>aa.py</code>文件的内容为：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">i_am_func</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;我是一个函数&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>test.py</code>文件的内容为：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> models.aa <span class="keyword">import</span> i_am_func</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">i_am_func()</span><br></pre></td></tr></table></figure>
+
+<p>那么，不修改任何环境变量，也不修改<code>sys.path</code>的情况下，我应该怎么运行<code>test.py</code>，才能让它正确调用<code>i_am_func</code>函数？</p>
+<p>首先我们进入<code>tools</code>文件夹运行，显然会报错，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240220214649.png"></p>
+<p>接下来，我们在项目根目录下面运行，也会报错：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240220214731.png"></p>
+<p>那应该怎么办呢？难道必须加环境变量或者改<code>sys.path</code>？</p>
+<p>其实，Python已经自带了正确运行工具脚本的方法，就是<code>-m</code>参数。我们只需要在项目<code>根目录</code>执行下面这个命令就可以了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -m tools.test</span><br></pre></td></tr></table></figure>
+<p>如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240220214921.png"></p>
+<p>如果工具脚本在很深的文件夹里面，那么路径只需要使用点分割就可以了。例如下面的文件结构：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240220215138.png"><br>要运行<code>second.py</code>，那么命令就写成：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -m tools.deep.folder.second</span><br></pre></td></tr></table></figure>
+
+<p>如果你的工具脚本有参数，也可以正常添加，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -m tools.deep.folder.second args1 args2</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
 </search>

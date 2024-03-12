@@ -11513,4 +11513,38 @@ llo
         <tag>Python</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一日一技：怎么中文也属于字母？</title>
+    <url>/2024/03/12/alphanumeric/</url>
+    <content><![CDATA[<p>我最近在使用一个第三方库，叫做<code>RapidFuzz</code>。它有一个工具函数，叫做<code>utils.default_process</code>，在官方文档里面，是这样介绍的：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312194758.png"><br>红色方框里面说，这个函数可以移除所有的非<code>alphanumeric</code>字符。如果我们使用翻译软件，会发现<code>alphanumeric</code>的意思是字母和数字。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312194930.png"></p>
+<p>因此，我想当然的觉得，这个功能函数，只会保留26个英文字母的大小写加上10个数字，一共62个字符。把除此之外的所有其他字符都移除掉。</p>
+<span id="more"></span>
+
+<p>但我经过测试，它竟然没有办法过滤掉中文字符，如下图所示。难道终于也属于字母？</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312195418.png"></p>
+<p>于是我到Github上面去给这个项目提Issue。但作者却说这个函数没有问题，并且使用Python的<code>.isalnum()</code>来做测试，发现Python也会认为中文也是<code>alphanumeric</code>。如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312195756.png"></p>
+<p>这就非常奇怪了，于是我找到Python官方文档，发现它是这样说的：</p>
+<blockquote>
+<p><a href="https://docs.python.org/3/library/stdtypes.html#str.isalnum" title="Link to this definition">str.isalnum()</a></p>
+<p>Return <code>True</code> if all characters in the string are alphanumeric and there is at least one character, <code>False</code> otherwise. A character <code>c</code> is alphanumeric if one of the following returns <code>True</code>: <code>c.isalpha()</code>, <code>c.isdecimal()</code>, <code>c.isdigit()</code>, or <code>c.isnumeric()</code>.</p>
+</blockquote>
+<p>说明<code>&#39;中文&#39;.isalnum()</code>返回<code>True</code>，显然是因为<code>&#39;中文&#39;.isalpha()</code>返回了<code>True</code>。而之所以<code>.isalpha()</code>会返回<code>True</code>，是因为它判断的不仅仅是英文字母，而是所有Unicode里面，类别为<code>letter</code>的字符：</p>
+<blockquote>
+<p><a href="https://docs.python.org/3/library/stdtypes.html#str.isalpha" title="Link to this definition">str.isalpha()</a></p>
+<p>Return <code>True</code> if all characters in the string are alphabetic and there is at least one character, <code>False</code> otherwise. Alphabetic characters are those characters defined in the Unicode character database as “Letter”, i.e., those with general category property being one of “Lm”, “Lt”, “Lu”, “Ll”, or “Lo”.</p>
+</blockquote>
+<p>在Unicode标准网站<a href="https://unicode.org/reports/tr44/#General_Category_Values">UAX #44: Unicode Character Database</a>上面，可以看到它这里定义的<code>Lm</code>、<code>Lt</code>、<code>Lu</code>、<code>Ll</code>和<code>Lo</code>的意思：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312200735.png"></p>
+<p>我们使用Python自带的<code>unicodedata</code>模块，可以看到中文字符的类型，确实是<code>Lo</code>，如下图所示：</p>
+<p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312200535.png"><br>所以，<code>&#39;中文&#39;.isalpha()</code>返回<code>True</code>确实是合理的。</p>
+<p>以后看到<code>alphanumeric</code>，再也不要以为只有62个字符了。</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>Unicode</tag>
+      </tags>
+  </entry>
 </search>

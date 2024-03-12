@@ -6,7 +6,7 @@
   <link href="https://www.kingname.info/atom.xml" rel="self"/>
   
   <link href="https://www.kingname.info/"/>
-  <updated>2024-02-20T14:14:15.316Z</updated>
+  <updated>2024-03-12T12:35:01.783Z</updated>
   <id>https://www.kingname.info/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一日一技：怎么中文也属于字母？</title>
+    <link href="https://www.kingname.info/2024/03/12/alphanumeric/"/>
+    <id>https://www.kingname.info/2024/03/12/alphanumeric/</id>
+    <published>2024-03-12T12:33:28.000Z</published>
+    <updated>2024-03-12T12:35:01.783Z</updated>
+    
+    <content type="html"><![CDATA[<p>我最近在使用一个第三方库，叫做<code>RapidFuzz</code>。它有一个工具函数，叫做<code>utils.default_process</code>，在官方文档里面，是这样介绍的：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312194758.png"><br>红色方框里面说，这个函数可以移除所有的非<code>alphanumeric</code>字符。如果我们使用翻译软件，会发现<code>alphanumeric</code>的意思是字母和数字。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312194930.png"></p><p>因此，我想当然的觉得，这个功能函数，只会保留26个英文字母的大小写加上10个数字，一共62个字符。把除此之外的所有其他字符都移除掉。</p><span id="more"></span><p>但我经过测试，它竟然没有办法过滤掉中文字符，如下图所示。难道终于也属于字母？</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312195418.png"></p><p>于是我到Github上面去给这个项目提Issue。但作者却说这个函数没有问题，并且使用Python的<code>.isalnum()</code>来做测试，发现Python也会认为中文也是<code>alphanumeric</code>。如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312195756.png"></p><p>这就非常奇怪了，于是我找到Python官方文档，发现它是这样说的：</p><blockquote><p><a href="https://docs.python.org/3/library/stdtypes.html#str.isalnum" title="Link to this definition">str.isalnum()</a></p><p>Return <code>True</code> if all characters in the string are alphanumeric and there is at least one character, <code>False</code> otherwise. A character <code>c</code> is alphanumeric if one of the following returns <code>True</code>: <code>c.isalpha()</code>, <code>c.isdecimal()</code>, <code>c.isdigit()</code>, or <code>c.isnumeric()</code>.</p></blockquote><p>说明<code>&#39;中文&#39;.isalnum()</code>返回<code>True</code>，显然是因为<code>&#39;中文&#39;.isalpha()</code>返回了<code>True</code>。而之所以<code>.isalpha()</code>会返回<code>True</code>，是因为它判断的不仅仅是英文字母，而是所有Unicode里面，类别为<code>letter</code>的字符：</p><blockquote><p><a href="https://docs.python.org/3/library/stdtypes.html#str.isalpha" title="Link to this definition">str.isalpha()</a></p><p>Return <code>True</code> if all characters in the string are alphabetic and there is at least one character, <code>False</code> otherwise. Alphabetic characters are those characters defined in the Unicode character database as “Letter”, i.e., those with general category property being one of “Lm”, “Lt”, “Lu”, “Ll”, or “Lo”.</p></blockquote><p>在Unicode标准网站<a href="https://unicode.org/reports/tr44/#General_Category_Values">UAX #44: Unicode Character Database</a>上面，可以看到它这里定义的<code>Lm</code>、<code>Lt</code>、<code>Lu</code>、<code>Ll</code>和<code>Lo</code>的意思：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312200735.png"></p><p>我们使用Python自带的<code>unicodedata</code>模块，可以看到中文字符的类型，确实是<code>Lo</code>，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312200535.png"><br>所以，<code>&#39;中文&#39;.isalpha()</code>返回<code>True</code>确实是合理的。</p><p>以后看到<code>alphanumeric</code>，再也不要以为只有62个字符了。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;我最近在使用一个第三方库，叫做&lt;code&gt;RapidFuzz&lt;/code&gt;。它有一个工具函数，叫做&lt;code&gt;utils.default_process&lt;/code&gt;，在官方文档里面，是这样介绍的：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312194758.png&quot;&gt;&lt;br&gt;红色方框里面说，这个函数可以移除所有的非&lt;code&gt;alphanumeric&lt;/code&gt;字符。如果我们使用翻译软件，会发现&lt;code&gt;alphanumeric&lt;/code&gt;的意思是字母和数字。如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20240312194930.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;因此，我想当然的觉得，这个功能函数，只会保留26个英文字母的大小写加上10个数字，一共62个字符。把除此之外的所有其他字符都移除掉。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
+    
+    <category term="Unicode" scheme="https://www.kingname.info/tags/Unicode/"/>
+    
+  </entry>
   
   <entry>
     <title>一日一技：Python工具脚本如何调用外层模块</title>
@@ -464,29 +488,6 @@
     <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
     
     <category term="Pandas" scheme="https://www.kingname.info/tags/Pandas/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一日一技：如何同时使用多个GPT的API Key？</title>
-    <link href="https://www.kingname.info/2023/09/03/multi-gpt-key/"/>
-    <id>https://www.kingname.info/2023/09/03/multi-gpt-key/</id>
-    <published>2023-09-03T02:19:50.000Z</published>
-    <updated>2023-09-03T02:20:42.886Z</updated>
-    
-    <content type="html"><![CDATA[<p>相信很多同学或多或少都在Python中使用过GPT API，通过Python安装<code>openai</code>库，来调用GPT模型。</p><p>OpenAI官方文档中给出了一个示例，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903093758.png"><br>如果你只有一个API账号，那么你可能不觉得这样写有什么问题。但如果你想同时使用两个账号怎么办？</p><span id="more"></span><p>有些同学可能知道，微软的Azure也提供GPT接口，在Python中也需要通过<code>openai</code>库来调用，它的调用示例为：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903094110.png"><br>当你全局设置了<code>openai.api_type = &#39;azure&#39;</code>以后，你怎么同时使用OpenAI的GPT接口？</p><p>这两个文档中给出的示例写法，都是全局写法，一但设定以后，在整个运行时中，所有调用GPT接口的地方，都会使用这里设置的参数：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> openai</span><br><span class="line"></span><br><span class="line">openai.xx = yy</span><br></pre></td></tr></table></figure><p>有些同学不知道怎么在Python SDK中同时使用多个账号，于是他们只有使用GPT的Rest HTTP接口，自己封装一个函数来发起请求从而切换不同的账号。放弃了Python SDK提供的各种便利。</p><p>但实际上，根本没有那么麻烦。在<code>openai</code>模块里面，天然就可以切换多个账号。虽然文档里面没有写，但是我们可以通过函数签名来找到这种方法。</p><p>如下图所示，在PyCharm中，随便写一段调用<code>openai</code>模块的代码，然后Windows按下键盘的Ctrl，MacOS按下键盘的Command，并鼠标左键点击<code>create</code>函数：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903094837.png"><br>跳转到的函数里面，还有一个<code>create</code>函数，继续按上面的方法跳入，如下图所示：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903094937.png"><br>接下来，你就会看到这个<code>create</code>函数能够接受的参数里面，包含了几个很熟悉的名字：</p><p><img src="https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903095029.png"></p><p>也就是说，当你想同时调用多个账号时，不需要在一开始给openai设置对应的参数，你只需要在调用<code>.create</code>函数的时候，把对应的API参数传入就可以了。示例代码如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> openai</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用OpenAI账号1</span></span><br><span class="line">response1 = openai.ChatCompletion.create(  </span><br><span class="line">            engine=<span class="string">&quot;chatgpt&quot;</span>,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            temperature=<span class="number">0.9</span>,  </span><br><span class="line">            max_tokens=<span class="number">800</span>,  </span><br><span class="line">            top_p=<span class="number">0.95</span>,  </span><br><span class="line">            frequency_penalty=<span class="number">0</span>,  </span><br><span class="line">            presence_penalty=<span class="number">0</span>,  </span><br><span class="line">            api_key=<span class="string">&#x27;xxxxxxxx&#x27;</span>,  <span class="comment"># 在这里传入API Key</span></span><br><span class="line">            stop=[<span class="string">&quot;&lt;|im_end|&gt;&quot;</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用OpenAI账号2</span></span><br><span class="line">response2 = openai.ChatCompletion.create(  </span><br><span class="line">            engine=<span class="string">&quot;chatgpt16k&quot;</span>,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            temperature=<span class="number">0.9</span>,  </span><br><span class="line">            max_tokens=<span class="number">800</span>,  </span><br><span class="line">            top_p=<span class="number">0.95</span>,  </span><br><span class="line">            frequency_penalty=<span class="number">0</span>,  </span><br><span class="line">            presence_penalty=<span class="number">0</span>,  </span><br><span class="line">            api_key=<span class="string">&#x27;yyyyyyyyy&#x27;</span>,   <span class="comment"># 在这里传入API Key</span></span><br><span class="line">            stop=[<span class="string">&quot;&lt;|im_end|&gt;&quot;</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用Azure OpenAI 账号</span></span><br><span class="line">response3 = openai.ChatCompletion.create(  </span><br><span class="line">            engine=<span class="string">&quot;gpt4&quot;</span>,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            temperature=<span class="number">0.9</span>,  </span><br><span class="line">            max_tokens=<span class="number">800</span>,  </span><br><span class="line">            top_p=<span class="number">0.95</span>,  </span><br><span class="line">            frequency_penalty=<span class="number">0</span>,  </span><br><span class="line">            presence_penalty=<span class="number">0</span>,  </span><br><span class="line">            api_key=<span class="string">&#x27;zzzzzzz&#x27;</span>,   <span class="comment"># 在这里传入API Key</span></span><br><span class="line">            api_base=<span class="string">&#x27;https://xxx.openai.azure.com/&#x27;</span>,  </span><br><span class="line">            api_type=<span class="string">&quot;azure&quot;</span>,  </span><br><span class="line">            api_version=<span class="string">&#x27;2023-05-15&#x27;</span>,  </span><br><span class="line">            stop=[<span class="string">&quot;&lt;|im_end|&gt;&quot;</span>])</span><br></pre></td></tr></table></figure><p>使用这种方法，我们就可以在一个程序里面同时使用多个GPT账号了。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;相信很多同学或多或少都在Python中使用过GPT API，通过Python安装&lt;code&gt;openai&lt;/code&gt;库，来调用GPT模型。&lt;/p&gt;
-&lt;p&gt;OpenAI官方文档中给出了一个示例，如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://kingname-1257411235.cos.ap-chengdu.myqcloud.com/20230903093758.png&quot;&gt;&lt;br&gt;如果你只有一个API账号，那么你可能不觉得这样写有什么问题。但如果你想同时使用两个账号怎么办？&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="Python" scheme="https://www.kingname.info/tags/Python/"/>
-    
-    <category term="ChatGPT" scheme="https://www.kingname.info/tags/ChatGPT/"/>
     
   </entry>
   
